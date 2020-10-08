@@ -1,25 +1,13 @@
 {
-  "name": "angular-electron",
-  "version": "8.0.5",
-  "description": "Angular 10 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "libertylogs-client",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "https://github.com/neneverm1ndo/libertylogs-client",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "neverm1ndo, maximegris",
+    "email": "it@nmnd.ru"
   },
-  "keywords": [
-    "angular",
-    "angular 10",
-    "electron",
-    "nodejs",
-    "typescript",
-    "spectron",
-    "eslint",
-    "sass",
-    "windows",
-    "mac",
-    "linux"
-  ],
+  "keywords": [],
   "main": "main.js",
   "private": true,
   "scripts": {
