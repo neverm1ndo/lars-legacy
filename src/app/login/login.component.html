@@ -1,0 +1,19 @@
+<div class="col-12 d-flex align-items-center h-100 l-bg">
+  <div class="col d-flex justify-content-center w-100">
+    <div class="col-lg-10 d-flex align-self-center justify-content-center col-10 auth">
+      <form class="pt-3 pb-3 text-center col-10 col-sm-8 col-lg-6">
+        <img class="logo" src="../assets/logo.svg" alt="">
+        <div class="form-group">
+          <input type="email" placeholder="E-Mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="Пароль" class="form-control" id="exampleInputPassword1">
+          <small *ngIf="true" id="emailHelp" class="form-text text-muted">Используйте свои данные админа для входа.</small>
+          <small *ngIf="false" id="wrong" class="form-text text-danger">Неверный логин или пароль.</small>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mb-2">Войти</button>
+        <a routerLink="/home"><strong>Не могу вспомнить пароль</strong></a>
+      </form>
+    </div>
+  </div>
+</div>

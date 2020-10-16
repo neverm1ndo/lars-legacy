@@ -3,20 +3,22 @@ import * as path from 'path';
 import * as url from 'url';
 
 let win: BrowserWindow = null;
-const args = process.argv.slice(1),
+const args: string[] = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
 function createWindow(): BrowserWindow {
 
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  // const electronScreen: Electron.Screen = screen;
 
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width: 800,
+    minWidth: 768,
+    minHeight: 580,
+    height: 600,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
@@ -26,14 +28,11 @@ function createWindow(): BrowserWindow {
   });
 
   if (serve) {
-
     win.webContents.openDevTools();
-
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
     });
     win.loadURL('http://localhost:4200');
-
   } else {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),

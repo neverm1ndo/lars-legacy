@@ -22,6 +22,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+               "includePaths": [
+                 "src/scss"
+               ]
+             },
             "scripts": [],
             "customWebpackConfig": {
               "path": "./angular.webpack.js"
@@ -115,6 +120,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+                "includePaths": [
+                  "src/scss"
+                ]
+              },
             "assets": [
               "src/assets"
             ],

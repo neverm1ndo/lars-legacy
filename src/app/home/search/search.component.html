@@ -1,0 +1,5 @@
+<form (ngSubmit)="search(currentNickname.value)" autocomplete="on">
+  <div class="input-group">
+    <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Ник игрока или серийный номер HD/SM" [formControl]="currentNickname"/>
+  </div>
+</form>

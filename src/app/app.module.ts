@@ -3,7 +3,6 @@ import '../polyfills';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -24,24 +23,29 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TopperComponent } from './topper/topper.component';
+import { LoginModule } from './login/login.module';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TopperComponent],
   imports: [
     BrowserModule,
-    FormsModule,
     HttpClientModule,
     CoreModule,
     SharedModule,
     HomeModule,
     DetailModule,
     AppRoutingModule,
+    NgbModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    LoginModule
   ],
   providers: [],
   bootstrap: [AppComponent]

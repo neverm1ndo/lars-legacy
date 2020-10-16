@@ -1,3 +1,10 @@
-:host {
-  
+@import "_colors";
+.main {
+  height: 100vh;
+  background: $mainbg;
+  .wrapper {
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    min-height: 94%;
+  }
 }

@@ -1,0 +1,38 @@
+@import '_colors';
+@import '_native';
+
+.toplogo {
+  width: 25px;
+  height: auto;
+  margin-left: 23px;
+  position: relative;
+  top: 5px;
+}
+.label {
+  position: relative;
+  top: 4px;
+  left: 25px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.btn-topnative {
+  width: 35px;
+  height: 35px;
+  background: $topper;
+  padding: 0px 0px 0px 0px;
+  border-radius: 0px;
+  color: $text;
+  svg {
+    width: 15px;
+    height: auto;
+    position: relative;
+    top: -3px;
+    path {
+      stroke: #ffffff;
+      stroke-width: 2px;
+    }
+  }
+}
+.btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) {
+  margin-left: 0px!important;
+}

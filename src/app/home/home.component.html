@@ -1,7 +1,7 @@
-<div class="container">
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
-
-  <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a>
+<app-sider></app-sider>
+<div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
+  <app-head></app-head>
+  <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
+    <router-outlet></router-outlet>
+  </div>
 </div>
