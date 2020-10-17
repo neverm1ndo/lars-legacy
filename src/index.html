@@ -7,6 +7,69 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    <style media="screen">
+        .app-preloader {
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-left: -50px;
+          margin-top: -50px;
+          text-align: center;
+          font-family: 'Arial', sans-serif;
+          color: #7f848a;
+          font-size: 10px;
+        }
+        .app-preloader img, .app-preloader svg{
+          animation: load;
+          animation-duration: 3s;
+          animation-iteration-count: infinite;
+          width: 64px; height: 64px;
+        }
+        .app-preloader .spinner {
+          height: 180px;
+          width: 180px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-left: -90px;
+          margin-top: -90px;
+        }
+        .app-preloader .spinner path {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+          animation: dash 1.5s ease-in-out infinite;
+          stroke-linecap: round;
+          stroke: #7f848a;
+        }
+        @keyframes rotate {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes dash {
+          0% {
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+          }
+          50% {
+            stroke-dasharray: 89, 200;
+            stroke-dashoffset: -35px;
+          }
+          100% {
+            stroke-dasharray: 89, 200;
+            stroke-dashoffset: -124px;
+          }
+        }
+      @keyframes load {
+        0% { transform: scale(1); }
+        5% { transform: scale(1.2); }
+        40% { transform: scale(1); }
+        45% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+    </style>
   </head>
   <body>
     <div class="etabs-tabgroup">
@@ -14,6 +77,10 @@
       <div class="etabs-buttons"></div>
     </div>
     <div class="etabs-views"></div>
-    <app-root>Loading...</app-root>
+    <app-root>
+      <div class="app-preloader">
+        <svg class="spinner" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill="#FDFDFD" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill="#FDFDFD" fill-opacity="1"></use></g></g></g></svg>
+      </div>
+    </app-root>
   </body>
 </html>

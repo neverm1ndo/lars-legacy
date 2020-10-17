@@ -11,6 +11,7 @@ import { HeadComponent } from './head/head.component';
 import { SiderComponent } from './sider/sider.component';
 import { SearchComponent } from './search/search.component';
 import { SharedModule } from '../shared/shared.module';
+import { AuthGuard } from '../guards/auth.guard';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -23,6 +24,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     FontAwesomeModule
-  ]
+  ],
+  providers: [AuthGuard]
 })
 export class HomeModule {}

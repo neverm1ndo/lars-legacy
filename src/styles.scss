@@ -87,3 +87,42 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb        {
   background: $scrollbar-thumb;
 }
+
+.spinner {
+    height: 30px;
+    width: 30px;
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+    position: relative;
+    // top: -10px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .spinner .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: $text;
+  }
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes dash {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -35px;
+    }
+    100% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -124px;
+    }
+  }

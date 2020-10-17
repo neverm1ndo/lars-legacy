@@ -9,6 +9,9 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
+  svg {
+    cursor: pointer!important;
+  }
 }
 .native-dragzone {
   -webkit-app-region: drag;
