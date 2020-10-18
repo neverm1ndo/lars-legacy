@@ -100,29 +100,51 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
     right: 0;
     margin: auto;
   }
-  .spinner .path {
-    stroke-dasharray: 1, 200;
-    stroke-dashoffset: 0;
-    animation: dash 1.5s ease-in-out infinite;
-    stroke-linecap: round;
-    stroke: $text;
+  .spinner .path, .spinner-logo path {
+
   }
-  @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
+  .spinner-logo {
+    height: 30px;
+    width: 30px;
+    transform-origin: center center;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
   }
+  .spinner-logo {
+     path, use {
+       stroke-width: 25;
+       stroke: #ffffff;
+       fill: transparent;
+       fill-opacity: 10;
+       stroke-dasharray: 100, 200;
+       stroke-dashoffset: 0;
+       animation: dash 1.5s ease-in-out infinite;
+       stroke-linecap: round;
+      }
+  }
+  // @keyframes rotate {
+  //   100% {
+  //     transform: rotate(360deg);
+  //   }
+  // }
   @keyframes dash {
     0% {
-      stroke-dasharray: 1, 200;
+      stroke-dasharray: 1, 10;
       stroke-dashoffset: 0;
     }
-    50% {
-      stroke-dasharray: 89, 200;
+    25% {
+      stroke-dasharray: 1, 60;
       stroke-dashoffset: -35px;
     }
+    50% {
+      stroke-dasharray: 1, 60;
+      stroke-dashoffset: -200px;
+    }
     100% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -124px;
+      stroke-dasharray: 1, 10;
+      stroke-dashoffset: 0;
     }
   }

@@ -23,7 +23,7 @@
         }
         .app-preloader img, .app-preloader svg{
           animation: load;
-          animation-duration: 3s;
+          animation-duration: 5s;
           animation-iteration-count: infinite;
           width: 64px; height: 64px;
         }
@@ -39,34 +39,41 @@
         .app-preloader .spinner path {
           stroke-dasharray: 1, 200;
           stroke-dashoffset: 0;
-          animation: dash 1.5s ease-in-out infinite;
+          fill: transparent;
+          fill-opacity: 10;
+          stroke-width: 10;
+          stroke-linejoin: miter;
+          animation: dash2 2.5s ease-in-out infinite;
           stroke-linecap: round;
-          stroke: #7f848a;
+          stroke: #fdfdfd;
         }
-        @keyframes rotate {
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-        @keyframes dash {
+        @keyframes dash2 {
           0% {
-            stroke-dasharray: 1, 200;
+            stroke-dasharray: 1, 0;
             stroke-dashoffset: 0;
           }
+          25% {
+            stroke-dasharray: 1, 60;
+            stroke-dashoffset: -35px;
+          }
           50% {
-            stroke-dasharray: 89, 200;
+            stroke-dasharray: 1, 50;
+            stroke-dashoffset: -200px;
+          }
+          75% {
+            stroke-dasharray: 1, 60;
             stroke-dashoffset: -35px;
           }
           100% {
-            stroke-dasharray: 89, 200;
-            stroke-dashoffset: -124px;
+            stroke-dasharray: 1, 0;
+            stroke-dashoffset: 0;
           }
         }
       @keyframes load {
         0% { transform: scale(1); }
-        5% { transform: scale(1.2); }
-        40% { transform: scale(1); }
-        45% { transform: scale(1.2); }
+        25% { transform: scale(2.2); }
+        50% { transform: scale(1); }
+        75% { transform: scale(2.2); }
         100% { transform: scale(1); }
       }
     </style>

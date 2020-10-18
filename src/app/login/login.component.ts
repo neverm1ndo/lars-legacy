@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup;
   return: string = '';
@@ -38,6 +38,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userService.error.subscribe((error) => {
+      this.error = error.status + ' ' + error.message;
+    });
     this.loginForm = new FormGroup({
       email: new FormControl('', [
         Validators.required,
@@ -48,5 +51,8 @@ export class LoginComponent implements OnInit {
         Validators.minLength(4)
       ])
     });
+  }
+  ngOnDestroy() {
+    this.userService.error.unsubscribe();
   }
 }

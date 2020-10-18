@@ -4,17 +4,19 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, retry, tap } from 'rxjs/operators';
 import { Token, UserData, UserLoginData } from './interfaces/app.interfaces';
 import { Router } from '@angular/router';
+import { AppConfig } from '../environments/environment.dev'
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  readonly URL_LOGIN: string = 'http://localhost:80/login'
+  readonly URL_LOGIN: string = AppConfig.api.auth;
   user: Subject<UserData | undefined> = new Subject();
   headers: HttpHeaders = new HttpHeaders ({
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   });
+  error: Subject<any> = new Subject();
 
   constructor(
     private http: HttpClient,
@@ -58,12 +60,13 @@ export class UserService {
   private handleError(error: HttpErrorResponse): Observable<any> {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
+      this.error.next(error.error);
     } else {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
+        this.error.next(error);
     }
-    return throwError(
-      'Something bad happened; please try again later.');
+    return throwError(error);
   }
 }

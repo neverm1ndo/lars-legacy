@@ -1,4 +1,7 @@
 export const AppConfig = {
   production: false,
-  environment: 'DEV'
+  environment: 'DEV',
+  api: {
+    auth: 'http://ohmydog.ml/login'
+  }
 };

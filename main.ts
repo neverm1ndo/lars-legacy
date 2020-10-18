@@ -19,6 +19,7 @@ function createWindow(): BrowserWindow {
     minHeight: 580,
     height: 600,
     frame: false,
+    backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
