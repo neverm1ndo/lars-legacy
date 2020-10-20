@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { UserService } from '../user.service';
+import { faSignOutAlt, faTerminal, faComments } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-topper',
   templateUrl: './topper.component.html',
   styleUrls: ['./topper.component.scss']
 })
 export class TopperComponent implements OnInit {
+
+  fa = {
+    signout: faSignOutAlt,
+    terminal: faTerminal,
+    comm: faComments
+  };
 
   isLoggedIn: boolean = false;
   authenticated: any;

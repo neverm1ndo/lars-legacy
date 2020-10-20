@@ -5,7 +5,22 @@
         <small class="native-dragzone label no-select">LIBERTYLOGS</small>
       </div>
       <div class="d-flex align-self-end btn-group" role="remote-group">
-        <button (click)="userService.logOut()" *ngIf="authenticated" type="button" class="btn-native-profile pl-2 pr-2" name="profile-button"><img src="http://www.gta-liberty.ru/images/avatars/upload/{{ authenticated.avatar }}"/><span>{{ authenticated.name }}</span><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+        <div *ngIf="authenticated" ngbDropdown class="btn-native-profile">
+          <button
+          ngbDropdownToggle
+          type="button"
+          id="dropdownTopper"
+          class="btn-profile pl-2 pr-2"
+          name="profile-button">
+            <img src="http://www.gta-liberty.ru/images/avatars/upload/{{ authenticated.avatar }}"/><span>{{ authenticated.name }}</span><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownTopper">
+            <button ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> Форум</button>
+            <button ngbDropdownItem><fa-icon [icon]="fa.terminal"></fa-icon> Консоль</button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem (click)="userService.logOut()"><fa-icon [icon]="fa.signout"></fa-icon> Выход</button>
+          </div>
+        </div>
         <button type="button" (click)="winmin()" class="btn btn-topnative native-min"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="" id="c2UyV86x7F"></path><path d="M25.05 20.46L4.95 20.46" id="a5uQaXHvxt"></path></defs><g><g><g><g><use xlink:href="#c2UyV86x7F" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#a5uQaXHvxt" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
         <!-- <button type="button" class="btn btn-topnative native-max"></button>
         <button type="button" class="btn btn-topnative native-restore"></button> -->
