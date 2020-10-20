@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { faCog } from '@fortawesome/free-solid-svg-icons'
+// import { FormGroup, FormControl } from '@angular/forms';
+import { faCog, faClipboardList, faMap } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-sider',
@@ -10,24 +10,26 @@ import { faCog } from '@fortawesome/free-solid-svg-icons'
 export class SiderComponent implements OnInit {
 
   fa = {
-    cog: faCog
+    cog: faCog,
+    redactor: faClipboardList,
+    map: faMap
   };
 
-  filterForm = new FormGroup({
-     weapBuy: new FormControl(),
-     killDeath: new FormControl(),
-     spawn: new FormControl(),
-     connection: new FormControl(),
-     colChange: new FormControl(),
-     preprocs: new FormControl(),
-     dateFrom: new FormControl(),
-     dateTo: new FormControl(),
-     view: new FormControl(),
-     litGr: new FormControl(),
-     litPm: new FormControl(),
-     idnick:new FormControl(),
-     cmd:new FormControl()
-   });
+  // filterForm = new FormGroup({
+  //    weapBuy: new FormControl(),
+  //    killDeath: new FormControl(),
+  //    spawn: new FormControl(),
+  //    connection: new FormControl(),
+  //    colChange: new FormControl(),
+  //    preprocs: new FormControl(),
+  //    dateFrom: new FormControl(),
+  //    dateTo: new FormControl(),
+  //    view: new FormControl(),
+  //    litGr: new FormControl(),
+  //    litPm: new FormControl(),
+  //    idnick:new FormControl(),
+  //    cmd:new FormControl()
+  //  });
 
    defaultOptions = {
      weapBuy: true,
@@ -49,10 +51,10 @@ export class SiderComponent implements OnInit {
 
   ngOnInit(): void {
     if (window.localStorage.getItem('filter')) {
-      this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
+      // this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
     } else {
       window.localStorage.setItem('filter', JSON.stringify(this.defaultOptions));
-      this.filterForm.setValue(this.defaultOptions);
+      // this.filterForm.setValue(this.defaultOptions);
     }
   }
 

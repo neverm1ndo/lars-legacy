@@ -3,7 +3,7 @@
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
   user-select: none;
-  cursor: default;
+  cursor: inherit;
 }
 @mixin btn-native {
   width: 100%;

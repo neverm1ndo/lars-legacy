@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.userService.loginUser(this.loginForm.value).subscribe(
       response => {
           this.loading = false;
+          this.error = undefined;
           this.userService.user.next(response);
           this.router.navigate(['/home']);
         },

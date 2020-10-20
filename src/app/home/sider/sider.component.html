@@ -1,5 +1,5 @@
 <div class="h-100 options d-flex flex-wrap align-content-between text-center">
-  <form [formGroup]="filterForm">
+  <!-- <form [formGroup]="filterForm">
       <label for="weap" [attr.data-content]="'Покупка оружия'">
         <input
         type="checkbox"
@@ -98,8 +98,16 @@
         </svg>
         <small class="svg-text">group</small>
       </label>
-    </form>
-    <div class="settings text-center">
+    </form> -->
+    <div class="work-panel">
+      <div class="text-center">
+        <label [attr.data-content]="'Редктор кофигов'"><fa-icon [icon]="fa.redactor"></fa-icon></label>
+      </div>
+      <div class="text-center">
+        <label [attr.data-content]="'Редктор карт'"><fa-icon [icon]="fa.map"></fa-icon></label>
+      </div>
+    </div>
+    <div class="panel text-center">
       <label [attr.data-content]="'Настройки'"><fa-icon [icon]="fa.cog"></fa-icon></label>
     </div>
 </div>

@@ -10,9 +10,22 @@
   bottom: 0px;
   margin-bottom: 0px;
   z-index: 2;
-  .settings {
+  .panel {
     width: 100%;
     margin-bottom: 10px;
+    label {
+      font-size: 24px;
+      &:active, &:target, &:focus {
+        outline: none;
+      }
+      &::after {
+        margin-left: 24px;
+      }
+    }
+  }
+  .work-panel {
+    width: 100%;
+    // margin-bottom: 10px;
     label {
       font-size: 24px;
       &:active, &:target, &:focus {
