@@ -14,9 +14,10 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchResultsComponent } from '../search-results/search-results.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent],
+  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent],
   imports: [
     CommonModule,
     SharedModule,

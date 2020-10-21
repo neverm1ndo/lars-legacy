@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
-import { catchError, retry, tap } from 'rxjs/operators';
-import { Token, UserData, UserLoginData } from './interfaces/app.interfaces';
+import { catchError, tap } from 'rxjs/operators';
+import { UserData, UserLoginData } from './interfaces/app.interfaces';
 import { Router } from '@angular/router';
-import { AppConfig } from '../environments/environment.dev'
+import { AppConfig } from '../environments/environment.dev';
+import { ElectronService } from './core/services/electron/electron.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public electron: ElectronService
   ) {
   }
 
@@ -53,9 +55,19 @@ export class UserService {
     }))
   }
   logOut(): void {
-    this.user.next(undefined);
-    localStorage.removeItem('user');
-    this.router.navigate(['/login']);
+    const dialogOpts = {
+        type: 'question',
+        buttons: ['Да, выйти', 'Отмена'],
+        title: 'Подтверждение выхода',
+        message: 'Вы точно хотите выйти с аккаунта?'
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        this.user.next(undefined);
+        localStorage.removeItem('user');
+        this.router.navigate(['/login']);
+      }
+    })
   }
   private handleError(error: HttpErrorResponse): Observable<any> {
     if (error.error instanceof ErrorEvent) {
