@@ -1,5 +1,31 @@
-form {
-  input {  
-  font-size: 13px;
+:host {
+  form {
+    input, button {
+      font-size: 13px;
+    }
+  }
+  .btn-dark {
+    font-size: 13px;
+    background-color: transparent!important;
+    border: none;
+  }
+  .dropdown-menu {
+    margin-top: 12px;
+    border-radius: 3px;
+    max-width: none;
+    width: auto;
+    &::before{
+      position: absolute;
+      z-index: 1000;
+      top: -20px;
+      left: 10px;
+      width: 0px;
+      height: 0px;
+      content: '';
+      border-bottom: 10px solid #2E2F39;
+      border-top: 10px solid transparent;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+    }
   }
 }

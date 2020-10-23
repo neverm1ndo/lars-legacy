@@ -27,4 +27,5 @@ export interface LogLine {
   nickname?: string;
   id: number;
   geo?: GeoData;
+  content?: string; 
 }

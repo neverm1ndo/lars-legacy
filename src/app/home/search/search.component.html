@@ -1,5 +1,13 @@
-<form (ngSubmit)="search(currentNickname.value)" autocomplete="on">
-  <div class="input-group">
-    <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Ник игрока или серийный номер HD/SM" [formControl]="currentNickname"/>
+<div class="row">
+  <form class="col-8" (ngSubmit)="search(currentNickname.value)" autocomplete="on">
+      <div class="input-group">
+        <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="currentNickname"/>
+      </div>
+  </form>
+  <div ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
+    <button class="btn btn-dark" name="filter" id="dropdownFilter" ngbDropdownToggle><fa-icon [icon]="fa.filter"></fa-icon></button>
+    <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownFilter">
+      <filter></filter>
+    </div>
   </div>
-</form>
+</div>

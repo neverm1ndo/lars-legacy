@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-search',
@@ -9,6 +10,10 @@ import { FormControl } from '@angular/forms';
 export class SearchComponent implements OnInit {
 
   currentNickname = new FormControl('');
+
+  fa = {
+    filter: faFilter
+  }
 
   constructor() { }
 

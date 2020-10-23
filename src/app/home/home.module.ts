@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -12,20 +13,25 @@ import { SiderComponent } from './sider/sider.component';
 import { SearchComponent } from './search/search.component';
 import { SharedModule } from '../shared/shared.module';
 import { AuthGuard } from '../guards/auth.guard';
+import { Processes } from '../line-process/log-processes';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchResultsComponent } from '../search-results/search-results.component';
+import { LineProcessComponent } from '../line-process/line-process.component';
+import { GeoComponent } from '../geo/geo.component';
+import { FilterComponent } from '../filter/filter.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent],
+  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, LineProcessComponent, GeoComponent, FilterComponent],
   imports: [
     CommonModule,
     SharedModule,
     HomeRoutingModule,
     FormsModule,
+    NgbModule,
     ReactiveFormsModule,
     FontAwesomeModule
   ],
-  providers: [AuthGuard]
+  providers: [AuthGuard, Processes]
 })
 export class HomeModule {}

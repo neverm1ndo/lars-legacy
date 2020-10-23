@@ -1,0 +1,36 @@
+@import 'scss/_colors';
+:host {
+  color: #fdfdfd;
+  h6 {
+    font-weight: 400;
+    margin-bottom: 0px;
+
+  }
+  hr {
+    margin-bottom: 5px;
+    margin-top: 10px;
+  }
+  .filter-form {
+    max-height: 70vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+     background: $scrollbar;
+     border-radius: 5px;
+     width: 3px;
+     height: 3px;
+    }
+  }
+  .badge {
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    padding-left: 10px;
+    padding-top: 4px;
+    padding-bottom: 6px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 10px;
+  }
+}

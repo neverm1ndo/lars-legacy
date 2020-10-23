@@ -1,0 +1,13 @@
+<span *ngIf="type" class="badge badge-{{type.type}}">{{type.translate}}</span>
+<br>
+<span [class.text-danger]="type.type == 'danger'" *ngIf="content">
+  {{ content }}
+</span>
+<!-- {{type | json}} {{process}} -->
+<!-- <span class="badge badge-secondary">Secondary</span>
+<span class="badge badge-success">Success</span>
+<span class="badge badge-danger">Danger</span>
+<span class="badge badge-warning">Warning</span>
+<span class="badge badge-info">Info</span>
+<span class="badge badge-light">Light</span>
+<span class="badge badge-dark">Dark</span> -->

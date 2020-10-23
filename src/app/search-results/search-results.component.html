@@ -1,16 +1,19 @@
-<div *ngFor="let line of _uber" class="col-12">
+<div *ngFor="let line of _uber" class="col-12 logline">
   <div class="row">
-    <div class="col-3">
-      {{line.date | date:'d MMM yy, HH:mm:ss'}}
+    <div class="col-3 col-md-2">
+      <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
     </div>
-    <div class="col-5">
+    <div class="d-none d-lg-block col-3 col-md-2">
       {{ line.process }}
     </div>
-    <div class="col-2">
-      {{ line.nickname }}
+    <div class="col-2 col-md-2 col-lg-1">
+      <strong>{{ line.nickname }}</strong>
+      <br>
+      <span class="line-id">id: {{ line.id }}</span>
     </div>
-    <div class="col-1">
-      {{ line.id }}
+    <div *ngIf="line.geo || line.content || line.process" class="col-3">
+      <line-process [content]="line.content"  process="{{line.process}}"></line-process>
+      <geo *ngIf="line.geo" [table]="line.geo"></geo>
     </div>
   </div>
 </div>
