@@ -8,7 +8,7 @@ import { SearchResultsComponent } from '../search-results/search-results.compone
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
-    { path: '**', redirectTo: 'dash' },
+    { path: '**', redirectTo: 'search' },
     { path: 'dash', component: DashboardComponent },
     { path: 'search', component: SearchResultsComponent }
   ]},

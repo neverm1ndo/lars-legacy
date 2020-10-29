@@ -1,8 +1,8 @@
 <div class="col-12 d-flex align-items-center h-100 l-bg">
   <div class="col d-flex justify-content-center w-100">
-    <div class="col-lg-10 d-flex align-self-center justify-content-center col-10 auth">
-      <form [formGroup]="loginForm" class="pt-3 pb-3 text-center col-10 col-sm-8 col-lg-6" (ngSubmit)="logIn()">
-        <img class="logo" src="../assets/logo.svg" alt="">
+    <div class="d-flex align-self-center justify-content-center col-10 auth">
+      <form [formGroup]="loginForm" class="pt-3 pb-3 text-center col-10 col-sm-8 col-md-8 col-lg-5" (ngSubmit)="logIn()">
+        <img class="logo mb-2" src="../assets/logo.svg" alt="">
         <div class="form-group">
           <input type="email"
                  formControlName="email"
@@ -23,7 +23,7 @@
           <!-- <small *ngIf="" id="wrong" class="form-text text-danger">Неправильный </small> -->
           <small *ngIf="error" id="wrong" class="form-text text-danger">{{ error.status }} {{ error.statusText }}</small>
         </div>
-        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary w-100 mb-2">
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-dark w-100 mb-2">
           <span *ngIf="!loading; else loader">Войти</span>
           <ng-template #loader>
               <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg>
