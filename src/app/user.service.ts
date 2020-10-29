@@ -13,6 +13,7 @@ import { ElectronService } from './core/services/electron/electron.service';
 export class UserService {
 
   readonly URL_LOGIN: string = AppConfig.api.auth;
+  readonly URL_USER: string = AppConfig.api.user;
   user: Subject<UserData | undefined> = new Subject();
   headers: HttpHeaders = new HttpHeaders ({
     'Content-Type': 'application/json'
@@ -24,6 +25,10 @@ export class UserService {
     private router: Router,
     public electron: ElectronService
   ) {
+  }
+
+  getUser(name: string): Observable<any> {
+    return this.http.get(this.URL_USER, { params: { name: name }});
   }
 
   getUserInfo(): UserData | null {

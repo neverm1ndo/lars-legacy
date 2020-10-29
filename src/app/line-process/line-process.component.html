@@ -2,6 +2,9 @@
 <br>
 <span [class.text-danger]="type.type == 'danger'" *ngIf="content">
   {{ content }}
+  <span *ngIf="user">
+    <img src="{{user.avatar}}" alt=""> {{ content }}
+  </span>
 </span>
 <!-- {{type | json}} {{process}} -->
 <!-- <span class="badge badge-secondary">Secondary</span>
