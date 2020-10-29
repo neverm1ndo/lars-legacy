@@ -125,6 +125,12 @@ export class Processes {
       translate: 'Общий чат',
       type: 'light',
       control: 'chatMain'
+    },
+    {
+      process: '<chat/block/blocked>',
+      translate: 'Блокировка чата',
+      type: 'warning',
+      control: 'chatBlock'
     }
   ];
 }

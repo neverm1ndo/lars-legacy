@@ -30,7 +30,8 @@ export class FilterComponent implements OnInit {
    cmdSuccess: new FormControl(),
    pauseStart: new FormControl(),
    pauseEnd: new FormControl(),
-   chatMain:new FormControl()
+   chatMain:new FormControl(),
+   chatBlock:new FormControl()
  });
 
  defaultOptions = {
@@ -54,7 +55,8 @@ export class FilterComponent implements OnInit {
    cmdSuccess: true,
    pauseStart: true,
    pauseEnd: true,
-   chatMain:true
+   chatMain:true,
+   chatBlock:true
  }
 
  _processes: any[];
