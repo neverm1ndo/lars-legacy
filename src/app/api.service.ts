@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Observable, BehaviorSubject, forkJoin } from 'rxjs';
+import { catchError, retry, switchMap } from 'rxjs/operators';
 import { LogLine } from './interfaces/app.interfaces';
 
 @Injectable({
@@ -9,13 +9,26 @@ import { LogLine } from './interfaces/app.interfaces';
 })
 export class ApiService {
 
-  URL: string = 'http://localhost:3080/api/uber'
+  URL: string = 'http://localhost:3080/api/uber';
+
+  reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
+
+  public loading: boolean = false;
 
   constructor(
     private http: HttpClient
   ) { }
+  uber: Observable<any> = this.http.get(this.URL);
 
   getLogFile(): Observable<any> {
-    return this.http.get(this.URL);
+    this.loading = true;
+    return this.reloader$.pipe(
+      switchMap(() => this.http.get(this.URL))
+    )
+  }
+
+  refresh() {
+    this.loading = true;
+    this.reloader$.next(null);
   }
 }

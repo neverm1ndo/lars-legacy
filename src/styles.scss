@@ -130,6 +130,9 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   //     transform: rotate(360deg);
   //   }
   // }
+  .blur {
+    filter: blur(10px);
+  }
   @keyframes dash {
     0% {
       stroke-dasharray: 1, 10;

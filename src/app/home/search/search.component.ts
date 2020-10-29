@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faSync } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-search',
@@ -12,10 +13,15 @@ export class SearchComponent implements OnInit {
   currentNickname = new FormControl('');
 
   fa = {
-    filter: faFilter
+    filter: faFilter,
+    sync: faSync
   }
 
-  constructor() { }
+  constructor( public api: ApiService) { }
+
+  refresh() {
+    this.api.refresh();
+  }
 
   ngOnInit(): void {
   }
