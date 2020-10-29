@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments } from '@fortawesome/free-solid-svg-icons';
+import { AppConfig } from '../../environments/environment.dev';
 @Component({
   selector: 'app-topper',
   templateUrl: './topper.component.html',
@@ -29,6 +30,10 @@ export class TopperComponent implements OnInit {
   winmin(): void {
     let win = this.electron.remote.getCurrentWindow();
         win.minimize();
+  }
+
+  openForum(): void {
+    this.electron.shell.openExternal(AppConfig.links.forum);
   }
 
   ngOnInit(): void {
