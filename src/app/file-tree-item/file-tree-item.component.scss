@@ -1,0 +1,13 @@
+$height: 15px;
+:host {
+  .item-name {
+    cursor: pointer;
+    &:active, &:focus, &:hover {
+      text-decoration: underline;
+    }
+  }
+  fa-icon {
+    font-size: $height;
+    margin-right: 0.5em;
+  }
+}

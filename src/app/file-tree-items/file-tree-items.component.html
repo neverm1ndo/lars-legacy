@@ -1,0 +1,14 @@
+<div class="item no-select">
+  <div (click)="toggleExpand($event); false" class="item-title">
+    <button [class.expanded]="toggler" class="items-expander">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-opacity="1"></use></g></svg>
+    </button>
+    <fa-icon [icon]="fa.dir"></fa-icon><span class="item-name">{{ nodes.name }}</span>
+  </div>
+  <div *ngIf="toggler" class="items">
+    <div class="item no-select" *ngFor="let item of nodes.items">
+      <file-tree-item (click)="getConfig(item.path)" *ngIf="item.type === 'file'" [item]="item"></file-tree-item>
+      <file-tree-items (chooseFileEvent)="getConfig($event)" *ngIf="item.type === 'dir'" [child-nodes]="item"></file-tree-items>
+    </div>
+  </div>
+</div>

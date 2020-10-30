@@ -1,0 +1,50 @@
+$height: 15px;
+:host {
+  .expanded {
+    transform: none!important;
+  }
+  .items-expander {
+    // transform-origin: 7px 7px;
+    transition: .05s linear;
+    height: $height;
+    width: $height;
+    border-radius: 100%;
+    border: none;
+    margin-right: 0.8em;
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    background: none;
+    padding: 0px 0px 0px 0px;
+    margin-left: -0.2rem;
+    transform: rotate(-90deg);
+    svg {
+      stroke-width: 3;
+      width: $height;
+      height: auto;
+      display: inline-block;
+      // transform: translateY(-3px);
+      position: relative;
+      top: -6px;
+    }
+  }
+  .item {
+    line-height: 26px;
+  }
+  .item-name {
+    cursor: pointer;
+    &:active, &:focus, &:hover {
+      text-decoration: underline;
+    }
+  }
+  .items {
+    & > .item {
+      padding-left: 2.4rem;
+    }
+    line-height: 26px;
+  }
+  fa-icon {
+    font-size: $height;
+    margin-right: 0.5em;
+  }
+}
