@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfigEditorComponent implements OnInit {
 
+  file: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {

@@ -1,3 +1,21 @@
+@import 'scss/_colors';
 :host {
-  height: 100%;
+  .filetree {
+    font-size: 13px;
+    background: $tab;
+    overflow: auto;
+    border-right: 1px solid $secondary;
+  }
+  .texteditor {
+    overflow: auto;
+  }
+  .text-edit-block {
+    color: $text;
+    text-align: center;
+    height: 100%;
+    h4 {
+      opacity: 0.2;
+      font-weight: 300;
+    }
+  }
 }

@@ -26,9 +26,10 @@ import { FilterComponent } from '../filter/filter.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptor } from '../interceptors/jwt.interceptor';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
+import { TextEditorComponent } from '../text-editor/text-editor.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent],
+  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent],
   imports: [
     CommonModule,
     SharedModule,

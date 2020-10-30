@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-file-tree',
+  selector: 'file-tree',
   templateUrl: './file-tree.component.html',
   styleUrls: ['./file-tree.component.scss']
 })

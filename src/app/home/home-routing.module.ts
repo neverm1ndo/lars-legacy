@@ -9,7 +9,7 @@ import { ConfigEditorComponent } from '../config-editor/config-editor.component'
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
-    // { path: '**', redirectTo: 'dash' },
+    { path: '*', redirectTo: 'dash' },
     { path: 'dash', component: DashboardComponent },
     { path: 'search', component: SearchEditorComponent },
     { path: 'config-editor', component: ConfigEditorComponent }
