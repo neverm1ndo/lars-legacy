@@ -25,6 +25,26 @@ button:active, button:focus {
     box-shadow: none;
   }
 }
+.btn-dark {
+  font-size: 13px;
+  background-color: transparent!important;
+  border: none;
+  transition: 0.1s linear;
+  &:hover, &:active, &:focus {
+    background-color: rgb(0 0 0 / 30%)!important;
+  }
+  &:disabled {
+    background-color: rgb(0 0 0 / 30%)!important;
+    opacity: 0.5;
+  }
+}
+.light-tooltip {
+  font-weight: 300;
+  font-size: 13px;
+  b {
+    font-weight: 500;
+  }
+}
 app-auth, app-dashboard, app-login, app-home, app-search-results {
   width: 100%;
 }

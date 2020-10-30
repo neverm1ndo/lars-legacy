@@ -1,8 +1,22 @@
+@import 'scss/_colors';
 :host {
   .geotable {
     td {
       padding-left: 15px;
       padding-right: 15px;
+    }
+  }
+  .chain {
+    height: 46px;
+    max-width: 46px;
+  }
+  .text-dashed {
+    border-bottom: 1px dashed $text;
+    cursor: pointer;
+    transition: 0.1s linear;
+    &:hover {
+      color: $text-secondary;
+      border-bottom: 1px dashed $text-secondary;
     }
   }
 }

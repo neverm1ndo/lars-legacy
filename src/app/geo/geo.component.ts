@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { GeoData } from '../interfaces/app.interfaces';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'geo',
@@ -9,6 +10,8 @@ import { GeoData } from '../interfaces/app.interfaces';
 export class GeoComponent implements OnInit {
 
   @Input('table') table: GeoData;
+
+  fa = { link : faLink };
 
   constructor() { }
 

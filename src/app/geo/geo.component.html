@@ -1,18 +1,24 @@
 <table class="geotable" *ngIf="table">
   <tr>
     <td>IP</td>
-    <td>{{ table.ip}}</td>
+    <td></td>
+    <td><span class="text-dashed">{{ table.ip }}</span></td>
   </tr>
   <tr>
     <td>Страна</td>
+    <td></td>
     <td>{{ table.country }}</td>
   </tr>
   <tr>
     <td>CC</td>
+    <td></td>
     <td>{{ table.cc}}</td>
   </tr>
   <tr>
     <td>AS</td>
+    <td class="chain" rowspan="2">
+      <ng-template #tipContent let-greeting="greeting">Поиск по <b>данной связке</b></ng-template>
+      <button class="btn btn-sm btn-dark" name="button" placement="left" tooltipClass="light-tooltip" [ngbTooltip]="tipContent"><fa-icon [icon]="fa.link"></fa-icon></button></td>
     <td>{{ table.as }}</td>
   </tr>
   <tr>
@@ -21,10 +27,12 @@
   </tr>
   <tr>
     <td>Провайдер</td>
+    <td></td>
     <td>{{ table.org }}</td>
   </tr>
   <tr>
     <td>Клиент</td>
+    <td></td>
     <td>{{ table.c }}</td>
   </tr>
 </table>
