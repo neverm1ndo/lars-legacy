@@ -1,3 +1,50 @@
 <div class="row h-100">
-  <textarea name="name" rows="8" cols="80">{{textplane}}</textarea>
+  <div class="d-flex align-items-start flex-column h-100 w-100">
+    <div class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
+      <textarea class="w-100" name="name">{{textplane}}</textarea>
+    </div>
+    <div class="texteditor-underpanel no-select align-self-end w-100">
+      <div class="col-12">
+        <div class="w-100 d-flex flex-row justify-content-between">
+          <!-- <div class="col">
+            <div class="row">
+
+              <div class="col panel-left">
+                configs/regex.test.js
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              <div class="col panel-left">
+                configs/regex.test.js
+              </div>
+              <div class="col panel-left">
+                configs/regex.test.js
+              </div>
+            </div>
+          </div> -->
+          <div class="panel-left">
+            configs/regex.test.js
+          </div>
+          <div class="panel-left">
+            <div class="w-100 d-flex flex-row justify-content-end">
+              <div [class.text-warning]="changed" class="panel">
+                {{ changed?'ИЗМЕНЕНО':'НЕ ИЗМЕНЕНО' }}
+              </div>
+              <div class="panel">
+                <i class="autosave-led"></i>
+              </div>
+              <div class="panel">
+                <fa-icon [icon]="fa.save"></fa-icon> Сохранить
+              </div>
+              <div class="panel">
+                <fa-icon [icon]="fa.fetch"></fa-icon> Обновить
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
