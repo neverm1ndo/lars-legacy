@@ -21,6 +21,9 @@ import { LineProcessComponent } from '../line-process/line-process.component';
 import { GeoComponent } from '../geo/geo.component';
 import { FilterComponent } from '../filter/filter.component';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JWTInterceptor } from '../interceptors/jwt.interceptor';
+
 @NgModule({
   declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, LineProcessComponent, GeoComponent, FilterComponent],
   imports: [
@@ -32,6 +35,14 @@ import { FilterComponent } from '../filter/filter.component';
     ReactiveFormsModule,
     FontAwesomeModule
   ],
-  providers: [AuthGuard, Processes]
+  providers: [
+    AuthGuard,
+    Processes,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTInterceptor,
+      multi: true
+    }
+  ]
 })
 export class HomeModule {}
