@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'text-editor',
@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class TextEditorComponent implements OnInit {
 
   constructor() { }
+
+  @Input('textplane') textplane: string;
 
   ngOnInit(): void {
   }

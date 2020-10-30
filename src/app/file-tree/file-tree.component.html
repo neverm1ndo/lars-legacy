@@ -1,3 +1,19 @@
-<div class="col-12 text-center">
-  <p>Файлы</p>
+<div class="d-flex align-items-start flex-column h-100">
+  <div class="pt-3 w-100">
+    <div class="col-12 text-center">
+      <p>Файлы</p>
+    </div>
+  </div>
+  <div class="col-12 no-padding flex-fill overflow-auto">
+    <div *ngIf="items.name; else loaderItems" class="text-left">
+      <file-tree-items (chooseFileEvent)="getConfig($event)" [child-nodes]="items" [expanded]="true"></file-tree-items>
+    </div>
+    <ng-template #loaderItems>
+      <div class="d-flex h-100">
+        <div class="loader w-100 loader-items d-flex align-self-center justify-content-center">
+          <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg>
+        </div>
+      </div>
+    </ng-template>
+  </div>
 </div>

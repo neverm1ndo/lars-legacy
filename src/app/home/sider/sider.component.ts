@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faCog, faClipboardList, faMap, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faFileSignature, faMap, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-sider',
@@ -10,7 +10,7 @@ export class SiderComponent implements OnInit {
 
   fa = {
     cog: faCog,
-    redactor: faClipboardList,
+    redactor: faFileSignature,
     map: faMap,
     search: faSearch
   };

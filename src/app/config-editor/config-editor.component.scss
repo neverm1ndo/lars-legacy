@@ -2,12 +2,12 @@
 :host {
   .filetree {
     font-size: 13px;
-    background: $tab;
-    overflow: auto;
+    background: $filetree;
     border-right: 1px solid $secondary;
   }
   .texteditor {
     overflow: auto;
+    background: $secondary;
   }
   .text-edit-block {
     color: $text;

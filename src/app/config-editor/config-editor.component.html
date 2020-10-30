@@ -2,18 +2,18 @@
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="col-12 h-100">
       <div class="row h-100">
-        <div class="col-4 col-lg-3 pt-3 filetree">
-          <file-tree></file-tree>
+        <div class="col-4 col-lg-3 filetree pr-0 pl-0">
+          <file-tree (chooseFileEvent)="getConfig($event)" [items]="files"></file-tree>
         </div>
         <div class="col-8 col-lg-9 texteditor">
           <ng-template #textEditorBlock>
             <div class="text-edit-block d-flex flex-row">
               <div class="d-flex align-self-center">
-                <h4>Выберите кофигурационныйф файл из списка, чтобы приступить к редактированию</h4>
+                <h4>Выберите кофигурационный файл из списка, чтобы приступить к редактированию</h4>
               </div>
             </div>
           </ng-template>
-          <text-editor *ngIf="file; else textEditorBlock"></text-editor>
+          <text-editor [textplane]="textplane" *ngIf="textplane !== undefined; else textEditorBlock"></text-editor>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'file-tree',
@@ -7,7 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FileTreeComponent implements OnInit {
 
+  @Input('items') items: any[];
+  @Output() chooseFileEvent = new EventEmitter<string>();
+
   constructor() { }
+
+  getConfig(path: string) {
+    this.chooseFileEvent.emit(path);
+  }
 
   ngOnInit(): void {
   }
