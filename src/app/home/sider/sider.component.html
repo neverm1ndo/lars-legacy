@@ -101,7 +101,10 @@
     </form> -->
     <div class="work-panel">
       <div class="text-center">
-        <label [attr.data-content]="'Редктор кофигов'"><fa-icon [icon]="fa.redactor"></fa-icon></label>
+        <label routerLink="/home/search" [attr.data-content]="'Поиск'"><fa-icon [icon]="fa.search"></fa-icon></label>
+      </div>
+      <div class="text-center">
+        <label routerLink="/home/config-editor" [attr.data-content]="'Редктор кофигов'"><fa-icon [icon]="fa.redactor"></fa-icon></label>
       </div>
       <div class="text-center">
         <label [attr.data-content]="'Редктор карт'"><fa-icon [icon]="fa.map"></fa-icon></label>

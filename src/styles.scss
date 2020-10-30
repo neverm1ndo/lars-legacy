@@ -45,7 +45,15 @@ button:active, button:focus {
     font-weight: 500;
   }
 }
-app-auth, app-dashboard, app-login, app-home, app-search-results {
+.playerlog {
+  margin-left: 70px;
+  margin-right: 0px;
+  right: 0px;
+}
+.wrapper-main {
+  width: auto;
+}
+app-auth, app-dashboard, app-login, app-home, app-search-editor, search-results {
   width: 100%;
 }
 app-topper {

@@ -4,13 +4,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from '../guards/auth.guard';
-import { SearchResultsComponent } from '../search-results/search-results.component';
+import { SearchEditorComponent } from '../search-editor/search-editor.component';
+import { ConfigEditorComponent } from '../config-editor/config-editor.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
-    { path: '**', redirectTo: 'search' },
+    // { path: '**', redirectTo: 'dash' },
     { path: 'dash', component: DashboardComponent },
-    { path: 'search', component: SearchResultsComponent }
+    { path: 'search', component: SearchEditorComponent },
+    { path: 'config-editor', component: ConfigEditorComponent }
   ]},
 ];
 
