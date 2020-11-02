@@ -1,3 +1,5 @@
-<fa-icon *ngIf="item.type === 'file'" [icon]="fa.file"></fa-icon>
-<fa-icon *ngIf="item.type === 'dir'" [icon]="fa.dir"></fa-icon>
-<span class="item-name">{{ item.name }}</span>
+<span class="item-name">
+  <fa-icon *ngIf="item.type === 'file'" [icon]="fa.file"></fa-icon>
+  <fa-icon *ngIf="item.type === 'dir'" [icon]="fa.dir"></fa-icon>
+  {{ item.name }}
+</span>

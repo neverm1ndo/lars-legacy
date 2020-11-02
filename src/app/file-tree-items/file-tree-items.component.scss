@@ -30,6 +30,10 @@ $height: 15px;
   }
   .item {
     line-height: 26px;
+    padding-right: 15px;
+  }
+  .item-title {
+    white-space: nowrap;
   }
   .item-name {
     cursor: pointer;

@@ -1,6 +1,8 @@
 $height: 15px;
 :host {
   .item-name {
+    white-space: nowrap;
+    padding-right: 15px;
     cursor: pointer;
     &:active, &:focus, &:hover {
       text-decoration: underline;
