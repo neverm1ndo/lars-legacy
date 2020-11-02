@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { faSave, faSync } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError, tap, delay, retryWhen } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';

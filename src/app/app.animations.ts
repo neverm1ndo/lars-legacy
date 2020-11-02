@@ -1,6 +1,6 @@
 import {
-  animation, trigger, animateChild, group,
-  transition, animate, style, query, state
+  animation, trigger,
+  transition, animate, style, state
 } from '@angular/animations';
 
 export const transAnimation = animation([

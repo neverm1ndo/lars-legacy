@@ -13,7 +13,7 @@ export class ToastService {
     this.toasts.push({ textOrTpl, ...options });
   }
 
-  remove(toast) {
+  remove(toast: any) {
     this.toasts = this.toasts.filter(t => t !== toast);
   }
 }

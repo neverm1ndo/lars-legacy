@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { catchError, retry, switchMap } from 'rxjs/operators';
-import { LogLine } from './interfaces/app.interfaces';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
