@@ -16,6 +16,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import { Processes } from '../line-process/log-processes';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SearchResultsComponent } from '../search-results/search-results.component';
 import { SearchEditorComponent } from '../search-editor/search-editor.component';
 import { ConfigEditorComponent } from '../config-editor/config-editor.component';
@@ -39,6 +40,7 @@ import { ToastsContainer } from '../toasts-container/toasts-container.component'
     HomeRoutingModule,
     FormsModule,
     NgbModule,
+    CodemirrorModule,
     ReactiveFormsModule,
     FontAwesomeModule
   ],

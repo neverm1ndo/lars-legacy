@@ -4,7 +4,15 @@
       <!-- <div class="texteditor-line-indexes">
         <div *ngFor="let line of plainArr; index as i" contenteditable="false" class="index no-select">{{ i }}</div>
       </div> -->
-      <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea>
+      <!-- <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea> -->
+      <ngx-codemirror
+        [(ngModel)]="textplain"
+        [options]="{
+          lineNumbers: true,
+          theme: 'material',
+          lineWrapping: true
+        }"
+      ></ngx-codemirror>
       <!-- <div contenteditable="true" class="supertextarea w-100">
         <div *ngFor="let line of plainArr; index as i" class="super-line d-flex flex-row">
           <div contenteditable="false" class="index no-select"> {{ i }}</div>

@@ -1,0 +1,12 @@
+@import 'scss/_colors';
+.CodeMirror {
+  height: 100%;
+  background: none!important;
+}
+.CodeMirror-gutters {
+  background: #2E2F3960!important;
+  padding-right: 3px;
+}
+.cm-comment, .CodeMirror-linenumber {
+  color: #70708c!important;
+}

@@ -1,9 +1,12 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 /* You can add global styles to this file, and also import other style files */
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
 
 @import 'scss/colors';
 @import 'scss/native';
+@import 'scss/cm';
 
 html, body, app-root {
   margin: 0px 0px 0px 0px;
