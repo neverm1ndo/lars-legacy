@@ -30,7 +30,9 @@ export class TextEditorComponent implements OnInit {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case 83 : { // Ctrl + S
-            this.saveFile();
+            if (this.changed.getValue()) {
+              this.saveFile();
+            }
             break;
           }
           default : break;

@@ -7,11 +7,16 @@
       <!-- <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea> -->
       <ngx-codemirror
         [(ngModel)]="textplain"
+        (input)="checkChanges()"
+        (keydown.backspace)="checkChanges()"
+        (keydown.control.z)="checkChanges()"
+        (keydown.control.y)="checkChanges()"
         [options]="{
           lineNumbers: true,
           theme: 'material',
           lineWrapping: true
         }"
+        [autoFocus]="true"
       ></ngx-codemirror>
       <!-- <div contenteditable="true" class="supertextarea w-100">
         <div *ngFor="let line of plainArr; index as i" class="super-line d-flex flex-row">

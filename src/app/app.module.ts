@@ -29,9 +29,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
-  declarations: [AppComponent, TopperComponent],
+  declarations: [AppComponent, TopperComponent, AutofocusDirective],
   imports: [
     BrowserModule,
     HttpClientModule,
