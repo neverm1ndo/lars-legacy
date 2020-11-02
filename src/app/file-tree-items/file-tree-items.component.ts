@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from '../api.service';
 
 interface TreeNode {
   items: TreeNode[];
@@ -26,6 +27,7 @@ export class FileTreeItemsComponent implements OnInit {
   }
   getConfig(path: string) {
     this.chooseFileEvent.emit(path);
+    this.api.currentFile = path;
   }
 
   toggleExpand(event: Event):void {
@@ -35,7 +37,7 @@ export class FileTreeItemsComponent implements OnInit {
   }
 
 
-  constructor() {
+  constructor( public api: ApiService) {
   }
 
   ngOnInit(): void {

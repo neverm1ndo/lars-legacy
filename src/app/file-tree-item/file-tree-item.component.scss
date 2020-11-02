@@ -1,5 +1,8 @@
 $height: 15px;
 :host {
+  .active {
+    color: #82AAFF;
+  }
   .item-name {
     white-space: nowrap;
     padding-right: 15px;

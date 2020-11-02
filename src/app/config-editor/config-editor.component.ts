@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   templateUrl: './config-editor.component.html',
   styleUrls: ['./config-editor.component.scss']
 })
-export class ConfigEditorComponent implements OnInit {
+export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   files: string[] = [];
 
@@ -30,6 +30,9 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+  ngOnDestroy(): void {
+    this.api.currentFile = '';
   }
 
 }

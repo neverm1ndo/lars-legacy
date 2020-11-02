@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'file-tree-item',
@@ -16,7 +17,7 @@ export class FileTreeItemComponent implements OnInit {
     dir: faFolder
   }
 
-  constructor() { }
+  constructor(public api: ApiService) { }
 
   ngOnInit(): void {
   }

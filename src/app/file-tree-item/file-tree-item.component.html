@@ -1,4 +1,4 @@
-<span class="item-name">
+<span class="item-name" [class.active]="item.path === api.currentFile">
   <fa-icon *ngIf="item.type === 'file'" [icon]="fa.file"></fa-icon>
   <fa-icon *ngIf="item.type === 'dir'" [icon]="fa.dir"></fa-icon>
   {{ item.name }}
