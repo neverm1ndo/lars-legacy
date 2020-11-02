@@ -2,10 +2,10 @@
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="col-12 h-100">
       <div class="row h-100">
-        <div class="col-4 col-lg-3 filetree pr-0 pl-0">
+        <div class="col-3 col-lg-3 filetree pr-0 pl-0">
           <file-tree (chooseFileEvent)="getConfig($event)" [items]="files"></file-tree>
         </div>
-        <div class="col-8 col-lg-9 texteditor">
+        <div class="col-9 col-lg-9 texteditor">
           <ng-template #textEditorBlock>
             <div class="text-edit-block d-flex flex-row">
               <div class="d-flex align-self-center">
@@ -13,7 +13,8 @@
               </div>
             </div>
           </ng-template>
-          <text-editor [textplane]="textplane" *ngIf="textplane !== undefined; else textEditorBlock"></text-editor>
+          <text-editor [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined; else textEditorBlock"></text-editor>
+          <!-- <text-editor [file-info]="currentFilePath"></text-editor> -->
         </div>
       </div>
     </div>

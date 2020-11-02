@@ -1,45 +1,40 @@
 <div class="row h-100">
   <div class="d-flex align-items-start flex-column h-100 w-100">
     <div class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
-      <textarea class="w-100" name="name">{{textplane}}</textarea>
+      <!-- <div class="texteditor-line-indexes">
+        <div *ngFor="let line of plainArr; index as i" contenteditable="false" class="index no-select">{{ i }}</div>
+      </div> -->
+      <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea>
+      <!-- <div contenteditable="true" class="supertextarea w-100">
+        <div *ngFor="let line of plainArr; index as i" class="super-line d-flex flex-row">
+          <div contenteditable="false" class="index no-select"> {{ i }}</div>
+          <div class="text">{{ line }}</div>
+        </div>
+      </div> -->
     </div>
     <div class="texteditor-underpanel no-select align-self-end w-100">
       <div class="col-12">
-        <div class="w-100 d-flex flex-row justify-content-between">
-          <!-- <div class="col">
-            <div class="row">
-
-              <div class="col panel-left">
-                configs/regex.test.js
-              </div>
+        <div class="row">
+          <div class="w-100 d-flex flex-row justify-content-between">
+            <div class="panel-left">
+              <button (click)="pathToClipboard(successClpBrdTpl)" class="panel">
+                {{ path }}{{ (changed | async)?'*':'' }}
+              </button>
             </div>
-          </div>
-          <div class="col">
-            <div class="row">
-              <div class="col panel-left">
-                configs/regex.test.js
-              </div>
-              <div class="col panel-left">
-                configs/regex.test.js
-              </div>
-            </div>
-          </div> -->
-          <div class="panel-left">
-            configs/regex.test.js
-          </div>
-          <div class="panel-left">
-            <div class="w-100 d-flex flex-row justify-content-end">
-              <div [class.text-warning]="changed" class="panel">
-                {{ changed?'ИЗМЕНЕНО':'НЕ ИЗМЕНЕНО' }}
-              </div>
-              <div class="panel">
-                <i class="autosave-led"></i>
-              </div>
-              <div class="panel">
-                <fa-icon [icon]="fa.save"></fa-icon> Сохранить
-              </div>
-              <div class="panel">
-                <fa-icon [icon]="fa.fetch"></fa-icon> Обновить
+            <div class="panel-left">
+              <div class="w-100 d-flex flex-row justify-content-end">
+                <!-- <div [class.text-warning]="(changed | async)" class="panel">
+                  {{ (changed | async)?'ИЗМЕНЕНО':'НЕ ИЗМЕНЕНО' }}
+                </div> -->
+                <button class="panel">
+                  <i [class.led-loading]="loading" [class.led-error]="(error | async)?.message" class="autosave-led"></i>
+                </button>
+                <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
+                  <fa-icon [icon]="fa.save"></fa-icon> Сохранить
+                </button>
+                <button class="panel" disabled>
+                  <fa-icon [icon]="fa.fetch"></fa-icon> Обновить
+                </button>
               </div>
             </div>
           </div>
@@ -48,3 +43,42 @@
     </div>
   </div>
 </div>
+<ng-template #successClpBrdTpl>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.copy"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        Путь <b>{{ path }}</b> скопирован в буффер обмена
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #successSaveTpl>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.save"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        <b>{{ path }}</b> успешно сохранен
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #failSaveTpl>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.save"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        ОШИБКА: <b>{{ path }}</b> не сохранен
+        <br>
+        {{ (error | async)?.message }}
+      </span>
+    </div>
+  </div>
+</ng-template>
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

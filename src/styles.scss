@@ -75,6 +75,21 @@ app-sider {
     margin-top: 0.5rem;
   }
 }
+.toast-body {
+  padding: 0px;
+}
+.toast-text {
+  opacity: 0.8;
+  padding: 10px 10px 10px 10px;
+
+  // float: right;
+}
+.toast-icon {
+  background: #00000040;
+  padding: 10px 10px 10px 10px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
 .native-main {
   // position: fixed;
   // height: 100vh;
@@ -92,6 +107,9 @@ app-head {
 }
 .btn-primary {
   background: $primary;
+}
+.bg-danger {
+  background: $danger;
 }
 button, input, svg, img, .no-select {
   @include no-select;

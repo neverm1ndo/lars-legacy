@@ -13,7 +13,9 @@ export class ConfigEditorComponent implements OnInit {
 
   directories$: Observable<any>;
 
-  textplane: string | undefined = undefined;
+  textplain: string | undefined = undefined;
+
+  currentFilePath: string;
 
   constructor(public api: ApiService) {
     this.directories$ = api.getConfigsDir();
@@ -21,12 +23,9 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   getConfig(path: string) {
-    console.log(path);
-
-    this.api.getConfigText(path).subscribe((textplane: string) => {
-      this.textplane = textplane;
-      console.log(textplane);
-
+    this.currentFilePath = path;
+    this.api.getConfigText(path).subscribe((textplain: string) => {
+      this.textplain = textplain;
     });
   }
 

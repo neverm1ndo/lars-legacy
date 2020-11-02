@@ -29,9 +29,10 @@ import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { FileTreeItemComponent } from '../file-tree-item/file-tree-item.component';
 import { FileTreeItemsComponent } from '../file-tree-items/file-tree-items.component';
+import { ToastsContainer } from '../toasts-container/toasts-container.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent],
+  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer],
   imports: [
     CommonModule,
     SharedModule,
