@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { faFilter, faSync } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../../api.service';
@@ -17,11 +17,17 @@ export class SearchComponent implements OnInit {
     sync: faSync
   }
 
-  constructor( public api: ApiService) { }
+  @Output() searchQuery = new EventEmitter<string>();
 
-  refresh() {
-    this.api.refresh();
+  constructor(public api: ApiService) { }
+
+  sendQuery(query: string): void {
+    console.log(query);
+
+    this.searchQuery.emit(query);
   }
+
+  // refresh()
 
   ngOnInit(): void {
   }

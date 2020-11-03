@@ -1,5 +1,5 @@
 <div *ngIf="api.loading" class="block-screen backdrop-blur"></div>
-<div *ngFor="let line of _uber" class="col-12 logline">
+<div *ngFor="let line of lines" class="col-12 logline">
   <div class="row">
     <div class="col-3 col-md-2">
       <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>

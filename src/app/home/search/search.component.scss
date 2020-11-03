@@ -1,4 +1,17 @@
+@import 'scss/colors';
+
 :host {
+  .head {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    max-height: 50px;
+    button[type="submit"] {
+      border: 1px solid $clr-formcontrol;
+    }
+  }
+  .head, input, button {
+    font-size: 13px;
+  }
   form {
     input, button {
       font-size: 13px;

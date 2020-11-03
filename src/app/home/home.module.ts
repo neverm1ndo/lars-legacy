@@ -8,7 +8,6 @@ import { HomeRoutingModule } from './home-routing.module';
 
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { HeadComponent } from './head/head.component';
 import { SiderComponent } from './sider/sider.component';
 import { SearchComponent } from './search/search.component';
 import { SharedModule } from '../shared/shared.module';
@@ -33,7 +32,7 @@ import { FileTreeItemsComponent } from '../file-tree-items/file-tree-items.compo
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeadComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer],
   imports: [
     CommonModule,
     SharedModule,

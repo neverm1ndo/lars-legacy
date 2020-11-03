@@ -1,6 +1,7 @@
 :host {
   font-size: 14px;
   transition: 0.2s linear;
+  background: #3d3e4a;
   .block-screen {
     position: fixed;
     top: 85px;
@@ -15,9 +16,8 @@
     padding-top: 5px;
     padding-bottom: 5px;
     cursor: pointer;
-    background: #3d3e4a;
     &:hover {
-      background: #3d3e4a70;
+      background: #00000010;
     }
     .line-id {
       margin-left: 10px;

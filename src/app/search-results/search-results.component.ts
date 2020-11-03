@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
-import { retryWhen, tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'search-results',
@@ -9,28 +9,11 @@ import { retryWhen, tap, delay } from 'rxjs/operators';
 })
 export class SearchResultsComponent implements OnInit {
 
-  _uber: any[];
+  @Input('searchResult') lines: LogLine[];
 
-  constructor(
-    private api: ApiService
-  ) { }
-
-  uber() {
-    this.api.getLogFile().pipe(
-      retryWhen(errors =>
-        errors.pipe(
-          delay(10*1000),
-          tap(val => console.log(val))
-        )
-      )
-    ).subscribe((uber)=> {
-      this._uber = uber ;
-      this.api.loading = false;
-    });
-  }
+  constructor(public api: ApiService) { }
 
   ngOnInit(): void {
-    this.uber();
   }
 
 }

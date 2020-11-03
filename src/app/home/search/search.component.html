@@ -1,14 +1,20 @@
-<div class="row">
-  <form class="col-8" (ngSubmit)="search(currentNickname.value)" autocomplete="on">
-      <div class="input-group">
-        <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="currentNickname"/>
+<header class="col-12">
+  <div class="row head">
+    <div class="col-8 pl-0">
+      <div class="row">
+        <form class="col-8" (ngSubmit)="sendQuery(currentNickname.value)" autocomplete="on">
+          <div class="input-group">
+            <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="currentNickname"/>
+          </div>
+        </form>
+        <div ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
+          <button class="btn btn-dark" name="filter" id="dropdownFilter" ngbDropdownToggle><fa-icon [icon]="fa.filter"></fa-icon></button>
+          <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownFilter">
+            <filter></filter>
+          </div>
+        </div>
+        <button class="btn btn-dark" (click)="refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
       </div>
-  </form>
-  <div ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
-    <button class="btn btn-dark" name="filter" id="dropdownFilter" ngbDropdownToggle><fa-icon [icon]="fa.filter"></fa-icon></button>
-    <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownFilter">
-      <filter></filter>
     </div>
   </div>
-    <button class="btn btn-dark" (click)="refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
-</div>
+</header>

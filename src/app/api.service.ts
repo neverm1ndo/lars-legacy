@@ -16,7 +16,7 @@ export class ApiService {
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  public loading: boolean = false;
+  public loading: boolean = true;
   uber: Observable<any> = this.http.get(this.URL);
   currentFile: string = '';
 
@@ -44,7 +44,8 @@ export class ApiService {
     as?: string;
     ss?: string;
   }): Observable<any> {
-    return this.http.get(this.URL_SEARCH, { params: query, responseType: 'json' })
+    this.loading = true;
+    return this.http.get(this.URL_SEARCH, { params: query })
   }
   saveConfigFile(path:string, data: string): Observable<any> {
     return this.http.post(this.URL_CONFIG_SAVE, {
