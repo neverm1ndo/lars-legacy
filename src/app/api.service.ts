@@ -8,10 +8,11 @@ import { switchMap } from 'rxjs/operators';
 })
 export class ApiService {
 
-  URL: string = 'http://localhost:3080/api/uber';
-  URL_CONFIGS: string = 'http://localhost:3080/api/config-files-tree';
-  URL_CONFIG: string = 'http://localhost:3080/api/config-file';
-  URL_CONFIG_SAVE: string = 'http://localhost:3080/api/save-config-file';
+  readonly URL: string = 'http://localhost:3080/api/uber';
+  readonly URL_CONFIGS: string = 'http://localhost:3080/api/config-files-tree';
+  readonly URL_CONFIG: string = 'http://localhost:3080/api/config-file';
+  readonly URL_CONFIG_SAVE: string = 'http://localhost:3080/api/save-config-file';
+  readonly URL_SEARCH: string = 'http://localhost:3080/api/search';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -35,6 +36,15 @@ export class ApiService {
     return this.reloader$.pipe(
       switchMap(() => this.http.get(this.URL))
     )
+  }
+  search(query: {
+    nickname?: string;
+    date?: string;
+    process?: string;
+    as?: string;
+    ss?: string;
+  }): Observable<any> {
+    return this.http.get(this.URL_SEARCH, { params: query, responseType: 'json' })
   }
   saveConfigFile(path:string, data: string): Observable<any> {
     return this.http.post(this.URL_CONFIG_SAVE, {

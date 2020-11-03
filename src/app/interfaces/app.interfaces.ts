@@ -27,5 +27,13 @@ export interface LogLine {
   nickname?: string;
   id: number;
   geo?: GeoData;
-  content?: string; 
+  content?: string;
+}
+
+export interface SearchQuery {
+  nickname?: string;
+  date?: string;
+  process?: string;
+  as?: string;
+  ss?: string;
 }
