@@ -1,5 +1,12 @@
 @import 'scss/colors';
 
+@mixin active-panel {
+  background: rgba(0,0,0,0.3);
+  path {
+    fill: '#'attr(data-color);
+  }
+}
+
 .options {
   width: 70px;
   padding-top: 40px;
@@ -94,10 +101,7 @@
       border-radius: 2px;
     }
     &:hover {
-      background: rgba(0,0,0,0.3);
-      path {
-        fill: '#'attr(data-color);
-      }
+      @include active-panel;
       &::after {
         opacity: 1;
         display: inline-block;
@@ -130,6 +134,9 @@
         width: 100%;
       }
     }
+  }
+  .active {
+    @include active-panel;
   }
   .custom-control-input:checked {
     & ~ .custom-control-label::before {
