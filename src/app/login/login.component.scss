@@ -1,8 +1,20 @@
-.logo {
-  width: 100px;
-  height: auto;
-}
-.l-bg {
-  background: url('../../assets/lbg.png') no-repeat;
-  background-size: contain;
+@import 'scss/colors';
+:host {
+  .logo {
+    width: 100px;
+    height: auto;
+  }
+  .l-bg {
+    background: url('../../assets/lbg.png') no-repeat;
+    background-size: contain;
+  }
+  .btn-dark {
+    background-color: $topper!important;
+    &:hover {
+      background-color: #353642;
+    }
+    &:active {
+      background-color: $primary;
+    }
+  }
 }
