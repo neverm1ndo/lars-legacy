@@ -2,9 +2,9 @@
   <div class="row head">
     <div class="col-8 pl-0">
       <div class="row">
-        <form class="col-8" (ngSubmit)="sendQuery(currentNickname.value)" autocomplete="on">
+        <form class="col-8" [formGroup]="searchForm" (ngSubmit)="sendQuery(query)" autocomplete="on">
           <div class="input-group">
-            <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="currentNickname"/>
+            <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="query"/>
           </div>
         </form>
         <div ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
@@ -13,8 +13,20 @@
             <filter></filter>
           </div>
         </div>
-        <button class="btn btn-dark" (click)="refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
+        <button class="btn btn-dark" (click)="api.refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
       </div>
     </div>
   </div>
 </header>
+<ng-template #error>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.err"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        ОШИБКА: Запрос должен состоять более чeм из 3 символов
+      </span>
+    </div>
+  </div>
+</ng-template>

@@ -1,18 +1,18 @@
 <div *ngIf="api.loading" class="block-screen backdrop-blur"></div>
 <div *ngFor="let line of lines" class="col-12 logline">
   <div class="row">
-    <div class="col-3 col-md-2">
+    <div class="col-3 col-md-2 col-lg-2">
       <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
     </div>
-    <div class="d-none d-lg-block col-3 col-md-2">
+    <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
       {{ line.process }}
     </div>
-    <div class="col-2 col-md-2 col-lg-1">
+    <div class="col-3 col-md-2 col-lg-2 text-center">
       <strong>{{ line.nickname }}</strong>
       <br>
       <span class="line-id">id: {{ line.id }}</span>
     </div>
-    <div *ngIf="line.geo || line.content || line.process" class="col-3">
+    <div *ngIf="line.geo || line.content || line.process" class="col-lg-6 col-8">
       <line-process [content]="line.content"  process="{{line.process}}"></line-process>
       <geo *ngIf="line.geo" [table]="line.geo"></geo>
     </div>
@@ -20,4 +20,9 @@
 </div>
 <div *ngIf="api.loading" class="loader">
   <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg>
+</div>
+<div *ngIf="lines.length === 0 && !api.loading" class="list-empty d-flex flex-row align-items-center">
+  <div class="d-flex w-100 align-self-center">
+    <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
+  </div>
 </div>

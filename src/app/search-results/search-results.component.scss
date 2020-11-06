@@ -2,6 +2,23 @@
   font-size: 14px;
   transition: 0.2s linear;
   background: #3d3e4a;
+  .list-empty {
+    width: 100%;
+    height: 100%;
+    h4 {
+      font-weight: 300;
+      opacity: 0.5;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+  }
+  .line-process {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .block-screen {
     position: fixed;
     top: 85px;
@@ -9,18 +26,19 @@
     width: 100%;
     height: 100%;
     filter: blur(10px);
-    z-index: 10;
+    z-index: 1;
   }
   .logline {
     border-bottom: 1px solid #0000000f;
     padding-top: 5px;
     padding-bottom: 5px;
+    transition: .05s linear;
     cursor: pointer;
+    background: #3d3e4a;
     &:hover {
-      background: #00000010;
+      background: #393a46;
     }
     .line-id {
-      margin-left: 10px;
       font-size: 10px;
       opacity: 0.7;
     }

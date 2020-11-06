@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
+import { SearchQuery } from '../interfaces/app.interfaces';
 
 @Component({
   selector: 'app-search-editor',
@@ -14,10 +15,58 @@ export class SearchEditorComponent implements OnInit {
 
   constructor(private api: ApiService) { }
 
-  search(query: string): void {
-    console.log(query);
+  parseSearchQuery(query: string): SearchQuery {
+    let result: SearchQuery = {};
+    let splited: any[] = [];
+    if (query.includes('&')) {
+      splited = query.split('&');
+    } else {
+      splited = [query];
+    }
+     if ((splited.length > 1) || (splited[0].includes(':'))) {
+       result.nickname = [];
+       result.ip = [];
+       for (let i = 0; i < splited.length; i++) {
+         if (splited[i].includes(':')) {
+           let q = {
+             type : splited[i].split(':')[0],
+             val: splited[i].split(':')[1]
+           };
+           if ((q.type === 'nickname') || (q.type === 'nn')) {
+             result.nickname.push(q.val);
+           }
+           if (q.type === 'ip') {
+             result.ip.push(q.val);
+           }
+           if ((q.type === 'serals') || (q.type === 'srl')) {
+             result.as = q.val.split('*')[0];
+             result.ss = q.val.split('*')[1];
+           }
+         } else {
+           if (i === 0) {
+             result.nickname.push(splited[i]);
+           } else if ( i < splited.length - 1 ) {
+             result.nickname.push(splited[i]);
+           } else {
+             result.nickname.push(splited[i]);
+           }
+         }
+       }
+     } else {
+       result.nickname = [splited[0]];
+     }
+    for (let key of Object.keys(result)) {
+      if (result[key].length === 0) {
+        delete result[key];
+      }
+    }
+    console.log(result);
+    return result;
+  }
 
-    this.api.search({ nickname: query }).subscribe(
+  search(query: string): void {
+    let sq: SearchQuery = this.parseSearchQuery(query);
+    this.api.search(sq).subscribe(
       (lines: any[]) => { this.lines = lines; this.api.loading = false;}
     );
   }
@@ -36,10 +85,12 @@ export class SearchEditorComponent implements OnInit {
       )
     ).subscribe((lines)=> {
       this.lines = lines ;
-    }).unsubscribe();
+      this.api.loading = false;
+    });
   }
 
   ngOnInit(): void {
+    this.uber();
   }
 
 }

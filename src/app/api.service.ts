@@ -38,13 +38,14 @@ export class ApiService {
     )
   }
   search(query: {
-    nickname?: string;
-    date?: string;
-    process?: string;
+    nickname?: Array<string>;
+    date?: Array<string>;
+    process?: Array<string>;
     as?: string;
     ss?: string;
   }): Observable<any> {
     this.loading = true;
+    console.log(query);
     return this.http.get(this.URL_SEARCH, { params: query })
   }
   saveConfigFile(path:string, data: string): Observable<any> {

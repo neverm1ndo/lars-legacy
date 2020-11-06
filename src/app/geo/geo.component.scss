@@ -1,14 +1,19 @@
 @import 'scss/_colors';
 :host {
+  .clip {
+    white-space: nowrap;
+  }
   .geotable {
     td {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
   .chain {
     height: 46px;
     max-width: 46px;
+    padding-left: 0px!important;
+    padding-right: 0px!important;
   }
   .text-dashed {
     border-bottom: 1px dashed $text;

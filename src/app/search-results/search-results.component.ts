@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
+import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'search-results',
@@ -10,6 +11,10 @@ import { ApiService } from '../api.service';
 export class SearchResultsComponent implements OnInit {
 
   @Input('searchResult') lines: LogLine[];
+
+  fa = {
+    sad: faFrownOpen
+  }
 
   constructor(public api: ApiService) { }
 
