@@ -3,6 +3,7 @@
   .logo {
     width: 100px;
     height: auto;
+    transform: scaleY(-1);
   }
   .l-bg {
     background: url('../../assets/lbg.png') no-repeat;
