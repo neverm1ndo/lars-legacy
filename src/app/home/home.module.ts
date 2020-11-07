@@ -30,6 +30,7 @@ import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { FileTreeItemComponent } from '../file-tree-item/file-tree-item.component';
 import { FileTreeItemsComponent } from '../file-tree-items/file-tree-items.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer],
@@ -39,6 +40,7 @@ import { ToastsContainer } from '../toasts-container/toasts-container.component'
     HomeRoutingModule,
     FormsModule,
     NgbModule,
+    BrowserAnimationsModule,
     CodemirrorModule,
     ReactiveFormsModule,
     FontAwesomeModule
