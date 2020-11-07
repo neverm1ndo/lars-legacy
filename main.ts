@@ -19,6 +19,7 @@ function createWindow(): BrowserWindow {
     minHeight: 580,
     height: 600,
     frame: false,
+    icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
