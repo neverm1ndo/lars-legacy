@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faFolder, faSearch, faSearchPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
@@ -12,22 +12,22 @@ export class DashboardComponent implements OnInit {
    innerHeight: number;
    version: string = '1.0';
 
+   last: any;
+
    fa = {
      dir: faFolder,
      search: faSearch,
      searchp: faSearchPlus,
      up: faUpload
    }
-
-   @HostListener('window:resize', ['$event'])
-     onResize() {
-       this.innerHeight = window.innerHeight;
-     }
-
   constructor() { }
 
   ngOnInit(): void {
-    this.innerHeight = window.innerHeight;
+    if (!localStorage.getItem('last')) {
+      this.last = { search: [], upload: [], files: []};
+      localStorage.setItem('last', JSON.stringify(this.last));
+    }
+    this.last = JSON.parse(localStorage.getItem('last'));
   }
 
 }

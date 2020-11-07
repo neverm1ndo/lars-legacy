@@ -1,9 +1,21 @@
+@import 'scss/colors';
 :host {
   h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
   }
   li {
     font-size: 14px;
+    margin-left: -24px;
+    list-style-type: none;
+    .history-item {
+      cursor: pointer;
+      opacity: 0.8;
+      width: 100%;
+      &:hover {
+        color: $text-secondary;
+        text-decoration: underline;
+      }
+    }
   }
   fa-icon {
     margin-right: 0.8rem;

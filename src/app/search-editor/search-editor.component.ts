@@ -3,6 +3,8 @@ import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
+import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-editor',
@@ -12,8 +14,12 @@ import { SearchQuery } from '../interfaces/app.interfaces';
 export class SearchEditorComponent implements OnInit {
 
   lines: LogLine[] = [];
+  queryIn: string;
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private api: ApiService,
+    public route: ActivatedRoute
+  ) { }
 
   parseSearchQuery(query: string): SearchQuery {
     let result: SearchQuery = {};
@@ -90,7 +96,15 @@ export class SearchEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.uber();
+    this.route.queryParams.subscribe(params => {
+      if (params.query) {
+        this.queryIn = params.query;
+        this.search(this.queryIn);
+      } else {
+        this.uber();
+      }
+    });
+    // this.uber();
   }
 
 }

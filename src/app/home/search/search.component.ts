@@ -27,6 +27,7 @@ export class SearchComponent implements OnInit {
 
   @Output() searchQuery = new EventEmitter<string>();
   @Input('quick') quick: boolean = false;
+  @Input('queryIn') queryIn: string;
 
   @ViewChild('error')
   private error: TemplateRef<any>;
@@ -39,12 +40,24 @@ export class SearchComponent implements OnInit {
 
   get query() { return this.searchForm.get('query'); }
 
+  addToRecent(val: string): void {
+    let last = JSON.parse(localStorage.getItem('last'));
+    if (last.search.length >= 10) {
+      last.search.splice(-(last.search.length), 0, val);
+      last.search.pop();
+    } else {
+      last.search.push(val);
+    }
+    localStorage.setItem('last', JSON.stringify(last));
+  }
+
   sendQuery(): void {
     if (this.searchForm.valid) {
       this.searchQuery.emit(this.query.value);
       if (this.quick) {
-        this.router.navigate(['home/search'])
+        this.router.navigate(['home/search'], {queryParams: { query: this.query.value }})
       }
+      this.addToRecent(this.query.value);
     } else {
         this.toast.show(this.error, { classname: 'bg-danger text-light', delay: 3000 });
     }
@@ -53,6 +66,9 @@ export class SearchComponent implements OnInit {
   // refresh()
 
   ngOnInit(): void {
+    if (this.queryIn) {
+      this.searchForm.setValue({ query: this.queryIn });
+    }
   }
 
 }
