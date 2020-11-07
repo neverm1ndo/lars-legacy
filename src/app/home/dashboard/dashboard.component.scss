@@ -1,3 +1,19 @@
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 300;
+:host {
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+  }
+  li {
+    font-size: 14px;
+  }
+  fa-icon {
+    margin-right: 0.8rem;
+  }
+  .hint {
+    opacity: 0.6;
+    margin-left: 1rem;
+    font-size: 12px;
+  }
+  .dashed {
+    border-bottom: 1px dashed #fdfdfd;
+  }
 }

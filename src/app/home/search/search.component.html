@@ -2,18 +2,18 @@
   <div class="row head">
     <div class="col-8 pl-0">
       <div class="row">
-        <form class="col-8" [formGroup]="searchForm" (ngSubmit)="sendQuery(query)" autocomplete="on">
+        <form [class.col-12]="quick" class="col-8" [formGroup]="searchForm" (ngSubmit)="sendQuery(query)" autocomplete="on">
           <div class="input-group">
             <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="query"/>
           </div>
         </form>
-        <div ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
+        <div *ngIf="!quick" ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
           <button class="btn btn-dark" name="filter" id="dropdownFilter" ngbDropdownToggle><fa-icon [icon]="fa.filter"></fa-icon></button>
           <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownFilter">
             <filter></filter>
           </div>
         </div>
-        <button class="btn btn-dark" (click)="api.refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
+        <button *ngIf="!quick" class="btn btn-dark" (click)="api.refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button>
       </div>
     </div>
   </div>

@@ -7,10 +7,13 @@
         <div class="row">
           <div class="col-12 mb-3">
             <h1>Начало работы с LibertyLogs</h1>
-            <a routerLink="/home/search">To search</a>
+          </div>
+          <div class="col-12 mb-2">
+            <small><fa-icon [icon]="fa.search"></fa-icon>Быстрый поиск</small><small class="hint">Например: <span class="dashed">srl:12345*BJBKLJBLJBLHVGVYVHBHJKBHBKJHBKHB</span></small>
+            <app-search quick="true"></app-search>
           </div>
           <div class="col-4">
-            <h4>Открыть последнее</h4>
+            <h6><fa-icon [icon]="fa.dir"></fa-icon>Открыть последнее</h6>
             <div class="col-12">
               <ul>
                 <li>File</li>
@@ -22,7 +25,7 @@
             </div>
           </div>
           <div class="col-8">
-            <h4>Последние загруженные файлы</h4>
+            <h6><fa-icon [icon]="fa.up"></fa-icon>Последние загруженные файлы</h6>
             <div class="col-12">
               <ul>
                 <li>File</li>
@@ -36,7 +39,7 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <h4>Последние поисковые запросы</h4>
+            <h6><fa-icon [icon]="fa.searchp"></fa-icon>Последние поисковые запросы</h6>
             <div class="col-12">
               <ul>
                 <li>File</li>
