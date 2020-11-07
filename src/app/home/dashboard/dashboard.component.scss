@@ -1,5 +1,8 @@
 @import 'scss/colors';
 :host {
+  .playerlog {
+    background: #3d3e4a;
+  }
   h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
   }
@@ -14,6 +17,12 @@
       &:hover {
         color: $text-secondary;
         text-decoration: underline;
+      }
+      .history-underitem {
+        font-size: 9px;
+        opacity: 0.5;
+        position: relative;
+        top: -7px;
       }
     }
   }

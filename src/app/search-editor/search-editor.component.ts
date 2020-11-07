@@ -4,7 +4,6 @@ import { ApiService } from '../api.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-editor',

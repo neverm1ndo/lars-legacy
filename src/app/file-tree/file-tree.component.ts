@@ -9,6 +9,7 @@ export class FileTreeComponent implements OnInit {
 
   @Input('items') items: any[];
   @Output() chooseFileEvent = new EventEmitter<string>();
+  @Input('current') current: string;
 
   constructor() { }
 

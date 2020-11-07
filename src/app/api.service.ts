@@ -18,7 +18,6 @@ export class ApiService {
 
   public loading: boolean = true;
   uber: Observable<any> = this.http.get(this.URL);
-  currentFile: string = '';
 
   constructor(
     private http: HttpClient

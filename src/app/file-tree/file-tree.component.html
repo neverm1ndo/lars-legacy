@@ -6,7 +6,7 @@
   </div>
   <div class="col-12 no-padding flex-fill overflow-auto">
     <div *ngIf="items.name; else loaderItems" class="text-left">
-      <file-tree-items (chooseFileEvent)="getConfig($event)" [child-nodes]="items" [expanded]="true"></file-tree-items>
+      <file-tree-items (chooseFileEvent)="getConfig($event)" [child-nodes]="items" [expanded]="true" [current]="current"></file-tree-items>
     </div>
     <ng-template #loaderItems>
       <div class="d-flex h-100">

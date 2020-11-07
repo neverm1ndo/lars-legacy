@@ -18,16 +18,16 @@ export class FileTreeItemsComponent implements OnInit {
 
   @Input('child-nodes') nodes: TreeNode[];
   @Input('expanded') expanded: boolean;
-  @Output() chooseFileEvent = new EventEmitter<string>();
+  @Input('current') current: string;
+  @Output() chooseFileEvent = new EventEmitter<{path: string, name: string}>();
 
   toggler: boolean = false;
 
   fa = {
     dir: faFolder,
   }
-  getConfig(path: string) {
+  getConfig(path: {path: string, name: string}) {
     this.chooseFileEvent.emit(path);
-    this.api.currentFile = path;
   }
 
   toggleExpand(event: Event):void {

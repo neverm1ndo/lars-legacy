@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faFolder, faSearch, faSearchPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faSearch, faSearchPlus, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
      dir: faFolder,
      search: faSearch,
      searchp: faSearchPlus,
-     up: faUpload
+     up: faCloudUploadAlt
    }
   constructor() { }
 

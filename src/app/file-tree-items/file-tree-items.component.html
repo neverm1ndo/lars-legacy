@@ -7,8 +7,8 @@
   </div>
   <div *ngIf="toggler" class="items">
     <div class="item no-select" *ngFor="let item of nodes.items">
-      <file-tree-item (click)="getConfig(item.path)" *ngIf="item.type === 'file'" [item]="item"></file-tree-item>
-      <file-tree-items (chooseFileEvent)="getConfig($event)" *ngIf="item.type === 'dir'" [child-nodes]="item"></file-tree-items>
+      <file-tree-item (click)="getConfig({path: item.path, name: item.name})" *ngIf="item.type === 'file'" [item]="item" [current]="current"></file-tree-item>
+      <file-tree-items (chooseFileEvent)="getConfig($event)" *ngIf="item.type === 'dir'" [child-nodes]="item" [current]="current"></file-tree-items>
     </div>
   </div>
 </div>
