@@ -101,19 +101,19 @@
     </form> -->
     <div class="work-panel">
       <div class="text-center">
-        <label routerLinkActive="active" routerLink="/home/dash" [attr.data-content]="'Старт'"><fa-icon [icon]="fa.home"></fa-icon></label>
+        <button class="side-button" routerLinkActive="active" routerLink="/home/dash" [attr.data-content]="'Старт'"><fa-icon [icon]="fa.home"></fa-icon></button>
       </div>
       <div class="text-center">
-        <label routerLinkActive="active" routerLink="/home/search" [attr.data-content]="'Поиск'"><fa-icon [icon]="fa.search"></fa-icon></label>
+        <button class="side-button" routerLinkActive="active" routerLink="/home/search" [attr.data-content]="'Поиск'"><fa-icon [icon]="fa.search"></fa-icon></button>
       </div>
       <div class="text-center">
-        <label routerLinkActive="active" routerLink="/home/config-editor" [attr.data-content]="'Редктор кофигов'"><fa-icon [icon]="fa.redactor"></fa-icon></label>
+        <button class="side-button" routerLinkActive="active" routerLink="/home/config-editor" [attr.data-content]="'Редктор кофигов'"><fa-icon [icon]="fa.redactor"></fa-icon></button>
       </div>
       <div class="text-center">
-        <label routerLinkActive="active" [attr.data-content]="'Редктор карт'"><fa-icon [icon]="fa.map"></fa-icon></label>
+        <button class="side-button" routerLinkActive="active" [attr.data-content]="'Редктор карт'" disabled><fa-icon [icon]="fa.map"></fa-icon></button>
       </div>
     </div>
     <div class="panel text-center">
-      <label [attr.data-content]="'Настройки'"><fa-icon [icon]="fa.cog"></fa-icon></label>
+      <button class="side-button" [attr.data-content]="'Настройки'"><fa-icon [icon]="fa.cog"></fa-icon></button>
     </div>
 </div>
