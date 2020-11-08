@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { AppConfig } from '../environments/environment.dev';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  readonly URL: string = 'http://localhost:3080/api/uber';
-  readonly URL_CONFIGS: string = 'http://localhost:3080/api/config-files-tree';
-  readonly URL_CONFIG: string = 'http://localhost:3080/api/config-file';
-  readonly URL_CONFIG_SAVE: string = 'http://localhost:3080/api/save-config-file';
-  readonly URL_SEARCH: string = 'http://localhost:3080/api/search';
+  readonly URL: string = AppConfig.api.main + 'uber';
+  readonly URL_CONFIGS: string =  AppConfig.api.main + 'config-files-tree';
+  readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
+  readonly URL_CONFIG_SAVE: string =  AppConfig.api.main + 'save-config-file';
+  readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 

@@ -4,7 +4,8 @@ export const AppConfig = {
   links: {
     forum: 'https://gta-liberty.ru/forum'
   },
-  api: {
+  api: { // Dev server
+    main: 'http://instr.gta-liberty.ru/api/',
     auth: 'https://ohmydog.ml/login2',
     user: 'https://ohmydog.ml/user',
   }
