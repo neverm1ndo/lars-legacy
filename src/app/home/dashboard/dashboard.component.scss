@@ -6,6 +6,11 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
   }
+  .clip {    
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   li {
     font-size: 14px;
     margin-left: -24px;

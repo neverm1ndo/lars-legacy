@@ -37,4 +37,6 @@ export interface SearchQuery {
   process?: string[];
   as?: string;
   ss?: string;
+  page?: string;
+  lim?: string;
 }

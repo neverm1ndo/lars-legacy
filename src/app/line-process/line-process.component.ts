@@ -32,11 +32,11 @@ export class LineProcessComponent implements OnInit {
   }
   ngOnInit(): void {
     this.type = this.check(this.process);
-    if (this.process.includes('auth')) {
-      this.userService.getUser(this.content)
-      .subscribe((userdata: any) => {
-        this.user = userdata;
-      });
-    }
+    // if (this.process.includes('auth')) {
+    //   this.userService.getUser(this.content)
+    //   .subscribe((userdata: any) => {
+    //     this.user = userdata;
+    //   });
+    // }
   }
 }

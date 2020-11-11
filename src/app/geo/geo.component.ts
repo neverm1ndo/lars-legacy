@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { GeoData } from '../interfaces/app.interfaces';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'geo',
@@ -14,10 +15,18 @@ export class GeoComponent implements OnInit {
 
   fa = { link : faLink };
 
-  constructor(public api: ApiService) { }
+  constructor(
+    public api: ApiService,
+    public router: Router
+  ) { }
 
   searchSerials(): void {
     this.api.search({ as: this.table.as.toString(), ss: this.table.ss });
+  }
+  sendQuery(): void {
+    let geoQuery = `srl:${this.table.as.toString()}*${this.table.ss}`;
+    this.router.navigate(['home/search'], { queryParams: { query: geoQuery }})
+    this.api.addToRecent('search', geoQuery);
   }
 
   ngOnInit(): void {

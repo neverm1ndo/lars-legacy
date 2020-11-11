@@ -16,7 +16,7 @@
             <h6><fa-icon [icon]="fa.searchp"></fa-icon>Поисковые запросы</h6>
             <div class="col-12">
               <ul *ngIf="last.search.length > 0; else emptylist">
-                <li *ngFor="let item of last.search"><span class="history-item" [routerLink]="['/home/search']" [queryParams]="{query: item}">{{ item }}</span></li>
+                <li class="clip" *ngFor="let item of last.search"><span class="history-item" [routerLink]="['/home/search']" [queryParams]="{query: item}">{{ item }}</span></li>
               </ul>
             </div>
           </div>

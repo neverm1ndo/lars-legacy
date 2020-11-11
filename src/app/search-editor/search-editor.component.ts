@@ -1,24 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-editor',
   templateUrl: './search-editor.component.html',
   styleUrls: ['./search-editor.component.scss']
 })
-export class SearchEditorComponent implements OnInit {
+export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
+
+  @ViewChild('wrapper') wrapper: ElementRef<any>;
 
   lines: LogLine[] = [];
-  queryIn: string;
+  scroll: any;
+  glf$: Observable<any>;
+  glf: Subscription;
 
   constructor(
     private api: ApiService,
     public route: ActivatedRoute
-  ) { }
+  ) {
+    this.glf$ = this.api.getLogFile().pipe(
+      retryWhen(errors =>
+        errors.pipe(
+          delay(10*1000),
+          tap(val => console.log(val))
+        )));
+  }
 
   parseSearchQuery(query: string): SearchQuery {
     let result: SearchQuery = {};
@@ -65,14 +78,18 @@ export class SearchEditorComponent implements OnInit {
         delete result[key];
       }
     }
-    console.log(result);
     return result;
   }
 
   search(query: string): void {
     let sq: SearchQuery = this.parseSearchQuery(query);
+    sq.lim = '50';
+    sq.page = this.api.currentPage.toString();
     this.api.search(sq).subscribe(
-      (lines: any[]) => { this.lines = lines; this.api.loading = false;}
+      (lines: any[]) => {
+        this.lines = lines;
+        this.api.loading = false;
+      }
     );
   }
 
@@ -81,29 +98,53 @@ export class SearchEditorComponent implements OnInit {
   }
 
   uber() {
-    this.api.getLogFile().pipe(
-      retryWhen(errors =>
-        errors.pipe(
-          delay(10*1000),
-          tap(val => console.log(val))
-        )
-      )
-    ).subscribe((lines)=> {
-      this.lines = lines ;
+    this.glf = this.glf$.subscribe((lines)=> {
+      if (lines.length) {
+        this.lines.push(...lines) ;
+      }
       this.api.loading = false;
     });
   }
 
+  isBottom(): boolean {
+    if (this.wrapper.nativeElement.scrollTop === this.wrapper.nativeElement.scrollHeight - this.wrapper.nativeElement.offsetHeight) {
+      return true;
+    }
+    return false;
+  }
+
+  ngAfterViewInit(): void {
+    console.log(this.wrapper);
+    this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
+    .pipe(
+      debounceTime(200)
+    ).subscribe(() => {
+      if (this.isBottom()) {
+        if (this.lines.length % 50 == 0) {
+          if (this.lines.length >=6) {
+            this.api.currentPage++;
+          }
+          this.api.lazyUpdate();
+        }
+      }
+    });
+  }
+
   ngOnInit(): void {
+    console.log(this.api.currentPage);
+    this.api.currentPage = 0;
+    console.log(this.api.currentPage);
     this.route.queryParams.subscribe(params => {
       if (params.query) {
-        this.queryIn = params.query;
-        this.search(this.queryIn);
+        this.search(params.query);
       } else {
+        this.api.clearLast();
         this.uber();
       }
     });
     // this.uber();
   }
-
+  ngOnDestroy(): void {
+    if (this.glf) this.glf.unsubscribe();
+  }
 }

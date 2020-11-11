@@ -18,7 +18,7 @@
     <td>AS</td>
     <td class="chain" rowspan="2">
       <ng-template #tipContent let-greeting="greeting">Поиск по <b>данной связке</b></ng-template>
-      <button class="btn btn-sm btn-dark" (click)="searchSerials()" name="button" placement="left" tooltipClass="light-tooltip" [ngbTooltip]="tipContent"><fa-icon [icon]="fa.link"></fa-icon></button></td>
+      <button class="btn btn-sm btn-dark" (click)="sendQuery()" name="button" placement="left" tooltipClass="light-tooltip" [ngbTooltip]="tipContent"><fa-icon [icon]="fa.link"></fa-icon></button></td>
     <td>{{ table.as }}</td>
   </tr>
   <tr>
