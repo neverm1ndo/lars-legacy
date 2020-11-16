@@ -1,10 +1,12 @@
 :host {
+  font-size: 12px;
   .badge {
-    font-size: 14px;
+    border-radius: 2px;
+    font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    padding-left: 10px;
-    padding-top: 4px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-top: 2px;
+    padding-right: 15px;
   }
 }

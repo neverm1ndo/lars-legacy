@@ -68,7 +68,7 @@ export class ApiService {
     page?: string;
     lim?: string
   }): Observable<any> {
-    this.loading = true;
+    // this.loading = true;
     return this.http.get(this.URL_SEARCH, { params: query });
   }
   saveConfigFile(path:string, data: string): Observable<any> {
@@ -79,18 +79,24 @@ export class ApiService {
       }
     }, { responseType: 'text' })
   }
-  addToRecent(key: string, val: string): void {
+  addToRecent(key: string, val: any): void {
     let last = JSON.parse(localStorage.getItem('last'));
     function exists() {
       for (let i = 0; i < last[key].length; i++) {
-        if (last[key][i] === val) {
-          return true;
+        if (typeof last[key][i] == 'string') {
+          if (last[key][i] === val) {
+            return true;
+          }
+        } else {
+          if (last[key][i].path === val.path) {
+            return true;
+          }
         }
       }
       return false;
     }
     if (!exists()) {
-      if (last[key].length >= 10) {
+      if (last[key].length >= (key=='search'?10:5)) {
         last[key].splice(-(last[key].length), 0, val);
         last[key].pop();
       } else {

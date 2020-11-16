@@ -27,31 +27,31 @@ export class ConfigEditorComponent implements OnInit {
     this.directories$.subscribe(items => { this.files = items; });
   }
 
-  addToRecent(val: {path: string, name?: string}): void {
-    let last = JSON.parse(localStorage.getItem('last'));
-    function exists() {
-      for (let i = 0; i < last.files.length; i++) {
-        if (last.files[i].name === val.name) {
-          return true;
-        }
-      }
-      return false;
-    }
-    if (!exists()) {
-      if (last.files.length >= 5) {
-        last.files.splice(-(last.search.length), 0, val);
-        last.files.pop();
-      } else {
-        last.files.push(val);
-      }
-      localStorage.setItem('last', JSON.stringify(last));
-    }
-  }
+  // addToRecent(val: {path: string, name?: string}): void {
+  //   let last = JSON.parse(localStorage.getItem('last'));
+  //   function exists() {
+  //     for (let i = 0; i < last.files.length; i++) {
+  //       if (last.files[i].name === val.name) {
+  //         return true;
+  //       }
+  //     }
+  //     return false;
+  //   }
+  //   if (!exists()) {
+  //     if (last.files.length >= 5) {
+  //       last.files.splice(-(last.search.length), 0, val);
+  //       last.files.pop();
+  //     } else {
+  //       last.files.push(val);
+  //     }
+  //     localStorage.setItem('last', JSON.stringify(last));
+  //   }
+  // }
 
   getConfig(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
     if (path.name) {
-      this.addToRecent(path);
+      this.api.addToRecent('files', path);
     }
     this.api.getConfigText(path.path).subscribe((textplain: string) => {
       this.textplain = textplain;

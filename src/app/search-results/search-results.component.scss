@@ -1,5 +1,5 @@
 :host {
-  font-size: 14px;
+  font-size: 13px;
   transition: 0.2s linear;
   background: #3d3e4a;
   .list-empty {
@@ -30,8 +30,8 @@
   }
   .logline {
     border-bottom: 1px solid #0000000f;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     transition: .05s linear;
     cursor: pointer;
     background: #3d3e4a;
