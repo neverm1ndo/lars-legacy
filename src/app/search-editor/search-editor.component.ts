@@ -83,21 +83,22 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
 
   search(query: string): void {
     let sq: SearchQuery = this.parseSearchQuery(query);
+    this.lines = [];
     sq.lim = '50';
+    this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
-    this.api.search(sq).subscribe(
-      (lines: any[]) => {
-        this.lines = lines;
-        this.api.loading = false;
-      }
-    );
+    if (this.api.lastQuery !== sq) {
+      this.api.lastQuery = sq;
+      this.api.qtype = 'search';
+      this.api.reloader$.next(null);
+    }
   }
 
   refresh(): void {
     this.api.refresh();
   }
 
-  uber() {
+  showLines() {
     this.glf = this.glf$.subscribe((lines)=> {
       if (lines.length) {
         this.lines.push(...lines) ;
@@ -114,16 +115,12 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   ngAfterViewInit(): void {
-    console.log(this.wrapper);
     this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
     .pipe(
       debounceTime(200)
     ).subscribe(() => {
       if (this.isBottom()) {
         if (this.lines.length % 50 == 0) {
-          if (this.lines.length >=6) {
-            this.api.currentPage++;
-          }
           this.api.lazyUpdate();
         }
       }
@@ -131,18 +128,18 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    console.log(this.api.currentPage);
     this.api.currentPage = 0;
-    console.log(this.api.currentPage);
+    this.lines = [];
     this.route.queryParams.subscribe(params => {
       if (params.query) {
-        this.search(params.query);
+        this.api.qtype = 'search';
+        this.api.lastQuery = this.parseSearchQuery(params.query);
+        this.showLines();
       } else {
-        this.api.clearLast();
-        this.uber();
+        this.api.qtype = 'last';
+        this.showLines();
       }
     });
-    // this.uber();
   }
   ngOnDestroy(): void {
     if (this.glf) this.glf.unsubscribe();

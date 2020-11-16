@@ -28,6 +28,11 @@ export class GeoComponent implements OnInit {
     this.router.navigate(['home/search'], { queryParams: { query: geoQuery }})
     this.api.addToRecent('search', geoQuery);
   }
+  sendQueryIP(): void {
+    let ipQuery = `ip:${this.table.ip}`;
+    this.router.navigate(['home/search'], { queryParams: { query: ipQuery }})
+    this.api.addToRecent('search', ipQuery);
+  }
 
   ngOnInit(): void {
   }

@@ -9,7 +9,7 @@ import { AppConfig } from '../environments/environment.dev';
 })
 export class ApiService {
 
-  readonly URL: string = AppConfig.api.main + 'last';
+  readonly URL_LAST: string = AppConfig.api.main + 'last';
   readonly URL_CONFIGS: string =  AppConfig.api.main + 'config-files-tree';
   readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
   readonly URL_CONFIG_SAVE: string =  AppConfig.api.main + 'save-config-file';
@@ -19,9 +19,11 @@ export class ApiService {
 
   public loading: boolean = true;
 
-  lastQuery: Observable<any> = this.http.get(this.URL, { params: { page: '0', lim: '50'}});
+  lastQuery: any = { page: '0', lim: '50'};
 
   currentPage: number = 0;
+
+  qtype: string;
 
 
   constructor(
@@ -35,14 +37,26 @@ export class ApiService {
      const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
      return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'text'});
   }
+  getLast(): Observable<any> {
+    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: '50'}});
+  }
   getLogFile(): Observable<any> {
     this.loading = true;
-    return this.reloader$.pipe(
-      switchMap(() => this.lastQuery)
-    )
+      return this.reloader$.pipe(
+        switchMap(() => {
+          if (this.qtype == 'search') {
+            if (!this.lastQuery.lim) this.lastQuery.lim = '50';
+            this.lastQuery.page = this.currentPage.toString();
+            return this.search(this.lastQuery)
+          } else {
+            return this.getLast();
+          }
+        })
+      )
   }
   lazyUpdate(): void {
-    this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: '50'}})
+    this.currentPage++;
+    // this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: '50'}})
     this.refresh();
   }
   search(query: {
@@ -55,8 +69,7 @@ export class ApiService {
     lim?: string
   }): Observable<any> {
     this.loading = true;
-    this.lastQuery = this.http.get(this.URL_SEARCH, { params: query });
-    return this.lastQuery;
+    return this.http.get(this.URL_SEARCH, { params: query });
   }
   saveConfigFile(path:string, data: string): Observable<any> {
     return this.http.post(this.URL_CONFIG_SAVE, {
@@ -68,21 +81,27 @@ export class ApiService {
   }
   addToRecent(key: string, val: string): void {
     let last = JSON.parse(localStorage.getItem('last'));
-    if (last[key].length >= 10) {
-      last[key].splice(-(last[key].length), 0, val);
-      last[key].pop();
-    } else {
-      last[key].push(val);
+    function exists() {
+      for (let i = 0; i < last[key].length; i++) {
+        if (last[key][i] === val) {
+          return true;
+        }
+      }
+      return false;
     }
-    localStorage.setItem('last', JSON.stringify(last));
-  }
-
-  clearLast(): void {
-    this.lastQuery = this.http.get(this.URL, { params: { page: '0', lim: '50'}});
+    if (!exists()) {
+      if (last[key].length >= 10) {
+        last[key].splice(-(last[key].length), 0, val);
+        last[key].pop();
+      } else {
+        last[key].push(val);
+      }
+      localStorage.setItem('last', JSON.stringify(last));
+    }
   }
 
   refresh() {
-    this.loading = true;
+    // this.loading = true;
     this.reloader$.next(null);
   }
 }
