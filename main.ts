@@ -1,4 +1,5 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow } from 'electron';
+import * as winStateKeeper from 'electron-window-state'
 import * as path from 'path';
 import * as url from 'url';
 
@@ -9,15 +10,20 @@ const args: string[] = process.argv.slice(1),
 function createWindow(): BrowserWindow {
 
   // const electronScreen: Electron.Screen = screen;
+  let state = winStateKeeper({
+    defaultWidth: 1000,
+    defaultHeight: 600
+  });
 
   // Create the browser window.
   win = new BrowserWindow({
-    x: 0,
-    y: 0,
-    width: 800,
-    minWidth: 800,
+    x: state.x,
+    y: state.y,
+    width: state.width,
+    height: state.height,
     minHeight: 580,
-    height: 600,
+    minWidth: 800,
+    title: 'LIBERTYLOGS',
     frame: false,
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
