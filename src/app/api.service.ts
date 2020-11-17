@@ -18,6 +18,7 @@ export class ApiService {
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   public loading: boolean = true;
+  public lazy: boolean = false;
 
   lastQuery: any = { page: '0', lim: '50'};
 
@@ -55,6 +56,7 @@ export class ApiService {
       )
   }
   lazyUpdate(): void {
+    this.lazy = true;
     this.currentPage++;
     // this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: '50'}})
     this.refresh();

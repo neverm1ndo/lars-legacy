@@ -6,11 +6,13 @@ import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { lazy } from '../app.animations';
 
 @Component({
   selector: 'app-search-editor',
   templateUrl: './search-editor.component.html',
-  styleUrls: ['./search-editor.component.scss']
+  styleUrls: ['./search-editor.component.scss'],
+  animations: [lazy]
 })
 export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
 
@@ -104,6 +106,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
         this.lines.push(...lines) ;
       }
       this.api.loading = false;
+      this.api.lazy = false;
     });
   }
 
@@ -129,8 +132,8 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
 
   ngOnInit(): void {
     this.api.currentPage = 0;
-    this.lines = [];
     this.route.queryParams.subscribe(params => {
+      this.lines = [];
       if (params.query) {
         this.api.qtype = 'search';
         this.api.lastQuery = this.parseSearchQuery(params.query);
@@ -142,6 +145,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
     });
   }
   ngOnDestroy(): void {
+    this.lines = [];
     if (this.glf) this.glf.unsubscribe();
   }
 }

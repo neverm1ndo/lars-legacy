@@ -84,6 +84,32 @@ export const upfade = trigger('upfade', [
           ]))
         ])
 ]);
+export const lazy = trigger('lazy', [
+  state('*', style({ transform: 'translateY(0%)' })),
+    state('void', style({
+        transform: 'translateY(100%)'
+    })),
+        transition('void => *', [
+          style({
+              transform: 'translateY(100%)'
+          }),
+          animate('0.15s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ transform: 'translateY(100%)'  }),
+            style({ transform: 'translateY(0%)'  })
+          ]))
+        ]),
+        transition('* => void', [
+          style({
+              transform: 'translateY(0%)'
+          }),
+          animate('0.15s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({  transform: 'translateY(0%)'  }),
+            style({  transform: 'translateY(100%)'  })
+          ]))
+        ])
+]);
 export const preload = trigger('preload', [
     transition(':enter', [
       query('*', style({ opacity: 0, transform: 'scale(0.98)' })),
