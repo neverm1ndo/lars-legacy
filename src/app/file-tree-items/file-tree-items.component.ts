@@ -1,13 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../api.service';
-
-interface TreeNode {
-  items: TreeNode[];
-  path: string;
-  name: string;
-  type: string;
-}
+import { TreeNode } from '../interfaces/app.interfaces'
 
 @Component({
   selector: 'file-tree-items',
@@ -16,7 +10,7 @@ interface TreeNode {
 })
 export class FileTreeItemsComponent implements OnInit {
 
-  @Input('child-nodes') nodes: TreeNode[];
+  @Input('child-nodes') nodes: TreeNode;
   @Input('expanded') expanded: boolean;
   @Input('current') current: string;
   @Output() chooseFileEvent = new EventEmitter<{path: string, name: string}>();

@@ -40,3 +40,10 @@ export interface SearchQuery {
   page?: string;
   lim?: string;
 }
+
+export interface TreeNode {
+  items?: TreeNode[];
+  path: string;
+  name: string;
+  type: string;
+}

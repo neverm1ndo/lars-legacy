@@ -3,6 +3,7 @@ import { ApiService } from '../api.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { TreeNode } from '../interfaces/app.interfaces';
 
 @Component({
   selector: 'app-config-editor',
@@ -11,7 +12,7 @@ import { filter } from 'rxjs/operators';
 })
 export class ConfigEditorComponent implements OnInit {
 
-  files: string[] = [];
+  files: TreeNode;
 
   directories$: Observable<any>;
 
@@ -24,29 +25,9 @@ export class ConfigEditorComponent implements OnInit {
     public route: ActivatedRoute
   ) {
     this.directories$ = api.getConfigsDir();
-    this.directories$.subscribe(items => { this.files = items; });
+    this.directories$.subscribe(items => { this.files = items; console.log(items);
+    });
   }
-
-  // addToRecent(val: {path: string, name?: string}): void {
-  //   let last = JSON.parse(localStorage.getItem('last'));
-  //   function exists() {
-  //     for (let i = 0; i < last.files.length; i++) {
-  //       if (last.files[i].name === val.name) {
-  //         return true;
-  //       }
-  //     }
-  //     return false;
-  //   }
-  //   if (!exists()) {
-  //     if (last.files.length >= 5) {
-  //       last.files.splice(-(last.search.length), 0, val);
-  //       last.files.pop();
-  //     } else {
-  //       last.files.push(val);
-  //     }
-  //     localStorage.setItem('last', JSON.stringify(last));
-  //   }
-  // }
 
   getConfig(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;

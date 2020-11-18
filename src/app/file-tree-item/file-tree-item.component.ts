@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { TreeNode } from '../interfaces/app.interfaces';
 
 @Component({
   selector: 'file-tree-item',
@@ -9,7 +10,7 @@ import { faFolder } from '@fortawesome/free-solid-svg-icons';
 })
 export class FileTreeItemComponent implements OnInit {
 
-  @Input('item') item: any;
+  @Input('item') item: TreeNode;
   @Input('current') current: string;
 
   fa = {

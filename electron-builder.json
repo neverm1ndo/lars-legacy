@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "libertylogs",
   "directories": {
     "output": "release/"
   },
@@ -20,21 +20,9 @@
         "!tslint.json"
     ],
   "win": {
-    "icon": "dist/assets/icons",
+    "icon": "dist/assets/icons/favicon.ico",
     "target": [
       "portable"
-    ]
-  },
-  "mac": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "dmg"
-    ]
-  },
-  "linux": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "AppImage"
     ]
   }
 }

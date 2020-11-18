@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { UserService } from '../user.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, fromEvent, Subscription } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { lazy } from '../app.animations';
 
@@ -15,21 +15,20 @@ import { lazy } from '../app.animations';
   styleUrls: ['./search-editor.component.scss'],
   animations: [lazy]
 })
-export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
+export class SearchEditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild('wrapper') wrapper: ElementRef<any>;
 
   lines: LogLine[] = [];
   scroll: any;
   glf$: Observable<any>;
-  glf: Subscription;
 
   constructor(
     public api: ApiService,
-    private user: UserService,
+    public user: UserService,
     public route: ActivatedRoute
   ) {
-    this.glf$ = this.api.getLogFile().pipe(
+    this. glf$ = api.getLogFile().pipe(
       retryWhen(errors =>
         errors.pipe(
           delay(10*1000),
@@ -108,7 +107,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   showLines() {
-    this.glf = this.glf$.subscribe((lines)=> {
+    this.glf$.subscribe((lines)=> {
       if (lines.length) {
         this.lines.push(...lines) ;
       }
@@ -150,9 +149,5 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
         this.showLines();
       }
     });
-  }
-  ngOnDestroy(): void {
-    this.lines = [];
-    if (this.glf) this.glf.unsubscribe();
   }
 }

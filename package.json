@@ -1,10 +1,10 @@
 {
   "name": "libertylogs-client",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.8.0",
+  "description": "Program to control Liberty server",
   "homepage": "https://github.com/neneverm1ndo/libertylogs-client",
   "author": {
-    "name": "neverm1ndo, maximegris",
+    "name": "neverm1ndo",
     "email": "it@nmnd.ru"
   },
   "keywords": [],

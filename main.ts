@@ -29,7 +29,8 @@ function createWindow(): BrowserWindow {
     backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent: (serve) ? true : false,
+      // allowRunningInsecureContent: (serve) ? true : false,
+      allowRunningInsecureContent: true,
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
@@ -42,11 +43,12 @@ function createWindow(): BrowserWindow {
     });
     win.loadURL('http://localhost:4200');
   } else {
-    win.loadURL(url.format({
-      pathname: path.join(__dirname, 'dist/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }));
+    win.loadURL('https://libertyapp.nmnd.ru');
+    // win.loadURL(url.format({
+    //   pathname: path.join(__dirname, 'dist/index.html'),
+    //   protocol: 'file:',
+    //   slashes: true
+    // }));
   }
 
   // Emitted when the window is closed.
