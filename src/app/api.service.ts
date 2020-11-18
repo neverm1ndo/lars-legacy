@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment.dev';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,15 @@ export class ApiService {
   currentPage: number = 0;
 
   qtype: string;
+  chunkSize: string;
 
 
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+    private user: UserService
+  ) {
+    this.chunkSize = this.user.getUserSettings().lineChunk;
+  }
 
   getConfigsDir(): Observable<any> {
     return this.http.get(this.URL_CONFIGS);
@@ -39,14 +44,14 @@ export class ApiService {
      return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'text'});
   }
   getLast(): Observable<any> {
-    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: '50'}});
+    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.chunkSize}});
   }
   getLogFile(): Observable<any> {
     this.loading = true;
       return this.reloader$.pipe(
         switchMap(() => {
           if (this.qtype == 'search') {
-            if (!this.lastQuery.lim) this.lastQuery.lim = '50';
+            if (!this.lastQuery.lim) this.lastQuery.lim = this.chunkSize;
             this.lastQuery.page = this.currentPage.toString();
             return this.search(this.lastQuery)
           } else {
@@ -58,7 +63,7 @@ export class ApiService {
   lazyUpdate(): void {
     this.lazy = true;
     this.currentPage++;
-    // this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: '50'}})
+    // this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: this.chunkSize}})
     this.refresh();
   }
   search(query: {

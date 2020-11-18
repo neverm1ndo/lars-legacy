@@ -14,6 +14,10 @@
           </div>
         </div>
         <!-- <button *ngIf="!quick" class="btn btn-dark" (click)="api.refresh()" name="refresh" [disabled]="api.loading"><fa-icon [icon]="fa.sync"></fa-icon></button> -->
+      <ng-template #tipContent let-greeting="greeting">Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
+      <div *ngIf="!quick" class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">
+        <kbd>{{lineCounter}}</kbd>
+      </div>
       </div>
     </div>
   </div>

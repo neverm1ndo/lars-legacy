@@ -30,6 +30,13 @@ export class UserService {
   getUser(name: string): Observable<any> {
     return this.http.get(this.URL_USER, { params: { name: name }});
   }
+  getUserSettings(): any {
+    if (localStorage.getItem('settings') !== null) {
+      return JSON.parse(localStorage.getItem('settings'));
+    } else {
+      return null;
+    }
+  }
 
   getUserInfo(): UserData | null {
     if (localStorage.getItem('user') !== null) {

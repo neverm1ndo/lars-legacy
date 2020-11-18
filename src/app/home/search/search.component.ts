@@ -28,6 +28,7 @@ export class SearchComponent implements OnInit {
 
   @Output() searchQuery = new EventEmitter<string>();
   @Input('quick') quick: boolean = false;
+  @Input('lineCounter') lineCounter: any = 0;
 
   @ViewChild('error')
   private error: TemplateRef<any>;

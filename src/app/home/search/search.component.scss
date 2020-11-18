@@ -1,6 +1,12 @@
 @import 'scss/colors';
 
 :host {
+  .counter {
+    display: inline-block;
+    position: relative;
+    margin-left: 15px;
+    top: 5px;
+  }
   .head {
     padding-top: 8px;
     padding-bottom: 8px;

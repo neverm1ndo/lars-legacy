@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
+import { UserService } from '../user.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -25,6 +26,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
 
   constructor(
     private api: ApiService,
+    private user: UserService,
     public route: ActivatedRoute
   ) {
     this.glf$ = this.api.getLogFile().pipe(
@@ -86,7 +88,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
   search(query: string): void {
     let sq: SearchQuery = this.parseSearchQuery(query);
     this.lines = [];
-    sq.lim = '50';
+    sq.lim = this.user.getUserSettings().lineChunk;
     this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
     if (this.api.lastQuery !== sq) {
@@ -123,7 +125,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
       debounceTime(200)
     ).subscribe(() => {
       if (this.isBottom()) {
-        if (this.lines.length % 50 == 0) {
+        if (this.lines.length % +this.user.getUserSettings().lineChunk == 0) {
           this.api.lazyUpdate();
         }
       }
