@@ -1,5 +1,5 @@
 <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
-  <app-search (searchQuery)="search($event)" [lineCounter]="lines.length" (syncronize)="sync($event)"></app-search>
+  <app-search (searchQuery)="search($event)" [lineCounter]="lines.length" (syncronize)="sync()"></app-search>
   <div #wrapper class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <search-results [searchResult]="lines"></search-results>
   </div>

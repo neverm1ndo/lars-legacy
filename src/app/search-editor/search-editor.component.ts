@@ -25,7 +25,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
   glf: Subscription;
 
   constructor(
-    private api: ApiService,
+    public api: ApiService,
     private user: UserService,
     public route: ActivatedRoute
   ) {

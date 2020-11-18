@@ -20,7 +20,7 @@ export class TopperComponent implements OnInit {
   authenticated: any;
   constructor(
     public electron: ElectronService,
-    private userService: UserService
+    public userService: UserService
   ) {}
 
   winclose(): void {

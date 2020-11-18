@@ -103,7 +103,7 @@ export class ApiService {
       return false;
     }
     if (!exists()) {
-      if (last[key].length >= (key=='search'?10:5)) {
+      if (last[key].length >= (key=='search'?15:7)) {
         last[key].splice(-(last[key].length), 0, val);
         last[key].pop();
       } else {
