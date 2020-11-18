@@ -1,0 +1,61 @@
+<div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
+  <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
+    <div class="jumbotron mb-0 h-100 w-100">
+      <div class="container">
+        <div class="d-flex justify-content-between">
+          <h3 class="display-4">Настройки</h3>
+          <button type="button" class="close" (click)="options.toggleSettings()" name="button"></button>
+        </div>
+        <p>Настройки для удобства работы с LibertyLogs</p>
+        <hr>
+        <form [formGroup]="settings" (change)="setup()">
+          <div class="d-flex justify-content-between align-content-center mb-2">
+            <div class="">
+              <h6>Сворачивать в трей</h6>
+              <small>Прятать LibertyLogs в трей при сворачивании приложения</small>
+            </div>
+            <label class="switch" for="checkbox2">
+            <input formControlName="tray" type="checkbox" id="checkbox2" />
+              <div class="slider round"></div>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between align-content-center mb-2">
+            <div class="">
+              <h6>Количество подгружаемых строк</h6>
+              <small>Определяет размер загружаемого чанка со строками. По умолчанию: <b>100</b>. Максимум: <b>500</b><br> Чем меньше число, тем чаще подгрузки, но выше производительность листинга.</small>
+            </div>
+            <input formControlName="lineChunk" type="text" id="lineChunk" placeholder="100" />
+          </div>
+          <div class="d-flex justify-content-between align-content-center mb-2">
+            <div class="">
+              <h6>Стиль листинга</h6>
+              <small>Выбор между стилями отображения лога</small>
+            </div>
+            <div class="styles d-flex justify-content-between">
+              <div class="form-check form-check-inline custom-control custom-radio">
+                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio1" value="small">
+                <label class="form-check-label custom-control-label" for="inlineRadio1">Компактный</label>
+              </div>
+              <div class="form-check form-check-inline custom-control custom-radio">
+                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio2" value="big" disabled>
+                <label class="form-check-label custom-control-label" for="inlineRadio2">Увеличенный</label>
+              </div>
+              <div class="form-check form-check-inline custom-control custom-radio">
+                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio3" value="legacy" disabled>
+                <label class="form-check-label custom-control-label" for="inlineRadio3">Legacy</label>
+              </div>
+            </div>
+            <!-- <input formControlName="lineChunk" type="text" id="lineChunk" placeholder="100" /> -->
+          </div>
+          <div class="d-flex justify-content-between align-content-center mb-2">
+            <div class="">
+              <h6>Стиль текстового редактора</h6>
+              <small>Стили подсветки синтаксиса текстового редактора</small>
+            </div>
+            <input formControlName="textEditorStyle" type="text" id="lineChunk" placeholder="100" value="material" disabled/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
