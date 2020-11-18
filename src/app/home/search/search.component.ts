@@ -27,6 +27,7 @@ export class SearchComponent implements OnInit {
   }
 
   @Output() searchQuery = new EventEmitter<string>();
+  @Output() syncronize = new EventEmitter<boolean>();
   @Input('quick') quick: boolean = false;
   @Input('lineCounter') lineCounter: any = 0;
 
@@ -52,6 +53,10 @@ export class SearchComponent implements OnInit {
     } else {
       this.toast.show(this.error, { classname: 'bg-danger text-light', delay: 3000 });
     }
+  }
+
+  sync(): void {
+    this.syncronize.emit(true);
   }
 
   // refresh()

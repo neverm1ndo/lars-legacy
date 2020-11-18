@@ -117,4 +117,8 @@ export class ApiService {
     // this.loading = true;
     this.reloader$.next(null);
   }
+  sync() {
+    this.loading = true;
+    this.reloader$.next(null);
+  }
 }

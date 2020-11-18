@@ -102,6 +102,11 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy{
     this.api.refresh();
   }
 
+  sync(): void {
+    this.lines = [];
+    this.api.sync();
+  }
+
   showLines() {
     this.glf = this.glf$.subscribe((lines)=> {
       if (lines.length) {
