@@ -1,0 +1,41 @@
+@import 'scss/colors';
+:host {
+  table {
+    color: $text;
+    
+  }
+  .title {
+    h3 {
+      text-overflow: ellipsis;
+      fa-icon {
+        margin-right: 0em;
+      }
+    }
+    white-space: nowrap;
+  }
+  fa-icon {
+    margin-right: 0.5em;
+  }
+  .playerlog, .jumbotron {
+    background: #3d3e4a;
+  }
+  .filetree {
+    font-size: 13px;
+    background: $filetree;
+    border-right: 1px solid $secondary;
+  }
+  .texteditor {
+    // overflow: auto;
+    background: $secondary;
+  }
+  .text-edit-block {
+    color: $text;
+    text-align: center;
+    height: 100%;
+    h4 {
+      width: 100%;
+      opacity: 0.2;
+      font-weight: 300;
+    }
+  }
+}

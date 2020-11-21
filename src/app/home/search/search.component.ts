@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, Input, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { faFilter, faSync, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../../api.service';
 import { ToastService } from '../../toast.service';
 import { filter } from 'rxjs/operators';
@@ -23,7 +23,9 @@ export class SearchComponent implements OnInit {
   fa = {
     filter: faFilter,
     sync: faSync,
-    err: faExclamationTriangle
+    err: faExclamationTriangle,
+    vsquare: faVectorSquare,
+    hist: faHistory
   }
 
   @Output() searchQuery = new EventEmitter<string>();

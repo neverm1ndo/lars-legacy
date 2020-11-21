@@ -1,11 +1,18 @@
 @import 'scss/colors';
 
 :host {
+  .btn {
+    margin-right: 5px;
+  }
   .counter {
     display: inline-block;
     position: relative;
     margin-left: 15px;
-    top: 5px;
+    top: 6px;
+    fa-icon {
+      position: relative;
+      top: 1px;
+    }
   }
   .head {
     padding-top: 8px;

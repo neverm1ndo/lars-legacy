@@ -1,39 +1,61 @@
 @import '_colors';
 @import '_native';
 
-.toplogo {
-  width: 25px;
-  height: auto;
-  margin-left: 23px;
-  position: relative;
-  top: 5px;
-  transform: scaleY(-1);
-}
-.label {
-  position: relative;
-  top: 4px;
-  left: 25px;
-  font-size: 12px;
-  opacity: 0.7;
-}
-.btn-topnative {
-  width: 35px;
-  height: 35px;
-  background: $topper;
-  padding: 0px 0px 0px 0px;
-  border-radius: 0px;
-  color: $text;
-  svg {
-    width: 15px;
+:host {
+  .toplogo {
+    width: 25px;
     height: auto;
+    margin-left: 23px;
     position: relative;
-    top: -3px;
-    path {
-      stroke: #ffffff;
-      stroke-width: 2px;
+    top: 5px;
+    transform: scaleY(-1);
+  }
+  .label {
+    position: relative;
+    top: 4px;
+    left: 25px;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .btn-topnative {
+    width: 35px;
+    height: 35px;
+    background: $topper;
+    padding: 0px 0px 0px 0px;
+    border-radius: 0px;
+    color: $text;
+    svg {
+      width: 15px;
+      height: auto;
+      position: relative;
+      top: -3px;
+      path {
+        stroke: #ffffff;
+        stroke-width: 2px;
+      }
     }
   }
-}
-.btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) {
-  margin-left: 0px!important;
+  .btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) {
+    margin-left: 0px!important;
+  }
+  .ddOpened {
+    animation: open .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translate(0px, 0%);
+  }
+
+  @keyframes open {
+    0% {  visibility: hidden; opacity: 0; transform: translate(0px, 20%);}
+    100% { visibility: visible; opacity: 1; }
+  }
+
+  .ddClosed {
+    animation: close .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translate(0px, -10%);
+  }
+
+  @keyframes close {
+    0% { display: block!important; opacity: 1 !important; }
+    99% { opacity: 0; transform: translate(0px, 0%); }
+    100% { display: none!important;}
+  }
 }

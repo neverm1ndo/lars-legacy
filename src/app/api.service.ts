@@ -15,6 +15,7 @@ export class ApiService {
   readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
   readonly URL_CONFIG_SAVE: string =  AppConfig.api.main + 'save-config-file';
   readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
+  readonly URL_MAPS: string =  AppConfig.api.main + 'maps-files-tree';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -38,6 +39,9 @@ export class ApiService {
 
   getConfigsDir(): Observable<any> {
     return this.http.get(this.URL_CONFIGS);
+  }
+  getMapsDir(): Observable<any> {
+    return this.http.get(this.URL_MAPS);
   }
   getConfigText(path: string): Observable<any> {
      const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');

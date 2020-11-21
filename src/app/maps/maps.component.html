@@ -1,0 +1,46 @@
+<div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
+  <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
+    <div class="col-12 h-100">
+      <div class="row h-100">
+        <div class="col-sm-4 col-lg-4 filetree pr-0 pl-0 h-100">
+          <file-tree [items]="files"></file-tree>
+        </div>
+        <div class="col-sm-8 col-lg-8 h-100">
+          <div class="jumbotron mb-0 h-100 w-100">
+            <div class="container">
+              <div class="btn-group mb-2" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.plus"></fa-icon> Загрузить новую карту</button>
+              </div>
+              <div class="d-flex justify-content-between overflow-hidden title w-100">
+                <h3 class="display-4"><fa-icon [icon]="fa.map"></fa-icon> palmas_beach_santa_maria_los_santos.map</h3>
+              </div>
+              <hr>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th scope="col">Кол-во объектов</th>
+                    <th scope="col">Координаты</th>
+                    <th scope="col">Автор</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>400</td>
+                    <td>x: 123.12, y: 123.43, z: 0.0</td>
+                    <td>Test</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="btn-group" role="group" aria-label="Управление картой">
+                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Скачать</button>
+                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.up"></fa-icon> Перезаписать</button>
+                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить</button>
+              </div>
+            </div>
+          </div>
+          <!-- <text-editor [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined; else textEditorBlock"></text-editor> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { ElectronService } from '../core/services/electron/electron.service';
 import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
+
 @Component({
   selector: 'app-topper',
   templateUrl: './topper.component.html',
@@ -18,6 +19,8 @@ export class TopperComponent implements OnInit {
 
   isLoggedIn: boolean = false;
   authenticated: any;
+  ddStyling: boolean = false;
+  ddStatus: string = 'ddClosed';
   constructor(
     public electron: ElectronService,
     public userService: UserService
@@ -34,6 +37,11 @@ export class TopperComponent implements OnInit {
 
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
+  }
+
+  dropDownClicked() {
+    this.ddStyling = !this.ddStyling;
+    this.ddStatus = this.ddStyling?'ddOpened':'ddClosed';
   }
 
   ngOnInit(): void {
