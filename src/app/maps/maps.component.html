@@ -3,10 +3,10 @@
     <div class="col-12 h-100">
       <div class="row h-100">
         <div class="col-sm-4 col-lg-4 filetree pr-0 pl-0 h-100">
-          <file-tree (chooseFileEvent)="getMap($event)" [items]="files"></file-tree>
+          <file-tree (chooseFileEvent)="getMap($event)" [items]="files" [current]="currentFilePath"></file-tree>
         </div>
         <div class="col-sm-8 col-lg-8 h-100">
-          <div *ngIf="current" class="jumbotron mb-0 h-100 w-100">
+          <div *ngIf="!api.loading && current; else loading" class="jumbotron mb-0 h-100 w-100">
             <div class="container">
               <div class="btn-group mb-2" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.plus"></fa-icon> Загрузить новую карту</button>
@@ -58,8 +58,6 @@
                         </span>
                       </div>
                     </div>
-                    <!-- <div class="col-md-6 col-lg-2"><kbd><b>Мир</b> {{ current.dim }}</kbd></div>
-                    <div class="col-md-6 col-lg-2"><kbd><b>Интерьер</b> {{ current.int }}</kbd></div> -->
                   </div>
                 </div>
               </div>
@@ -71,6 +69,18 @@
               </div>
             </div>
           </div>
+          <ng-template #loading>
+            <div *ngIf="!current && !api.loading" class="jumbotron mb-0 h-100 w-100 d-flex justify-content-center">
+              <div class="pr d-flex align-self-center text-center">
+                <h3><fa-icon [icon]="fa.map"></fa-icon> <br>Выберите карту из списка или добавьте новую с помощью комбинации <span class="badge badge-dark"> CTRL+A </span></h3>
+              </div>
+            </div>
+            <div class="jumbotron mb-0 h-100 w-100 d-flex justify-content-center">
+              <div class="loader d-flex align-self-center">
+                <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg>
+              </div>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>

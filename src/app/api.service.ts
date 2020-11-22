@@ -20,7 +20,7 @@ export class ApiService {
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  public loading: boolean = true;
+  public loading: boolean = false;
   public lazy: boolean = false;
 
   lastQuery: any = { page: '0', lim: '50'};
@@ -49,6 +49,7 @@ export class ApiService {
      return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'text'});
   }
   getMap(path: string) {
+    this.loading = true;
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
     return this.http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
   }

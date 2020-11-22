@@ -1,5 +1,16 @@
 @import 'scss/colors';
 :host {
+  .pr {
+    color: #fdfdfd30;
+    h3 {
+      font-weight: 300;
+      .badge {
+        padding-left: 10px;
+        padding-right: 10px;
+        opacity: 0.5;
+      }
+    }
+  }
   kbd {
     font-size: inherit;
     width: 100%;

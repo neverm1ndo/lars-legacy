@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-maps',
@@ -10,11 +13,20 @@ import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCi
 })
 export class MapsComponent implements OnInit {
 
-  constructor(public api: ApiService) { }
+  constructor(
+    public api: ApiService,
+    public route: ActivatedRoute
+   ) {
+     this.directories$ = api.getMapsDir();
+     this.directories$.subscribe(items => { this.files = items; this.current = null});
+   }
 
   files: TreeNode;
 
+  directories$: Observable<any>;
+
   current: any;
+  currentFilePath: string;
 
   fa = {
     map: faMap,
@@ -45,16 +57,23 @@ export class MapsComponent implements OnInit {
     };
   }
 
-  getMaps() {
-    this.api.getMapsDir().subscribe(maps => { this.files = maps });
-  }
-
   getMap(path: { path: string, name?: string}) {
-    this.api.getMap(path.path).subscribe(map => { this.current = this.parseMap(map); this.current.name = path.name })
+    this.currentFilePath = path.path;
+    this.api.getMap(path.path).subscribe(map => {
+      this.current = this.parseMap(map);
+      this.current.name = path.name;
+      this.api.loading = false;
+    })
   }
 
   ngOnInit(): void {
-    this.getMaps();
+    this.route.queryParams.pipe(
+      filter(params => (params.path || params.name))
+    ).subscribe(params => {
+      console.log(params);
+      this.currentFilePath = params.path;
+      this.getMap({path: params.path, name: params.name});
+    });
   }
 
 }

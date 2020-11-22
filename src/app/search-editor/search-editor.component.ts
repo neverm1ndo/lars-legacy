@@ -126,7 +126,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
     .pipe(
-      debounceTime(200)
+      debounceTime(1200)
     ).subscribe(() => {
       if (this.isBottom()) {
         if (this.lines.length % +this.user.getUserSettings().lineChunk == 0) {

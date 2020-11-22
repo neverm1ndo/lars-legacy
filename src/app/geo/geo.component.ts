@@ -24,11 +24,13 @@ export class GeoComponent implements OnInit {
     this.api.search({ as: this.table.as.toString(), ss: this.table.ss });
   }
   sendQuery(): void {
+    this.api.currentPage = 0;
     let geoQuery = `srl:${this.table.as.toString()}*${this.table.ss}`;
     this.api.addToRecent('search', geoQuery);
     this.router.navigate(['home/search'], { queryParams: { query: geoQuery }})
   }
   sendQueryIP(): void {
+    this.api.currentPage = 0;
     let ipQuery = `ip:${this.table.ip}`;
     this.api.addToRecent('search', ipQuery);
     this.router.navigate(['home/search'], { queryParams: { query: ipQuery }})
