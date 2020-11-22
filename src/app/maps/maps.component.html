@@ -3,34 +3,67 @@
     <div class="col-12 h-100">
       <div class="row h-100">
         <div class="col-sm-4 col-lg-4 filetree pr-0 pl-0 h-100">
-          <file-tree [items]="files"></file-tree>
+          <file-tree (chooseFileEvent)="getMap($event)" [items]="files"></file-tree>
         </div>
         <div class="col-sm-8 col-lg-8 h-100">
-          <div class="jumbotron mb-0 h-100 w-100">
+          <div *ngIf="current" class="jumbotron mb-0 h-100 w-100">
             <div class="container">
               <div class="btn-group mb-2" role="group" aria-label="Basic example">
                 <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.plus"></fa-icon> Загрузить новую карту</button>
               </div>
               <div class="d-flex justify-content-between overflow-hidden title w-100">
-                <h3 class="display-4"><fa-icon [icon]="fa.map"></fa-icon> palmas_beach_santa_maria_los_santos.map</h3>
+                <h3 class="display-4"><fa-icon [icon]="fa.map"></fa-icon> {{ current.name }}</h3>
               </div>
               <hr>
-              <table class="table table-borderless">
-                <thead>
-                  <tr>
-                    <th scope="col">Кол-во объектов</th>
-                    <th scope="col">Координаты</th>
-                    <th scope="col">Автор</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>400</td>
-                    <td>x: 123.12, y: 123.43, z: 0.0</td>
-                    <td>Test</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-md-8 col-lg-7">
+                      <div class="mb-2">
+                        <b>Кол-во объектов</b>
+                      </div>
+                      <span *ngIf="current.objects <= 380" class="badge badge-success">
+                        <span class="pre-badge">{{ current.objects }}</span>
+                        <fa-icon [icon]="fa.check"></fa-icon>Лимит не превышен
+                      </span>
+                      <span *ngIf="current.objects >= 380 && current.objects < 400" class="badge badge-warning">
+                        <span class="pre-badge">{{ current.objects }}</span>
+                        <fa-icon [icon]="fa.info"></fa-icon>Близко к лимиту
+                      </span>
+                      <span *ngIf="current.objects >= 400" class="badge badge-danger">
+                        <span class="pre-badge">{{ current.objects }}</span>
+                        <fa-icon [icon]="fa.info"></fa-icon>Превышен лимит
+                      </span>
+                    </div>
+                    <div class="col-md-4 col-lg-5">
+                      <div class="mb-2">
+                        <b>Координаты</b>
+                      </div>
+                      <div class="mb-1">
+                        <span class="badge badge-dark">
+                          <span class="pre-badge">X</span>
+                          {{ current.coords.x }}
+                        </span>
+                      </div>
+                      <div class="mb-1">
+                        <span class="badge badge-dark">
+                          <span class="pre-badge">Y</span>
+                          {{ current.coords.y }}
+                        </span>
+                      </div>
+                      <div class="mb-1">
+                        <span class="badge badge-dark">
+                          <span class="pre-badge">Z</span>
+                          {{ current.coords.z }}
+                        </span>
+                      </div>
+                    </div>
+                    <!-- <div class="col-md-6 col-lg-2"><kbd><b>Мир</b> {{ current.dim }}</kbd></div>
+                    <div class="col-md-6 col-lg-2"><kbd><b>Интерьер</b> {{ current.int }}</kbd></div> -->
+                  </div>
+                </div>
+              </div>
+              <hr>
               <div class="btn-group" role="group" aria-label="Управление картой">
                 <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Скачать</button>
                 <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.up"></fa-icon> Перезаписать</button>
@@ -38,7 +71,6 @@
               </div>
             </div>
           </div>
-          <!-- <text-editor [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined; else textEditorBlock"></text-editor> -->
         </div>
       </div>
     </div>
