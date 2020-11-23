@@ -8,9 +8,6 @@
         <div class="col-sm-8 col-lg-8 h-100">
           <div *ngIf="!api.loading && current; else loading" class="jumbotron mb-0 h-100 w-100">
             <div class="container">
-              <div class="btn-group mb-2" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.plus"></fa-icon> Загрузить новую карту</button>
-              </div>
               <div class="d-flex justify-content-between overflow-hidden title w-100">
                 <h3 class="display-4"><fa-icon [icon]="fa.map"></fa-icon> {{ current.name }}</h3>
               </div>
@@ -62,11 +59,11 @@
                 </div>
               </div>
               <hr>
-              <div class="btn-group" role="group" aria-label="Управление картой">
-                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Скачать</button>
-                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.up"></fa-icon> Перезаписать</button>
-                <button type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить</button>
-              </div>
+              <!-- <div class="btn-group" role="group" aria-label="Управление картой"> -->
+                <button (click)="saveMapLocal()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Сохранить локально <br> <small>Ctrl+S</small></button>
+                <button (click)="saveMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.up"></fa-icon> Загрузить на сервер <br> <small>Ctrl+A</small></button>
+                <button (click)="deleteMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить <br> <small>Alt+X</small></button>
+              <!-- </div> -->
             </div>
           </div>
           <ng-template #loading>
@@ -86,3 +83,28 @@
     </div>
   </div>
 </div>
+<ng-template #successSaveTpl>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.save"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        <b>{{ this.current.name }}</b> успешно сохранен
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #failSaveTpl>
+  <div class="d-flex flex-row">
+    <div class="d-flex toast-icon">
+      <fa-icon [icon]="fa.save"></fa-icon>
+    </div>
+    <div class="d-flex flex-fill toast-text">
+      <span>
+        ОШИБКА: <b>{{ this.current.name }}</b> не сохранен
+        <br>
+      </span>
+    </div>
+  </div>
+</ng-template>

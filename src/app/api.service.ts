@@ -17,6 +17,7 @@ export class ApiService {
   readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps-files-tree';
   readonly URL_MAPINFO: string = AppConfig.api.main + 'map-file';
+  readonly URL_MAPDELETE: string = AppConfig.api.main + 'map-delete';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -52,6 +53,9 @@ export class ApiService {
     this.loading = true;
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
     return this.http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
+  }
+  deleteMap(path: string) {
+    return this.http.delete(this.URL_MAPDELETE, { params: { path: path }});
   }
   getLast(): Observable<any> {
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.chunkSize}});
