@@ -37,6 +37,7 @@ export class TopperComponent implements OnInit {
 
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
+    this.dropDownClicked();
   }
 
   dropDownClicked() {

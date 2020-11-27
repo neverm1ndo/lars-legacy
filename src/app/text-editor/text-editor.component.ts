@@ -81,7 +81,7 @@ export class TextEditorComponent implements OnInit {
   saveFile() {
     this.loading = true;
     this.error.next(null);
-    this.api.saveConfigFile(this.path, this.textplain)
+    this.api.saveFile(this.path, this.textplain)
     .pipe(catchError((error) => this.handleError(error)))
     .pipe(tap(()=> {
       this.loading = false;

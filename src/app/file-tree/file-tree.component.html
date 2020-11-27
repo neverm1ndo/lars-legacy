@@ -1,7 +1,23 @@
 <div class="d-flex align-items-start flex-column h-100">
   <div class="pt-3 w-100">
-    <div class="col-12 text-center">
-      <p>Файлы</p>
+    <div class="col-12 d-flex text-center justify-content-between top">
+      <span>Файлы</span>
+      <!-- <span class="btn btn-outline-light btn-file float-right theme-button">
+        <fa name="file" class="mr-lg-2"></fa>
+        <label for="fileLoader" class="d-none d-lg-inline">
+          Открыть лог
+        </label>
+      </span> -->
+      <div>
+        <button class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
+        <span type="button" class="btn btn-dark btn-file" name="button">
+          <fa-icon [icon]="fa.plus"></fa-icon>
+          <label for="fileloader">
+            Добавить
+          </label>
+          <input type="file" name="fileLoader" (input)="upload($event)" multiple="true" accept=".map, .off, .conf">
+        </span>
+      </div>
     </div>
   </div>
   <div class="col-12 no-padding flex-fill overflow-auto">

@@ -5,8 +5,9 @@ import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-maps',
@@ -20,7 +21,7 @@ export class MapsComponent implements OnInit {
   @ViewChild('failSaveTpl')
   private savefailtpl: TemplateRef<any>;
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
-    if (this.current) {      
+    if (this.current) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case 83 : { // Ctrl + S
@@ -52,16 +53,20 @@ export class MapsComponent implements OnInit {
     public electron: ElectronService,
     public toast: ToastService
    ) {
-     this.directories$ = api.getMapsDir();
+     this.directories$ = this.reloader$.pipe(switchMap(() => api.getMapsDir()));
      this.directories$.subscribe(items => { this.files = items; this.current = null});
    }
 
   files: TreeNode;
 
   directories$: Observable<any>;
+  reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   current: any;
   currentFilePath: string;
+  progress: number = 0;
+
+  loading: boolean = false;
 
   fa = {
     map: faMap,
@@ -99,11 +104,11 @@ export class MapsComponent implements OnInit {
         buttonLabel: 'Сохранить',
         defaultPath: this.current.name,
         filters: [
-          { name: 'Maps(*.map)', extensions: ['map'] },
+          { name: 'Maps(*.map, *.off)', extensions: ['map', 'off'] },
           { name: 'All Files', extensions: ['*'] }
         ]
       }).then(res => {
-        if (res.filePath) {
+        if (res.filePath && !res.canceled) {
           console.log(res.filePath);
           this.electron.fs.writeFile(res.filePath, this.current.text, 'utf8', (err) => {
             if (err) throw err;
@@ -137,12 +142,46 @@ export class MapsComponent implements OnInit {
     this.electron.dialog.showMessageBox(dialogOpts).then(
       val => {
         if (val.response === 0) {
-          sub = this.api.deleteMap(this.currentFilePath).subscribe(() => {
-            this.toast.show(this.savetpl, { classname: 'bg-success text-light', delay: 3000 });
-          });
+          sub = this.api.deleteMap(this.currentFilePath).subscribe();
         }
       }
-    ).finally(() => { if (sub) sub.unsubscribe() });
+    ).finally(() => {
+      if (sub) sub.unsubscribe();
+      this.reloadFileTree();
+      this.toast.show('Map deleted', { classname: 'bg-warning text-dark', delay: 3000 });
+    });
+  }
+
+  saveMapCloud(): void {}
+
+  addNewMap(event: any): void {
+    let files = event.target.files;
+       if (files.length > 0) {
+         let formData: FormData = new FormData();
+         for (let file of files) {
+              formData.append('file', file);
+         }
+         this.api.uploadFile(formData).subscribe(
+           event => {
+              if (event.type === HttpEventType.UploadProgress) {
+                this.progress = Math.round(100 * event.loaded / event.total);
+              } else if (event instanceof HttpResponse) {
+                this.toast.show('Map uploaded', { classname: 'bg-success text-light', delay: 3000 });
+                this.reloadFileTree();
+                setTimeout(() => { this.progress = 0; }, 1000)
+              }
+            },
+            err => {
+              this.progress = 0;
+              console.error(err);
+              this.reloadFileTree();
+            });
+    }
+  }
+
+  reloadFileTree(): void {
+
+    this.reloader$.next(null);
   }
 
   ngOnInit(): void {

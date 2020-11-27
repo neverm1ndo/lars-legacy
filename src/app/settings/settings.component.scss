@@ -1,5 +1,8 @@
 @import "scss/colors";
 :host {
+  .playerlog {
+    background: #3d3e4a;
+  }
   .styles {
     background: $topper;
     border-radius: 36px;
@@ -27,7 +30,7 @@
     }
   }
   .jumbotron {
-  background: $mainbg!important;
+  background: none!important;
   // color: #afafaf;
   -webkit-user-select: none;
   hr {

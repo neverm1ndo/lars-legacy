@@ -13,11 +13,12 @@ export class ApiService {
   readonly URL_LAST: string = AppConfig.api.main + 'last';
   readonly URL_CONFIGS: string =  AppConfig.api.main + 'config-files-tree';
   readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
-  readonly URL_CONFIG_SAVE: string =  AppConfig.api.main + 'save-config-file';
+  readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'save-config';
+  readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'upload-map';
   readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps-files-tree';
   readonly URL_MAPINFO: string = AppConfig.api.main + 'map-file';
-  readonly URL_MAPDELETE: string = AppConfig.api.main + 'map-delete';
+  readonly URL_DELETE_FILE: string = AppConfig.api.main + 'delete-file';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -55,7 +56,7 @@ export class ApiService {
     return this.http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
   }
   deleteMap(path: string) {
-    return this.http.delete(this.URL_MAPDELETE, { params: { path: path }});
+    return this.http.delete(this.URL_DELETE_FILE, { params: { path: path }});
   }
   getLast(): Observable<any> {
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.chunkSize}});
@@ -74,10 +75,20 @@ export class ApiService {
         })
       )
   }
+  saveFile(path:string, data: string): Observable<any> {
+    return this.http.post(this.URL_SAVE_CONFIG, {
+      file: {
+        path: path,
+        data: data
+      }
+    }, { responseType: 'text' });
+  }
+  uploadFile(form: FormData): Observable<any> {
+    return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+  }
   lazyUpdate(): void {
     this.lazy = true;
     this.currentPage++;
-    // this.lastQuery = this.http.get(this.URL, { params: { page: this.currentPage.toString(), lim: this.chunkSize}})
     this.refresh();
   }
   search(query: {
@@ -91,14 +102,6 @@ export class ApiService {
   }): Observable<any> {
     // this.loading = true;
     return this.http.get(this.URL_SEARCH, { params: query });
-  }
-  saveConfigFile(path:string, data: string): Observable<any> {
-    return this.http.post(this.URL_CONFIG_SAVE, {
-      file: {
-        path: path,
-        data: data
-      }
-    }, { responseType: 'text' })
   }
   addToRecent(key: string, val: any): void {
     let last = JSON.parse(localStorage.getItem('last'));
@@ -128,7 +131,6 @@ export class ApiService {
   }
 
   refresh() {
-    // this.loading = true;
     this.reloader$.next(null);
   }
   sync() {
