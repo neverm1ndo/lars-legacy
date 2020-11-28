@@ -30,6 +30,16 @@ export class UserService {
   getUser(name: string): Observable<any> {
     return this.http.get(this.URL_USER, { params: { name: name }});
   }
+  getUserGroupName(): string {
+    switch (this.getUserInfo().gr) {
+      case 9: return 'Претендент';
+      case 10: return 'Разработчик';
+      case 11: return 'Админ';
+      case 12: return 'Маппер';
+      case 13: return 'Редактор конфигурационных файлов';
+      default: return 'Самозванец';
+    }
+  }
   getUserSettings(): any {
     if (localStorage.getItem('settings') !== null) {
       return JSON.parse(localStorage.getItem('settings'));

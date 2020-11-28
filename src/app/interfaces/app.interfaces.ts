@@ -9,6 +9,7 @@ export interface UserData {
   token?: string,
   id?: number,
   role?: string,
+  gr?: number,
   name?: string
 }
 export interface GeoData {
