@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory } from '@fortawesome/free-solid-svg-icons';
@@ -33,9 +33,6 @@ export class SearchComponent implements OnInit {
   @Input('quick') quick: boolean = false;
   @Input('lineCounter') lineCounter: any = 0;
 
-  @ViewChild('error')
-  private error: TemplateRef<any>;
-
   constructor(
     public api: ApiService,
     public toast: ToastService,
@@ -53,7 +50,7 @@ export class SearchComponent implements OnInit {
       }
       this.api.addToRecent('search', this.query.value);
     } else {
-      this.toast.show(this.error, { classname: 'bg-danger text-light', delay: 3000 });
+      this.toast.show('Поисковой запрос должен состоять не менее, чем из 3-х символов', { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
     }
   }
 
@@ -61,12 +58,7 @@ export class SearchComponent implements OnInit {
     this.syncronize.emit(true);
   }
 
-  // refresh()
-
   ngOnInit(): void {
-    // if (this.queryIn) {
-    //   this.searchForm.setValue({ query: this.queryIn });
-    // }
     this.route.queryParams.pipe(
       filter(params => (params.query))
     ).subscribe(params => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
@@ -16,10 +16,6 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 })
 export class MapsComponent implements OnInit {
 
-  @ViewChild('successSaveTpl')
-  private savetpl: TemplateRef<any>;
-  @ViewChild('failSaveTpl')
-  private savefailtpl: TemplateRef<any>;
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
     if (this.current) {
       if (event.ctrlKey) {
@@ -112,12 +108,23 @@ export class MapsComponent implements OnInit {
           console.log(res.filePath);
           this.electron.fs.writeFile(res.filePath, this.current.text, 'utf8', (err) => {
             if (err) throw err;
-            console.log('success');
           });
-          this.toast.show(this.savetpl, { classname: 'bg-success text-light', delay: 3000 });
+          this.toast.show(`Карта <b>${ this.current.name }</b> успешно сохранена`,
+            {
+              classname: 'bg-success text-light',
+              delay: 3000,
+              icon: faSave,
+              subtext: res.filePath
+             });
         }
       }).catch( res => {
-        this.toast.show(this.savefailtpl, { classname: 'bg-danger text-light', delay: 3000 });
+        this.toast.show(`<b>${ res.filePath }</b> не была сохранена`,
+          {
+            classname: 'bg-warning text-dark',
+            delay: 5000,
+            icon: faInfo,
+            subtext: res.message
+           });
         console.error(res);
       })
   }
@@ -148,7 +155,12 @@ export class MapsComponent implements OnInit {
     ).finally(() => {
       if (sub) sub.unsubscribe();
       this.reloadFileTree();
-      this.toast.show('Map deleted', { classname: 'bg-warning text-dark', delay: 3000 });
+      this.toast.show(`Карта <b>${ this.current.name }</b> удалена с сервера`,
+        {
+          classname: 'bg-success text-light',
+          delay: 3000,
+          icon: faTrash
+        });
     });
   }
 
@@ -166,13 +178,20 @@ export class MapsComponent implements OnInit {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);
               } else if (event instanceof HttpResponse) {
-                this.toast.show('Map uploaded', { classname: 'bg-success text-light', delay: 3000 });
+                this.toast.show(`Карта <b>${ files[0].name }</b> успешно добавлена`, { classname: 'bg-success text-light', delay: 3000, icon: faSave });
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
               }
             },
             err => {
               this.progress = 0;
+              this.toast.show(`Карта <b>${ files[0].name }</b> не была добавлена, или она добавилась, но сервер вернул ошибку`,
+                {
+                  classname: 'bg-warning text-dark',
+                  delay: 5000,
+                  icon: faInfo,
+                  subtext: err.message
+                 });
               console.error(err);
               this.reloadFileTree();
             });
@@ -180,7 +199,6 @@ export class MapsComponent implements OnInit {
   }
 
   reloadFileTree(): void {
-
     this.reloader$.next(null);
   }
 

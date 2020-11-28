@@ -86,28 +86,3 @@
     </div>
   </div>
 </div>
-<ng-template #successSaveTpl>
-  <div class="d-flex flex-row">
-    <div class="d-flex toast-icon">
-      <fa-icon [icon]="fa.save"></fa-icon>
-    </div>
-    <div class="d-flex flex-fill toast-text">
-      <span>
-        <b>{{ this.current.name }}</b> успешно сохранен
-      </span>
-    </div>
-  </div>
-</ng-template>
-<ng-template #failSaveTpl>
-  <div class="d-flex flex-row">
-    <div class="d-flex toast-icon">
-      <fa-icon [icon]="fa.save"></fa-icon>
-    </div>
-    <div class="d-flex flex-fill toast-text">
-      <span>
-        ОШИБКА: <b>{{ this.current.name }}</b> не сохранен
-        <br>
-      </span>
-    </div>
-  </div>
-</ng-template>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { faSave, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faSync, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -14,11 +14,6 @@ import { ToastService } from '../toast.service';
   styleUrls: ['./text-editor.component.scss']
 })
 export class TextEditorComponent implements OnInit {
-
-  @ViewChild('successSaveTpl')
-  private savetpl: TemplateRef<any>;
-  @ViewChild('failSaveTpl')
-  private savefailtpl: TemplateRef<any>;
 
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
   _texp: BehaviorSubject<string> = new BehaviorSubject('');
@@ -69,13 +64,24 @@ export class TextEditorComponent implements OnInit {
         this.error.next(error);
     }
     this.loading = false;
-    this.toast.show(this.savefailtpl, { classname: 'bg-danger text-light', delay: 3000 });
+    this.toast.show(error.statusText,
+      {
+        classname: 'bg-danger text-light',
+        delay: 7000,
+        icon: faExclamationTriangle,
+        subtext: error.message
+      });
     return throwError(error);
   }
 
-  pathToClipboard(tpl: any): void {
+  pathToClipboard(): void {
     this.electron.clipboard.writeText(this.path);
-    this.toast.show(tpl, { classname: 'bg-success text-light', delay: 3000 });
+    this.toast.show('Путь скопирован в буффер обмена',
+    {
+      classname: 'bg-success text-light',
+      delay: 3000,
+      icon: faCopy
+    });
   }
 
   saveFile() {
@@ -86,7 +92,12 @@ export class TextEditorComponent implements OnInit {
     .pipe(tap(()=> {
       this.loading = false;
       this._texp.next(this.textplain);
-      this.toast.show(this.savetpl, { classname: 'bg-success text-light', delay: 3000 });
+      this.toast.show( `Конфигурационный файл успешно сохранен`, {
+        classname: 'bg-success text-light',
+        delay: 3000,
+        icon: faSave,
+        subtext: this.path
+      });
     })).subscribe();
   }
 

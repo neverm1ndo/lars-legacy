@@ -6,6 +6,7 @@ import { filter } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { faSave, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-config-editor',
@@ -61,13 +62,25 @@ export class ConfigEditorComponent implements OnInit {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);
               } else if (event instanceof HttpResponse) {
-                this.toast.show('Config uploaded', { classname: 'bg-success text-light', delay: 3000 });
+                this.toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
+                  {
+                    classname: 'bg-success text-light',
+                    delay: 3000,
+                    icon: faSave
+                  });
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
               }
             },
             err => {
               this.progress = 0;
+              this.toast.show(`Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
+                {
+                  classname: 'bg-warning text-dark',
+                  delay: 5000,
+                  icon: faInfo,
+                  subtext: err.message
+                 });
               console.error(err);
               this.reloadFileTree();
             });

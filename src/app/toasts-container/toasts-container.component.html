@@ -9,6 +9,23 @@
    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
      <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
    </ng-template>
-
-   <ng-template #text><span class="toast-text">{{ toast.textOrTpl }}</span></ng-template>
+   <ng-template #text>
+     <div class="d-flex flex-row">
+       <div class="d-flex toast-icon">
+         <fa-icon [icon]="toast.icon"></fa-icon>
+       </div>
+       <div class="d-flex flex-fill flex-column toast-text">
+         <div>
+           <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.textOrTpl"></span>
+           <span *ngIf="isTemplate(toast)">{{ textOrTpl }}</span>
+         </div>
+        <div>
+          <div *ngIf="toast.subtext">
+            <hr>
+            <span><b>{{ toast.subtext }}</b></span>
+          </div>
+        </div>
+       </div>
+      </div>
+   </ng-template>
  </ngb-toast>
