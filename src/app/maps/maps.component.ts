@@ -173,7 +173,7 @@ export class MapsComponent implements OnInit {
          for (let file of files) {
               formData.append('file', file);
          }
-         this.api.uploadFile(formData).subscribe(
+         this.api.uploadFileMap(formData).subscribe(
            event => {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);

@@ -15,6 +15,7 @@ export class ApiService {
   readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
   readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'save-config';
   readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'upload-map';
+  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'upload-cfg';
   readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps-files-tree';
   readonly URL_MAPINFO: string = AppConfig.api.main + 'map-file';
@@ -75,7 +76,7 @@ export class ApiService {
         })
       )
   }
-  saveFile(path:string, data: string): Observable<any> {
+  saveFile(path: string, data: string): Observable<any> {
     return this.http.post(this.URL_SAVE_CONFIG, {
       file: {
         path: path,
@@ -83,8 +84,11 @@ export class ApiService {
       }
     }, { responseType: 'text' });
   }
-  uploadFile(form: FormData): Observable<any> {
+  uploadFileMap(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+  }
+  uploadFileCfg(form: FormData): Observable<any> {
+    return this.http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
   lazyUpdate(): void {
     this.lazy = true;

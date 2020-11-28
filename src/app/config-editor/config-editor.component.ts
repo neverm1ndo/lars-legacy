@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faSave, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faInfo, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-config-editor',
@@ -24,6 +24,10 @@ export class ConfigEditorComponent implements OnInit {
   currentFilePath: string;
   progress: number = 0;
 
+  fa = {
+    conf: faFileSignature
+  }
+
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   constructor(
@@ -31,7 +35,7 @@ export class ConfigEditorComponent implements OnInit {
     public route: ActivatedRoute,
     public toast: ToastService
   ) {
-    this.directories$ = api.getConfigsDir();
+    this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => { this.files = items; console.log(items);
     });
   }
@@ -57,7 +61,7 @@ export class ConfigEditorComponent implements OnInit {
          for (let file of files) {
               formData.append('file', file);
          }
-         this.api.uploadFile(formData).subscribe(
+         this.api.uploadFileCfg(formData).subscribe(
            event => {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);

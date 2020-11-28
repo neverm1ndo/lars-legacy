@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { faSave, faSync, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';

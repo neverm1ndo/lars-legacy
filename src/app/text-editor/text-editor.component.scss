@@ -43,10 +43,10 @@
   }
   .texteditor-underpanel {
     height: 31px;
-    background: $topper;
+    background: $underpanel;
     font-size: 12px;
     line-height: 29px;
-    color: #fdfdfddf;
+    color: $text;
     .panel-left {
       line-height: 29px;
       span {
@@ -63,12 +63,12 @@
         overflow: hidden;
         .autosave-led {
           display: inline-block;
-          width: 5px;
-          height: 5px;
+          width: 6px;
+          height: 6px;
           background: #63d87d;
           border-radius: 100%;
           position: relative;
-          top: -2px;
+          top: -1px;
           transition: 0.2s linear;
         }
         .led-loading {
@@ -82,13 +82,13 @@
         }
         fa-icon {
           font-size: 14px;
-          margin-right: 3px;
+          margin-right: 5px;
         }
         &:hover {
-          background: $secondary;
+          background: $underpanel-hover;
         }
         &:disabled {
-          background: $secondary;
+          background: $underpanel-hover;
           opacity: 0.4;
         }
         &:active {

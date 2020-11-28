@@ -2,12 +2,6 @@
   <div class="pt-3 w-100">
     <div class="col-12 d-flex text-center justify-content-between top">
       <span>Файлы</span>
-      <!-- <span class="btn btn-outline-light btn-file float-right theme-button">
-        <fa name="file" class="mr-lg-2"></fa>
-        <label for="fileLoader" class="d-none d-lg-inline">
-          Открыть лог
-        </label>
-      </span> -->
       <div>
         <button class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
         <span type="button" class="btn btn-dark btn-file" name="button">
@@ -15,7 +9,7 @@
           <label for="fileloader">
             Добавить
           </label>
-          <input type="file" name="fileLoader" (input)="upload($event)" multiple="true" accept=".map, .off, .conf">
+          <input #add type="file" name="fileLoader" (input)="upload($event)" multiple="true" accept=".map, .off, .conf">
         </span>
       </div>
     </div>
@@ -32,4 +26,21 @@
       </div>
     </ng-template>
   </div>
-</div>
+  <div *ngIf="node" class="texteditor-underpanel no-select align-self-end w-100">
+    <div class="col-12">
+      <div class="row">
+        <div class="w-100 d-flex flex-row justify-content-between">
+          <div class="panel-left">
+            <button class="panel">
+              <fa-icon [icon]="fa.file"></fa-icon> {{ node.items.length }}
+            </button>
+          </div>
+          <!-- <div class="panel-left">
+            <div class="w-100 d-flex flex-row justify-content-end">
+
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>

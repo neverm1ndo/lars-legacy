@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faPlus, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSyncAlt, faFile } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -15,10 +15,23 @@ export class FileTreeComponent implements OnInit {
   @Output() addNew = new EventEmitter<Event>();
   @Output() resync = new EventEmitter<any>();
   @Input('current') current: string;
+  @ViewChild('add') add: ElementRef;
+  @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
+      if (event.altKey) {
+        switch (event.keyCode) {
+          case 65 : { // Alt + A
+            this.add.nativeElement.click();
+            break;
+          }
+          default : break;
+        }
+      }
+  }
 
   fa = {
     plus: faPlus,
-    sync: faSyncAlt
+    sync: faSyncAlt,
+    file: faFile
   }
 
   constructor() { }
