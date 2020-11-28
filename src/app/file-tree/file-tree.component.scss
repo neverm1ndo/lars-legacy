@@ -38,8 +38,8 @@
     }
   }
   .texteditor-underpanel {
-    height: 31px;
     background: $underpanel;
+    height: 31px;
     font-size: 12px;
     line-height: 29px;
     color: $text;
@@ -78,7 +78,7 @@
         }
         fa-icon {
           font-size: 14px;
-          margin-right: 5px;
+          margin-right: 8px;
         }
         &:hover {
           background: $underpanel-hover;

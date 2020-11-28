@@ -6,7 +6,7 @@ export const AppConfig = {
   },
   api: { // Dev server
     main: 'http://localhost:8080/api/',
-    auth: 'http://instr.gta-liberty.ru/login-secret',
+    auth: 'http://instr.gta-liberty.ru/login',
     user: 'http://instr.gta-liberty.ru/user',
   }
 };
