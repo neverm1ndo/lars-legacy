@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LibertyLogs</title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico"> -->
+    <style media="screen">
+        html, body {
+          background-color: #383a4a;
+          margin: 0px 0px 0px 0px;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+        }
+        .app-preloader {
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-left: -50px;
+          margin-top: -50px;
+          text-align: center;
+          font-family: 'Arial', sans-serif;
+          color: #7f848a;
+          font-size: 10px;
+          transform: scaleY(-1);
+        }
+        .app-preloader img, .app-preloader svg {
+          width: 64px; height: 64px;
+        }
+        .app-preloader .spinner {
+          height: 80px;
+          width: 80px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin-left: -40px;
+          margin-top: -40px;
+        }
+        .app-preloader .spinner path {
+          fill: #fdfdfd;
+          fill-opacity: 1;
+          stroke-width: 5;
+          animation: dash2 2.5s ease-in-out infinite;
+          stroke: #fdfdfd;
+        }
+        @keyframes dash2 {
+          0% {
+            opacity: 0;
+            transform: translateY(-5%);
+          }
+          50% {
+            fill-opacity: 1;
+            opacity: 1;
+            transform: translateY(0%);
+          }
+          90% { opacity: 0; }
+          100% {
+            transform: translateY(5%);
+            opacity: 0;
+          }
+        }
+      @keyframes load {
+        0% { transform: scale(1); }
+        25% { transform: scale(2.2); }
+        50% { transform: scale(1); }
+        75% { transform: scale(2.2); }
+        100% { transform: scale(1); }
+      }
+      @keyframes splash {
+        0% { transform: scale(1); }
+        25% { transform: scale(2.2); }
+        50% { transform: scale(1); }
+        75% { transform: scale(2.2); }
+        100% { transform: scale(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="etabs-tabgroup">
+      <div class="etabs-tabs"></div>
+      <div class="etabs-buttons"></div>
+    </div>
+    <div class="etabs-views"></div>
+    <!-- <app-root> -->
+    <canvas id="canvas" width="300" height="300"></canvas>
+      <div class="app-preloader">
+        <svg
+        class="spinner"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 300 300"
+        width="300"
+        height="300">
+        <defs class="#circle">
+          <path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path>
+          <path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path>
+        </defs>
+          <use xlink:href="#bh8Xu6F6b" opacity="1" fill="#FDFDFD" fill-opacity="1"></use>
+          <use xlink:href="#a3qVZuQh" opacity="1" fill="#FDFDFD" fill-opacity="1"></use>
+        </svg>
+      </div>
+    <!-- </app-root> -->
+    <script type="text/javascript">
+      (function animate() {
+          let canvas = document.querySelector('#canvas');
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          let ctx = canvas.getContext('2d');
+          let innerH = window.innerHeight;
+          let fxH = 0;
+
+          function expEaseInOut(currentProgress, start, distance, steps) {
+              currentProgress /= steps/2;
+              if (currentProgress < 1) return distance/2 * Math.pow( 2, 10 * (currentProgress - 1) ) + start;
+             currentProgress--;
+              return distance/2 * ( -Math.pow( 2, -10 * currentProgress) + 2 ) + start;
+            };
+
+          function sineEaseInOut(currentProgress, start, distance, steps) {
+            return -distance/2 * (Math.cos(Math.PI*currentProgress/steps) - 1) + start;
+          };
+
+          function layer1() {
+            ctx.fillStyle = '#30333e';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, innerH);
+            ctx.lineTo(sineEaseInOut(innerH + fxH, 0, 500, 1000), innerH);
+            ctx.bezierCurveTo(expEaseInOut(fxH, 0, 100, 1000), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 300, 1000), 60, 50, 0);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          function layer3() { //blue
+            ctx.fillStyle = '#356da9';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, innerH);
+            ctx.lineTo(sineEaseInOut(innerH + fxH + 200, 0, 600, 1000), innerH);
+            ctx.bezierCurveTo(expEaseInOut(fxH, 0, 200, 900), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 400, 1000), 60, 50, 0);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          function layer2() {
+            ctx.fillStyle = '#8ab9ff';
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, innerH);
+            ctx.lineTo(sineEaseInOut(innerH + fxH + 100, 0, 700, 1000), innerH);
+            ctx.bezierCurveTo(expEaseInOut(fxH, 0, 300, 800), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 500, 1000), 60, 50, 0);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          function draw() {
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+            fxH++;
+            layer2();
+            layer3();
+            layer1();
+            window.requestAnimationFrame(draw);
+          };
+          draw();
+        }
+      )();
+    </script>
+  </body>
+</html>

@@ -17,7 +17,7 @@
        <div class="d-flex flex-fill flex-column toast-text">
          <div>
            <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.textOrTpl"></span>
-           <span *ngIf="isTemplate(toast)">{{ textOrTpl }}</span>
+           <span *ngIf="isTemplate(toast)">{{ toast.textOrTpl }}</span>
          </div>
         <div>
           <div *ngIf="toast.subtext">
