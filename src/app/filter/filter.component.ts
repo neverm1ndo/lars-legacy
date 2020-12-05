@@ -31,7 +31,17 @@ export class FilterComponent implements OnInit {
    pauseStart: new FormControl(),
    pauseEnd: new FormControl(),
    chatMain:new FormControl(),
-   chatBlock:new FormControl()
+   chatBlock:new FormControl(),
+   disconnectTimeout:new FormControl(),
+   toBackupLoad:new FormControl(),
+   chatHandUnBlock:new FormControl(),
+   chatHandBlock:new FormControl(),
+   devWeap:new FormControl(),
+   devVeh:new FormControl(),
+   spectateChange:new FormControl(),
+   spectateEnter:new FormControl(),
+   spectateLeave:new FormControl(),
+   checkExpl:new FormControl(),
  });
 
  defaultOptions = {
@@ -56,7 +66,17 @@ export class FilterComponent implements OnInit {
    pauseStart: true,
    pauseEnd: true,
    chatMain:true,
-   chatBlock:true
+   chatBlock:true,
+   disconnectTimeout:true,
+   toBackupLoad:true,
+   chatHandUnBlock:true,
+   chatHandBlock:true,
+   devWeap:true,
+   devVeh:true,
+   spectateChange:true,
+   spectateEnter:true,
+   spectateLeave:true,
+   checkExpl:true
  }
 
  _processes: any[];

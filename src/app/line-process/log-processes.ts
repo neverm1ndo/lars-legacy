@@ -7,6 +7,12 @@ export class Processes {
       control: 'connect'
     },
     {
+      process: '<disconnect/time_out>',
+      translate: 'Выход с сервера после ожидания',
+      type: 'dark',
+      control: 'disconnectTimeout'
+    },
+    {
       process: '<disconnect/leave>',
       translate: 'Выход с сервера',
       type: 'dark',
@@ -49,6 +55,18 @@ export class Processes {
       control: 'cmdPreerrNotF'
     },
     {
+      process: '<cmd/pre_error/player>',
+      translate: 'Команда не найдена',
+      type: 'danger',
+      control: 'cmdPreerrNotF'
+    },
+    {
+      process: '<cmd/pre_error/value>',
+      translate: 'Команда содержит ошибку значения',
+      type: 'danger',
+      control: 'cmdPreerrNotF'
+    },
+    {
       process: '<cmd/success>',
       translate: 'Успешное выполнение команды',
       type: 'success',
@@ -69,19 +87,19 @@ export class Processes {
     {
       process: '<weapon/buy>',
       translate: 'Покупка оружия',
-      type: 'info',
+      type: 'usual',
       control: 'weapBuy'
     },
     {
       process: '<weapon/pickup>',
       translate: 'Подбор оружия',
-      type: 'info',
+      type: 'usual',
       control: 'weapPick'
     },
     {
       process: '<armour/buy>',
       translate: 'Покупка брони',
-      type: 'info',
+      type: 'usual',
       control: 'armBuy'
     },
     {
@@ -121,6 +139,12 @@ export class Processes {
       control: 'toBackupSave'
     },
     {
+      process: '<time_out/backup/load>',
+      translate: 'Загрузка бэкапа состояния',
+      type: 'info',
+      control: 'toBackupLoad'
+    },
+    {
       process: '<chat/main>',
       translate: 'Общий чат',
       type: 'light',
@@ -131,6 +155,48 @@ export class Processes {
       translate: 'Блокировка чата',
       type: 'warning',
       control: 'chatBlock'
+    },
+    {
+      process: '<chat/unmute/hand>',
+      translate: 'Ручная разблокировка чата',
+      type: 'adm',
+      control: 'chatHandUnBlock'
+    },
+    {
+      process: '<chat/mute/hand>',
+      translate: 'Ручная блокировка чата',
+      type: 'info',
+      control: 'chatHandBlock'
+    },
+    {
+      process: '<spectate/leave>',
+      translate: 'Выход из наблюдения',
+      type: 'adm',
+      control: 'spectateLeave'
+    },
+    {
+      process: '<check/explosion/player>',
+      translate: 'Проверка взрывом',
+      type: 'adm',
+      control: 'checkExpl'
+    },
+    {
+      process: '<spectate/change>',
+      translate: 'Смена цели наблюдения',
+      type: 'adm',
+      control: 'spectateChange'
+    },
+    {
+      process: '<dev/weapon>',
+      translate: 'DEV: Оружие',
+      type: 'dev',
+      control: 'devWeap'
+    },
+    {
+      process: '<dev/vehicle/add>',
+      translate: 'DEV: Спавн транспорта',
+      type: 'dev',
+      control: 'devVeh'
     }
   ];
 }
