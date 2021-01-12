@@ -114,5 +114,13 @@ export class LoginComponent implements OnInit {
         Validators.minLength(4)
       ])
     });
+    if (!window.localStorage.getItem('settings')) {
+      window.localStorage.setItem('settings', JSON.stringify({
+        tray: false,
+        lineChunk: 100,
+        listStyle: 'small',
+        textEditorStyle: 'material'
+      }));
+    }
   }
 }

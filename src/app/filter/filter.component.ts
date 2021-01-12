@@ -10,94 +10,54 @@ import { Processes } from '../line-process/log-processes';
 export class FilterComponent implements OnInit {
 
   filterForm = new FormGroup({
-   weapBuy: new FormControl(),
-   weapPick: new FormControl(),
-   armBuy: new FormControl(),
-   ammoEnt: new FormControl(),
-   ammoLeav: new FormControl(),
-   guardBlockOn: new FormControl(),
-   guardBlockOff: new FormControl(),
-   rconLogTrue: new FormControl(),
-   toBackupSave: new FormControl(),
-   authIncorrect: new FormControl(),
-   authCorrectAdm: new FormControl(),
-   authCorrectGue: new FormControl(),
-   connect: new FormControl(),
-   disconnect: new FormControl(),
-   cmdPreproc: new FormControl(),
-   cmdPreerrBlock: new FormControl(),
-   cmdPreerrNotF: new FormControl(),
-   cmdSuccess: new FormControl(),
-   pauseStart: new FormControl(),
-   pauseEnd: new FormControl(),
-   chatMain:new FormControl(),
-   chatBlock:new FormControl(),
-   disconnectTimeout:new FormControl(),
-   toBackupLoad:new FormControl(),
-   chatHandUnBlock:new FormControl(),
-   chatHandBlock:new FormControl(),
-   devWeap:new FormControl(),
-   devVeh:new FormControl(),
-   spectateChange:new FormControl(),
-   spectateEnter:new FormControl(),
-   spectateLeave:new FormControl(),
-   checkExpl:new FormControl(),
+   weapBuy: new FormControl(true),
+   weapPick: new FormControl(true),
+   armBuy: new FormControl(true),
+   ammoEnt: new FormControl(true),
+   ammoLeav: new FormControl(true),
+   guardBlockOn: new FormControl(true),
+   guardBlockOff: new FormControl(true),
+   rconLogTrue: new FormControl(true),
+   toBackupSave: new FormControl(true),
+   authIncorrect: new FormControl(true),
+   authCorrectAdm: new FormControl(true),
+   authCorrectGue: new FormControl(true),
+   connect: new FormControl(true),
+   disconnect: new FormControl(true),
+   cmdPreproc: new FormControl(true),
+   cmdPreerrBlock: new FormControl(true),
+   cmdPreerrNotF: new FormControl(true),
+   cmdSuccess: new FormControl(true),
+   pauseStart: new FormControl(true),
+   pauseEnd: new FormControl(true),
+   chatMain:new FormControl(true),
+   chatBlock:new FormControl(true),
+   disconnectTimeout:new FormControl(true),
+   toBackupLoad:new FormControl(true),
+   chatHandUnBlock:new FormControl(true),
+   chatHandBlock:new FormControl(true),
+   devWeap:new FormControl(true),
+   devVeh:new FormControl(true),
+   spectateChange:new FormControl(true),
+   spectateEnter:new FormControl(true),
+   spectateLeave:new FormControl(true),
+   checkExpl:new FormControl(true),
  });
-
- defaultOptions = {
-   weapBuy: true,
-   weapPick: true,
-   armBuy: true,
-   ammoEnt: true,
-   ammoLeav: true,
-   guardBlockOn: true,
-   guardBlockOff: true,
-   rconLogTrue: true,
-   toBackupSave: true,
-   authIncorrect: true,
-   authCorrectAdm: true,
-   authCorrectGue: true,
-   connect: true,
-   disconnect: true,
-   cmdPreproc: true,
-   cmdPreerrBlock: true,
-   cmdPreerrNotF: true,
-   cmdSuccess: true,
-   pauseStart: true,
-   pauseEnd: true,
-   chatMain:true,
-   chatBlock:true,
-   disconnectTimeout:true,
-   toBackupLoad:true,
-   chatHandUnBlock:true,
-   chatHandBlock:true,
-   devWeap:true,
-   devVeh:true,
-   spectateChange:true,
-   spectateEnter:true,
-   spectateLeave:true,
-   checkExpl:true
- }
 
  _processes: any[];
 
   constructor(
     public processes: Processes
-  ) {
-  }
+  ) {}
 
   setFilter() {
     let changedOpt = this.filterForm.getRawValue();
     window.localStorage.setItem('filter', JSON.stringify(changedOpt));
-    // this.options.options.next(changedOpt);
   }
 
   ngOnInit(): void {
     if (window.localStorage.getItem('filter')) {
-    this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
-    } else {
-      window.localStorage.setItem('filter', JSON.stringify(this.defaultOptions));
-      this.filterForm.setValue(this.defaultOptions);
+      this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
     }
   }
 

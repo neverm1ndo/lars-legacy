@@ -1,5 +1,9 @@
 @import 'scss/colors';
 :host {
+  lty-icon {
+    width: 45px;
+    height: 45px;
+  }
   .progress {
     height: 2px;
     margin-bottom: -2px;

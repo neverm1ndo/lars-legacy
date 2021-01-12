@@ -11,6 +11,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SiderComponent } from './sider/sider.component';
 import { SearchComponent } from './search/search.component';
 import { SharedModule } from '../shared/shared.module';
+import { LibertyIconsModule } from '../libery-icons/liberty-icons.module';
 import { AuthGuard } from '../guards/auth.guard';
 import { Processes } from '../line-process/log-processes';
 
@@ -43,6 +44,7 @@ import { MapsComponent } from '../maps/maps.component';
     FormsModule,
     NgbModule,
     BrowserAnimationsModule,
+    LibertyIconsModule,
     CodemirrorModule,
     ReactiveFormsModule,
     FontAwesomeModule

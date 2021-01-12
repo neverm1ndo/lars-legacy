@@ -20,6 +20,7 @@ import { DetailModule } from './detail/detail.module';
 import { AppComponent } from './app.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LibertyIconsModule } from './libery-icons/liberty-icons.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -43,6 +44,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     AppRoutingModule,
     NgbModule,
     FontAwesomeModule,
+    LibertyIconsModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {

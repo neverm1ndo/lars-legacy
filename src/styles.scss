@@ -19,6 +19,10 @@ html, body, app-root {
   width: 100%;
   background: $mainbg;
 }
+lty-icon {
+  display: inline-block;
+  vertical-align: baseline;
+}
 button:active, button:focus {
   outline: none!important;
 }
@@ -174,7 +178,7 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   }
   .spinner-logo {
      path, use {
-       stroke-width: 25;
+       stroke-width: 18;
        stroke: #ffffff;
        fill: transparent;
        fill-opacity: 10;

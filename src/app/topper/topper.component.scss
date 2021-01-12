@@ -2,17 +2,16 @@
 @import '_native';
 
 :host {
-  .toplogo {
-    width: 25px;
-    height: auto;
-    margin-left: 23px;
+  lty-icon {
+    width: 34px;
+    height: 34px;
+    margin-left: 16px;
     position: relative;
-    top: 5px;
-    transform: scaleY(-1);
+    top: 0px;
   }
   .label {
     position: relative;
-    top: 4px;
+    top: 1px;
     left: 25px;
     font-size: 12px;
     opacity: 0.7;

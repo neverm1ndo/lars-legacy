@@ -149,18 +149,19 @@ export class MapsComponent implements OnInit {
     this.electron.dialog.showMessageBox(dialogOpts).then(
       val => {
         if (val.response === 0) {
-          sub = this.api.deleteMap(this.currentFilePath).subscribe();
+          sub = this.api.deleteMap(this.currentFilePath).subscribe(() => {
+            this.toast.show(`Карта <b>${ this.current.name }</b> удалена с сервера`,
+              {
+                classname: 'bg-success text-light',
+                delay: 3000,
+                icon: faTrash
+              });
+              this.reloadFileTree();
+          });
         }
       }
     ).finally(() => {
       if (sub) sub.unsubscribe();
-      this.reloadFileTree();
-      this.toast.show(`Карта <b>${ this.current.name }</b> удалена с сервера`,
-        {
-          classname: 'bg-success text-light',
-          delay: 3000,
-          icon: faTrash
-        });
     });
   }
 

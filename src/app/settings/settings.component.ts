@@ -16,12 +16,6 @@ export class SettingsComponent implements OnInit {
     listStyle: new FormControl('small'),
     textEditorStyle: new FormControl('material'),
   });
-  defaultSettings = {
-    tray: false,
-    lineChunk: 100,
-    listStyleSmall: 'small',
-    textEditorStyle: 'material'
-  }
 
   setup() {
     let newSets = this.settings.getRawValue();
@@ -32,8 +26,7 @@ export class SettingsComponent implements OnInit {
     if (window.localStorage.getItem('settings')) {
       this.settings.setValue(JSON.parse(window.localStorage.getItem('settings')))
     } else {
-      window.localStorage.setItem('settings', JSON.stringify(this.defaultSettings));
-      this.settings.setValue(this.defaultSettings);
+      window.localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { UserService } from '../user.service';
@@ -15,20 +15,21 @@ import { lazy } from '../app.animations';
   styleUrls: ['./search-editor.component.scss'],
   animations: [lazy]
 })
-export class SearchEditorComponent implements OnInit, AfterViewInit {
+export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('wrapper') wrapper: ElementRef<any>;
 
   lines: LogLine[] = [];
   scroll: any;
   glf$: Observable<any>;
+  glfSubber: any;
 
   constructor(
     public api: ApiService,
     public user: UserService,
     public route: ActivatedRoute
   ) {
-    this. glf$ = api.getLogFile().pipe(
+    this.glf$ = api.getLogFile().pipe(
       retryWhen(errors =>
         errors.pipe(
           delay(10*1000),
@@ -107,7 +108,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit {
   }
 
   showLines() {
-    this.glf$.subscribe((lines)=> {
+    this.glfSubber = this.glf$.subscribe((lines)=> {
       if (lines.length) {
         this.lines.push(...lines) ;
       }
@@ -149,5 +150,11 @@ export class SearchEditorComponent implements OnInit, AfterViewInit {
         this.showLines();
       }
     });
+  }
+  ngOnDestroy(): void {
+    if (this.glfSubber) {
+      this.glfSubber.unsubscribe();
+      this.glfSubber = null;
+    }
   }
 }

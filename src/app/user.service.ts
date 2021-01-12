@@ -19,13 +19,13 @@ export class UserService {
     'Content-Type': 'application/json'
   });
   error: Subject<any> = new Subject();
+  settings: any;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     public electron: ElectronService
-  ) {
-  }
+  ) {}
 
   getUser(name: string): Observable<any> {
     return this.http.get(this.URL_USER, { params: { name: name }});
@@ -41,8 +41,16 @@ export class UserService {
     }
   }
   getUserSettings(): any {
-    if (localStorage.getItem('settings') !== null) {
-      return JSON.parse(localStorage.getItem('settings'));
+    if (!window.localStorage.getItem('settings')) {
+      window.localStorage.setItem('settings', JSON.stringify({
+        tray: false,
+        lineChunk: 100,
+        listStyle: 'small',
+        textEditorStyle: 'material'
+      }));
+    }
+    if (window.localStorage.getItem('settings') !== null) {
+      return JSON.parse(window.localStorage.getItem('settings'));
     } else {
       return null;
     }
