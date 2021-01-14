@@ -41,16 +41,16 @@ export class UserService {
     }
   }
   getUserSettings(): any {
-    if (!window.localStorage.getItem('settings')) {
-      window.localStorage.setItem('settings', JSON.stringify({
+    if (!localStorage.getItem('settings')) {
+      localStorage.setItem('settings', JSON.stringify({
         tray: false,
         lineChunk: 100,
         listStyle: 'small',
         textEditorStyle: 'material'
       }));
     }
-    if (window.localStorage.getItem('settings') !== null) {
-      return JSON.parse(window.localStorage.getItem('settings'));
+    if (localStorage.getItem('settings') !== null) {
+      return JSON.parse(localStorage.getItem('settings'));
     } else {
       return null;
     }

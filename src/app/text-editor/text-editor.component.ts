@@ -116,8 +116,8 @@ export class TextEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (window.localStorage.getItem('settings')) {
-      this.cmSettings.theme = JSON.parse(window.localStorage.getItem('settings')).textEditorStyle;
+    if (localStorage.getItem('settings')) {
+      this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
     this._texp.subscribe((tp) => {
       this.initialTextplainPure = tp.replace(/\s/g, '');

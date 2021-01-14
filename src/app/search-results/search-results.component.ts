@@ -21,8 +21,8 @@ export class SearchResultsComponent implements OnInit {
   constructor(public api: ApiService) { }
 
   ngOnInit(): void {
-    if (window.localStorage.getItem('settings')) {
-      this.style = JSON.parse(window.localStorage.getItem('settings')).listStyle;
+    if (localStorage.getItem('settings')) {
+      this.style = JSON.parse(localStorage.getItem('settings')).listStyle;
     }
   }
 

@@ -25,7 +25,7 @@ export class SettingsComponent implements OnInit {
     tray: new FormControl(false),
     lineChunk: new FormControl(100),
     listStyle: new FormControl('small'),
-    textEditorStyle: new FormControl(JSON.parse(window.localStorage.getItem('settings')).textEditorStyle),
+    textEditorStyle: new FormControl(JSON.parse(localStorage.getItem('settings')).textEditorStyle),
   });
   textplain: string = `# Create a safe reference to the Underscore object for use below.
 _ = (obj) -> new wrapper(obj)
@@ -54,16 +54,16 @@ _.VERSION = '1.1.0'`;
 
   setup() {
     let newSets = this.settings.getRawValue();
-    window.localStorage.setItem('settings', JSON.stringify(newSets));
+    localStorage.setItem('settings', JSON.stringify(newSets));
     this.cmSettings.theme = newSets.textEditorStyle;
   }
 
   ngOnInit(): void {
-    if (window.localStorage.getItem('settings')) {
-      this.settings.setValue(JSON.parse(window.localStorage.getItem('settings')))
+    if (localStorage.getItem('settings')) {
+      this.settings.setValue(JSON.parse(localStorage.getItem('settings')))
 
     } else {
-      window.localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
+      localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
     }
   }
 

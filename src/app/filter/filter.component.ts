@@ -52,12 +52,12 @@ export class FilterComponent implements OnInit {
 
   setFilter() {
     let changedOpt = this.filterForm.getRawValue();
-    window.localStorage.setItem('filter', JSON.stringify(changedOpt));
+    localStorage.setItem('filter', JSON.stringify(changedOpt));
   }
 
   ngOnInit(): void {
-    if (window.localStorage.getItem('filter')) {
-      this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
+    if (localStorage.getItem('filter')) {
+      this.filterForm.setValue(JSON.parse(localStorage.getItem('filter')))
     }
   }
 

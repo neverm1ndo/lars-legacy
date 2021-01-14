@@ -10,7 +10,16 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
+  loginForm: FormGroup = new FormGroup({
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(4)
+    ])
+  });;
   return: string = '';
   error: any;
   loading: boolean = false;
@@ -30,6 +39,7 @@ export class LoginComponent implements OnInit {
 
   logIn() {
     this.loading = true;
+    localStorage.setItem('lastUser', this.email.value);
     this.userService.loginUser(this.loginForm.value).subscribe(
       response => {
           this.loading = false;
@@ -104,23 +114,12 @@ export class LoginComponent implements OnInit {
     this.userService.error.subscribe((error) => {
       this.error = error.status + ' ' + error.message;
     });
-    this.loginForm = new FormGroup({
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email
-      ]),
-      password: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4)
-      ])
-    });
-    if (!window.localStorage.getItem('settings')) {
-      window.localStorage.setItem('settings', JSON.stringify({
-        tray: false,
-        lineChunk: 100,
-        listStyle: 'small',
-        textEditorStyle: 'material'
-      }));
+    if (localStorage.getItem('lastUser')) {
+      this.loginForm.setValue({
+        email: localStorage.getItem('lastUser'),
+        password: ''
+      });
     }
+    this.userService.getUserSettings();
   }
 }
