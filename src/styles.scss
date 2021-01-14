@@ -2,7 +2,13 @@
 @import '~bootstrap/scss/bootstrap';
 /* You can add global styles to this file, and also import other style files */
 @import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/dracula';
 @import '~codemirror/theme/material';
+@import '~codemirror/theme/cobalt';
+@import '~codemirror/theme/ayu-mirage';
+@import '~codemirror/theme/yonce';
+@import '~codemirror/theme/nord';
+@import '~codemirror/theme/panda-syntax';
 
 @import 'scss/colors';
 @import 'scss/native';
@@ -133,18 +139,20 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   }
 }
 ::-webkit-scrollbar {
- background: $scrollbar;
- width: 10px;
- height: 10px;
+ background: $topper;
+ width: 14px;
+ height: 14px;
 }
 ::-webkit-scrollbar-corner {
-  background: $scrollbar;
+  background: $topper;
 }
-::-webkit-scrollbar-thumb        {
+::-webkit-scrollbar-thumb {
   background: $scrollbar-thumb;
+  border-radius: 3px;
   cursor: default!important;
   &:hover {
-    opacity: 0.8;
+    transition: 1s ease-in-out;
+    border: 1px solid $underpanel-hover;
   }
   &:active, &:focus {
     opacity: 0.5;

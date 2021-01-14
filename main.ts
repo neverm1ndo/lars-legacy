@@ -8,26 +8,26 @@ let splash: BrowserWindow = null;
 const args: string[] = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
-function splashWindow() {
-  splash = new BrowserWindow({
-    width: 450,
-    height: 300,
-    backgroundColor: '#3A3F52',
-    resizable: false,
-    icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
-    frame: false
-  });
-  splash.setAlwaysOnTop(true);
-  splash.center();
-  splash.setMenu(null);
-  splash.loadURL(url.format({
-    pathname: path.join(__dirname, 'dist/assets/splash.html'),
-    protocol: 'file:'
-  }));
-  splash.on('closed', () => {
-    splash = null;
-  });
-}
+// function splashWindow() {
+//   splash = new BrowserWindow({
+//     width: 450,
+//     height: 300,
+//     backgroundColor: '#3A3F52',
+//     resizable: false,
+//     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
+//     frame: false
+//   });
+//   splash.setAlwaysOnTop(true);
+//   splash.center();
+//   splash.setMenu(null);
+//   splash.loadURL(url.format({
+//     pathname: path.join(__dirname, 'dist/assets/splash.html'),
+//     protocol: 'file:'
+//   }));
+//   splash.on('closed', () => {
+//     splash = null;
+//   });
+// }
 
 function createWindow(): BrowserWindow {
 
@@ -58,10 +58,10 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  win.once('ready-to-show', () => {
-    splash.close();
-    setTimeout(() => win.show(), 2000);
-  });
+  // win.once('ready-to-show', () => {
+  //   splash.close();
+  //   setTimeout(() => win.show(), 2000);
+  // });
 
   if (serve) {
     win.webContents.openDevTools();
@@ -95,7 +95,7 @@ try {
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-    setTimeout(() => splashWindow(), 400);
+    // setTimeout(() => splashWindow(), 400);
     createWindow();
   });
 

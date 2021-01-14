@@ -16,9 +16,14 @@ export class SearchResultsComponent implements OnInit {
     sad: faFrownOpen
   }
 
+  style: string = 'small';
+
   constructor(public api: ApiService) { }
 
   ngOnInit(): void {
+    if (window.localStorage.getItem('settings')) {
+      this.style = JSON.parse(window.localStorage.getItem('settings')).listStyle;
+    }
   }
 
 }

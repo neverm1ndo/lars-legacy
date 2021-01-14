@@ -11,11 +11,7 @@
         (keydown.backspace)="checkChanges()"
         (keydown.control.z)="checkChanges()"
         (keydown.control.y)="checkChanges()"
-        [options]="{
-          lineNumbers: true,
-          theme: 'material',
-          lineWrapping: true
-        }"
+        [options]="cmSettings"
         [autoFocus]="true"
       ></ngx-codemirror>
       <!-- <div contenteditable="true" class="supertextarea w-100">

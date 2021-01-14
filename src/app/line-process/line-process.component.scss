@@ -1,13 +1,14 @@
 :host {
-  font-size: 12px;
+  font-size: inherit;
   .badge {
     border-radius: 2px;
-    font-size: 12px;
+    font-size: inherit;
     font-weight: 500;
     text-transform: uppercase;
     padding-left: 15px;
     padding-top: 2px;
     padding-right: 15px;
+    margin-bottom: 3px;
   }
   .badge-dev {
     background-color: #7b4888;

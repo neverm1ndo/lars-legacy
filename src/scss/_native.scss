@@ -1,4 +1,7 @@
 @import 'scss/colors';
+:root {
+  --primary: #2E2F39;
+}
 @mixin no-select {
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
@@ -106,13 +109,16 @@
   }
 }
 .custom-control {
+  padding-left: 0px!important;
   label {
   	position: relative;
+    margin-left: 38px;
   	cursor: pointer;
   	font-size: inherit;
+    text-align: left;
   }
 
-  input[type="checkbox"], input[type="radio"]{
+  input[type="checkbox"] {
   	position: absolute;
   	right: 9000px;
   }
@@ -148,69 +154,45 @@
   	color: #ccc;
   }
 
-  /*Radio box*/
+label::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  border: 2px solid #fdfdfd20;
+  border-radius: 50%;
+  top: 50%;
+  left: -2rem;
+  transform: translateY(-50%);
+  transition: border-color 400ms ease;
+}
+input[type="radio"] {
+  width: 0px;
+  height: 0px;
+}
+label::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-color: $topper;
+  border: 13px solid $topper;
+  border-radius: 100%;
+  top: 50%;
+  left: -35px;
+  transform: translateY(-50%) scale(0);
+  transition: transform 400ms ease;
+}
 
-  input[type="radio"] + .label-text:before{
-  	content: "\f10c";
-  	font-family: "FontAwesome";
-  	speak: none;
-  	font-style: normal;
-  	font-weight: normal;
-  	font-variant: normal;
-  	text-transform: none;
-  	line-height: 1;
-  	-webkit-font-smoothing:antialiased;
-  	width: 5em;
-  	display: inline-block;
-  	margin-right: 5px;
-  }
+input[type="radio"]:checked + label::before {
+  border-color: none;
 
-  input[type="radio"]:checked + .label-text:before{
-  	content: "\f192";
-  	color: $success;
-  	animation: effect 250ms ease-in;
-  }
+}
 
-  input[type="radio"]:disabled + .label-text{
-  	color: #aaa;
-  }
-
-  input[type="radio"]:disabled + .label-text:before{
-  	content: "\f111";
-  	color: #ccc;
-  }
-
-  /*Radio Toggle*/
-
-  .toggle input[type="radio"] + .label-text:before{
-  	content: "\f204";
-  	font-family: "FontAwesome";
-  	speak: none;
-  	font-style: normal;
-  	font-weight: normal;
-  	font-variant: normal;
-  	text-transform: none;
-  	line-height: 1;
-  	-webkit-font-smoothing:antialiased;
-  	width: 5em;
-  	display: inline-block;
-  	margin-right: 10px;
-  }
-
-  .toggle input[type="radio"]:checked + .label-text:before{
-  	content: "\f205";
-  	color: $success;
-  	animation: effect 250ms ease-in;
-  }
-
-  .toggle input[type="radio"]:disabled + .label-text{
-  	color: #aaa;
-  }
-
-  .toggle input[type="radio"]:disabled + .label-text:before{
-  	content: "\f204";
-  	color: #ccc;
-  }
+input[type="radio"]:checked + label::after {
+  transform: translateY(-50%) scale(0.55);
+}
 
 
   @keyframes effect{

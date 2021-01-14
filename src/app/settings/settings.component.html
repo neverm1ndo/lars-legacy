@@ -1,6 +1,6 @@
 <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
-    <div class="jumbotron mb-0 h-100 w-100">
+    <div class="jumbotron col-12 pl-2 pr-1 mb-0 h-100 w-100">
       <div class="container">
         <div class="d-flex justify-content-between">
           <h3 class="display-4">Настройки</h3>
@@ -32,29 +32,145 @@
               <small>Выбор между стилями отображения лога</small>
             </div>
             <div class="styles d-flex justify-content-between">
-              <div class="form-check form-check-inline custom-control custom-radio">
+              <div class="form-check custom-control custom-radio">
                 <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio1" value="small">
                 <label class="form-check-label custom-control-label" for="inlineRadio1">Компактный</label>
               </div>
-              <div class="form-check form-check-inline custom-control custom-radio">
-                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio2" value="big" disabled>
-                <label class="form-check-label custom-control-label" for="inlineRadio2">Увеличенный</label>
+              <div class="form-check custom-control custom-radio">
+                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio2" value="big">
+                <label class="form-check-label custom-control-label" for="inlineRadio2">Увеличеный</label>
               </div>
-              <div class="form-check form-check-inline custom-control custom-radio">
-                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio3" value="legacy" disabled>
+              <div class="form-check custom-control custom-radio">
+                <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio3" value="legacy">
                 <label class="form-check-label custom-control-label" for="inlineRadio3">Legacy</label>
               </div>
             </div>
-            <!-- <input formControlName="lineChunk" type="text" id="lineChunk" placeholder="100" /> -->
           </div>
-          <div class="d-flex justify-content-between align-content-center mb-2">
+          <div class="d-flex listing-preview col-12">
+            <div class="row w-100">
+              <div *ngIf="listStyle !== 'legacy'; else legacy" [class.expanded]="listStyle == 'big'" class="col-12 logline">
+                <div class="row">
+                  <div class="col-3 col-md-2 col-lg-2">
+                    <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
+                  </div>
+                  <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
+                    <auth/correct/admin>
+                  </div>
+                  <div class="col-3 col-md-2 col-lg-2 text-center">
+                    <strong>John_Doe</strong>
+                    <br>
+                    <span class="line-id">id: 42</span>
+                  </div>
+                  <div class="col-lg-6 col-8">
+                    <line-process content="Johnny"  process="<auth/correct/admin>"></line-process>
+                    <geo [table]="sampleGeo"></geo>
+                  </div>
+                </div>
+              </div>
+              <ng-template #legacy>
+                <div class="col-12">
+                  <div class="row legacy">
+                    <div class="col-sm-3 col-md-4 col-lg-3">
+                      <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
+                    </div>
+                    <div class="col-sm-9 col-md-8 col-lg-9">
+                      <span class="legacy-process"> <auth/correct/admin></span>
+                      <span class="legacy-nickname">
+                        John_Doe
+                      </span>
+                      <span class="legacy-id">
+                        (42)
+                      </span>
+                      <span> Johnny</span><br>
+                      <span class="pre">
+                        {{ sampleGeo | json }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <div *ngIf="listStyle !== 'legacy'; else legacy2" [class.expanded]="listStyle == 'big'" class="col-12 logline">
+                <div class="row">
+                  <div class="col-3 col-md-2 col-lg-2">
+                    <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
+                  </div>
+                  <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
+                    <dev/weapon>
+                  </div>
+                  <div class="col-3 col-md-2 col-lg-2 text-center">
+                    <strong>John_Doe</strong>
+                    <br>
+                    <span class="line-id">id: 42</span>
+                  </div>
+                  <div class="col-lg-6 col-8">
+                    <line-process content="31 1010"  process="<dev/weapon>"></line-process>
+                  </div>
+                </div>
+              </div>
+              <ng-template #legacy2>
+                <div class="col-12">
+                  <div class="row legacy">
+                    <div class="col-sm-3 col-md-4 col-lg-3">
+                      <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
+                    </div>
+                    <div class="col-sm-9 col-md-8 col-lg-9">
+                      <span class="legacy-process">  <dev/weapon></span>
+                      <span class="legacy-nickname">
+                        John_Doe
+                      </span>
+                      <span class="legacy-id">
+                        (42)
+                      </span>
+                      <span> 31 1010</span><br>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between flex-wrap align-content-center mb-2">
             <div class="">
               <h6>Стиль текстового редактора</h6>
               <small>Стили подсветки синтаксиса текстового редактора</small>
             </div>
-            <input formControlName="textEditorStyle" type="text" id="lineChunk" placeholder="100" value="material" disabled/>
-          </div>
+              <div class="styles w-100 d-flex justify-content-stretch">
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio4" value="dracula">
+                  <label class="custom-control-label" for="inlineRadio4">dracula</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio5" value="material">
+                  <label class="custom-control-label" for="inlineRadio5">material</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio6" value="nord">
+                  <label class="custom-control-label" for="inlineRadio6">nord</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio7" value="panda-syntax">
+                  <label class="custom-control-label" for="inlineRadio7">panda</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio8" value="cobalt">
+                  <label class="custom-control-label" for="inlineRadio8">cobalt</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio9" value="ayu-mirage">
+                  <label class="custom-control-label" for="inlineRadio9">ayu</label>
+                </div>
+                <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
+                  <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio10" value="yonce">
+                  <label class="custom-control-label" for="inlineRadio10">yonce</label>
+                </div>
+              </div>
+            </div>
         </form>
+        <div class="w-100 listing-preview">
+          <ngx-codemirror
+          [ngModel]="textplain"
+          [options]="cmSettings"
+          ></ngx-codemirror>
+        </div>
       </div>
     </div>
   </div>
