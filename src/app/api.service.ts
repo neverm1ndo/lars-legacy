@@ -82,7 +82,7 @@ export class ApiService {
         path: path,
         data: data
       }
-    }, { responseType: 'text' });
+    }, { responseType: 'json' });
   }
   uploadFileMap(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
