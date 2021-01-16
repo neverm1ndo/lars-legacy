@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons';
-import { faFolder, faMap } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faMap, faFileCode } from '@fortawesome/free-solid-svg-icons';
 import { TreeNode } from '../interfaces/app.interfaces';
 
 @Component({
@@ -16,11 +16,15 @@ export class FileTreeItemComponent implements OnInit {
   fa = {
     file: faFileAlt,
     dir: faFolder,
-    map: faMap
+    map: faMap,
+    conf: faFileCode
   }
 
   isMapFile(name: string): boolean {
     return name.includes('.map');
+  }
+  isConfFile(name: string): boolean {
+    return name.includes('.conf');
   }
 
   constructor() { }
