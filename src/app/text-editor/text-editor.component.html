@@ -39,10 +39,10 @@
                   <i [class.led-loading]="loading" [class.led-error]="(error | async)?.message" class="autosave-led"></i>
                 </button>
                 <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
-                  <fa-icon [icon]="fa.save"></fa-icon> Сохранить
+                  <fa-icon [icon]="fa.save"></fa-icon> <span>Сохранить</span>
                 </button>
                 <button class="panel" disabled>
-                  <fa-icon [icon]="fa.fetch"></fa-icon> Обновить
+                  <fa-icon [icon]="fa.fetch"></fa-icon> <span>Обновить</span>
                 </button>
               </div>
             </div>

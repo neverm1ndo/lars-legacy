@@ -83,6 +83,12 @@
         fa-icon {
           font-size: 14px;
           margin-right: 8px;
+          position: relative;
+          top: -1px;
+        }
+        span {
+          position: relative;
+          top: -1px;
         }
         &:hover {
           background: $underpanel-hover;
