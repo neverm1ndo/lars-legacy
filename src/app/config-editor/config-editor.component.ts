@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature } from '@fortawesome/free-solid-svg-icons';
+import { FileTreeComponent } from '../file-tree/file-tree.component';
 
 @Component({
   selector: 'app-config-editor',
@@ -14,6 +15,8 @@ import { faSave, faInfo, faFileSignature } from '@fortawesome/free-solid-svg-ico
   styleUrls: ['./config-editor.component.scss']
 })
 export class ConfigEditorComponent implements OnInit {
+
+  @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
 
   files: TreeNode;
 
@@ -74,6 +77,7 @@ export class ConfigEditorComponent implements OnInit {
                   });
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
+                this.ftc.add.nativeElement.value = '';
               }
             },
             err => {
@@ -87,6 +91,7 @@ export class ConfigEditorComponent implements OnInit {
                  });
               console.error(err);
               this.reloadFileTree();
+              this.ftc.add.nativeElement.value = '';
             });
     }
   }
