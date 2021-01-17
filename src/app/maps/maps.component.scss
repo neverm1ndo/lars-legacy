@@ -4,6 +4,18 @@
     width: 45px;
     height: 45px;
   }
+  .map-inspector-top {
+    height: 48px;
+    width: 100%;
+    .text {
+      font-size: 13px;
+      line-height: 53px;
+    }
+  }
+  .inspector {
+    border-left: 2px solid $topper;
+    background: $filetree;
+  }
   .progress {
     height: 2px;
     margin-bottom: -2px;

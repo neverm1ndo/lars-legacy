@@ -1,0 +1,51 @@
+@import "scss/colors";
+:host {
+  width: 100%;
+  .tab {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 10px;
+    width: 100%;
+    border-bottom: 1px solid $topper;
+    .name {
+      text-transform: uppercase;
+      font-size: 10px;
+      background: #efefef;
+      color: #121212;
+      font-weight: 700;
+      padding-right: 5px;
+      padding-left: 5px;
+    }
+    .model-id {
+      margin-left: 5px;
+    }
+    .id {
+      opacity: 0.8;
+      font-weight: bold;
+    }
+    .vehicle {
+      background: #2791dc;
+      color: #fdfdfd;
+    }
+    .pickup {
+      background: #f3b94f;
+    }
+    .remove {
+      background: #ce3d4a;
+      color: #fdfdfd;
+    }
+    .spawn {
+      background: #6d55cc;
+      color: #fdfdfd;
+    }
+    .racepickup {
+      background: #505050;
+      color: #fdfdfd;
+    }
+    .d-inline {
+      overflow: hidden;
+      max-width: 80px;
+      word-wrap: break-word;
+    }
+  }
+}

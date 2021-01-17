@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
@@ -61,6 +61,7 @@ export class MapsComponent implements OnInit {
   current: any;
   currentFilePath: string;
   progress: number = 0;
+  mapObjects: any;
 
   loading: boolean = false;
 
@@ -72,25 +73,47 @@ export class MapsComponent implements OnInit {
     trash: faTrash,
     check: faCheckCircle,
     info: faInfo,
-    save: faSave
+    save: faSave,
+    sign: faMapSigns
   }
 
-  parseMap(xml: string): { text: string, objects: number, coords: { x: string | null, y: string | null, z: string | null }, dim?: string | null, int?: string | null } {
-    let parser = new DOMParser();
-    let map = parser.parseFromString(xml.replace('edf:definitions="editor_main"', ''), 'text/xml');
+  // parseMap(xml: string): { text: string, objects: number, coords: { x: string | null, y: string | null, z: string | null }, dim?: string | null, int?: string | null } {
+  //   let parser = new DOMParser();
+  //   const xmlfyRegex = new RegExp(' (edf:)(.*")');
+  //   let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
+  //   console.log(map);
+  //   let firstobj = map.getElementsByTagName("object")[0];
+  //   return {
+  //     text: xml,
+  //     objects: map.getElementsByTagName('map')[0].children.length,
+  //     coords: {
+  //       x: firstobj.getAttribute('posX'),
+  //       y: firstobj.getAttribute('posY'),
+  //       z: firstobj.getAttribute('posZ'),
+  //     },
+  //     dim: firstobj.getAttribute('dimension'),
+  //     int: firstobj.getAttribute('interior')
+  //   };
+  // }
 
-    let firstobj = map.getElementsByTagName("object")[0];
-    return {
-      text: xml,
-      objects: Math.floor(map.getElementsByTagName('map')[0].childNodes.length/2),
-      coords: {
-        x: firstobj.getAttribute('posX'),
-        y: firstobj.getAttribute('posY'),
-        z: firstobj.getAttribute('posZ'),
-      },
-      dim: firstobj.getAttribute('dimension'),
-      int: firstobj.getAttribute('interior')
+  mapToObject(xml: string) {
+    let parser = new DOMParser();
+    const xmlfyRegex = new RegExp(' (edf:)(.*")');
+    let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
+    let object: { objects: any[]} = {
+      objects: []
     };
+    const elems = map.getElementsByTagName('map')[0].children;
+    for (let i = 0; i < elems.length; i++) {
+      const attrs = elems[i].attributes;
+      let obj = { name: elems[i].tagName };
+      for (let i = 0; i < attrs.length; i++) {
+        obj[attrs[i].name] = attrs[i].value;
+      }
+      object.objects.push(obj);
+    }
+    console.log(object);
+    return object;
   }
 
   saveMapLocal(): void {
@@ -132,7 +155,7 @@ export class MapsComponent implements OnInit {
   getMap(path: { path: string, name?: string}) {
     this.currentFilePath = path.path;
     this.api.getMap(path.path).subscribe(map => {
-      this.current = this.parseMap(map);
+      this.current = this.mapToObject(map);
       this.current.name = path.name;
       this.api.loading = false;
     })

@@ -1,0 +1,24 @@
+<div class="col-12 d-flex flex-column tab" *ngFor="let obj of objects.objects; index as i">
+  <div class="d-flex flex-row justify-content-between">
+    <div><span [ngClass]="{
+      'vehicle': obj.name == 'vehicle',
+      'pickup': obj.name == 'pickup',
+      'remove': obj.name == 'removeworldobject',
+      'spawn': obj.name == 'spawnpoint',
+      'racepickup': obj.name == 'racepickup'
+    }" class="name">{{obj.name}}</span>
+    <span class="model-id" *ngIf="obj.id"> ID: {{obj.id}}</span>
+  </div>
+    <div class="id">#{{i}}</div>
+  </div>
+  <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex" *ngIf="obj.model">MODEL: {{obj.model}}</div>
+    <div class="d-flex" *ngIf="obj.dimension">DIM: {{obj.dimension}}</div>
+    <div class="d-flex" *ngIf="obj.interior">INT: {{obj.interior}}</div>
+  </div>
+  <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex" *ngIf="obj.posX">X: {{obj.posX}}</div>
+    <div class="d-flex" *ngIf="obj.posY">Y: {{obj.posY}}</div>
+    <div class="d-flex" *ngIf="obj.posZ">Z: {{obj.posZ}}</div>
+  </div>
+</div>
