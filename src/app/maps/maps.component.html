@@ -10,32 +10,35 @@
         </div>
         <div class="col-md-8 col-lg-9 col-xl-10 h-100 pr-0 pl-0">
           <div *ngIf="!api.loading && current; else loading" class="mb-0 h-100 w-100 d-flex justify-content-stretch overflow-auto">
-            <div class="d-flex justify-content-stretch align-items-center p-3">
-              <div class="jumbotron w-100">
-                <div class="d-flex justify-content-between overflow-hidden title w-100">
-                  <h3 class="display-5"><fa-icon [icon]="fa.map"></fa-icon> {{ current.name }}</h3>
+            <div class="d-flex justify-content-stretch align-items-center flex-fill overflow-hidden">
+              <div class="d-flex flex-column h-100 w-100">
+                <div class="d-flex justify-content-between flex-row overflow-hidden title w-100 map-top">
+                  <div><span class="badge badge-light"><fa-icon [icon]="fa.map"></fa-icon><span class="pre-badge">{{ current.name }}</span></span></div>
+                  <div>
+                    <span placement="left" [ngbTooltip]="limitOk" *ngIf="current.objects.length <= 380" class="badge badge-success">
+                      <fa-icon [icon]="fa.cubes"></fa-icon>
+                      <span class="pre-badge">{{ current.objects.length }}</span>
+                      <ng-template #limitOk><fa-icon [icon]="fa.check"></fa-icon>Лимит не превышен</ng-template>
+                    </span>
+                    <span placement="left" [ngbTooltip]="limitWarn" *ngIf="current.objects.length >= 380 && current.objects < 400" class="badge badge-warning">
+                      <fa-icon [icon]="fa.cubes"></fa-icon>
+                      <span class="pre-badge">{{ current.objects.length }}</span>
+                      <ng-template #limitWarn><fa-icon [icon]="fa.info"></fa-icon>Близко к лимиту</ng-template>
+                    </span>
+                    <span placement="left" [ngbTooltip]="limitDanger" *ngIf="current.objects.length >= 400" class="badge badge-danger">
+                      <fa-icon [icon]="fa.cubes"></fa-icon>
+                      <span class="pre-badge">{{ current.objects.length }}</span>
+                      <ng-template #limitDanger><fa-icon [icon]="fa.info"></fa-icon>Превышен лимит</ng-template>
+                    </span>
+                  </div>
                 </div>
-                <hr>
-                <div class="row">
+                <div class="d-flex flex-fill map">
+                  <map-editor [objects]="current.objects"></map-editor>
+                </div>
+
+                <!-- <div class="row">
                   <div class="col-12">
                     <div class="row">
-                      <div class="col-12 mb-2">
-                        <div class="mb-2">
-                          <b>Кол-во объектов</b>
-                        </div>
-                        <span *ngIf="current.objects.length <= 380" class="badge badge-success">
-                          <span class="pre-badge">{{ current.objects.length }}</span>
-                          <fa-icon [icon]="fa.check"></fa-icon>Лимит не превышен
-                        </span>
-                        <span *ngIf="current.objects.length >= 380 && current.objects < 400" class="badge badge-warning">
-                          <span class="pre-badge">{{ current.objects.length }}</span>
-                          <fa-icon [icon]="fa.info"></fa-icon>Близко к лимиту
-                        </span>
-                        <span *ngIf="current.objects.length >= 400" class="badge badge-danger">
-                          <span class="pre-badge">{{ current.objects.length }}</span>
-                          <fa-icon [icon]="fa.info"></fa-icon>Превышен лимит
-                        </span>
-                      </div>
                       <div class="col-12">
                         <div class="mb-2">
                           <b>Координаты</b>
@@ -61,16 +64,14 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <hr>
-                <!-- <div class="btn-group" role="group" aria-label="Управление картой"> -->
-                  <button (click)="saveMapLocal()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Сохранить локально <br> <small>Ctrl+S</small></button>
-                  <!-- <button (click)="saveMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.up" disabled></fa-icon> Загрузить на сервер <br> <small>Ctrl+A</small></button> -->
-                  <button (click)="deleteMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить <br> <small>Alt+X</small></button>
-                  <!-- </div> -->
+                </div> -->
+          <div class="map-bottom">
+              <button (click)="saveMapLocal()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Сохранить локально <br> <small>Ctrl+S</small></button>
+              <button (click)="deleteMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить <br> <small>Alt+X</small></button>
+          </div>
               </div>
             </div>
-            <div class="d-flex flex-column inspector h-100 flex-fill">
+            <div class="d-flex flex-column inspector h-100">
               <div class="d-flex text-center map-inspector-top justify-content-center">
                 <div class="d-flex text"><fa-icon [icon]="fa.sign"></fa-icon>Map inspector</div>
               </div>

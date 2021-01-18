@@ -1,13 +1,14 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faMap, faPlus, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
+import { faMap, faPlus, faCubes, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { FileTreeComponent } from '../file-tree/file-tree.component';
 
 @Component({
   selector: 'app-maps',
@@ -53,12 +54,15 @@ export class MapsComponent implements OnInit {
      this.directories$.subscribe(items => { this.files = items; this.current = null});
    }
 
+   @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
+
   files: TreeNode;
 
   directories$: Observable<any>;
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   current: any;
+  xml: string;
   currentFilePath: string;
   progress: number = 0;
   mapObjects: any;
@@ -74,7 +78,8 @@ export class MapsComponent implements OnInit {
     check: faCheckCircle,
     info: faInfo,
     save: faSave,
-    sign: faMapSigns
+    sign: faMapSigns,
+    cubes: faCubes
   }
 
   // parseMap(xml: string): { text: string, objects: number, coords: { x: string | null, y: string | null, z: string | null }, dim?: string | null, int?: string | null } {
@@ -110,7 +115,9 @@ export class MapsComponent implements OnInit {
       for (let i = 0; i < attrs.length; i++) {
         obj[attrs[i].name] = attrs[i].value;
       }
-      object.objects.push(obj);
+      if (obj.name !== 'parsererror') {
+        object.objects.push(obj);
+      }
     }
     console.log(object);
     return object;
@@ -129,7 +136,7 @@ export class MapsComponent implements OnInit {
       }).then(res => {
         if (res.filePath && !res.canceled) {
           console.log(res.filePath);
-          this.electron.fs.writeFile(res.filePath, this.current.text, 'utf8', (err) => {
+          this.electron.fs.writeFile(res.filePath, this.xml, 'utf8', (err) => {
             if (err) throw err;
           });
           this.toast.show(`Карта <b>${ this.current.name }</b> успешно сохранена`,
@@ -156,13 +163,14 @@ export class MapsComponent implements OnInit {
     this.currentFilePath = path.path;
     this.api.getMap(path.path).subscribe(map => {
       this.current = this.mapToObject(map);
+      this.xml = map;
       this.current.name = path.name;
       this.api.loading = false;
     })
   }
 
   deleteMapCloud(): void {
-    let sub: any;
+    // let sub: any;
     const dialogOpts = {
         type: 'warning',
         buttons: ['Удалить', 'Отмена'],
@@ -172,7 +180,7 @@ export class MapsComponent implements OnInit {
     this.electron.dialog.showMessageBox(dialogOpts).then(
       val => {
         if (val.response === 0) {
-          sub = this.api.deleteMap(this.currentFilePath).subscribe(() => {
+          /*sub =*/ this.api.deleteMap(this.currentFilePath).subscribe(() => {
             this.toast.show(`Карта <b>${ this.current.name }</b> удалена с сервера`,
               {
                 classname: 'bg-success text-light',
@@ -184,7 +192,9 @@ export class MapsComponent implements OnInit {
         }
       }
     ).finally(() => {
-      if (sub) sub.unsubscribe();
+      // if (sub) sub.unsubscribe();
+      this.reloadFileTree();
+      this.current = null;
     });
   }
 
@@ -205,6 +215,7 @@ export class MapsComponent implements OnInit {
                 this.toast.show(`Карта <b>${ files[0].name }</b> успешно добавлена`, { classname: 'bg-success text-light', delay: 3000, icon: faSave });
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
+                this.ftc.add.nativeElement.value = '';
               }
             },
             err => {
@@ -218,6 +229,7 @@ export class MapsComponent implements OnInit {
                  });
               console.error(err);
               this.reloadFileTree();
+              this.ftc.add.nativeElement.value = '';
             });
     }
   }
@@ -227,8 +239,9 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.router.navigate(['/home/maps'], {queryParams: {path: 'E:/ht/libertylogs/support/sa_lv_nyancat.map', name: 'sa_lv_nyancat.map'}})
     this.route.queryParams.pipe(
-      filter(params => (params.path || params.name))
+      filter(params => (params.name || params.path))
     ).subscribe(params => {
       console.log(params);
       this.currentFilePath = params.path;

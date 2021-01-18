@@ -10,6 +10,13 @@
       position: relative;
       top: -5px;
     }
+    lty-icon {
+      width: 21px;
+      height: 21px;
+      margin-right: 10px;
+      position: relative;
+      top: -1px;
+    }
     .sync {
       width: 32px;
       margin-right: 5px;
@@ -22,9 +29,9 @@
       position: relative;
       overflow: hidden;
       height: 32px;
-      fa-icon {
-        margin-right: 5px;
-      }
+      // fa-icon {
+      //   margin-right: 5px;
+      // }
     }
     .btn-file input[type=file] {
         position: absolute;
