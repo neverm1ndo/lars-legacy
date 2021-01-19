@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog } from 'electron';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
+import axios from 'axios';
 
 let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
@@ -24,6 +25,9 @@ function splashWindow() {
     pathname: path.join(__dirname, 'dist/assets/splash.html'),
     protocol: 'file:'
   }));
+  splash.once('ready-to-show', () => {
+    splash.webContents.executeJavaScript('changeStatus("Загрузка основного модуля", 60);', true)
+  })
   splash.on('closed', () => {
     splash = null;
   });
@@ -59,8 +63,23 @@ function createWindow(): BrowserWindow {
   });
 
   win.once('ready-to-show', () => {
-    splash.close();
-    setTimeout(() => win.show(), 2000);
+    splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
+    win.webContents.executeJavaScript('localStorage.getItem("user");', true)
+    .then(result => {
+      axios.get('http://instr.gta-liberty.ru/v2/login/check-token', { headers: { 'Authorization': JSON.parse(result).token }})
+      .then(() => {
+        splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
+      })
+      .catch((err)=> {
+        win.webContents.send('token-verify-denied', true);
+        splash.webContents.executeJavaScript('changeStatus("Токен не прошел верификацию", 100);', true);
+      }).finally(() => {
+        setTimeout(() => {
+          splash.close();
+          win.show();
+        }, 2000);
+      })
+    });
   });
 
   if (serve) {

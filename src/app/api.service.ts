@@ -10,16 +10,16 @@ import { UserService } from './user.service';
 })
 export class ApiService {
 
-  readonly URL_LAST: string = AppConfig.api.main + 'last';
-  readonly URL_CONFIGS: string =  AppConfig.api.main + 'config-files-tree';
-  readonly URL_CONFIG: string =  AppConfig.api.main + 'config-file';
-  readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'save-config';
-  readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'upload-map';
-  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'upload-cfg';
-  readonly URL_SEARCH: string =  AppConfig.api.main + 'search';
-  readonly URL_MAPS: string =  AppConfig.api.main + 'maps-files-tree';
-  readonly URL_MAPINFO: string = AppConfig.api.main + 'map-file';
-  readonly URL_DELETE_FILE: string = AppConfig.api.main + 'delete-file';
+  readonly URL_LAST: string = AppConfig.api.main + 'logs/last';
+  readonly URL_SEARCH: string =  AppConfig.api.main + 'logs/search';
+  readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
+  readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
+  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-cfg';
+  readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
+  readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
+  readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
+  readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
+  readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
