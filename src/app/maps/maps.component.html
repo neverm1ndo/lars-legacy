@@ -18,17 +18,17 @@
                     <span placement="left" [ngbTooltip]="limitOk" *ngIf="current.objects.length <= 380" class="badge badge-success">
                       <fa-icon [icon]="fa.cubes"></fa-icon>
                       <span class="pre-badge">{{ current.objects.length }}</span>
-                      <ng-template #limitOk><fa-icon [icon]="fa.check"></fa-icon>Лимит не превышен</ng-template>
+                      <ng-template #limitOk><fa-icon class="ttp-icon" [icon]="fa.check"></fa-icon>Лимит не превышен</ng-template>
                     </span>
                     <span placement="left" [ngbTooltip]="limitWarn" *ngIf="current.objects.length >= 380 && current.objects < 400" class="badge badge-warning">
                       <fa-icon [icon]="fa.cubes"></fa-icon>
                       <span class="pre-badge">{{ current.objects.length }}</span>
-                      <ng-template #limitWarn><fa-icon [icon]="fa.info"></fa-icon>Близко к лимиту</ng-template>
+                      <ng-template #limitWarn><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Близко к лимиту</ng-template>
                     </span>
                     <span placement="left" [ngbTooltip]="limitDanger" *ngIf="current.objects.length >= 400" class="badge badge-danger">
                       <fa-icon [icon]="fa.cubes"></fa-icon>
                       <span class="pre-badge">{{ current.objects.length }}</span>
-                      <ng-template #limitDanger><fa-icon [icon]="fa.info"></fa-icon>Превышен лимит</ng-template>
+                      <ng-template #limitDanger><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Превышен лимит</ng-template>
                     </span>
                   </div>
                 </div>
@@ -40,9 +40,12 @@
                     </div>
                   </div>
                 </div>
-          <div class="map-bottom">
-              <button (click)="saveMapLocal()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.down"></fa-icon> Сохранить локально <br> <small>Ctrl+S</small></button>
-              <button (click)="deleteMapCloud()" type="button" class="btn btn-dark"><fa-icon [icon]="fa.trash"></fa-icon> Удалить <br> <small>Alt+X</small></button>
+          <div class="map-bottom d-flex justify-content-center">
+            <button disabled ngbTooltip="Переместить" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
+            <button disabled ngbTooltip="Повернуть" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
+            <button ngbTooltip="Сохранить локально" placement="top" (click)="saveMapLocal()" type="button" class="btn btn-light"><fa-icon [icon]="fa.down"></fa-icon></button>
+            <button disabled ngbTooltip="Сохранить на сервере" placement="top" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
+            <button ngbTooltip="Удалить" placement="top" (click)="deleteMapCloud()" type="button" class="btn btn-light"><fa-icon [icon]="fa.trash"></fa-icon></button>
           </div>
               </div>
             </div>

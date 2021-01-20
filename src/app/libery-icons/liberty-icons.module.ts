@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { IconsComponent } from './icons/icons.component';
 import { IconsService } from './icons.service';
-import { ltyLogo, ltyOld, ltyFolderTree } from './icons/icons.lib';
+import { ltyLogo, ltyFolderTree, ltyServerSave } from './icons/icons.lib';
 
 @NgModule({
   declarations: [ IconsComponent ],
@@ -15,7 +15,7 @@ import { ltyLogo, ltyOld, ltyFolderTree } from './icons/icons.lib';
 export class LibertyIconsModule {
   constructor(private ltyicons: IconsService) {
     this.ltyicons.regIcons([
-      ltyLogo, ltyOld, ltyFolderTree
+      ltyLogo, ltyFolderTree, ltyServerSave 
     ]);
   }
 }

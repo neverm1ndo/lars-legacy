@@ -44,6 +44,15 @@
       padding-left: 1rem;
       padding-right: 1rem;
       // background: $topper;
+      .btn {
+        height: 35px;
+        margin-right: 5px;
+        lty-icon {
+          width: 16px;
+          position: relative;
+          height: auto;
+        }
+      }
     }
   }
   .inspector {
@@ -89,6 +98,9 @@
     font-weight: 300;
     padding: 0px 0px 0px 0px;
     line-height: 30px;
+    .ttp-icon {
+      margin-right: 10px!important;
+    }
     fa-icon {
       margin-left: 10px;
       margin-right: 10px;
@@ -111,14 +123,8 @@
   .title {
     h3 {
       text-overflow: ellipsis;
-      fa-icon {
-        margin-right: 0em;
-      }
     }
     white-space: nowrap;
-  }
-  fa-icon {
-    margin-right: 0.5em;
   }
   .playerlog, .jumbotron {
     background: #3d3e4a;

@@ -87,15 +87,16 @@ export class MapEditorComponent implements OnInit {
        this.style.cursor = 'pointer';
      });
     this.canvas.nativeElement.addEventListener('mousedown', (event) => {
+      this.canvas.nativeElement.style.cursor = '-webkit-grabbing';
        dragStart = {
          x: event.pageX - this.canvas.nativeElement.offsetLeft,
          y: event.pageY - this.canvas.nativeElement.offsetTop
        }
      drag = true;
     })
-    this.canvas.nativeElement.addEventListener('mouseup', () => {
+    this.canvas.nativeElement.addEventListener('mouseup', function () {
      drag = false;
-     console.log(this.viewport);
+     this.style.cursor = '-webkit-grab';
     })
     this.canvas.nativeElement.addEventListener('mousemove', (event) => {
       if (drag) {

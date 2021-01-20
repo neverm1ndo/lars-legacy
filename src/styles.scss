@@ -38,17 +38,19 @@ button:active, button:focus {
     box-shadow: none;
   }
 }
-.btn-dark {
+.btn {
   font-size: 13px;
-  background-color: transparent!important;
   border: none;
   transition: 0.1s linear;
-  &:hover, &:active, &:focus {
-    background-color: rgb(0 0 0 / 30%)!important;
-  }
-  &:disabled {
-    background-color: rgb(0 0 0 / 30%)!important;
-    opacity: 0.5;
+  &-dark {
+    background-color: transparent!important;
+    &:hover, &:active, &:focus {
+      background-color: rgb(0 0 0 / 30%)!important;
+    }
+    &:disabled {
+      background-color: rgb(0 0 0 / 30%)!important;
+      opacity: 0.5;
+    }
   }
 }
 .light-tooltip {

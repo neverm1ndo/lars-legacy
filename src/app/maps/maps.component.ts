@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faMap, faPlus, faCubes, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
+import { faMap, faPlus, faCubes, faDraftingCompass, faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
@@ -82,7 +82,9 @@ export class MapsComponent implements OnInit {
     info: faInfo,
     save: faSave,
     sign: faMapSigns,
-    cubes: faCubes
+    cubes: faCubes,
+    replace: faRoute,
+    rotate: faDraftingCompass
   }
 
   mapToObject(xml: string) {
@@ -103,7 +105,6 @@ export class MapsComponent implements OnInit {
         object.objects.push(obj);
       }
     }
-    console.log(object);
     return object;
   }
 
