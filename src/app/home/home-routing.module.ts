@@ -11,6 +11,7 @@ import { SearchEditorComponent } from '../search-editor/search-editor.component'
 import { ConfigEditorComponent } from '../config-editor/config-editor.component';
 import { SettingsComponent } from '../settings/settings.component';
 import { MapsComponent } from '../maps/maps.component';
+import { BanhammerComponent } from '../banhammer/banhammer.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'config-editor', component: ConfigEditorComponent, canActivate: [IsConfiguratorGuard] },
     { path: 'settings', component: SettingsComponent },
     { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard] },
+    { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] }
   ]},
 ];
 

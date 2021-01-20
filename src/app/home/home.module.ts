@@ -36,9 +36,10 @@ import { SettingsComponent } from '../settings/settings.component';
 import { MapsComponent } from '../maps/maps.component';
 import { MapInspectorComponent } from '../map-inspector/map-inspector.component';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
+import { BanhammerComponent } from '../banhammer/banhammer.component';
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent],
   imports: [
     CommonModule,
     SharedModule,
