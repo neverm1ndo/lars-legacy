@@ -27,6 +27,27 @@ export const settings = trigger('settings', [
         ])
 ]);
 
+export const mapload = trigger('mapload', [
+  state('true', style({ filter: 'blur(20px)' })),
+  state('false', style({ filter: 'blur(0px)' })),
+  transition('false => true', [
+    style({ filter: 'blur(0)' }),
+    animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+    keyframes([
+      style({ filter: 'blur(0px)' }),
+      style({ filter: 'blur(20px)' })
+    ]))
+  ]),
+  transition('true => false', [
+    style({ filter: 'blur(20px)' }),
+    animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+    keyframes([
+      style({ filter: 'blur(20px)' }),
+      style({ filter: 'blur(0px)' })
+    ]))
+  ])
+]);
+
 export const toast = trigger(
       'toast',
       [

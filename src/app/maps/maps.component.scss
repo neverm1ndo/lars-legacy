@@ -4,6 +4,18 @@
     width: 45px;
     height: 45px;
   }
+  .blured-fix {
+    position: relative;
+    left: -50%;
+    width: 100%;
+    margin-left: -15px;
+    margin-right: -15px;
+    z-index: 3;
+    .loader, lty-icon {
+      width: 30px!important;
+      height: 30px!important;
+    }
+  }
   .map-inspector-top {
     height: 48px;
     width: 100%;

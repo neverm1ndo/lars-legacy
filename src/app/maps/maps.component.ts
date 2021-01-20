@@ -4,16 +4,18 @@ import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { faMap, faPlus, faCubes, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
+import { mapload } from '../app.animations';
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.scss']
+  styleUrls: ['./maps.component.scss'],
+  animations: [ mapload ]
 })
 export class MapsComponent implements OnInit {
 
@@ -47,6 +49,7 @@ export class MapsComponent implements OnInit {
   constructor(
     public api: ApiService,
     public route: ActivatedRoute,
+    public router: Router,
     public electron: ElectronService,
     public toast: ToastService
    ) {
@@ -81,25 +84,6 @@ export class MapsComponent implements OnInit {
     sign: faMapSigns,
     cubes: faCubes
   }
-
-  // parseMap(xml: string): { text: string, objects: number, coords: { x: string | null, y: string | null, z: string | null }, dim?: string | null, int?: string | null } {
-  //   let parser = new DOMParser();
-  //   const xmlfyRegex = new RegExp(' (edf:)(.*")');
-  //   let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
-  //   console.log(map);
-  //   let firstobj = map.getElementsByTagName("object")[0];
-  //   return {
-  //     text: xml,
-  //     objects: map.getElementsByTagName('map')[0].children.length,
-  //     coords: {
-  //       x: firstobj.getAttribute('posX'),
-  //       y: firstobj.getAttribute('posY'),
-  //       z: firstobj.getAttribute('posZ'),
-  //     },
-  //     dim: firstobj.getAttribute('dimension'),
-  //     int: firstobj.getAttribute('interior')
-  //   };
-  // }
 
   mapToObject(xml: string) {
     let parser = new DOMParser();
@@ -239,7 +223,7 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.router.navigate(['/home/maps'], {queryParams: {path: 'E:/ht/libertylogs/support/sa_lv_nyancat.map', name: 'sa_lv_nyancat.map'}})
+    this.router.navigate(['/home/maps'], {queryParams: {path: 'E:/ht/libertylogs/support/sa_lv_ufo.map', name: 'sa_lv_ufo.map'}})
     this.route.queryParams.pipe(
       filter(params => (params.name || params.path))
     ).subscribe(params => {
