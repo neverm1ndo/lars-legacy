@@ -49,6 +49,18 @@ export class Processes {
       control: 'cmdPreerrBlock'
     },
     {
+      process: '<cmd/pre_error/syntax>',
+      translate: 'Ошибка синтаксиса команды',
+      type: 'danger',
+      control: 'cmdPreerrSynt'
+    },
+    {
+      process: '<cmd/pre_error/flood>',
+      translate: 'Флуд',
+      type: 'danger',
+      control: 'cmdPreerrFlood'
+    },
+    {
       process: '<cmd/pre_error/not_found>',
       translate: 'Команда не найдена',
       type: 'danger',
@@ -187,6 +199,12 @@ export class Processes {
       control: 'spectateLeave'
     },
     {
+      process: '<spectate/enter>',
+      translate: 'Вход в наблюдение',
+      type: 'adm',
+      control: 'spectateEnter'
+    },
+    {
       process: '<check/explosion/player>',
       translate: 'Проверка взрывом',
       type: 'adm',
@@ -229,6 +247,18 @@ export class Processes {
       control: 'devVeh'
     },
     {
+      process: '<dev/vehicle/remove>',
+      translate: 'DEV: Удаление транспорта',
+      type: 'dev',
+      control: 'devVehRm'
+    },
+    {
+      process: '<dev/keylog>',
+      translate: 'DEV: Захват кодов клавиш',
+      type: 'dev',
+      control: 'devKeylog'
+    },
+    {
       process: '<pickup/artifact>',
       translate: 'PICKUP: Артефакт',
       type: 'pickup',
@@ -269,12 +299,6 @@ export class Processes {
       translate: 'Создание TDM',
       type: 'tdm',
       control: 'tdmCreate'
-    },
-    {
-      process: '<clothes_shop/enter>',
-      translate: 'Вход в Магазин одежды',
-      type: 'clothes',
-      control: 'clotEnter'
     },
     {
       process: '<clothes_shop/enter>',
