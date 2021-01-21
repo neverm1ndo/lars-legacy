@@ -193,6 +193,18 @@ export class Processes {
       control: 'checkExpl'
     },
     {
+      process: '<check/scroll/false>',
+      translate: 'Проверка автоскролла: FALSE',
+      type: 'adm',
+      control: 'checkScroll'
+    },
+    {
+      process: '<check/scroll/true>',
+      translate: 'Проверка автоскролла: TRUE',
+      type: 'adm',
+      control: 'checkScroll'
+    },
+    {
       process: '<spectate/change>',
       translate: 'Смена цели наблюдения',
       type: 'adm',
@@ -245,6 +257,18 @@ export class Processes {
       translate: 'Вход в TDM',
       type: 'tdm',
       control: 'tdmEnter'
+    },
+    {
+      process: '<team_death_match/leave>',
+      translate: 'Выход из TDM',
+      type: 'tdm',
+      control: 'tdmLeave'
+    },
+    {
+      process: '<team_death_match/create>',
+      translate: 'Создание TDM',
+      type: 'tdm',
+      control: 'tdmCreate'
     },
     {
       process: '<clothes_shop/enter>',
