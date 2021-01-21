@@ -61,6 +61,18 @@ export class Processes {
       control: 'cmdPreerrNotF'
     },
     {
+      process: '<cmd/pre_error/preload>',
+      translate: 'Ввод команды до загрузки',
+      type: 'danger',
+      control: 'cmdPreerrPre'
+    },
+    {
+      process: '<cmd/pre_error/not_in_game>',
+      translate: 'Ввод команды до входа',
+      type: 'danger',
+      control: 'cmdPreerrNotInGame'
+    },
+    {
       process: '<cmd/pre_error/value>',
       translate: 'Команда содержит ошибку значения',
       type: 'danger',
@@ -193,10 +205,58 @@ export class Processes {
       control: 'devWeap'
     },
     {
+      process: '<dev/click_map>',
+      translate: 'DEV: Телепорт к точке',
+      type: 'dev',
+      control: 'devClickMap'
+    },
+    {
       process: '<dev/vehicle/add>',
       translate: 'DEV: Спавн транспорта',
       type: 'dev',
       control: 'devVeh'
+    },
+    {
+      process: '<pickup/artifact>',
+      translate: 'PICKUP: Артефакт',
+      type: 'pickup',
+      control: 'pickArt'
+    },
+    {
+      process: '<death_match/leave>',
+      translate: 'Выход из DM',
+      type: 'dm',
+      control: 'dmLeave'
+    },
+    {
+      process: '<death_match/enter>',
+      translate: 'Вход в DM',
+      type: 'dm',
+      control: 'dmEnter'
+    },
+    {
+      process: '<death_match/create>',
+      translate: 'Создание DM',
+      type: 'dm',
+      control: 'dmCreate'
+    },
+    {
+      process: '<team_death_match/enter>',
+      translate: 'Вход в TDM',
+      type: 'tdm',
+      control: 'tdmEnter'
+    },
+    {
+      process: '<clothes_shop/enter>',
+      translate: 'Вход в Магазин одежды',
+      type: 'clothes',
+      control: 'clotEnter'
+    },
+    {
+      process: '<clothes_shop/enter>',
+      translate: 'Вход в Магазин одежды',
+      type: 'clothes',
+      control: 'clotEnter'
     }
   ];
 }

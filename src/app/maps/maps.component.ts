@@ -4,7 +4,7 @@ import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { faMap, faPlus, faCubes, faDraftingCompass, faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -27,10 +27,6 @@ export class MapsComponent implements OnInit {
             this.saveMapLocal();
             break;
           }
-          case 65 : { // Ctrl + A
-            this.saveMapLocal();
-            break;
-          }
           default : break;
         }
       }
@@ -49,7 +45,6 @@ export class MapsComponent implements OnInit {
   constructor(
     public api: ApiService,
     public route: ActivatedRoute,
-    public router: Router,
     public electron: ElectronService,
     public toast: ToastService
    ) {
@@ -177,7 +172,6 @@ export class MapsComponent implements OnInit {
         }
       }
     ).finally(() => {
-      // if (sub) sub.unsubscribe();
       this.reloadFileTree();
       this.current = null;
     });
@@ -224,7 +218,6 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.navigate(['/home/maps'], {queryParams: {path: 'E:/ht/libertylogs/support/sa_lv_ufo.map', name: 'sa_lv_ufo.map'}})
     this.route.queryParams.pipe(
       filter(params => (params.name || params.path))
     ).subscribe(params => {

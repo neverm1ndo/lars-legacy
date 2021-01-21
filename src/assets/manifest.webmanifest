@@ -1,0 +1,37 @@
+{
+  "name": "LibertyLogs",
+  "short_name": "LLS",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#3A3F52",
+  "description": "Gta Liberty Server admin panel app",
+  "icons": [{
+    "src": "icons/favicon48.ico",
+    "sizes": "48x48",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/favicon72.ico",
+    "sizes": "72x72",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/favicon96.ico",
+    "sizes": "96x96",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/favicon144.ico",
+    "sizes": "144x144",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/favicon168.ico",
+    "sizes": "168x168",
+    "type": "image/x-icon"
+  }, {
+    "src": "icons/favicon.ico",
+    "sizes": "256x256",
+    "type": "image/x-icon"
+  }],
+  "related_applications": [{
+    "platform": "web",
+    "url": "https://libertyapp.nmnd.ru/"
+  }]
+}
