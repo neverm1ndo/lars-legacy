@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit() {
-    this.electronService.ipcRenderer.on('token-verify-denied', (event, arg) => {
+    this.electronService.ipcRenderer.on('token-verify-denied', () => {
       this.ngZone.run(() => {
         localStorage.removeItem('user');
         this.router.navigate(['/login']);
