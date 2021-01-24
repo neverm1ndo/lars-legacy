@@ -19,10 +19,12 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('wrapper') wrapper: ElementRef<any>;
 
-  lines: LogLine[] = [];
+  lines: number = 0;
+  chunks: LogLine[][] = [];
   scroll: any;
   glf$: Observable<any>;
   glfSubber: any;
+  direction: number = 1;
 
   constructor(
     public api: ApiService,
@@ -85,13 +87,15 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return result;
   }
 
-  search(query: string): void {
-    let sq: SearchQuery = this.parseSearchQuery(query);
-    this.lines = [];
+  search(query: any): void {
+    let sq: SearchQuery = this.parseSearchQuery(query.query);
+    this.chunks = [];
     sq.lim = this.user.getUserSettings().lineChunk;
     this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
     if (this.api.lastQuery !== sq) {
+      sq.dateFrom = query.from;
+      sq.dateTo = query.to;
       this.api.lastQuery = sq;
       this.api.qtype = 'search';
       this.api.reloader$.next(null);
@@ -103,14 +107,28 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sync(): void {
-    this.lines = [];
+    this.lines = 0;
+    this.chunks = [];
     this.api.sync();
   }
 
   showLines() {
-    this.glfSubber = this.glf$.subscribe((lines)=> {
+    this.glfSubber = this.glf$.subscribe((lines: LogLine[])=> {
       if (lines.length) {
-        this.lines.push(...lines) ;
+        if (this.direction > 0) {
+          this.chunks.push(...[lines]);
+        } else {
+          this.chunks.unshift(...[lines]);
+        }
+        this.lines += lines.length;
+      }
+      if (this.lines > 600) {
+        this.lines = this.lines - lines.length;
+        if (this.direction > 0) {
+          this.chunks = this.chunks.splice(1, 600/this.user.getUserSettings().lineChunk);
+        } else {
+          this.chunks.pop();
+        }
       }
       this.api.loading = false;
       this.api.lazy = false;
@@ -123,6 +141,12 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
+  isTop(): boolean {
+    if (this.wrapper.nativeElement.scrollTop === 0) {
+      return true;
+    }
+    return false;
+  }
 
   ngAfterViewInit(): void {
     this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
@@ -130,17 +154,24 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       debounceTime(1200)
     ).subscribe(() => {
       if (this.isBottom()) {
-        if (this.lines.length % +this.user.getUserSettings().lineChunk == 0) {
-          this.api.lazyUpdate();
+        if (this.lines % +this.user.getUserSettings().lineChunk == 0) {
+          this.direction = 1;
+          this.api.lazyUpdate(1);
         }
       }
+      // if (this.isTop()) {
+      //   if (this.lines % +this.user.getUserSettings().lineChunk == 0) {
+      //     this.direction = -1;
+      //     this.api.lazyUpdate(-1);
+      //   }
+      // }
     });
   }
 
   ngOnInit(): void {
     this.api.currentPage = 0;
     this.route.queryParams.subscribe(params => {
-      this.lines = [];
+      this.lines = 0;
       if (params.query) {
         this.api.qtype = 'search';
         this.api.lastQuery = this.parseSearchQuery(params.query);

@@ -90,10 +90,12 @@ export class ApiService {
   uploadFileCfg(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
-  lazyUpdate(): void {
-    this.lazy = true;
-    this.currentPage++;
-    this.refresh();
+  lazyUpdate(page: number): void {
+    if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
+      this.lazy = true;
+      this.currentPage += page;
+      this.refresh();
+    }
   }
   search(query: {
     nickname?: Array<string>;

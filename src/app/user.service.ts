@@ -19,7 +19,6 @@ export class UserService {
     'Content-Type': 'application/json'
   });
   error: Subject<any> = new Subject();
-  settings: any;
 
   constructor(
     private http: HttpClient,

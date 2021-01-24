@@ -1,10 +1,31 @@
 <header class="col-12">
   <div class="row head">
-    <div class="col-8 pl-0">
+    <div class="col-12 pl-0">
       <div class="row">
-        <form [class.col-12]="quick" class="col-8" [formGroup]="searchForm" (ngSubmit)="sendQuery()" autocomplete="on">
+        <form (keyup.enter)="sendQuery()" [class.col-12]="quick" class="col-8 pr-0" [formGroup]="searchForm" (ngSubmit)="sendQuery()" autocomplete="off">
           <div class="input-group">
-            <input name="quest" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока или серийный номер" [formControl]="query"/>
+            <input formControlName="query" name="query" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока, IP или связку серийных номеров"/>
+            <div ngbDropdown class="d-inline-block">
+              <a ngbDropdownToggle class="date btn btn-dark" placeholder="Промежуток времени"><fa-icon [icon]="fa.calendar"></fa-icon></a>
+              <div class="big-drop" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <div class="w-100 date-dropdown">
+                  <fa-icon [icon]="fa.calendar"></fa-icon><span> Ограничение по дате</span>
+                <hr>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">От</span>
+                    </div>
+                    <input formControlName="dateFrom" name="dateFrom" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">До</span>
+                    </div>
+                      <input formControlName="dateTo" name="dateTo" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon2">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
         <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="api.loading || api.lazy"><fa-icon [icon]="fa.sync"></fa-icon></button>
@@ -15,7 +36,7 @@
           </div>
         </div> -->
         <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" disabled><fa-icon [icon]="fa.hist"></fa-icon></button>
-      <ng-template #tipContent let-greeting="greeting">Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
+      <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
       <div *ngIf="!quick" class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">
         <kbd><fa-icon [icon]="fa.vsquare"></fa-icon> {{lineCounter}}</kbd>
       </div>

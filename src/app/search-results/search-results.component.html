@@ -1,51 +1,52 @@
-<div *ngIf="api.loading" class="block-screen backdrop-blur"></div>
-<div *ngFor="let line of lines" class="col-12 logline" [ngClass]="{legacy: style == 'legacy', expanded: style == 'big'}">
-  <div *ngIf="style !== 'legacy'; else legacy" class="row">
-    <div class="col-3 col-md-2 col-lg-2">
-      <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
+<div *ngFor="let chunk of chunks">
+  <div *ngFor="let line of chunk" class="col-12 logline" [ngClass]="{legacy: style == 'legacy', expanded: style == 'big'}">
+    <div *ngIf="style !== 'legacy'; else legacy" class="row">
+      <div class="col-3 col-md-2 col-lg-2">
+        <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
+      </div>
+      <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
+        {{ line.process }}
+      </div>
+      <div class="col-3 col-md-2 col-lg-2 text-center">
+        <strong>{{ line.nickname }}</strong>
+        <br>
+        <span class="line-id">id: {{ line.id }}</span>
+      </div>
+      <div *ngIf="line.geo || line.content || line.process" class="col-lg-6 col-8">
+        <line-process [content]="line.content"  process="{{line.process}}"></line-process>
+        <geo *ngIf="line.geo" [table]="line.geo"></geo>
+      </div>
     </div>
-    <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
-      {{ line.process }}
-    </div>
-    <div class="col-3 col-md-2 col-lg-2 text-center">
-      <strong>{{ line.nickname }}</strong>
-      <br>
-      <span class="line-id">id: {{ line.id }}</span>
-    </div>
-    <div *ngIf="line.geo || line.content || line.process" class="col-lg-6 col-8">
-      <line-process [content]="line.content"  process="{{line.process}}"></line-process>
-      <geo *ngIf="line.geo" [table]="line.geo"></geo>
-    </div>
-  </div>
-  <ng-template #legacy>
-    <div class="row">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-sm-3 col-md-2 col-lg-2">
-            <span><b>{{ line.date | date:'d MMM yy, HH:mm:ss' }}</b></span>
-          </div>
-          <div class="col-sm-9 col-md-10 col-lg-10">
-            <span class="legacy-process"> {{ line.process }}</span>
-            <span class="legacy-nickname">
-              {{ line.nickname }}
-            </span>
-            <span class="legacy-id">
-              ({{ line.id }})
-            </span>
-            <span *ngIf="line.content"> {{ line.content }}</span><br>
-            <span class="pre" *ngIf="line.geo">
-              {{ line.geo | json }}
-            </span>
+    <ng-template #legacy>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-sm-3 col-md-2 col-lg-2">
+              <span><b>{{ line.date | date:'d MMM yy, HH:mm:ss' }}</b></span>
+            </div>
+            <div class="col-sm-9 col-md-10 col-lg-10">
+              <span class="legacy-process"> {{ line.process }}</span>
+              <span class="legacy-nickname">
+                {{ line.nickname }}
+              </span>
+              <span class="legacy-id">
+                ({{ line.id }})
+              </span>
+              <span *ngIf="line.content"> {{ line.content }}</span><br>
+              <span class="pre" *ngIf="line.geo">
+                {{ line.geo | json }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ng-template>
+    </ng-template>
+  </div>
 </div>
 <div *ngIf="api.loading" class="loader">
   <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
 </div>
-<div *ngIf="lines.length === 0 && !api.loading" class="list-empty d-flex flex-row align-items-center">
+<div *ngIf="chunks.length === 0 && !api.loading" class="list-empty d-flex flex-row align-items-center">
   <div class="d-flex w-100 align-self-center">
     <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
   </div>

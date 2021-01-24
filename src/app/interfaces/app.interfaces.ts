@@ -34,7 +34,8 @@ export interface LogLine {
 export interface SearchQuery {
   nickname?: string[];
   ip?: string[];
-  date?: string[];
+  dateFrom?: string,
+  dateTo?: string
   process?: string[];
   as?: string;
   ss?: string;

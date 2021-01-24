@@ -10,7 +10,9 @@ import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 })
 export class SearchResultsComponent implements OnInit {
 
-  @Input('searchResult') lines: LogLine[];
+  // chunks: LogLine[][];
+
+  @Input('searchResult') chunks: LogLine[][];
 
   fa = {
     sad: faFrownOpen

@@ -14,6 +14,41 @@
       top: 1px;
     }
   }
+  .input-group {
+    input {
+      margin-right: 5px;
+      border: none;
+    }
+    .big-drop {
+      width: 230px;
+    }
+    .date {
+      max-width: 34px;
+      height: 100%;
+      &-dropdown {
+        color: $text;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        hr {
+          margin-top: 10px;
+          margin-bottom: 0px;
+        }
+        fa-icon {
+          margin-left: 5px;
+          margin-right: 10px;
+        }
+        .input-group-text {
+          color: $text;
+          background: none;
+          border: none;
+          font-size: inherit;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
   .head {
     padding-top: 8px;
     padding-bottom: 8px;

@@ -2,6 +2,10 @@
   font-size: 13px;
   transition: 0.2s linear;
   background: #3d3e4a;
+  .loading-trigger {
+    height: 3px;
+    background: linear-gradient(to right, red, orange);
+  }
   .list-empty {
     width: 100%;
     height: 100%;
