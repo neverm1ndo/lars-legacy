@@ -65,6 +65,8 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
     if (localStorage.getItem('filter')) {
       this.filterForm.setValue(JSON.parse(localStorage.getItem('filter')))
+    } else {
+      this.setFilter();
     }
   }
 
