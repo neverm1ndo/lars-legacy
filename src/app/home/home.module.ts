@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -37,9 +38,25 @@ import { MapsComponent } from '../maps/maps.component';
 import { MapInspectorComponent } from '../map-inspector/map-inspector.component';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
+import { LoglineContentComponent } from '../logline-content/logline-content.component';
+
+const dbConfig: DBConfig  = {
+  name: 'LibertyUsers',
+  version: 1,
+  objectStoresMeta: [{
+    store: 'user',
+    storeConfig: { keyPath: 'id', autoIncrement: true },
+    storeSchema: [
+      { name: 'name', keypath: 'name', options: { unique: false } },
+      { name: 'avatar', keypath: 'avatar', options: { unique: false } },
+      { name: 'id', keypath: 'id', options: { unique: true } },
+      { name: 'group', keypath: 'group', options: { unique: false } },
+    ]
+  }]
+};
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -50,7 +67,8 @@ import { BanhammerComponent } from '../banhammer/banhammer.component';
     LibertyIconsModule,
     CodemirrorModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxIndexedDBModule.forRoot(dbConfig)
   ],
   providers: [
     AuthGuard,

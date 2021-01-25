@@ -1,0 +1,9 @@
+<div *ngIf="controltype() && user; else default" class="user bg-shade-{{type.type}}">
+  <img src="{{user.avatar}}"/>
+  {{ user.name }}
+  <span class="badge badge-dark">{{user.id}}</span>
+  <small>{{userGroup(user.group)}}</small>
+</div>
+<ng-template #default>
+  <span>{{content}} </span>
+</ng-template>

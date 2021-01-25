@@ -10,7 +10,8 @@ export interface UserData {
   id?: number,
   role?: string,
   gr?: number,
-  name?: string
+  name?: string,
+  avatar?: string
 }
 export interface GeoData {
   country?: string;

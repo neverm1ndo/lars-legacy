@@ -6,6 +6,7 @@ import { UserData, UserLoginData } from './interfaces/app.interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment.dev';
 import { ElectronService } from './core/services/electron/electron.service';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,11 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    public electron: ElectronService
+    public electron: ElectronService,
+    private idbService: NgxIndexedDBService
   ) {}
 
-  getUser(name: string): Observable<any> {
+  getUser(name: string): Observable<UserData> {
     return this.http.get(this.URL_USER, { params: { name: name }});
   }
   getUserGroupName(): string {
@@ -36,7 +38,7 @@ export class UserService {
       case 11: return 'Админ';
       case 12: return 'Маппер';
       case 13: return 'Редактор конфигурационных файлов';
-      default: return 'Самозванец';
+      default: return 'Игрок';
     }
   }
   getUserSettings(): any {
@@ -78,6 +80,14 @@ export class UserService {
       tap(user => {
         if (user && user.token) {
           localStorage.setItem('user', JSON.stringify(user));
+          const addUserSub = this.idbService.add('user', {
+            name: user.name,
+            avatar: user.avatar,
+            id: user.id,
+            group: user.gr
+          }).subscribe(() => {
+            addUserSub.unsubscribe();
+          });
         }
         this.user.next(user);
         return user;

@@ -1,0 +1,39 @@
+:host {
+  .user {
+    padding-left: 15px;
+    padding-right: 15px;
+    line-height:  24px;
+    padding-top: 3px;
+    padding-bottom: 4px;
+    border-radius: 3px;
+      img {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        margin-right: 5px;
+        border-radius: 100%;
+        position: relative;
+        top: -1px;
+      }
+      .badge {
+        width: 26px;
+        padding: 2px;
+        line-height: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+  }
+  .bg {
+    &-shade {
+      &-danger {
+        background-color: #9e333d;
+      }
+      &-warning {
+        background-color: #e8c763;
+      }
+      &-success {
+        background-color: #449055;
+      }
+    }
+  }
+}
