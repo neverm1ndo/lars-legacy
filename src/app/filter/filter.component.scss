@@ -1,18 +1,86 @@
 @import 'scss/_colors';
-:host {
-  color: #fdfdfd;
-  h6 {
-    font-weight: 400;
-    margin-bottom: 0px;
+@mixin css-checkbox(
+        $size: '16px',
+        $selectedColor: #444,
+        $checkColor: #FFF,
+        $valign: 'middle',
+        $rounded: rounded
+    ) {
+	display: none;
+
+	&:checked + i {
+		background: #{$selectedColor};
+		border-color: #{$selectedColor};
+
+		&:hover:after { opacity: 1; }
+
+		&:after {
+			opacity: 1;
+      border-color: #{$checkColor};
+		}
+	}
+
+  + i {
+    box-sizing: border-box;
+    &:before, &:after {
+       box-sizing: border-box;
+    }
   }
-  hr {
-    margin-bottom: 5px;
-    margin-top: 10px;
+	+ i {
+		position: relative;
+		display: inline-block;
+		top: -1px;
+		width: #{$size};
+		height: #{$size};
+		margin: 0;
+    vertical-align: #{$valign};
+		border: 1px solid #707070;
+    transition: background 200ms ease;
+
+    @if $rounded == "circle" {
+      border-radius: 10em;
+    } @else if $rounded == "rounded" {
+      border-radius: .2em;
+    } @else {
+      border-radius: 0;
+    }
+
+		background: #505050;
+		font-size: #{$size};
+		cursor: pointer;
+
+		&:hover:after { opacity: .2; }
+
+		&:after {
+			content: '';
+			opacity: 0;
+			transform: translateZ(1px) rotate(-45deg);
+      outline: 1px solid transparent; // hack to prevent antialias atrifacts in firefox
+			position: absolute;
+			top: 22%;
+			left: 15%;
+			width: .68em;
+			height: .4em;
+			border: .15em solid #222;
+			border-top: none;
+			border-right: none;
+			background: rgba(0, 0, 0, 0);
+		}
+	}
+}
+:host {
+  padding-top: 10px;
+  h6 {
+    margin-bottom: 0em;
+    font-weight: 700;
+  }
+  small {
+    opacity: 0.7;
+    line-height: 10px;
+    position: relative;
+    bottom: 3px;
   }
   .filter-form {
-    max-height: 70vh;
-    overflow-x: hidden;
-    overflow-y: auto;
     &::-webkit-scrollbar {
      background: $scrollbar;
      border-radius: 5px;
@@ -20,16 +88,63 @@
      height: 3px;
     }
   }
+  .pseudo {
+    width: 100%;
+    cursor: pointer;
+    .form-check-input {
+      @include css-checkbox(18px, $selectedColor: #202020);
+    }
+    i {
+      position: relative;
+      z-index: 2;
+    }
+  }
   .badge {
     font-size: 12px;
     font-weight: 400;
     text-transform: uppercase;
-    padding-left: 10px;
-    padding-top: 4px;
-    padding-bottom: 6px;
+    padding-left: 45px;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 10px;
     padding-right: 10px;
     margin-bottom: 5px;
-    margin-left: 5px;
+    margin-left: -30px;
     margin-right: 10px;
+    word-wrap: normal;
+    &-dev {
+      background-color: #7b4888;
+    }
+    &-usual {
+      background-color: #545454;
+    }
+    &-adm {
+      background-color: #da6e00;
+    }
+    &-dm {
+      background: rgb(33,99,110);
+      background: linear-gradient(90deg, rgba(33,99,110,1) 0%, rgba(0,167,129,1) 50%, rgba(33,99,110,1) 100%);
+    }
+    &-tdm {
+      position: relative;
+      z-index: 1;
+      $border: 1px;
+      border: solid $border transparent; /* !importanté */
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        z-index: -2;
+        margin: -$border;
+        border-radius: inherit;
+        background: linear-gradient(127deg, rgba(33,99,110,1) 0%, rgba(0,144,167,1) 50%, rgba(193,105,61,1) 50%, rgba(147,0,0,1) 100%)
+      }
+    }
+    &-pickup {
+      background-color: #a12f63;
+    }
+    &-clothes {
+      background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(252,176,69,1) 100%);
+    }
   }
 }

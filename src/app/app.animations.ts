@@ -1,28 +1,28 @@
 import { trigger, style, animate, transition, state, keyframes, query, stagger} from '@angular/animations';
 
 export const settings = trigger('settings', [
-  state('*', style({ opacity : '1', transform: 'scale(1)' })),
+  state('*', style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  })),
     state('void', style({
-       opacity : '0', transform: 'scale(1.04)'
+       opacity : '0', transform: 'scale(1.04)', position: 'fixed' 
     })),
         transition('void => *', [
           style({
-             opacity : '0', transform: 'scale(1.04)'
+             opacity : '0', transform: 'scale(1.04)', position: 'fixed' 
           }),
           animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
           keyframes([
-            style({ opacity : '0', transform: 'scale(1.04)'  }),
-            style({ opacity : '1', transform: 'scale(1)'  })
+            style({ opacity : '0', transform: 'scale(1.04)', position: 'fixed'  }),
+            style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  })
           ]))
         ]),
         transition('* => void', [
           style({
-             opacity : '1', transform: 'scale(1)'
+             opacity : '1', transform: 'scale(1)', position: 'fixed' 
           }),
           animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
           keyframes([
-            style({ opacity : '1', transform: 'scale(1)'  }),
-            style({ opacity : '0', transform: 'scale(1.04)'  })
+            style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  }),
+            style({ opacity : '0', transform: 'scale(1.04)', position: 'fixed'  })
           ]))
         ])
 ]);

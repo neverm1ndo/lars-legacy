@@ -48,7 +48,7 @@ function createWindow(): BrowserWindow {
     width: state.width,
     height: state.height,
     minHeight: 580,
-    minWidth: 800,
+    minWidth: 950,
     title: 'LIBERTYLOGS',
     show: false,
     frame: false,

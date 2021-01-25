@@ -18,8 +18,8 @@ export class SearchComponent implements OnInit {
       Validators.required,
       Validators.minLength(3),
     ]),
-    dateFrom: new FormControl(),
-    dateTo: new FormControl()
+    dateFrom: new FormControl(''),
+    dateTo: new FormControl('')
   });
 
   fa = {
@@ -31,6 +31,7 @@ export class SearchComponent implements OnInit {
     calendar: faCalendarAlt
   }
   datepickers: boolean = false;
+  filter: boolean = false;
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
@@ -54,8 +55,13 @@ export class SearchComponent implements OnInit {
 
   sendQuery(): void {
     if (this.searchForm.valid) {
-      console.log('lol')
-      this.searchQuery.emit(this.query);
+      if (this.query.from !== '' && this.query.to !== '') {
+        this.searchQuery.emit(this.query);
+      } else {
+        delete this.query.from;
+        delete this.query.to;
+        this.searchQuery.emit(this.query);
+      }
       if (this.quick) {
         this.router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
       }
@@ -68,6 +74,9 @@ export class SearchComponent implements OnInit {
   openDatePickers(): void {
     this.datepickers = this.datepickers?true:false;
   }
+  openFilter(): void {
+    this.filter = this.filter?true:false;
+  }
 
   sync(): void {
     this.syncronize.emit(true);
@@ -77,7 +86,7 @@ export class SearchComponent implements OnInit {
     this.route.queryParams.pipe(
       filter(params => (params.query))
     ).subscribe(params => {
-      this.searchForm.setValue({ query: params.query });
+      this.searchForm.setValue({ query: params.query, dateFrom: '', dateTo: '' });
     });
   }
 

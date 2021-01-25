@@ -29,12 +29,6 @@
           </div>
         </form>
         <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="api.loading || api.lazy"><fa-icon [icon]="fa.sync"></fa-icon></button>
-        <!-- <div *ngIf="!quick" ngbDropdown class="btn-group" role="group" aria-label="Filter group with nested dropdown">
-          <button class="btn btn-dark" name="filter" id="dropdownFilter" ngbDropdownToggle disabled><fa-icon [icon]="fa.filter"></fa-icon></button>
-          <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownFilter">
-            <filter></filter>
-          </div>
-        </div> -->
         <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" disabled><fa-icon [icon]="fa.hist"></fa-icon></button>
       <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
       <div *ngIf="!quick" class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">

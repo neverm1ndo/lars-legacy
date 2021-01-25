@@ -94,8 +94,10 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
     if (this.api.lastQuery !== sq) {
-      sq.dateFrom = query.from;
-      sq.dateTo = query.to;
+      if (sq.dateFrom && sq.dateTo) {
+        sq.dateFrom = query.from;
+        sq.dateTo = query.to;
+      }
       this.api.lastQuery = sq;
       this.api.qtype = 'search';
       this.api.reloader$.next(null);
@@ -172,6 +174,8 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.api.currentPage = 0;
     this.route.queryParams.subscribe(params => {
       this.lines = 0;
+      this.chunks = [];
+      this.direction = 1;
       if (params.query) {
         this.api.qtype = 'search';
         this.api.lastQuery = this.parseSearchQuery(params.query);

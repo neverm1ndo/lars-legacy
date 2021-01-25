@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { settings } from '../app.animations';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
+  animations: [ settings ]
 })
 export class SettingsComponent implements OnInit {
 
@@ -20,6 +22,8 @@ export class SettingsComponent implements OnInit {
     org: 'Rostelecom OJSC',
     c: '0.3.7'
   }
+
+  pane: 'general' | 'filter' = 'general';
 
   settings = new FormGroup({
     tray: new FormControl(false),

@@ -1,7 +1,19 @@
 @import "scss/colors";
 :host {
+  h3 {
+    font-weight: 300;
+  }
+  .sid {
+    background: $filetree;
+    span {
+      line-height: normal;
+    }
+  }
   .playerlog {
     background: #3d3e4a;
+  }
+  .active {
+    background: #1d212450!important;
   }
   .styles {
     background: $topper;

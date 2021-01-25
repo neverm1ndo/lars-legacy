@@ -3,8 +3,14 @@
   input, button {
     font-size: 13px;
   }
-  fa-icon {
+  lty-icon {
     margin-right: 10px;
+    font-size: 13px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.4;
+    position: relative;
+    top: -2px;
   }
   h4, span {
     color: #fdfdfd40;
