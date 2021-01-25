@@ -31,6 +31,12 @@ export class Processes {
       control: 'authCorrectAdm'
     },
     {
+      process: '<auth/correct/user>',
+      translate: 'ИГРОК: Успешная аутентификация',
+      type: 'success',
+      control: 'authCorrectUsr'
+    },
+    {
       process: '<auth/correct/guest>',
       translate: 'ГОСТЬ: Успешная аутентификация',
       type: 'success',
@@ -68,9 +74,9 @@ export class Processes {
     },
     {
       process: '<cmd/pre_error/player>',
-      translate: 'Команда не найдена',
+      translate: '????',
       type: 'danger',
-      control: 'cmdPreerrNotF'
+      control: 'cmdPreerrPlayer'
     },
     {
       process: '<cmd/pre_error/preload>',
@@ -117,8 +123,14 @@ export class Processes {
     {
       process: '<weapon/pickup>',
       translate: 'Подбор оружия',
-      type: 'usual',
+      type: 'pickup',
       control: 'weapPick'
+    },
+    {
+      process: '<health/pickup>',
+      translate: 'Подбор здоровья',
+      type: 'pickup',
+      control: 'healthPick'
     },
     {
       process: '<armour/buy>',
@@ -175,6 +187,12 @@ export class Processes {
       control: 'chatMain'
     },
     {
+      process: '<chat/admin>',
+      translate: 'Админ чат',
+      type: 'light',
+      control: 'chatAdm'
+    },
+    {
       process: '<chat/block/blocked>',
       translate: 'Блокировка чата',
       type: 'warning',
@@ -214,13 +232,13 @@ export class Processes {
       process: '<check/scroll/false>',
       translate: 'Проверка автоскролла: FALSE',
       type: 'adm',
-      control: 'checkScroll'
+      control: 'checkScrollF'
     },
     {
       process: '<check/scroll/true>',
       translate: 'Проверка автоскролла: TRUE',
       type: 'adm',
-      control: 'checkScroll'
+      control: 'checkScrollT'
     },
     {
       process: '<spectate/change>',
@@ -281,6 +299,12 @@ export class Processes {
       translate: 'Создание DM',
       type: 'dm',
       control: 'dmCreate'
+    },
+    {
+      process: '<death_match/owner>',
+      translate: 'Владение DM',
+      type: 'dm',
+      control: 'dmOwn'
     },
     {
       process: '<team_death_match/enter>',

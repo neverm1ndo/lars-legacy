@@ -86,6 +86,7 @@ export class UserService {
             id: user.id,
             group: user.gr
           }).subscribe(() => {
+            const johnny = this.idbService.add('user', { name: 'JohnnyTheDog', id: 42, group: 12, avatar: './assets/images/doge.png'}).subscribe(() => johnny.unsubscribe());
             addUserSub.unsubscribe();
           });
         }

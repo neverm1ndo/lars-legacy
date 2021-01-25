@@ -23,6 +23,7 @@ export class LoglineContentComponent implements OnInit {
     switch (this.type.control) {
       case 'authCorrectAdm': return true;
       case 'authIncorrect': return true;
+      case 'authCorrectUsr': return true;
       default: return false;
     }
   }

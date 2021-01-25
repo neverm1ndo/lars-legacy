@@ -43,6 +43,7 @@
     }
   }
   .listing-preview {
+    pointer-events: none;
     background: $topper;
     border-radius: 5px;
     padding-top: 5px;
