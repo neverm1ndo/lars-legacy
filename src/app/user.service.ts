@@ -57,6 +57,10 @@ export class UserService {
     }
   }
 
+  openUserProfile(id: number): void {
+    this.electron.shell.openExternal('https://www.gta-liberty.ru/memberlist.php?mode=viewprofile&u='+ id.toString())
+  }
+
   getUserInfo(): UserData | null {
     if (localStorage.getItem('user') !== null) {
       return JSON.parse(localStorage.getItem('user'));

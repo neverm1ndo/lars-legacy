@@ -28,6 +28,10 @@ export class LoglineContentComponent implements OnInit {
     }
   }
 
+  userLink(id: number) {
+    this.userService.openUserProfile(id);
+  }
+
   userGroup(gr: number): string {
     switch (gr) {
       case 9: return 'Претендент';

@@ -1,6 +1,6 @@
 <div *ngIf="controltype() && user; else default" class="user bg-shade-{{type.type}}">
   <img src="{{user.avatar}}"/>
-  {{ user.name }}
+  <a (click)="userLink(user.id)">{{ user.name }}</a>
   <span class="badge badge-dark">{{user.id}}</span>
   <small>{{userGroup(user.group)}}</small>
 </div>

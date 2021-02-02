@@ -27,9 +27,10 @@
     }
   }
 	+ i {
-		position: relative;
+		position: absolute;
 		display: inline-block;
-		top: -1px;
+		top: 6px;
+    left: 30px;
 		width: #{$size};
 		height: #{$size};
 		margin: 0;
@@ -46,7 +47,7 @@
     }
 
 		background: #505050;
-		font-size: #{$size};
+		// font-size: #{$size};
 		cursor: pointer;
 
 		&:hover:after { opacity: .2; }
@@ -109,7 +110,6 @@
     padding-bottom: 10px;
     padding-right: 10px;
     margin-bottom: 5px;
-    margin-left: -30px;
     margin-right: 10px;
     word-wrap: normal;
     &-dev {
