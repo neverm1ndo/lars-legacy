@@ -16,6 +16,10 @@
       padding-right: 5px;
       padding-left: 5px;
     }
+    img {
+      width: 32px;
+      height: auto;
+    }
     .model-id {
       margin-left: 5px;
     }
@@ -40,6 +44,14 @@
     }
     .racepickup {
       background: #505050;
+      color: #fdfdfd;
+    }
+    .material {
+      background: #3a84a0;
+      color: #fdfdfd;
+    }
+    .text {
+      background: #3e0f0f;
       color: #fdfdfd;
     }
     .d-inline {

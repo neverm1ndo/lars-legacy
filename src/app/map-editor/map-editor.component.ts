@@ -16,7 +16,7 @@ export class MapEditorComponent implements OnInit {
 
   _objects: any[];
   @Input('objects') set objects (newObjects: any[]) {
-    this._objects = newObjects;
+    this._objects = this.filter(newObjects);
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
@@ -36,6 +36,16 @@ export class MapEditorComponent implements OnInit {
   }
 
   constructor(private hostElem: ElementRef) {}
+
+  filter(objects: any[]): any[] {
+    let filtered: any[] = [];
+    objects.forEach((obj) => {
+      if (obj.name !== 'material' || obj.name !== 'text') {
+        filtered.push(obj);
+      }
+    });
+    return filtered;
+  }
 
   easeIn(currentProgress: number, start: number, distance: number, steps: number, power: number) {
     currentProgress /= steps/2;
