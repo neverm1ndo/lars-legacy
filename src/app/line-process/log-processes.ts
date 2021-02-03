@@ -19,6 +19,12 @@ export class Processes {
       control: 'disconnect'
     },
     {
+      process: '<disconnect/kickban>',
+      translate: 'Кикбан',
+      type: 'danger',
+      control: 'disconnectKickBan'
+    },
+    {
       process: '<auth/incorrect>',
       translate: 'Неудачная аутентификация',
       type: 'danger',
@@ -197,6 +203,12 @@ export class Processes {
       translate: 'Блокировка чата',
       type: 'warning',
       control: 'chatBlock'
+    },
+    {
+      process: '<chat/block/flood>',
+      translate: 'Блокировка чата: флуд',
+      type: 'warning',
+      control: 'chatBlockFlood'
     },
     {
       process: '<chat/unmute/hand>',
