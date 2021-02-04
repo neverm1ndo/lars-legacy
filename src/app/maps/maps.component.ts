@@ -49,12 +49,27 @@ export class MapsComponent implements OnInit {
     public toast: ToastService
    ) {
      this.directories$ = this.reloader$.pipe(switchMap(() => api.getMapsDir()));
-     this.directories$.subscribe(items => { this.files = items; this.current = null});
+     this.directories$.subscribe(items => {
+       const expandIfExpandedBefore = (nodes: TreeNode) => {
+         for (let item of nodes.items) {
+           if (item.type == 'dir') {
+             if (this.expanded.includes(item.path)) {
+               item.expanded = true;
+             }
+             expandIfExpandedBefore(item);
+           }
+         }
+         items = nodes;
+       };
+       expandIfExpandedBefore(items);
+       this.files = items; this.current = null
+     });
    }
 
    @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
 
   files: TreeNode;
+  expanded: string[] = [];
 
   directories$: Observable<any>;
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -80,6 +95,14 @@ export class MapsComponent implements OnInit {
     cubes: faCubes,
     replace: faRoute,
     rotate: faDraftingCompass
+  }
+
+  chooseDir(dir: string) {
+    if (this.expanded.includes(dir)) {
+      this.expanded.splice(this.expanded.indexOf(dir), 1);
+    } else {
+      this.expanded.push(dir);
+    }
   }
 
   mapToObject(xml: string) {
@@ -180,9 +203,14 @@ export class MapsComponent implements OnInit {
   saveMapCloud(): void {}
 
   addNewMap(event: any): void {
-    let files = event.target.files;
+    let files: any[];
+    if (event.filelist) { files = event.filelist; }
+    else { files = event.target.files; }
        if (files.length > 0) {
          let formData: FormData = new FormData();
+         if (event.path) {
+           formData.append('path', event.path)
+         }
          for (let file of files) {
               formData.append('file', file);
          }

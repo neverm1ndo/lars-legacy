@@ -1,7 +1,11 @@
+@import "scss/colors";
 $height: 15px;
 :host {
   .expanded {
     transform: none!important;
+  }
+  .under-toggler {
+    padding-left: 1rem;
   }
   .items-expander {
     // transform-origin: 7px 7px;
@@ -30,7 +34,9 @@ $height: 15px;
   }
   .item {
     line-height: 26px;
-    padding-right: 15px;
+    // padding-right: 15px;
+    width: 100%;
+    border-left: 1px solid transparent;
   }
   .item-title {
     white-space: nowrap;
@@ -41,14 +47,49 @@ $height: 15px;
       text-decoration: underline;
     }
   }
+  .expandedTab {
+    border-left: 1px solid #717686;
+    transition: .1s ease;
+    &:before {
+      // width: 5px;
+      height: 5px;
+      content: '-';
+      font-size: 24px;
+      color: #717686;
+      font-weight: 200;
+      line-height: 0px;
+      padding-left: 5px;
+      max-width: 5px;
+      border-radius: 3px;
+      background: #717686;
+      position: absolute;
+      margin-left: -3px;
+      margin-top: 11px;
+      transition: .1s ease;
+    }
+  }
   .items {
     & > .item {
-      padding-left: 1.2rem;
+      padding-left: 0.5rem;
+    }
+    & > .under-toggler {
+      padding-left: 1rem;
     }
     line-height: 26px;
+  }
+  .fileover {
+    background: #fdfdfd20;
+    // * .expandedTab {
+      border-left: 1px solid $text-secondary;
+      &:before {
+        color: $text-secondary;
+        background: $text-secondary;
+      }
+    // }
   }
   fa-icon {
     font-size: $height;
     margin-right: 0.5em;
+    margin-left: 0.2rem;
   }
 }

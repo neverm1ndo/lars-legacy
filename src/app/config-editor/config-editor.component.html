@@ -9,6 +9,7 @@
           <file-tree
             (resync)="reloadFileTree()"
             (chooseFileEvent)="getConfig($event)"
+            (chooseDirEvent)="chooseDir($event)"
             [items]="files" [current]="currentFilePath"
             (addNew)="addNewFile($event)">
           </file-tree>

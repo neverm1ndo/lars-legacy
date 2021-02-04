@@ -39,6 +39,7 @@ import { MapInspectorComponent } from '../map-inspector/map-inspector.component'
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
+import { DndDirective } from '../directives/dnd.directive';
 
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
@@ -56,7 +57,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective],
   imports: [
     CommonModule,
     SharedModule,

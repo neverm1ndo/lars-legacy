@@ -12,6 +12,7 @@ export class FileTreeComponent implements OnInit {
 
   @Input('items') node: TreeNode;
   @Output() chooseFileEvent = new EventEmitter<string>();
+  @Output() chooseDirEvent = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
   @Output() resync = new EventEmitter<any>();
   @Input('current') current: string;
@@ -37,14 +38,18 @@ export class FileTreeComponent implements OnInit {
   constructor() { }
 
   getConfig(path: string) {
+    console.log(path)
     this.chooseFileEvent.emit(path);
+  }
+  chooseDir(path: string) {
+    this.chooseDirEvent.emit(path);
   }
 
   sync(): void {
     this.resync.emit();
   }
 
-  upload(event: Event): void {
+  upload(event: any): void {
     this.addNew.emit(event);
   }
 

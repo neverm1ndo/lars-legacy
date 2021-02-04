@@ -19,6 +19,7 @@ export class ConfigEditorComponent implements OnInit {
   @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
 
   files: TreeNode;
+  expanded: string[] = [];
 
   directories$: Observable<any>;
 
@@ -39,8 +40,29 @@ export class ConfigEditorComponent implements OnInit {
     public toast: ToastService
   ) {
     this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
-    this.directories$.subscribe(items => { this.files = items; console.log(items);
+    this.directories$.subscribe(items => {
+      const expandIfExpandedBefore = (nodes: TreeNode) => {
+        for (let item of nodes.items) {
+          if (item.type == 'dir') {
+            if (this.expanded.includes(item.path)) {
+              item.expanded = true;
+            }
+            expandIfExpandedBefore(item);
+          }
+        }
+        items = nodes;
+      };
+      expandIfExpandedBefore(items);
+      this.files = items;
     });
+  }
+
+  chooseDir(dir: string) {
+    if (this.expanded.includes(dir)) {
+      this.expanded.splice(this.expanded.indexOf(dir), 1);
+    } else {
+      this.expanded.push(dir);
+    }
   }
 
   getConfig(path: { path: string, name?: string }) {
@@ -58,9 +80,16 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   addNewFile(event: any): void {
-    let files = event.target.files;
+    let files: any[];
+    let path: string = '';
+    if (event.filelist) { files = event.filelist; }
+    else { files = event.target.files; }
        if (files.length > 0) {
          let formData: FormData = new FormData();
+         if (event.path) {
+           path = event.path;
+           formData.append('path', path)
+         }
          for (let file of files) {
               formData.append('file', file);
          }
@@ -69,12 +98,30 @@ export class ConfigEditorComponent implements OnInit {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);
               } else if (event instanceof HttpResponse) {
-                this.toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
-                  {
-                    classname: 'bg-success text-light',
-                    delay: 3000,
-                    icon: faSave
-                  });
+                if (files.length > 1) {
+                  console.log(files)
+                  const buildFileList = (files): string => {
+                    let list = '';
+                    for (let file of files) {
+                      list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
+                    };
+                    return list;
+                  }
+                  this.toast.show(`Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`,
+                    {
+                      classname: 'bg-success text-light',
+                      delay: 5000,
+                      icon: faSave,
+                      subtext: path
+                    });
+                } else {
+                  this.toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
+                    {
+                      classname: 'bg-success text-light',
+                      delay: 3000,
+                      icon: faSave
+                    });
+                }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
                 this.ftc.add.nativeElement.value = '';
@@ -82,13 +129,23 @@ export class ConfigEditorComponent implements OnInit {
             },
             err => {
               this.progress = 0;
-              this.toast.show(`Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
-                {
-                  classname: 'bg-warning text-dark',
-                  delay: 5000,
-                  icon: faInfo,
-                  subtext: err.message
-                 });
+              if (files.length > 1) {
+                this.toast.show(`Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`,
+                  {
+                    classname: 'bg-warning text-dark',
+                    delay: 5000,
+                    icon: faInfo,
+                    subtext: err.message
+                  });
+              } else {
+                this.toast.show(`Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
+                  {
+                    classname: 'bg-warning text-dark',
+                    delay: 5000,
+                    icon: faInfo,
+                    subtext: err.message
+                  });
+              }
               console.error(err);
               this.reloadFileTree();
               this.ftc.add.nativeElement.value = '';

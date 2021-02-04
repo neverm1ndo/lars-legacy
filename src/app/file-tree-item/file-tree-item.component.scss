@@ -6,6 +6,7 @@ $height: 15px;
   .item-name {
     white-space: nowrap;
     padding-right: 15px;
+    padding-left: 8px;
     cursor: pointer;
     &:active, &:focus, &:hover {
       text-decoration: underline;
@@ -14,5 +15,6 @@ $height: 15px;
   fa-icon {
     font-size: $height;
     margin-right: 0.5em;
+    margin-left: 1.2rem;
   }
 }

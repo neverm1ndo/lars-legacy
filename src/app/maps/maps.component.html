@@ -6,7 +6,7 @@
           <div class="progress">
             <div class="progress-bar" [style.width.%]="progress" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <file-tree (chooseFileEvent)="getMap($event)" [items]="files" [current]="currentFilePath" (addNew)="addNewMap($event)" (resync)="reloadFileTree()"></file-tree>
+          <file-tree (chooseDirEvent)="chooseDir($event)" (chooseFileEvent)="getMap($event)" [items]="files" [current]="currentFilePath" (addNew)="addNewMap($event)" (resync)="reloadFileTree()"></file-tree>
         </div>
         <div class="col-md-8 col-lg-9 col-xl-10 h-100 pr-0 pl-0">
           <div *ngIf="current; else loading" class="mb-0 h-100 w-100 d-flex justify-content-stretch overflow-auto">

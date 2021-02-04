@@ -13,7 +13,9 @@ export class FileTreeItemsComponent implements OnInit {
   @Input('child-nodes') nodes: TreeNode;
   @Input('expanded') expanded: boolean;
   @Input('current') current: string;
-  @Output() chooseFileEvent = new EventEmitter<{path: string, name: string}>();
+  @Output() chooseFileEvent = new EventEmitter<{ path: string, name: string }>();
+  @Output() chooseDirEvent = new EventEmitter<string>();
+  @Output('uploadFileList') uploadFileListEvent = new EventEmitter<{ filelist: FileList, path: string }>();
 
   toggler: boolean = false;
 
@@ -24,10 +26,19 @@ export class FileTreeItemsComponent implements OnInit {
     this.chooseFileEvent.emit(path);
   }
 
+  uploadDnD(event: any) {
+    this.uploadFileListEvent.emit(event);
+  }
+
+  chooseDir(event: any): void {
+    this.chooseDirEvent.emit(event);
+  }
+
   toggleExpand(event: Event):void {
     event.stopPropagation();
     event.preventDefault();
     this.toggler = !this.toggler;
+    this.chooseDir(this.nodes.path);
   }
 
 

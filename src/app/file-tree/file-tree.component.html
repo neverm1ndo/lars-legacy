@@ -12,9 +12,9 @@
       </div>
     </div>
   </div>
-  <div class="col-12 no-padding flex-fill overflow-auto">
+  <div class="col-12 pr-0 pl-0 no-padding flex-fill overflow-auto">
     <div *ngIf="node; else loaderItems" class="text-left">
-      <file-tree-items (chooseFileEvent)="getConfig($event)" [child-nodes]="node" [expanded]="true" [current]="current"></file-tree-items>
+      <file-tree-items (chooseFileEvent)="getConfig($event)" (chooseDirEvent)="chooseDir($event)" [child-nodes]="node" [expanded]="true" [current]="current" (uploadFileList)="upload($event)"></file-tree-items>
     </div>
     <ng-template #loaderItems>
       <div class="d-flex h-100">
