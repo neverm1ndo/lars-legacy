@@ -37,6 +37,10 @@
                   </div>
                   <div class="styles d-flex justify-content-between">
                     <div class="form-check custom-control custom-radio">
+                      <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio0" value="inline">
+                      <label class="form-check-label custom-control-label" for="inlineRadio0">Однострочный</label>
+                    </div>
+                    <div class="form-check custom-control custom-radio">
                       <input formControlName="listStyle" class="form-check-input custom-control-input" type="radio" name="listStyle" id="inlineRadio1" value="small">
                       <label class="form-check-label custom-control-label" for="inlineRadio1">Компактный</label>
                     </div>
@@ -52,7 +56,7 @@
                 </div>
                 <div class="d-flex listing-preview col-12">
                   <div class="row w-100">
-                    <div *ngIf="listStyle !== 'legacy'; else legacy" [class.expanded]="listStyle == 'big'" class="col-12 logline">
+                    <div *ngIf="listStyle == 'big' || listStyle == 'small'" [class.expanded]="listStyle == 'big'" class="col-12 logline">
                       <div class="row">
                         <div class="col-3 col-md-2 col-lg-2">
                           <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
@@ -71,29 +75,47 @@
                         </div>
                       </div>
                     </div>
-                    <ng-template #legacy>
-                      <div class="col-12">
-                        <div class="row legacy">
-                          <div class="col-sm-3 col-md-4 col-lg-3">
-                            <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
-                          </div>
-                          <div class="col-sm-9 col-md-8 col-lg-9">
-                            <span class="legacy-process"> <auth/correct/admin></span>
-                            <span class="legacy-nickname">
-                              John_Doe
-                            </span>
-                            <span class="legacy-id">
-                              (42)
-                            </span>
-                            <span> JohnnyTheDog</span><br>
-                            <span class="pre">
-                              {{ sampleGeo | json }}
-                            </span>
-                          </div>
+                    <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
+                      <div class="row">
+                        <div class="col-2">
+                          <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
+                        </div>
+                        <div class="col-4">
+                          <simple-line-process process="<auth/correct/admin>"></simple-line-process>
+                        </div>
+                        <div class="col-2">
+                          <strong>John_Doe</strong><span> (42)</span>
+                        </div>
+                        <div class="col-4">
+                          JohnnyTheDog
+                          <!-- <line-process content="JohnnyTheDog"  process="<auth/correct/admin>"></line-process> -->
+                        </div>
+                        <div class="col-12 offset-lg-2 col-lg-10">
+                          <geo [table]="sampleGeo" tab-style="inline"></geo>
                         </div>
                       </div>
-                    </ng-template>
-                    <div *ngIf="listStyle !== 'legacy'; else legacy2" [class.expanded]="listStyle == 'big'" class="col-12 logline">
+                    </div>
+                    <div *ngIf="listStyle == 'legacy'" class="col-12">
+                      <div class="row legacy">
+                        <div class="col-sm-3 col-md-4 col-lg-3">
+                          <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
+                        </div>
+                        <div class="col-sm-9 col-md-8 col-lg-9">
+                          <span class="legacy-process"> <auth/correct/admin></span>
+                          <span class="legacy-nickname">
+                            John_Doe
+                          </span>
+                          <span class="legacy-id">
+                            (42)
+                          </span>
+                          <span> JohnnyTheDog</span><br>
+                          <span class="pre">
+                            {{ sampleGeo | json }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="listStyle == 'big' || listStyle == 'small'" [class.expanded]="listStyle == 'big'" class="col-12 logline">
                       <div class="row">
                         <div class="col-3 col-md-2 col-lg-2">
                           <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
@@ -111,25 +133,41 @@
                         </div>
                       </div>
                     </div>
-                    <ng-template #legacy2>
-                      <div class="col-12">
-                        <div class="row legacy">
-                          <div class="col-sm-3 col-md-4 col-lg-3">
-                            <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
-                          </div>
-                          <div class="col-sm-9 col-md-8 col-lg-9">
-                            <span class="legacy-process">  <dev/weapon></span>
-                            <span class="legacy-nickname">
-                              John_Doe
-                            </span>
-                            <span class="legacy-id">
-                              (42)
-                            </span>
-                            <span> 31 1010</span><br>
-                          </div>
+                    <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
+                      <div class="row">
+                        <div class="col-2">
+                          <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
+                        </div>
+                        <div class="col-4">
+                          <simple-line-process process="<dev/weapon>"></simple-line-process>
+                        </div>
+                        <div class="col-2">
+                          <strong>John_Doe</strong><span> (42)</span>
+                        </div>
+                        <div class="col-4">
+                          31 1010
+                          <!-- <line-process content="JohnnyTheDog"  process="<auth/correct/admin>"></line-process> -->
+                          <!-- <geo [table]="sampleGeo"></geo> -->
                         </div>
                       </div>
-                    </ng-template>
+                    </div>
+                    <div *ngIf="listStyle == 'legacy'" class="col-12">
+                      <div class="row legacy">
+                        <div class="col-sm-3 col-md-4 col-lg-3">
+                          <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
+                        </div>
+                        <div class="col-sm-9 col-md-8 col-lg-9">
+                          <span class="legacy-process">  <dev/weapon></span>
+                          <span class="legacy-nickname">
+                            John_Doe
+                          </span>
+                          <span class="legacy-id">
+                            (42)
+                          </span>
+                          <span> 31 1010</span><br>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="d-flex justify-content-between flex-wrap align-content-center mb-2">

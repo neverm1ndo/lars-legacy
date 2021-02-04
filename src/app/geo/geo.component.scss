@@ -11,6 +11,11 @@
       }
     }
   }
+  .inline {
+    width: 100%;
+    background: $topper;
+    border-radius: 3px;
+  }
   .chain {
     height: 46px;
     max-width: 46px;
