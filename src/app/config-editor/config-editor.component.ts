@@ -100,7 +100,7 @@ export class ConfigEditorComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 if (files.length > 1) {
                   console.log(files)
-                  const buildFileList = (files): string => {
+                  const buildFileList = (files: any): string => {
                     let list = '';
                     for (let file of files) {
                       list = list + '<br><small class="pl-2"> > '+file.name+'</small>';

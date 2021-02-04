@@ -193,6 +193,12 @@ export class Processes {
       control: 'chatMain'
     },
     {
+      process: '<chat/team>',
+      translate: 'Командный чат',
+      type: 'light',
+      control: 'chatTeam'
+    },
+    {
       process: '<chat/admin>',
       translate: 'Админ чат',
       type: 'light',
@@ -301,6 +307,18 @@ export class Processes {
       control: 'dmLeave'
     },
     {
+      process: '<death_match/restore>',
+      translate: 'Восстановление DM',
+      type: 'dm',
+      control: 'dmRestore'
+    },
+    {
+      process: '<death_match/kick>',
+      translate: 'Кик с DM',
+      type: 'dm',
+      control: 'dmKick'
+    },
+    {
       process: '<death_match/enter>',
       translate: 'Вход в DM',
       type: 'dm',
@@ -335,6 +353,42 @@ export class Processes {
       translate: 'Создание TDM',
       type: 'tdm',
       control: 'tdmCreate'
+    },
+    {
+      process: '<derby/leave>',
+      translate: 'Выход с дерби',
+      type: 'derby',
+      control: 'derbyLeave'
+    },
+    {
+      process: '<derby/enter>',
+      translate: 'Вход на дерби',
+      type: 'derby',
+      control: 'derbyEnter'
+    },
+    {
+      process: '<spectate/derby/bug/spawn>',
+      translate: 'Спавн багги из наблюдения',
+      type: 'adm',
+      control: 'spectateDerbyBugSpawn'
+    },
+    {
+      process: '<spectate/derby/enter>',
+      translate: 'Наблюдение за дерби',
+      type: 'adm',
+      control: 'spectateDerbyEnter'
+    },
+    {
+      process: '<spectate/derby/enter>',
+      translate: 'Наблюдение за дерби',
+      type: 'adm',
+      control: 'spectateDerbyEnter'
+    },
+    {
+      process: '<spectate/derby/change>',
+      translate: 'Смена цели наблюдения на дерби',
+      type: 'adm',
+      control: 'spectateDerbyChange'
     },
     {
       process: '<clothes_shop/enter>',
