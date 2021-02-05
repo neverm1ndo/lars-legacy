@@ -77,20 +77,20 @@
                     </div>
                     <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
                       <div class="row">
-                        <div class="col-2">
+                        <div class="col-3">
                           <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
                         </div>
-                        <div class="col-4">
+                        <div class="col-5">
                           <simple-line-process process="<auth/correct/admin>"></simple-line-process>
                         </div>
                         <div class="col-2">
                           <strong>John_Doe</strong><span> (42)</span>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                           JohnnyTheDog
                           <!-- <line-process content="JohnnyTheDog"  process="<auth/correct/admin>"></line-process> -->
                         </div>
-                        <div class="col-12 offset-lg-2 col-lg-10">
+                        <div class="col-12">
                           <geo [table]="sampleGeo" tab-style="inline"></geo>
                         </div>
                       </div>
@@ -135,16 +135,16 @@
                     </div>
                     <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
                       <div class="row">
-                        <div class="col-2">
+                        <div class="col-3">
                           <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
                         </div>
-                        <div class="col-4">
+                        <div class="col-5">
                           <simple-line-process process="<dev/weapon>"></simple-line-process>
                         </div>
                         <div class="col-2">
                           <strong>John_Doe</strong><span> (42)</span>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                           31 1010
                           <!-- <line-process content="JohnnyTheDog"  process="<auth/correct/admin>"></line-process> -->
                           <!-- <geo [table]="sampleGeo"></geo> -->

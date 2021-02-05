@@ -9,7 +9,7 @@ import { Processes } from '../line-process/log-processes';
 export class SimpleLineProcessComponent implements OnInit {
 
   @Input('process') process: string;
-  type: string;
+  type: any;
 
   constructor(public processes: Processes ) { }
 
