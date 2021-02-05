@@ -14,6 +14,7 @@ export class ApiService {
   readonly URL_SEARCH: string =  AppConfig.api.main + 'logs/search';
   readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
   readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
+  readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
   readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-cfg';
   readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
   readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
@@ -75,6 +76,9 @@ export class ApiService {
           }
         })
       )
+  }
+  getFileInfo(path: string): Observable<any> {
+    return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
   }
   saveFile(path: string, data: string): Observable<any> {
     return this.http.post(this.URL_SAVE_CONFIG, {

@@ -42,6 +42,8 @@ import { LoglineContentComponent } from '../logline-content/logline-content.comp
 import { DndDirective } from '../directives/dnd.directive';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
+import { FileSizePipe } from '../pipes/file-size.pipe';
+
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
   version: 1,
@@ -58,7 +60,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe],
   imports: [
     CommonModule,
     SharedModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -6,8 +6,9 @@ import { filter, switchMap } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faSave, faInfo, faFileSignature } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
+import { ElectronService } from '../core/services/electron/electron.service';
 
 @Component({
   selector: 'app-config-editor',
@@ -20,6 +21,8 @@ export class ConfigEditorComponent implements OnInit {
 
   files: TreeNode;
   expanded: string[] = [];
+  showBinary: boolean = false;
+  binStats: { size: number; mime: string; lastm: Date }
 
   directories$: Observable<any>;
 
@@ -27,9 +30,12 @@ export class ConfigEditorComponent implements OnInit {
 
   currentFilePath: string;
   progress: number = 0;
+  dprogress: number = 0;
 
   fa = {
-    conf: faFileSignature
+    conf: faFileSignature,
+    save: faSave,
+    del: faTrash
   }
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -37,7 +43,9 @@ export class ConfigEditorComponent implements OnInit {
   constructor(
     public api: ApiService,
     public route: ActivatedRoute,
-    public toast: ToastService
+    public toast: ToastService,
+    private electron: ElectronService,
+    private ngZone: NgZone
   ) {
     this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => {
@@ -57,6 +65,12 @@ export class ConfigEditorComponent implements OnInit {
     });
   }
 
+  notBinary(name:string): boolean {
+    const binaries: string[] = ['amx', 'so', 'db', 'cadb'];
+    const splited = name.split('.');
+    return binaries.every((bin: string) => splited[splited.length - 1] !== bin);
+  }
+
   chooseDir(dir: string) {
     if (this.expanded.includes(dir)) {
       this.expanded.splice(this.expanded.indexOf(dir), 1);
@@ -70,13 +84,76 @@ export class ConfigEditorComponent implements OnInit {
     if (path.name) {
       this.api.addToRecent('files', path);
     }
-    this.api.getConfigText(path.path).subscribe((textplain: string) => {
-      this.textplain = textplain;
-    });
+    if (this.notBinary(path.name)) {
+      this.showBinary = false;
+      const getConfSub = this.api.getConfigText(path.path).subscribe((textplain: string) => {
+        this.textplain = textplain;
+        getConfSub.unsubscribe();
+      });
+    } else {
+      if (this.textplain) this.textplain = undefined;
+      const getFileSub = this.api.getFileInfo(path.path).subscribe((stats: any) => {
+        this.binStats = stats;
+        this.showBinary = true;
+        getFileSub.unsubscribe();
+      })
+    }
   }
 
   reloadFileTree(): void {
     this.reloader$.next(null);
+  }
+
+  deleteFile(): void {
+    const dialogOpts = {
+        type: 'warning',
+        buttons: ['Удалить', 'Отмена'],
+        title: `Подтверждение удаления`,
+        message: `Вы точно хотите удалить файл ${this.currentFilePath}? После подтверждения он будет безвозвратно удален с сервера.`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then(
+      val => {
+        if (val.response === 0) {
+           this.api.deleteMap(this.currentFilePath).subscribe(() => {});
+          this.toast.show(`Файл <b>${ this.currentFilePath }</b> удален с сервера`,
+            {
+              classname: 'bg-success text-light',
+              delay: 3000,
+              icon: faTrash
+            });
+          this.showBinary = false;
+        }
+      }
+    ).finally(() => { this.reloadFileTree(); });
+  }
+
+  downloadFile(): void {
+    let filename: string = ((): string => {
+      const spl = this.currentFilePath.split('/');
+      return spl[spl.length - 1];
+    })();
+    this.electron.dialog.showSaveDialog(
+      {
+        title: 'Сохранить карту как',
+        buttonLabel: 'Сохранить',
+        defaultPath: filename,
+        filters: [
+          { name: 'All Files', extensions: ['*'] }
+        ]
+      }).then(res => {
+        if (res.filePath && !res.canceled) {
+          this.electron.ipcRenderer.send('download-file', { remotePath: this.currentFilePath, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token })
+        }
+      }).catch( res => {
+        this.toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
+          {
+            classname: 'bg-warning text-dark',
+            delay: 5000,
+            icon: faInfo,
+            subtext: res.message
+           });
+        console.error(res);
+      })
   }
 
   addNewFile(event: any): void {
@@ -160,6 +237,24 @@ export class ConfigEditorComponent implements OnInit {
       console.log(params);
       this.currentFilePath = params.path;
       this.getConfig({path: params.path, name: params.name});
+    });
+    this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
+      this.ngZone.run(() => {
+        this.dprogress = Math.round(100 * progress.loaded / progress.total);
+      })
+    });
+    this.electron.ipcRenderer.on('download-end', () => {
+      this.ngZone.run(() => {
+      this.toast.show(`Файл <b>${ this.currentFilePath }</b> успешно загружен`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faInfo
+         });
+        setTimeout(() => {
+          this.dprogress = 0;
+        }, 2000);
+      });
     });
   }
 }

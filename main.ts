@@ -1,8 +1,10 @@
-import { app, BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import axios from 'axios';
+import { createWriteStream } from 'fs';
+import { AppConfig } from './src/environments/environment.prod';
 
 let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
@@ -66,7 +68,7 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get('http://instr.gta-liberty.ru/v2/login/check-token', { headers: { 'Authorization': JSON.parse(result).token }})
+      axios.get(AppConfig.api.validation, { headers: { 'Authorization': JSON.parse(result).token }})
       .then(() => {
         splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
       })
@@ -109,6 +111,46 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
+function downloadFile(configuration: any) {
+  const w_stream = createWriteStream(configuration.localPath);
+  axios.get(AppConfig.api.main +'utils/download-file' ,
+    { headers: { 'Authorization': 'Bearer ' + configuration.token },
+    params: { path: configuration.remotePath },
+    responseType: 'stream'
+  })
+  .then((res: any) => {
+    return new Promise((resolve, reject) => {
+      const totalSize = res.headers['content-length']
+      let error = null;
+      let downloaded = 0
+      res.data.pipe(w_stream);
+      res.data.on('data', (data) => {
+        downloaded += Buffer.byteLength(data);
+        win.webContents.send('download-progress', { total: totalSize, loaded: downloaded })
+      })
+      res.data.on('error', (error) => {
+        win.webContents.send('download-error', error)
+      })
+      w_stream.on('error', err => {
+        error = err;
+        w_stream.close();
+        reject(err);
+      });
+      w_stream.on('close', () => {
+        if (!error) {
+          resolve(true);
+          win.webContents.send('download-end');
+        }
+      });
+    });
+  })
+  .catch((err)=> {
+    win.webContents.send('download-error', err);
+  })
+}
+ipcMain.on('download-file', (event, conf) => {
+  downloadFile(conf);
+});
 try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
