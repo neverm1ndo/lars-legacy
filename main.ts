@@ -75,13 +75,20 @@ function createWindow(): BrowserWindow {
       })
       .catch((err)=> {
         win.webContents.send('token-verify-denied', true);
-        splash.webContents.executeJavaScript('changeStatus("Токен не прошел верификацию", 100);', true);
+        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.message}", 100);`, true);
       }).finally(() => {
         setTimeout(() => {
           splash.close();
           win.show();
         }, 2000);
-      })
+      });
+    }).catch((err) => {
+      win.webContents.send('token-verify-denied', true);
+      splash.webContents.executeJavaScript(`changeStatus("Токен отсутствует: ${err.message}", 100);`, true);
+      setTimeout(() => {
+        splash.close();
+        win.show();
+      }, 2000);
     });
   });
 
