@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as url from 'url';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
-import { AppConfig } from './src/environments/environment.prod';
 
 let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
@@ -70,7 +69,7 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get(AppConfig.api.validation, { headers: { 'Authorization': JSON.parse(result).token }})
+      axios.get('http://instr.gta-liberty.ru/v2/login/check-token', { headers: { 'Authorization': JSON.parse(result).token }})
       .then(() => {
         splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
       })
@@ -115,7 +114,7 @@ function createWindow(): BrowserWindow {
 
 function downloadFile(configuration: any) {
   const w_stream = createWriteStream(configuration.localPath);
-  axios.get(AppConfig.api.main +'utils/download-file' ,
+  axios.get('http://instr.gta-liberty.ru/v2/utils/download-file' ,
     { headers: { 'Authorization': 'Bearer ' + configuration.token },
     params: { path: configuration.remotePath },
     responseType: 'stream'
