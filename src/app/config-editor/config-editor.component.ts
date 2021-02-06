@@ -9,6 +9,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { ElectronService } from '../core/services/electron/electron.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-config-editor',
@@ -45,7 +46,8 @@ export class ConfigEditorComponent implements OnInit {
     public route: ActivatedRoute,
     public toast: ToastService,
     private electron: ElectronService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    public user: UserService
   ) {
     this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => {
@@ -241,6 +243,18 @@ export class ConfigEditorComponent implements OnInit {
     this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
       this.ngZone.run(() => {
         this.dprogress = Math.round(100 * progress.loaded / progress.total);
+      })
+    });
+    this.electron.ipcRenderer.on('download-error', (event: any, err) => {
+      this.ngZone.run(() => {
+        this.dprogress = 0;
+        this.toast.show(`Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`,
+          {
+            classname: 'bg-danger text-dark',
+            delay: 5000,
+            icon: faInfo,
+            subtext: err.message
+          });
       })
     });
     this.electron.ipcRenderer.on('download-end', () => {

@@ -1,6 +1,6 @@
 {
   "name": "libertylogs-client",
-  "version": "0.9.8-pre-release",
+  "version": "0.9.9",
   "description": "Program to control Liberty server",
   "homepage": "https://github.com/neneverm1ndo/libertylogs-client",
   "author": {

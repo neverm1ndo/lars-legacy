@@ -18,7 +18,8 @@ function splashWindow() {
     backgroundColor: '#3A3F52',
     resizable: false,
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
-    frame: false
+    frame: false,
+    show: false
   });
   splash.setAlwaysOnTop(true);
   splash.center();
@@ -28,6 +29,7 @@ function splashWindow() {
     protocol: 'file:'
   }));
   splash.once('ready-to-show', () => {
+    splash.show();
     splash.webContents.executeJavaScript('changeStatus("Загрузка основного модуля", 60);', true)
   })
   splash.on('closed', () => {
