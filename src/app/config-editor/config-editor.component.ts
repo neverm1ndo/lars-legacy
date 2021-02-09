@@ -236,7 +236,6 @@ export class ConfigEditorComponent implements OnInit {
     this.route.queryParams.pipe(
       filter(params => (params.path || params.name))
     ).subscribe(params => {
-      console.log(params);
       this.currentFilePath = params.path;
       this.getConfig({path: params.path, name: params.name});
     });
