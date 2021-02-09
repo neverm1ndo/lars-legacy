@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { UserService } from '../user.service';
-import { faSignOutAlt, faTerminal, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
+import { WebSocketService } from '../web-socket.service';
 
 @Component({
   selector: 'app-topper',
@@ -14,38 +15,49 @@ export class TopperComponent implements OnInit {
   fa = {
     signout: faSignOutAlt,
     terminal: faTerminal,
-    comm: faComments
+    comm: faComments,
+    play: faPlay,
+    redo: faRedo,
+    stop: faStop
   };
 
   isLoggedIn: boolean = false;
   authenticated: any;
-  ddStyling: boolean = false;
-  ddStatus: string = 'ddClosed';
+  server = {
+    reboot: () => {
+      console.log('\x1b[35m[server]\x1b[0m', 'Rebooting samp03svr...');
+      this.ws.send({ event: 'reboot-server' });
+    },
+    launch: () => {
+      console.log('\x1b[35m[server]\x1b[0m', 'Launching samp03svr...');
+      this.ws.send({ event: 'launch-server' });
+    },
+    stop: () => {
+      console.log('\x1b[35m[server]\x1b[0m', 'Killing samp03svr...');
+      this.ws.send({ event: 'stop-server' });
+    }
+  }
+  window = {
+    win: this.electron.remote.getCurrentWindow(),
+    close: () => {
+      this.window.win.close();
+    },
+    min: () => {
+      this.window.win.minimize();
+    }
+  }
   constructor(
     public electron: ElectronService,
-    public userService: UserService
+    public userService: UserService,
+    private ws: WebSocketService
   ) {}
-
-  winclose(): void {
-    let win = this.electron.remote.getCurrentWindow();
-        win.close();
-  }
-  winmin(): void {
-    let win = this.electron.remote.getCurrentWindow();
-        win.minimize();
-  }
 
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
-    this.dropDownClicked();
-  }
-
-  dropDownClicked() {
-    this.ddStyling = !this.ddStyling;
-    this.ddStatus = this.ddStyling?'ddOpened':'ddClosed';
   }
 
   ngOnInit(): void {
+    this.ws.connect();
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
     });

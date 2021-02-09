@@ -4,7 +4,8 @@ export const AppConfig = {
   links: {
     forum: 'https://gta-liberty.ru/index.php'
   },
-  api: { // Dev server
+  api: {
+    ws: 'ws://instr.gta-liberty.ru/v2/ws',
     main: 'http://instr.gta-liberty.ru/v2/',
     auth: 'http://instr.gta-liberty.ru/v2/login',
     user: 'http://instr.gta-liberty.ru/v2/login/user',

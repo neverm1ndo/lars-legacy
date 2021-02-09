@@ -38,7 +38,6 @@ export class FileTreeComponent implements OnInit {
   constructor() { }
 
   getConfig(path: string) {
-    console.log(path)
     this.chooseFileEvent.emit(path);
   }
   chooseDir(path: string) {

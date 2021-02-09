@@ -1,3 +1,9 @@
+export interface WsMessage {
+  event: 'reboot-server' | 'launch-server' | 'stop-server';
+  msg?: string,
+  options?: any;
+  token?: string;
+}
 export interface UserLoginData {
   email: string,
   password: string

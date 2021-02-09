@@ -16,16 +16,16 @@ export class AppComponent implements OnInit {
     private ngZone: NgZone
   ) {
     this.translate.setDefaultLang('en');
-    console.log('AppConfig', AppConfig);
 
-    if (electronService.isElectron) {
-
-      console.log(process.env);
-      console.log('Run in electron');
-      console.log('Electron ipcRenderer', this.electronService.ipcRenderer);
-      console.log('NodeJS childProcess', this.electronService.childProcess);
+    console.warn('%c[WARNING]' + '\n%cНичего не вводите и не копируйте из консоли. Это может привести к потере данных от аккаунта или некорректной работе программы. Информация ниже предназначена только для разработчиков приложения.', 'color: yellow; font-size: 30px', 'font-size: 16px;');
+    if (electronService.isElectron && !AppConfig.production) {
+      console.log('\x1b[33m[app]\x1b[0m', AppConfig);
+      console.log('\x1b[33m[app]\x1b[0m', process.env);
+      console.log('\x1b[33m[app]\x1b[0m', 'Run in electron');
+      console.log('\x1b[33m[app]\x1b[0m', 'Electron ipcRenderer', this.electronService.ipcRenderer);
+      console.log('\x1b[33m[app]\x1b[0m', 'NodeJS childProcess', this.electronService.childProcess);
     } else {
-      console.log('Run in browser');
+      console.log('\x1b[33m[app]\x1b[0m', 'Run in browser');
     }
   }
   ngOnInit() {
