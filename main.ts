@@ -18,7 +18,11 @@ function splashWindow() {
     resizable: false,
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
     frame: false,
-    show: false
+    show: false,
+    webPreferences: {
+      worldSafeExecuteJavaScript: true,
+      contextIsolation: true
+    }
   });
   splash.setAlwaysOnTop(true);
   splash.center();
@@ -58,8 +62,9 @@ function createWindow(): BrowserWindow {
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
+      worldSafeExecuteJavaScript: true,
       nodeIntegration: true,
-      allowRunningInsecureContent: true,
+      allowRunningInsecureContent: (serve) ? true : false,
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
