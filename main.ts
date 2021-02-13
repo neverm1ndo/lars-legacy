@@ -29,7 +29,7 @@ function splashWindow() {
   splash.center();
   splash.setMenu(null);
   splash.loadURL(url.format({
-    pathname: path.join(__dirname, 'src/assets/splash.html'),
+    pathname: path.join(__dirname, 'dist/assets/splash.html'),
     protocol: 'file:'
   }));
   splash.once('ready-to-show', () => {
