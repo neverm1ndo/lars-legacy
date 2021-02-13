@@ -21,14 +21,15 @@ function splashWindow() {
     show: false,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
-      contextIsolation: true
+      contextIsolation: true,
+      allowRunningInsecureContent: true
     }
   });
   splash.setAlwaysOnTop(true);
   splash.center();
   splash.setMenu(null);
   splash.loadURL(url.format({
-    pathname: path.join(__dirname, 'dist/assets/splash.html'),
+    pathname: path.join(__dirname, 'src/assets/splash.html'),
     protocol: 'file:'
   }));
   splash.once('ready-to-show', () => {
@@ -64,17 +65,23 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       worldSafeExecuteJavaScript: true,
       nodeIntegration: true,
-      allowRunningInsecureContent: (serve) ? true : false,
+      webSecurity: (serve)? false: true,
+      allowRunningInsecureContent: true,
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
       enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
   });
 
+
   win.once('ready-to-show', () => {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get('http://instr.gta-liberty.ru/v2/login/check-token', { headers: { 'Authorization': JSON.parse(result).token }})
+      axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+        headers: {
+          'Authorization': JSON.parse(result).token
+        }
+      })
       .then(() => {
         splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
       })
@@ -126,7 +133,7 @@ function createWindow(): BrowserWindow {
 
 function downloadFile(configuration: any) {
   const w_stream = createWriteStream(configuration.localPath);
-  axios.get('http://instr.gta-liberty.ru/v2/utils/download-file' ,
+  axios.get('https://instr.gta-liberty.ru/v2/utils/download-file' ,
     { headers: { 'Authorization': 'Bearer ' + configuration.token },
     params: { path: configuration.remotePath },
     responseType: 'stream'
@@ -164,13 +171,13 @@ function downloadFile(configuration: any) {
 ipcMain.on('download-file', (event, conf) => {
   downloadFile(conf);
 });
+
 try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
-
     setTimeout(() => splashWindow(), 400);
     createWindow();
   });
@@ -191,6 +198,14 @@ try {
       createWindow();
     }
   });
+  if (serve) {
+    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+      // On certificate error we disable default behaviour (stop loading the page)
+      // and we then say "it is all fine - true" to the callback
+      event.preventDefault();
+      callback(true);
+    });
+  }
 
 } catch (e) {
   console.error(e);

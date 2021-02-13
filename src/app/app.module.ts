@@ -22,6 +22,8 @@ import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LibertyIconsModule } from './libery-icons/liberty-icons.module';
 
+import { StatusPipe } from './pipes/status.pipe';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -33,7 +35,7 @@ import { LoginModule } from './login/login.module';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
-  declarations: [AppComponent, TopperComponent, AutofocusDirective],
+  declarations: [AppComponent, TopperComponent, AutofocusDirective, StatusPipe],
   imports: [
     BrowserModule,
     HttpClientModule,

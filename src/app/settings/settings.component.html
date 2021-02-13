@@ -213,6 +213,20 @@
                 [options]="cmSettings"
                 ></ngx-codemirror>
               </div>
+              <hr>
+              <div class="credits d-flex w-100">
+                <div class="d-flex flex-row w-100 justify-content-between">
+                  <div class="d-flex flex-column">
+                    <h6>О программе</h6>
+                    <div>
+                      <small>libertylogs v{{ version }}</small>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row align-self-center">
+                    <img src="./assets/images/codemirror.png" alt="">
+                  </div>
+                </div>
+              </div>
             </div>
             <div @settings *ngIf="pane == 'filter'" class="d-flex flex-column h-100 overflow-auto p-4">
               <filter></filter>

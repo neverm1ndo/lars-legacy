@@ -68,7 +68,7 @@ export class MapEditorComponent implements OnInit {
     let dragEnd: any;
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
-      this.map.src = './assets/images/sa_map4k.jpg';
+      this.map.src = './assets/images/sa_map4k.webp';
       this.map.onload = () => {
         draw();
       }

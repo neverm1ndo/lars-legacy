@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ElectronService } from '../core/services/electron/electron.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { settings } from '../app.animations';
 
@@ -10,7 +11,9 @@ import { settings } from '../app.animations';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private electron: ElectronService) { }
+
+  version: string = this.electron.remote.app.getVersion();
 
   date: Date = new Date(Date.now());
   sampleGeo = {

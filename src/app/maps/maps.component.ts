@@ -138,7 +138,6 @@ export class MapsComponent implements OnInit {
         ]
       }).then(res => {
         if (res.filePath && !res.canceled) {
-          console.log(res.filePath);
           this.electron.fs.writeFile(res.filePath, this.xml, 'utf8', (err) => {
             if (err) throw err;
           });

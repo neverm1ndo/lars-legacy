@@ -12,6 +12,7 @@
         "!package-lock.json",
         "!src/",
         "!e2e/",
+        "!dist/assets/images",
         "!hooks/",
         "!angular.json",
         "!_config.yml",

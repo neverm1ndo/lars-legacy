@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { UserService } from '../user.service';
-import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-topper',
@@ -18,14 +19,17 @@ export class TopperComponent implements OnInit {
     comm: faComments,
     play: faPlay,
     redo: faRedo,
-    stop: faStop
+    stop: faStop,
+    update: faCloudDownloadAlt
   };
+
 
   isLoggedIn: boolean = false;
   authenticated: any;
   server = {
     reboot: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Rebooting samp03svr...');
+      this.ws.state.next('rebooting');
       this.ws.send({ event: 'reboot-server' });
     },
     launch: () => {
@@ -34,6 +38,7 @@ export class TopperComponent implements OnInit {
     },
     stop: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Killing samp03svr...');
+      this.ws.state.next('stoped');
       this.ws.send({ event: 'stop-server' });
     }
   }
@@ -49,7 +54,7 @@ export class TopperComponent implements OnInit {
   constructor(
     public electron: ElectronService,
     public userService: UserService,
-    private ws: WebSocketService
+    public ws: WebSocketService
   ) {}
 
   openForum(): void {
@@ -57,12 +62,14 @@ export class TopperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ws.connect();
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());
+      if (this.userService.getUserInfo().gr == 10) {
+        this.ws.connect();
+      }
     }
   }
 

@@ -17,7 +17,12 @@
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "allowedCommonJsDependencies": [
-              "@ctrl/ngx-codemirror"
+              "@ctrl/ngx-codemirror",
+              "codemirror/mode/coffeescript/coffeescript",
+              "codemirror/mode/clike/clike",
+              "codemirror/mode/markdown/markdown",
+              "codemirror/mode/javascript/javascript",
+              "codemirror/mode/xml/xml"
             ],
             "assets": [
               "src/assets"
