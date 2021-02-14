@@ -18,6 +18,10 @@
     input {
       margin-right: 5px;
       border: none;
+      &:active, &:focus {
+        border: none!important;
+        box-shadow: none;
+      }
     }
     .big-drop {
       width: 230px;
@@ -31,6 +35,12 @@
         padding-right: 15px;
         padding-top: 5px;
         padding-bottom: 5px;
+        z-index: 1;
+        .input-group {
+          input {
+            background-color: $dropdown!important;
+          }
+        }
         hr {
           margin-top: 10px;
           margin-bottom: 0px;
@@ -64,6 +74,10 @@
     input, button {
       font-size: 13px;
     }
+    input {
+      border-top-right-radius: 0.25rem!important;
+      border-bottom-right-radius: 0.25rem!important;
+    }
   }
   .btn-dark {
     font-size: 13px;
@@ -83,6 +97,7 @@
     border-radius: 3px;
     max-width: none;
     width: 300px;
+    z-index: 1;
     &::before {
       position: absolute;
       z-index: 1000;
@@ -91,7 +106,7 @@
       width: 0px;
       height: 0px;
       content: '';
-      border-bottom: 10px solid #2E2F39;
+      border-bottom: 10px solid $dropdown;
       border-top: 10px solid transparent;
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
