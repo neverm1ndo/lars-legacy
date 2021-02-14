@@ -5,7 +5,7 @@
         <small class="native-dragzone label no-select">LIBERTYLOGS</small>
       </div>
       <div *ngIf="authenticated" class="d-flex align-self-end btn-group top-btn" role="remote-group">
-        <div *ngIf="userService.getUserInfo().gr == 10" ngbDropdown class="btn-native-profile">
+        <div *ngIf="userService.getUserInfo().gr == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
           <button
           ngbDropdownToggle
           type="button"
@@ -13,23 +13,23 @@
           name="profile-button">
             <span>Действия с сервером</span><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>
           </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownTopper">
+        <div ngbDropdownMenu aria-labelledby="dropdownTopper">
             <div data-content="Статус сервера" class="status" ngbDropdownItem>
-              <i [class.led-loading]="(ws.state | async) == 'live'"
-              [class.led-error]="(ws.state | async) == 'stoped'"
-              [class.led-loading]="(ws.state | async) == 'rebooting'"
-              [class.led-error]="(ws.state | async) == 'error'"
-              class="led led-loading">
+              <i [ngClass]="{
+                 'led-loading': ( server.state == 'loading' ||  server.state == 'rebooting'),
+                 'led-error': ( server.state == 'error' ||  server.state == 'stoped')
+              }"
+              class="led">
               </i>{{(ws.state | async) | status}}</div>
             <div class="dropdown-divider"></div>
-            <button [disabled]="(ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
-            <button [disabled]="(ws.state | async) == 'rebooting' || (ws.state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
-            <button [disabled]="(ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
+            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
+            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
+            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
           </div>
         </div>
       </div>
       <div class="d-flex align-self-end btn-group" role="remote-group">
-        <div *ngIf="authenticated" ngbDropdown class="btn-native-profile">
+        <div *ngIf="authenticated" ngbDropdown autoClose="outside" class="btn-native-profile">
           <button
           ngbDropdownToggle
           type="button"

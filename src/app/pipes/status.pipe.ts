@@ -9,6 +9,7 @@ export class StatusPipe implements PipeTransform {
     'rebooting' : 'Перезагружается',
     'live' : 'Запущен',
     'stoped' : 'Остановлен',
+    'loading' : 'Загружается',
     'error' : 'Нет соедниения'
   }
 

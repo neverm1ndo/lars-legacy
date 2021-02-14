@@ -77,6 +77,9 @@
     border: none;
     color: $text;
     height: 100%;
+    &[aria-expanded = true] {
+      background: $tab;
+    }
   }
   &:hover, &:focus, &:active, &:focus-within {
     background: $tab!important;

@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class WebSocketService {
 
   private ws: WebSocket;
-  state: BehaviorSubject<'stoped' | 'rebooting' | 'live' | 'error'> = new BehaviorSubject('live');
+  state: BehaviorSubject<'stoped' | 'rebooting' | 'live' | 'error' | 'loading'> = new BehaviorSubject('live');
   constructor() {}
 
   connect(): void {
@@ -42,7 +42,7 @@ export class WebSocketService {
           break;
         }
         case 'server-status': {
-          console.log('%c[server]', 'color: magenta', 'status', m.msg);
+          console.log('%c[server]', 'color: magenta', 'status:', m.msg);
           this.state.next(m.msg);
           break;
         }
@@ -60,6 +60,9 @@ export class WebSocketService {
          this.state.next('error')
        }
     }
+  }
+  disconnect() {
+    this.ws.close();
   }
   send(msg: WsMessage): void {
     this.ws.send(JSON.stringify(msg));

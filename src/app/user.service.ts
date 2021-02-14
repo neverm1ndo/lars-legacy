@@ -6,6 +6,7 @@ import { UserData, UserLoginData } from './interfaces/app.interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment.dev';
 import { ElectronService } from './core/services/electron/electron.service';
+import { WebSocketService } from './web-socket.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
@@ -25,7 +26,8 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
     public electron: ElectronService,
-    private idbService: NgxIndexedDBService
+    private idbService: NgxIndexedDBService,
+    private ws: WebSocketService
   ) {}
 
   getUser(name: string): Observable<UserData> {
@@ -109,6 +111,7 @@ export class UserService {
       if (returnValue.response === 0) {
         this.user.next(undefined);
         localStorage.removeItem('user');
+        this.ws.disconnect();
         this.router.navigate(['/login']);
       }
     })

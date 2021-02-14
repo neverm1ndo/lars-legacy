@@ -4,14 +4,6 @@
 :host {
   .status {
     pointer-events: none;
-    // &:before {
-    //   content: attr(data-content);
-    //   position: absolute;
-    //   font-size: 9px;
-    //   opacity: 0.5;
-    //   margin-top: -12px;
-    // }
-    -webkit-user-select: none;
     .led {
       display: inline-block;
       width: 6px;
