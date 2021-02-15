@@ -193,6 +193,12 @@ export class Processes {
       control: 'chatMain'
     },
     {
+      process: '<chat/close>',
+      translate: 'Ближний чат',
+      type: 'light',
+      control: 'chatClose'
+    },
+    {
       process: '<chat/team>',
       translate: 'Командный чат',
       type: 'light',
