@@ -1,4 +1,4 @@
-<div *ngIf="controltype() && user; else default" class="user bg-shade-{{type.type}}">
+<div *ngIf="controltype() && user; else default" class="user w-100 bg-shade-{{type.type}}">
   <img src="{{user.avatar}}"/>
   <a (click)="userLink(user.id)">{{ user.name }}</a>
   <span class="badge badge-dark">{{user.id}}</span>
