@@ -24,6 +24,7 @@ export class WebSocketService {
       switch (m.event) {
         case 'error': {
           console.error('%c[server]', 'color: magenta', m.msg);
+          this.state.next('error');
           break;
         }
         case 'server-rebooted': {

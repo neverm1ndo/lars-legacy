@@ -23,6 +23,17 @@
       }
       &-error {
         background: #dc3545!important;
+        &:before {
+          position: absolute;
+          border-radius: 100%;
+          content: ' ';
+          background: #dc3545;
+          width: 6px;
+          height: 6px;
+          animation-name: blinknscale;
+          animation-duration: 1s;
+          animation-iteration-count: infinite;
+        }
       }
     }
   }
@@ -30,6 +41,10 @@
     0% { opacity: 1 }
     50% { opacity: 0 }
     100% { opacity: 1 }
+  }
+  @keyframes blinknscale {
+    0% { opacity: 1; transform: scale(1);}
+    100% { opacity: 0; transform: scale(2.5);}
   }
   lty-icon {
     width: 34px;
