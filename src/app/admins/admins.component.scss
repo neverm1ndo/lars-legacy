@@ -1,0 +1,50 @@
+@import "scss/colors";
+:host {
+  font-size: 11px;
+  .adm-head {
+    height: 50px;
+    width: 100%;
+    background: $secondary;
+    h6 {
+      font-weight: 300;
+      line-height: 50px;
+      fa-icon {
+        margin-right: 15px;
+      }
+    }
+  }
+  table {
+    color: #fdfdfd;
+    margin-bottom: 0px;
+    height: 100%;
+    td {
+      vertical-align: middle;
+      border-top: none;
+      border-bottom: none;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-right: 1px solid $secondary;
+      text-align: center;
+      &:last-child {
+        border: none;
+      }
+      // &:nth-child(odd) {
+      //   background: rgba(0, 0, 0, 0.05);
+      // }
+    }
+    thead {
+      position: relative;
+      th {
+        border: none;
+      }
+    }
+  }
+  .td-avatar {
+    width: 60px;
+  }
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+  }
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faCog, faFileSignature, faMap, faSearch, faHome, faGavel } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faFileSignature, faMap, faSearch, faHome, faGavel, faUserSecret } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-sider',
@@ -14,7 +14,8 @@ export class SiderComponent implements OnInit {
     map: faMap,
     search: faSearch,
     home: faHome,
-    gavel: faGavel
+    gavel: faGavel,
+    agent: faUserSecret
   };
 
   constructor() {}
