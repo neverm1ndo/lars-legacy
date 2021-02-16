@@ -10,7 +10,7 @@ export class StatusPipe implements PipeTransform {
     'live' : 'Запущен',
     'stoped' : 'Остановлен',
     'loading' : 'Загружается',
-    'error' : 'Нет соедниения'
+    'error' : 'Ошибка сервера'
   }
 
   transform(value: string): unknown {
