@@ -112,11 +112,6 @@ function createWindow(): BrowserWindow {
     win.loadURL('http://localhost:4200');
   } else {
     win.loadURL('https://libertyapp.nmnd.ru');
-    // win.loadURL(url.format({
-    //   pathname: path.join(__dirname, 'dist/index.html'),
-    //   protocol: 'file:',
-    //   slashes: true
-    // }));
   }
 
   // Emitted when the window is closed.
