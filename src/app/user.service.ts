@@ -40,6 +40,7 @@ export class UserService {
       case 11: return 'Админ';
       case 12: return 'Маппер';
       case 13: return 'Редактор конфигурационных файлов';
+      case 14: return 'Бэкапер';
       default: return 'Игрок';
     }
   }
