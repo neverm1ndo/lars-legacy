@@ -1,29 +1,43 @@
 {
-  "productName": "libertylogs",
+  "productName": "Libertylogs",
   "directories": {
     "output": "release/"
   },
-    "files": [
-        "**/*",
-        "!**/*.ts",
-        "!*.code-workspace",
-        "!LICENSE.md",
-        "!package.json",
-        "!package-lock.json",
-        "!src/",
-        "!e2e/",
-        "!dist/assets/images",
-        "!hooks/",
-        "!angular.json",
-        "!_config.yml",
-        "!karma.conf.js",
-        "!tsconfig.json",
-        "!tslint.json"
-    ],
+  "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.code-workspace",
+      "!LICENSE.md",
+      "!package.json",
+      "!package-lock.json",
+      "!src/",
+      "!e2e/",
+      "!dist/assets/images",
+      "!hooks/",
+      "!angular.json",
+      "!_config.yml",
+      "!karma.conf.js",
+      "!tsconfig.json",
+      "!tslint.json"
+  ],
+  "nsis": {
+    "installerIcon": "dist/assets/icons/favicon.ico",
+    "uninstallerIcon": "dist/assets/icons/favicon_u.ico",
+    "installerHeader": "dist/assets/icons/favicon_u.ico",
+    "installerHeaderIcon": "dist/assets/icons/favicon.ico",
+    "installerSidebar": "dist/assets/images/installerSidebar.ico",
+    "uninstallerSidebar": "dist/assets/images/installerSidebar.ico",
+    "uninstallDisplayName": "${productName} ${version}",
+    "license": "LICENSE.md",
+    "installerLanguages": ["ru_RU", "en_US"],
+    "runAfterFinish": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
   "win": {
     "icon": "dist/assets/icons/favicon.ico",
     "target": [
-      "portable"
+      "nsis"
     ]
   }
 }
