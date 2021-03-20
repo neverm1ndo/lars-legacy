@@ -1,5 +1,6 @@
 {
   "productName": "Libertylogs",
+  "copyright": "MIT © 2020 ${author}",
   "directories": {
     "output": "release/"
   },
@@ -23,14 +24,15 @@
   "nsis": {
     "installerIcon": "dist/assets/icons/favicon.ico",
     "uninstallerIcon": "dist/assets/icons/favicon_u.ico",
-    "installerHeader": "dist/assets/icons/favicon_u.ico",
     "installerHeaderIcon": "dist/assets/icons/favicon.ico",
-    "installerSidebar": "dist/assets/images/installerSidebar.ico",
-    "uninstallerSidebar": "dist/assets/images/installerSidebar.ico",
+    "installerSidebar": "dist/assets/images/installerSidebar.bmp",
+    "uninstallerSidebar": "dist/assets/images/uninstallerSidebar.bmp",
     "uninstallDisplayName": "${productName} ${version}",
     "license": "LICENSE.md",
     "installerLanguages": ["ru_RU", "en_US"],
+    "allowToChangeInstallationDirectory": true,
     "runAfterFinish": true,
+    "oneClick": false,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true
   },
