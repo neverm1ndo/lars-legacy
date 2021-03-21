@@ -1,4 +1,5 @@
-import { app, autoUpdater, BrowserWindow, dialog, ipcMain, FeedURLOptions } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
@@ -9,16 +10,6 @@ let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
 const args: string[] = process.argv.slice(1),
       serve = args.some(val => val === '--serve');
-
-// Update server
-const server: string = 'https://libertylogs-client-4x18bcxi7-neverm1ndo.vercel.app';
-const feed: FeedURLOptions = {
-  url: `${server}/update/${process.platform}/${app.getVersion()}`
-};
-autoUpdater.setFeedURL(feed);
-setInterval(() => {
-  autoUpdater.checkForUpdates()
-}, 120000);
 
 // Windows
 function splashWindow() {
@@ -85,6 +76,7 @@ function createWindow(): BrowserWindow {
 
 
   win.once('ready-to-show', () => {
+    if (!serve) autoUpdater.checkForUpdatesAndNotify();
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
@@ -177,6 +169,12 @@ function downloadFile(configuration: any) {
 ipcMain.on('download-file', (event, conf) => {
   downloadFile(conf);
 });
+autoUpdater.on('update-available', () => {
+  win.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  win.webContents.send('update_downloaded');
+});
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
@@ -187,7 +185,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   }
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
   })
 })
 autoUpdater.on('error', message => {

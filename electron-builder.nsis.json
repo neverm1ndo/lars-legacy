@@ -1,6 +1,11 @@
 {
   "productName": "Libertylogs",
   "copyright": "MIT © 2020 ${author}",
+  "appId": "ru.nmnd.libertylogs",
+  "publish": {
+    "provider": "github",
+    "token": ""
+  },
   "directories": {
     "output": "release/"
   },
