@@ -1,0 +1,30 @@
+{
+  "productName": "Libertylogs",
+  "copyright": "MIT © 2020 ${author}",
+  "directories": {
+    "output": "release/"
+  },
+  "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.code-workspace",
+      "!LICENSE.md",
+      "!package.json",
+      "!package-lock.json",
+      "!src/",
+      "!e2e/",
+      "!dist/assets/images",
+      "!hooks/",
+      "!angular.json",
+      "!_config.yml",
+      "!karma.conf.js",
+      "!tsconfig.json",
+      "!tslint.json"
+  ],
+  "win": {
+    "icon": "dist/assets/icons/favicon.ico",
+    "target": [
+      "nsis"
+    ]
+  }
+}

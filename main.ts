@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, autoUpdater, BrowserWindow, dialog, ipcMain, FeedURLOptions } from 'electron';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
@@ -8,8 +8,19 @@ import { createWriteStream } from 'fs';
 let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
 const args: string[] = process.argv.slice(1),
-  serve = args.some(val => val === '--serve');
+      serve = args.some(val => val === '--serve');
 
+// Update server
+const server: string = 'https://libertylogs-client-4x18bcxi7-neverm1ndo.vercel.app';
+const feed: FeedURLOptions = {
+  url: `${server}/update/${process.platform}/${app.getVersion()}`
+};
+autoUpdater.setFeedURL(feed);
+setInterval(() => {
+  autoUpdater.checkForUpdates()
+}, 120000);
+
+// Windows
 function splashWindow() {
   splash = new BrowserWindow({
     width: 450,
@@ -166,6 +177,24 @@ function downloadFile(configuration: any) {
 ipcMain.on('download-file', (event, conf) => {
   downloadFile(conf);
 });
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Перезапустить', 'Отложить'],
+    title: 'Обновление приложения',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'Новая версия уже загружена. Перезапустите приложение, чтобы принять изменения.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+autoUpdater.on('error', message => {
+  console.error('Ошибка при попытке обновить приложение');
+  console.error(message);
+  dialog.showErrorBox('Ошибка при попытке обновить приложение', message.message);
+})
 
 try {
   // This method will be called when Electron has finished
