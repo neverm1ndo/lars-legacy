@@ -33,8 +33,8 @@ export class UserService {
   getUser(name: string): Observable<UserData> {
     return this.http.get(this.URL_USER, { params: { name: name }});
   }
-  getUserGroupName(): string {
-    switch (this.getUserInfo().gr) {
+  getUserGroupName(userGroup: number): string {
+    switch (userGroup) {
       case 9: return 'Претендент';
       case 10: return 'Разработчик';
       case 11: return 'Админ';

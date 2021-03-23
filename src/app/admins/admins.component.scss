@@ -23,14 +23,13 @@
       border-bottom: none;
       padding-top: 5px;
       padding-bottom: 5px;
-      border-right: 1px solid $secondary;
       text-align: center;
       &:last-child {
         border: none;
       }
-      // &:nth-child(odd) {
-      //   background: rgba(0, 0, 0, 0.05);
-      // }
+      &:nth-child(odd) {
+        background: rgba(0, 0, 0, 0.01);
+      }
     }
     thead {
       position: relative;

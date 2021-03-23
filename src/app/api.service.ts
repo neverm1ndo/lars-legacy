@@ -21,6 +21,8 @@ export class ApiService {
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
   readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
   readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
+  readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
+  readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-status';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -41,7 +43,9 @@ export class ApiService {
   ) {
     this.chunkSize = this.user.getUserSettings().lineChunk;
   }
-
+  getAdminsList(): Observable<any> {
+    return this.http.get(this.URL_ADMINS_LIST);
+  }
   getConfigsDir(): Observable<any> {
     return this.http.get(this.URL_CONFIGS);
   }

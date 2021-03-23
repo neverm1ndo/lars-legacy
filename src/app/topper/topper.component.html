@@ -4,6 +4,14 @@
         <lty-icon name="lty-logo"></lty-icon>
         <small class="native-dragzone label no-select">LIBERTYLOGS</small>
       </div>
+      <div *ngIf="false" class="d-flex align-self-end btn-group top-btn" role="remote-group">
+          <button
+          type="button"
+          class="btn btn-topnative pl-2 pr-2 top-btn update"
+          name="profile-button">
+            <span><fa-icon [icon]="fa.update"></fa-icon></span>
+          </button>
+      </div>
       <div *ngIf="authenticated" class="d-flex align-self-end btn-group top-btn" role="remote-group">
         <div *ngIf="userService.getUserInfo().gr == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
           <button

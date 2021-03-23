@@ -12,23 +12,33 @@
             <table *ngIf="admins.length > 0" class="table w-100 h-100">
               <tr *ngFor="let admin of admins">
                 <td class="td-avatar">
-                  <img class="avatar" src="{{admin.avatar}}" alt="">
+                  <img class="avatar" src="https://www.gta-liberty.ru/images/avatars/upload/{{admin.user_avatar}}" alt="">
                 </td>
                 <td>
-                  {{ admin.name }} <br>
+                  {{ admin.username }} <br>
                   <small>Админ</small>
                 </td>
                 <td>
-                  <kbd>{{ admin.id }}</kbd>
+                  <kbd>{{ admin.user_id }}</kbd>
                 </td>
                 <td>
-                  <kbd>{{ admin.group }}</kbd>
+                  <kbd>{{ userService.getUserGroupName(admin.group_id) }}</kbd>
+                </td>
+                <td>
+                  30 Sep 20, 00:38:00
                 </td>
                 <td>
                   30 Sep 20, 00:38:00
                 </td>
                 <td>
-                  30 Sep 20, 00:38:00
+                  <select class="" name="">
+                    <option value="9">Претендент</option>
+                    <option value="10">Разработчик</option>
+                    <option value="11">Админ</option>
+                    <option value="12">Маппер</option>
+                    <option value="13">Редактор конфигов</option>
+                    <option value="14">Бэкапер</option>
+                  </select>
                 </td>
               </tr>
             </table>

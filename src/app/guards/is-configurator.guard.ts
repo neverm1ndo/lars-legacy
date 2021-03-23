@@ -22,7 +22,7 @@ export class IsConfiguratorGuard implements CanActivate {
           classname: 'bg-danger text-light',
           delay: 3000,
           icon: faExclamationTriangle,
-          subtext: 'Ваша роль: ' + this.user.getUserGroupName()
+          subtext: 'Ваша роль: ' + this.user.getUserGroupName(group)
         })
         return false;
       }
