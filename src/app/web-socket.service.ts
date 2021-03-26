@@ -63,7 +63,7 @@ export class WebSocketService {
     }
   }
   disconnect() {
-    this.ws.close();
+    if (this.ws) this.ws.close();
   }
   send(msg: WsMessage): void {
     this.ws.send(JSON.stringify(msg));
