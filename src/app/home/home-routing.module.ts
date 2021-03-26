@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { IsCommonGuard } from '../guards/is-common.guard';
 import { IsConfiguratorGuard } from '../guards/is-configurator.guard';
+import { IsDevGuard } from '../guards/is-dev.guard';
 import { IsMapperGuard } from '../guards/is-mapper.guard';
 import { SearchEditorComponent } from '../search-editor/search-editor.component';
 import { ConfigEditorComponent } from '../config-editor/config-editor.component';
@@ -23,7 +24,7 @@ const routes: Routes = [
     { path: 'settings', component: SettingsComponent },
     { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard] },
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
-    { path: 'admins', component: AdminsComponent, canActivate: [IsCommonGuard] }
+    { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] }
   ]},
 ];
 
