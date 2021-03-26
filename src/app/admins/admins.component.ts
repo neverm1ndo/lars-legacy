@@ -65,7 +65,6 @@ export class AdminsComponent implements OnInit {
 
   getFullAdminsList() {
     this.api.getAdminsList().subscribe((admins: any) => {
-      console.log(admins);
       this.admins = admins;
     });
   }
