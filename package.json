@@ -1,15 +1,15 @@
 {
-  "name": "libertylogs-client",
+  "name": "lars",
   "version": "0.9.11",
   "description": "Program to control Liberty server",
-  "homepage": "https://github.com/neverm1ndo/libertylogs-client",
+  "homepage": "https://github.com/neverm1ndo/lars",
   "author": {
     "name": "neverm1ndo",
     "email": "it@nmnd.ru"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/neverm1ndo/libertylogs-client.git"
+    "url": "https://github.com/neverm1ndo/lars.git"
   },
   "keywords": [],
   "main": "main.js",

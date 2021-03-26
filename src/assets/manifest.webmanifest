@@ -1,10 +1,10 @@
 {
-  "name": "LibertyLogs",
-  "short_name": "LLS",
+  "name": "LiberyAdminRemoteService",
+  "short_name": "LARS",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#3A3F52",
-  "description": "Gta Liberty Server admin panel app",
+  "description": "GTA SAMP/OMP Liberty Server admin panel app",
   "icons": [{
     "src": "icons/favicon48.ico",
     "sizes": "48x48",

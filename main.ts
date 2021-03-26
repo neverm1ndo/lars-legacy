@@ -59,7 +59,7 @@ function createWindow(): BrowserWindow {
     height: state.height,
     minHeight: 580,
     minWidth: 950,
-    title: 'LIBERTYLOGS',
+    title: 'LARS',
     show: false,
     frame: false,
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
