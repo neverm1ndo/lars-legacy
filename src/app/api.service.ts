@@ -22,7 +22,9 @@ export class ApiService {
   readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
   readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
   readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
-  readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-status';
+  readonly URL_ADMINS_ALL: string = AppConfig.api.main + 'admins/all';
+  readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
+  readonly URL_ADMIN_SUB_GROUP: string = AppConfig.api.main + 'admins/sub-groups';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -45,6 +47,15 @@ export class ApiService {
   }
   getAdminsList(): Observable<any> {
     return this.http.get(this.URL_ADMINS_LIST);
+  }
+  getAdminsAll(): Observable<any> {
+    return this.http.get(this.URL_ADMINS_LIST);
+  }
+  setAdminGroup(username: string, group: number) {
+    return this.http.put(this.URL_ADMIN_CHANGE_GROUP, { username: username, group: group })
+  }
+  getAdminSubGroup() {
+    return this.http.get(this.URL_ADMIN_SUB_GROUP)
   }
   getConfigsDir(): Observable<any> {
     return this.http.get(this.URL_CONFIGS);

@@ -3,11 +3,11 @@ import { trigger, style, animate, transition, state, keyframes, query, stagger} 
 export const settings = trigger('settings', [
   state('*', style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  })),
     state('void', style({
-       opacity : '0', transform: 'scale(1.04)', position: 'fixed' 
+       opacity : '0', transform: 'scale(1.04)', position: 'fixed'
     })),
         transition('void => *', [
           style({
-             opacity : '0', transform: 'scale(1.04)', position: 'fixed' 
+             opacity : '0', transform: 'scale(1.04)', position: 'fixed'
           }),
           animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
           keyframes([
@@ -17,12 +17,48 @@ export const settings = trigger('settings', [
         ]),
         transition('* => void', [
           style({
-             opacity : '1', transform: 'scale(1)', position: 'fixed' 
+             opacity : '1', transform: 'scale(1)', position: 'fixed'
           }),
           animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
           keyframes([
             style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  }),
             style({ opacity : '0', transform: 'scale(1.04)', position: 'fixed'  })
+          ]))
+        ])
+]);
+export const flipListItem =  trigger('flipListItem', [
+      state('active', style({
+        transform: 'rotateY(179.9deg)'
+      })),
+      state('inactive', style({
+        transform: 'rotateY(0)'
+      })),
+      transition('active => inactive', animate('500ms ease-out')),
+      transition('inactive => active', animate('500ms ease-in'))
+    ])
+export const popblur = trigger('popblur', [
+  state('*', style({ 'backdrop-filter': 'blur(20px)'  })),
+    state('void', style({
+       'backdrop-filter': 'blur(0px)'
+    })),
+        transition('void => *', [
+          style({
+            'backdrop-filter': 'blur(0px)'
+          }),
+          animate('0.1s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({'backdrop-filter': 'blur(0px)' }),
+            style({ 'backdrop-filter': 'blur(20px)' })
+          ]))
+        ]),
+        transition('* => void', [
+          style({
+            'backdrop-filter': 'blur(20px)'
+          }),
+          animate('0.1s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ 'backdrop-filter': 'blur(20px)'  }),
+            style({ 'backdrop-filter': 'blur(0px)'  })
           ]))
         ])
 ]);

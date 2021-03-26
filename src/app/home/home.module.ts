@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -44,7 +45,6 @@ import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-p
 
 import { FileSizePipe } from '../pipes/file-size.pipe';
 import { AdminsComponent } from '../admins/admins.component';
-import { SelectComponent } from './select/select.component';
 
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
@@ -62,7 +62,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, SelectComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -74,7 +74,8 @@ const dbConfig: DBConfig  = {
     CodemirrorModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    NgxIndexedDBModule.forRoot(dbConfig)
+    NgxIndexedDBModule.forRoot(dbConfig),
+    NgSelectModule
   ],
   providers: [
     AuthGuard,
