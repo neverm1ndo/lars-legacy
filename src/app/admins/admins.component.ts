@@ -6,6 +6,7 @@ import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ElectronService } from '../core/services/electron/electron.service';
 
 @Component({
   selector: 'app-admins',
@@ -45,7 +46,8 @@ export class AdminsComponent implements OnInit {
     private idbService: NgxIndexedDBService,
     private api: ApiService,
     public userService: UserService,
-    private toast: ToastService
+    private toast: ToastService,
+    private electron: ElectronService
   ) { }
 
 
@@ -85,10 +87,20 @@ export class AdminsComponent implements OnInit {
       this.getFullAdminsList();
   }
   removeAdmin(username: string) {
-    this.changeAdminGroup(username, 6);
-    setTimeout(() => {
-      this.getFullAdminsList();
-    }, 500);
+    const dialogOpts = {
+        type: 'question',
+        buttons: ['Исключить', 'Отмена'],
+        title: 'Подтверждение исключения',
+        message: `Вы точно хотите исключть ${username} из администраторского состава?`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) {
+        this.changeAdminGroup(username, 2);
+        setTimeout(() => {
+          this.getFullAdminsList();
+        }, 500);
+      }
+    })
   }
 
   changeAdminGroup(username: string, group: number) {
