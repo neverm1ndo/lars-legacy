@@ -62,12 +62,10 @@ export class TopperComponent implements OnInit {
   ngOnInit(): void {
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
-      if (this.userService.getUserInfo().gr == 10) {
-        this.ws.connect();
-        this.ws.state.subscribe((val: any) => {
-          this.server.state = val;
-        })
-      }
+      this.ws.connect();
+      this.ws.state.subscribe((val: any) => {
+        this.server.state = val;
+      })
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());

@@ -25,6 +25,7 @@ export class ApiService {
   readonly URL_ADMINS_ALL: string = AppConfig.api.main + 'admins/all';
   readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
   readonly URL_ADMIN_SUB_GROUP: string = AppConfig.api.main + 'admins/sub-groups';
+  readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -53,6 +54,9 @@ export class ApiService {
   }
   setAdminGroup(username: string, group: number) {
     return this.http.put(this.URL_ADMIN_CHANGE_GROUP, { username: username, group: group })
+  }
+  closeAdminSession(username: string): Observable<any> {
+    return this.http.get(this.URL_ADMIN_TOKEN_EXPIRATION, { params: { username: username }})
   }
   getAdminSubGroup() {
     return this.http.get(this.URL_ADMIN_SUB_GROUP)

@@ -102,6 +102,27 @@ export class AdminsComponent implements OnInit {
       }
     })
   }
+  closeAdminSession(username: string) {
+    const dialogOpts = {
+        type: 'question',
+        buttons: ['Зарыть сессию', 'Отмена'],
+        title: 'Подтверждение закрытия сессии',
+        message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      console.log(returnValue.response)
+      if (returnValue.response === 0) {
+        this.api.closeAdminSession(username).subscribe(() => {
+          this.toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
+            {
+              classname: 'bg-success text-light',
+              delay: 3000,
+              icon: faUserSecret
+            });
+        });
+      }
+    })
+  }
 
   changeAdminGroup(username: string, group: number) {
     this.api.setAdminGroup(username, group).subscribe(() => {

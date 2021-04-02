@@ -41,9 +41,15 @@
                   </ng-select>
                 </td>
                 <td class="td-rm"><button (click)="removeAdmin(admin.username)" class="btn btn-dark rm-adm" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+                <td class="td-rm"><button (click)="closeAdminSession(admin.username)" class="btn btn-dark rm-adm" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
               </tr>
             </table>
           </div>
+        </div>
+      </div>
+      <div *ngIf="admins.length == 0" class="loader h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="d-flex align-items-center">
+          <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
         </div>
       </div>
       <form [formGroup]="addAdminForm" (ngSubmit)="addNewAdmin()" *ngIf="popup" @settings class="popup d-flex flex-row justify-content-center align-items-center">

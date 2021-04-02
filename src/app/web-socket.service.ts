@@ -1,7 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { WsMessage } from './interfaces/app.interfaces';
 import { AppConfig } from '../environments/environment';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ToastService } from './toast.service';
+import { UserService } from './user.service';
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
+
+// type UserActionType = 'redacting' | 'idle' | 'inlogs' | 'inmaps';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +16,12 @@ export class WebSocketService {
 
   private ws: WebSocket;
   state: BehaviorSubject<'stoped' | 'rebooting' | 'live' | 'error' | 'loading'> = new BehaviorSubject('live');
-  constructor() {}
+  // activity: BehaviorSubject<UserActionType> = new BehaviorSubject('idle');
+  constructor(
+    private router: Router,
+    private toast: ToastService,
+    private injector: Injector
+  ) {}
 
   connect(): void {
     const URL: string = AppConfig.api.ws + '?token=' + JSON.parse(localStorage.getItem('user')).token;
@@ -47,6 +58,24 @@ export class WebSocketService {
           this.state.next(m.msg);
           break;
         }
+        case 'user-activity': {
+          console.log('%c[server]', 'color: magenta', 'activity:', m.msg);
+          break;
+        }
+        case 'expire-token': {
+          console.log('%c[ws-service]', 'color: tomato', m.msg);
+          this.toast.show(`Ваша прошлая сессия была прекращена. Токен доступа сброшен.`,
+            {
+              classname: 'bg-warning text-dark',
+              delay: 3000,
+              icon: faUserSecret,
+              subtext: 'Вашу прошлую сессию закрыл вышестоящий администратор.'
+            });
+          this.clearUserData();
+          this.disconnect();
+          this.router.navigate(['/login']);
+          break;
+        }
         default: console.error('%c[ws-service]', 'color: tomato', 'Unknown message event')
           break;
       }
@@ -61,6 +90,11 @@ export class WebSocketService {
          this.state.next('error')
        }
     }
+  }
+  clearUserData() {
+    const user = this.injector.get(UserService);
+    user.user.next(undefined);
+    localStorage.removeItem('user');
   }
   disconnect() {
     if (this.ws) this.ws.close();
