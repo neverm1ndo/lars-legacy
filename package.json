@@ -1,7 +1,7 @@
 {
   "name": "lars",
   "version": "0.9.12",
-  "description": "Program to control Liberty server",
+  "description": "GTA-Liberty Admin Remote Service",
   "homepage": "https://github.com/neverm1ndo/lars",
   "author": {
     "name": "neverm1ndo",
