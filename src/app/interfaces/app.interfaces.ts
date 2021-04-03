@@ -1,5 +1,5 @@
 export interface WsMessage {
-  event: 'reboot-server' | 'launch-server' | 'stop-server' | 'get-status';
+  event: 'reboot-server' | 'launch-server' | 'stop-server' | 'get-status' | 'user-action';
   msg?: string,
   options?: any;
   token?: string;

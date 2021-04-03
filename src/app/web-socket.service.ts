@@ -2,12 +2,13 @@ import { Injectable, Injector } from '@angular/core';
 import { WsMessage } from './interfaces/app.interfaces';
 import { AppConfig } from '../environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { ToastService } from './toast.service';
 import { UserService } from './user.service';
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { filter } from 'rxjs/operators';
 
-// type UserActionType = 'redacting' | 'idle' | 'inlogs' | 'inmaps';
+//type UserActionType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,30 @@ import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
 export class WebSocketService {
 
   private ws: WebSocket;
+  usersStates = {};
   state: BehaviorSubject<'stoped' | 'rebooting' | 'live' | 'error' | 'loading'> = new BehaviorSubject('live');
   // activity: BehaviorSubject<UserActionType> = new BehaviorSubject('idle');
   constructor(
     private router: Router,
     private toast: ToastService,
     private injector: Injector
-  ) {}
+  ) {
+    router.events.pipe(
+      filter((val: any) => val instanceof NavigationEnd)
+    ).subscribe((val: NavigationEnd) => {
+        if(val.url){
+          switch (val.url) {
+            case '/home/dash': { this.send({event: 'user-action', msg: 'idle'}); break; }
+            case '/home/search': { this.send({event: 'user-action', msg: 'inlogs'}); break; }
+            case '/home/config-editor': { this.send({event: 'user-action', msg: 'redacting'}); break; }
+            case '/home/maps': { this.send({event: 'user-action', msg: 'inmaps'}); break; }
+            case '/home/admins': { this.send({event: 'user-action', msg: 'inadm'}); break };
+            case '/login': { this.disconnect(); break; }
+            default: break;
+          }
+        }
+      });
+  }
 
   connect(): void {
     const URL: string = AppConfig.api.ws + '?token=' + JSON.parse(localStorage.getItem('user')).token;
@@ -59,7 +77,9 @@ export class WebSocketService {
           break;
         }
         case 'user-activity': {
-          console.log('%c[server]', 'color: magenta', 'activity:', m.msg);
+          const msg = JSON.parse(m.msg);
+          // console.log('%c[server]', 'color: magenta', 'activity:', msg);
+          this.usersStates[msg.user] = msg.action;
           break;
         }
         case 'expire-token': {
@@ -91,9 +111,19 @@ export class WebSocketService {
        }
     }
   }
+  userActionTranslation(action: string) {
+    switch (action) {
+      case 'idle': return 'Спит';
+      case 'inlogs': return 'Просматривает логи';
+      case 'inmaps': return 'В редакторе карт';
+      case 'redacting': return 'В редакторе конфигов';
+      case 'inadm': return 'В спискe админов';
+      default: return '???';
+    }
+  }
   clearUserData() {
-    const user = this.injector.get(UserService);
-    user.user.next(undefined);
+    const user = this.injector.get(UserService).user;
+    user.next(undefined);
     localStorage.removeItem('user');
   }
   disconnect() {

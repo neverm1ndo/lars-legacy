@@ -1,6 +1,10 @@
 @import "scss/colors";
 :host {
   font-size: 11px;
+  .btn-36 {
+    height: 36px;
+    width: 36px;
+  }
   .adm-head {
     height: 50px;
     width: 100%;

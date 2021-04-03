@@ -24,10 +24,21 @@
                 </td>
                 <td class="td-username">
                   <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
-                  <small>{{ admin.user_email }}</small>
+                  <small>{{ admin.user_email }}</small><br>
+                  <small *ngIf="ws.usersStates[admin.username]">
+                    <fa-icon *ngIf="ws.usersStates[admin.username] == 'idle'" [icon]="fa.wind"></fa-icon>
+                    <fa-icon *ngIf="ws.usersStates[admin.username] == 'inmaps'" [icon]="fa.map"></fa-icon>
+                    <fa-icon *ngIf="ws.usersStates[admin.username] == 'inlogs'" [icon]="fa.search"></fa-icon>
+                    <fa-icon *ngIf="ws.usersStates[admin.username] == 'redacting'" [icon]="fa.conf"></fa-icon>
+                    <fa-icon *ngIf="ws.usersStates[admin.username] == 'inadm'" [icon]="fa.agent"></fa-icon>
+                    {{ ws.userActionTranslation(ws.usersStates[admin.username]) }}
+                  </small>
                 </td>
                 <td>
                   {{ admin.user_regdate*1000 | date:'d MMM yy'}}
+                </td>
+                <td>
+                  {{ admin.user_last_ip }}
                 </td>
                 <td>
                   <ng-select [items]="roles"
@@ -40,8 +51,8 @@
                              [(ngModel)]="admin.group_id">
                   </ng-select>
                 </td>
-                <td class="td-rm"><button (click)="removeAdmin(admin.username)" class="btn btn-dark rm-adm" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
-                <td class="td-rm"><button (click)="closeAdminSession(admin.username)" class="btn btn-dark rm-adm" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+                <td class="td-rm"><button (click)="removeAdmin(admin.username)" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+                <td class="td-rm"><button (click)="closeAdminSession(admin.username)" ngbTooltip="Сбросить токен доступа" class="btn btn-dark btn-36" type="button" name="button"><fa-icon [icon]="fa.poo"></fa-icon></button></td>
               </tr>
             </table>
           </div>

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user.service';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services/electron/electron.service';
+import { WebSocketService } from '../web-socket.service';
 
 @Component({
   selector: 'app-admins',
@@ -19,7 +20,12 @@ export class AdminsComponent implements OnInit {
   admins: any[] = [];
 
   fa = {
-    agent: faUserSecret
+    agent: faUserSecret,
+    poo: faPooStorm,
+    search: faSearch,
+    wind: faWind,
+    map: faMap,
+    conf: faFileSignature
   }
   popup: boolean = false;
 
@@ -47,7 +53,8 @@ export class AdminsComponent implements OnInit {
     private api: ApiService,
     public userService: UserService,
     private toast: ToastService,
-    private electron: ElectronService
+    private electron: ElectronService,
+    public ws: WebSocketService
   ) { }
 
 
@@ -136,10 +143,7 @@ export class AdminsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getAdmins();
-    // this.getFullAdminsAll();
     this.getFullAdminsList();
-    // this.getAdminSubGroup();
   }
 
 }
