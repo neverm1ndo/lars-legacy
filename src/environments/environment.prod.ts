@@ -5,10 +5,10 @@ export const AppConfig = {
     forum: 'https://gta-liberty.ru/index.php'
   },
   api: { // Dev server
-    ws: 'ws://instr.gta-liberty.ru/v2/ws',
-    main: 'http://instr.gta-liberty.ru/v2/',
-    auth: 'http://instr.gta-liberty.ru/v2/login',
-    user: 'http://instr.gta-liberty.ru/v2/login/user',
-    validation: 'http://instr.gta-liberty.ru/v2/login/check-token'
+    ws: 'wss://instr.gta-liberty.ru/',
+    main: 'https://instr.gta-liberty.ru/v2/',
+    auth: 'https://instr.gta-liberty.ru/v2/login',
+    user: 'https://instr.gta-liberty.ru/v2/login/user',
+    validation: 'https://instr.gta-liberty.ru/v2/login/check-token'
   }
 };
