@@ -8,7 +8,7 @@
               <h6><fa-icon [icon]="fa.agent"></fa-icon>Администраторский состав</h6>
             </div>
             <div class="col-6 text-right">
-              <button (click)="popup = true" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> Добавить админа</button>
+              <button [disabled]="userService.getUserInfo().gr !== 10" (click)="popup = true" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> Добавить админа</button>
             </div>
           </div>
         </div>
@@ -47,12 +47,13 @@
                              [clearable]="false"
                              bindValue="id"
                              class="custom"
+                             [disabled]="userService.getUserInfo().gr !== 10"
                              (change)="changeAdminGroup(admin.username, admin.group_id)"
                              [(ngModel)]="admin.group_id">
                   </ng-select>
                 </td>
-                <td class="td-rm"><button (click)="removeAdmin(admin.username)" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
-                <td class="td-rm"><button (click)="closeAdminSession(admin.username)" ngbTooltip="Сбросить токен доступа" class="btn btn-dark btn-36" type="button" name="button"><fa-icon [icon]="fa.poo"></fa-icon></button></td>
+                <td class="td-rm"><button (click)="removeAdmin(admin.username)" [disabled]="userService.getUserInfo().gr !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+                <td class="td-rm"><button (click)="closeAdminSession(admin.username)" [disabled]="userService.getUserInfo().gr !== 10" ngbTooltip="Сбросить токен доступа" class="btn btn-dark btn-36" type="button" name="button"><fa-icon [icon]="fa.poo"></fa-icon></button></td>
               </tr>
             </table>
           </div>

@@ -169,6 +169,11 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   border-color: $filetree;
   color: $text;
 }
+.ng-select-disabled > .ng-select-container {
+  opacity: 0.2;
+  border-color: $filetree;
+  background: $topper;
+}
 .custom {
     border: 0px;
     min-height: 0px;
