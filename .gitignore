@@ -10,9 +10,10 @@ main.js
 src/**/*.js
 !src/karma.conf.js
 *.js.map
+*.log
 
 # prod builder conf
-electron-builder.nsis.json 
+electron-builder.nsis.json
 
 # dependencies
 /node_modules

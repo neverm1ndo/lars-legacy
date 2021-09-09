@@ -21,11 +21,11 @@
       <div class="d-inline model-id" *ngIf="obj.txd">{{obj.txd }} {{obj.texture}}</div>
       <div class="d-flex" *ngIf="obj.txd"><img src="http://textures.xyin.ws/textures/texvol2/{{obj.txd}}/{{obj.texture}}.png" alt=""></div>
     </div>
-    <div class="d-flex flex-row justify-content-between">
+    <!-- <div class="d-flex flex-row justify-content-between">
       <div class="d-flex" *ngIf="obj.posX">X: {{obj.posX | number:'0.0-3'}}</div>
       <div class="d-flex" *ngIf="obj.posY">Y: {{obj.posY | number:'0.0-3'}}</div>
       <div class="d-flex" *ngIf="obj.posZ">Z: {{obj.posZ | number:'0.0-3'}}</div>
-    </div>
+    </div> -->
 </div>
 <div *ngIf="objects.objects.length > toShow.length">
   <button (click)="showOther()" class="btn btn-dark w-100" name="button">Показать еще {{ getCount() }}</button>

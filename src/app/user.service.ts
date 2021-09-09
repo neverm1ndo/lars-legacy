@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserData, UserLoginData } from './interfaces/app.interfaces';
 import { Router } from '@angular/router';
-import { AppConfig } from '../environments/environment.dev';
+import { AppConfig } from '../environments/environment';
 import { ElectronService } from './core/services/electron/electron.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 

@@ -79,6 +79,7 @@ export class MapsComponent implements OnInit {
   currentFilePath: string;
   progress: number = 0;
   mapObjects: any;
+  mode: 'view' | 'move' | 'rotate' = 'view';
 
   loading: boolean = false;
 

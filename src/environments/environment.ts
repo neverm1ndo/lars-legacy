@@ -1,14 +1,14 @@
 export const AppConfig = {
   production: false,
-  environment: 'LOCAL',
+  environment: 'DEV',
   links: {
     forum: 'https://gta-liberty.ru/index.php'
   },
-  api: { // Dev server
-    ws: 'wss://instr.gta-liberty.ru/',
-    main: 'https://instr.gta-liberty.ru/v2/',
-    auth: 'https://instr.gta-liberty.ru/v2/login',
-    user: 'https://instr.gta-liberty.ru/v2/login/user',
-    validation: 'https://instr.gta-liberty.ru/v2/login/check-token'
+  api: {
+    ws: 'wss://localhost:8443/',
+    main: 'https://localhost:8443/v2/',
+    auth: 'https://localhost:8443/v2/login',
+    user: 'https://localhost:8443/v2/login/user',
+    validation: 'https://localhost:8443/v2/login/check-token'
   }
 };

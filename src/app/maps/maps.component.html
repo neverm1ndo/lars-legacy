@@ -33,7 +33,7 @@
                   </div>
                 </div>
                 <div class="d-flex flex-fill map">
-                  <map-editor [@mapload]="api.loading" [objects]="current.objects"></map-editor>
+                  <map-editor [@mapload]="api.loading" [mode]="mode" [objects]="current.objects"></map-editor>
                   <div *ngIf="api.loading" class="blured-fix mb-0 d-flex justify-content-center">
                     <div class="loader d-flex align-self-center">
                       <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
@@ -41,7 +41,8 @@
                   </div>
                 </div>
           <div class="map-bottom d-flex justify-content-center">
-            <button disabled ngbTooltip="Переместить" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
+            <button [disabled]="mode == 'move'" ngbTooltip="Переместить" (click)="mode = 'move'" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
+            <!-- <button [disabled         ]="mode == 'move'" ngbTooltip="Переместить" (click)="mode = 'move'" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button> -->
             <button disabled ngbTooltip="Повернуть" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
             <button ngbTooltip="Сохранить локально" placement="top" (click)="saveMapLocal()" type="button" class="btn btn-light"><fa-icon [icon]="fa.down"></fa-icon></button>
             <button disabled ngbTooltip="Сохранить на сервере" placement="top" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
