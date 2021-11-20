@@ -1,4 +1,4 @@
-  <div class="col-12 top-bg">
+  <div *ngIf="electron.isElectron" class="col-12 top-bg">
     <div class="row d-flex">
       <div class="native-dragzone flex-fill">
         <lty-icon name="lty-logo"></lty-icon>
@@ -13,7 +13,7 @@
           </button>
       </div>
       <div *ngIf="authenticated" class="d-flex align-self-end btn-group top-btn" role="remote-group">
-        <div *ngIf="userService.getUserInfo().gr == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
+        <div *ngIf="userService.getUserInfo()?.gr == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
           <button
           ngbDropdownToggle
           type="button"
