@@ -86,34 +86,31 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+       return axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
         httpsAgent: agent,
         headers: {
           'Authorization': 'Bearer ' + JSON.parse(result).token
         }
       })
-      .then(() => {
-        splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
-      })
-      .catch((err)=> {
-        win.webContents.send('token-verify-denied', true);
-        console.error(err);
-        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
-      }).finally(() => {
-        setTimeout(() => {
-          splash.close();
-          win.show();
-          state.manage(win);
-        }, 2000);
-      });
-    }).catch((err) => {
+    })
+    .then(() => {
+      splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
+    })
+    .catch((err)=> {
+      win.webContents.send('token-verify-denied', true);
+      console.error(err);
+      splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
+    })
+    .catch((err) => {
       win.webContents.send('token-verify-denied', true);
       splash.webContents.executeJavaScript(`changeStatus("Токен отсутствует: ${err.message}", 100);`, true);
+    }).finally(() => {
       setTimeout(() => {
         splash.close();
         win.show();
+        state.manage(win);
       }, 2000);
-    });
+    })
   });
 
   if (serve) {
