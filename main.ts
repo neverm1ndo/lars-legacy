@@ -4,12 +4,18 @@ import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import axios from 'axios';
+import { Agent } from 'https';
 import { createWriteStream } from 'fs';
 
 let win: BrowserWindow = null;
 let splash: BrowserWindow = null;
 const args: string[] = process.argv.slice(1),
       serve = args.some(val => val === '--serve');
+
+// FIXME: Insecure HACK (TLS/CA)
+const agent: Agent = new Agent({
+  rejectUnauthorized: false
+});
 
 // Windows
 function splashWindow() {
@@ -80,9 +86,11 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+      axios.get('https://localhost:8443/v2/login/check-token', {
+      // axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+        httpsAgent: agent,
         headers: {
-          'Authorization': JSON.parse(result).token
+          'Authorization': 'Bearer ' + JSON.parse(result).token
         }
       })
       .then(() => {
@@ -90,7 +98,8 @@ function createWindow(): BrowserWindow {
       })
       .catch((err)=> {
         win.webContents.send('token-verify-denied', true);
-        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.message}", 100);`, true);
+        console.error(err);
+        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
       }).finally(() => {
         setTimeout(() => {
           splash.close();
