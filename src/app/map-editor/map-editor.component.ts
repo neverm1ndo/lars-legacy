@@ -109,7 +109,7 @@ export class MapEditorComponent implements OnInit {
          ctx.strokeStyle = '#fdfdfd';
           ctx.lineWidth = 1;
          ctx.beginPath();
-         ctx.arc(+obj.posX * 0.33 + this.viewport.x + this.imgSize/2, +obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 10, 0, 2 * Math.PI, false);
+         ctx.arc(+obj.posX * 0.33 + this.viewport.x + this.imgSize/2, +obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
          ctx.closePath();
          ctx.fill();
          ctx.stroke();
@@ -235,11 +235,13 @@ export class MapEditorComponent implements OnInit {
          y: event.pageY - this.canvas.nativeElement.offsetTop
        }
      drag = true;
-     if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
-       // rotate = true;
-       drag = false;
-       // console.log(this.dots);
-       move = true;
+     if (this.dots) {
+       if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
+         // rotate = true;
+         drag = false;
+         // console.log(this.dots);
+         move = true;
+       }
      }
     })
     this.canvas.nativeElement.addEventListener('mouseup', function () {
