@@ -86,8 +86,7 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     win.webContents.executeJavaScript('localStorage.getItem("user");', true)
     .then(result => {
-      axios.get('https://localhost:8443/v2/login/check-token', {
-      // axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+      axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
         httpsAgent: agent,
         headers: {
           'Authorization': 'Bearer ' + JSON.parse(result).token
@@ -104,6 +103,7 @@ function createWindow(): BrowserWindow {
         setTimeout(() => {
           splash.close();
           win.show();
+          state.manage(win);
         }, 2000);
       });
     }).catch((err) => {
