@@ -265,11 +265,10 @@ export class MapEditorComponent implements OnInit {
          y: event.pageY - this.canvas.nativeElement.offsetTop
        }
      drag = true;
-     if (this.dots) {
+     if (this.dots && this.mode === 'move') {
        if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
-         // rotate = true;
+         rotate = false;
          drag = false;
-         // console.log(this.dots);
          move = true;
        }
      }
