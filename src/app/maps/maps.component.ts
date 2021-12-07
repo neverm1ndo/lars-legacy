@@ -3,19 +3,19 @@ import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faMap, faPlus, faCubes, faDraftingCompass, faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns } from '@fortawesome/free-solid-svg-icons';
+import { faMap, faPlus, faCubes, faDraftingCompass, faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns, faArchway, faCross } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
-import { mapload } from '../app.animations';
+import { mapload, panelSwitch } from '../app.animations';
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.scss'],
-  animations: [ mapload ]
+  animations: [ mapload, panelSwitch ]
 })
 export class MapsComponent implements OnInit {
 
@@ -95,7 +95,9 @@ export class MapsComponent implements OnInit {
     sign: faMapSigns,
     cubes: faCubes,
     replace: faRoute,
-    rotate: faDraftingCompass
+    rotate: faDraftingCompass,
+    arch: faArchway,
+    cross: faCross
   }
 
   chooseDir(dir: string) {

@@ -26,6 +26,32 @@ export const settings = trigger('settings', [
           ]))
         ])
 ]);
+export const panelSwitch = trigger('panelSwitch', [
+  state('*', style({ opacity : '1', transform: 'translateY(0px)', position: 'fixed'  })),
+    state('void', style({
+       opacity : '0', transform: 'translateY(20px)', position: 'fixed'
+    })),
+        transition('void => *', [
+          style({
+             opacity : '0', transform: 'translateY(20px)', position: 'fixed'
+          }),
+          animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ opacity : '0', transform: 'translateY(20px)', position: 'fixed'  }),
+            style({ opacity : '1', transform: 'translateY(0px)', position: 'fixed'  })
+          ]))
+        ]),
+        transition('* => void', [
+          style({
+             opacity : '1', transform: 'translateY(0px)', position: 'fixed'
+          }),
+          animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ opacity : '1', transform: 'translateY(0px)', position: 'fixed'  }),
+            style({ opacity : '0', transform: 'translateY(20px)', position: 'fixed'  })
+          ]))
+        ])
+]);
 export const flipListItem =  trigger('flipListItem', [
       state('active', style({
         transform: 'rotateY(179.9deg)'
