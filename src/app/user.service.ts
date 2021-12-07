@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
 import { ElectronService } from './core/services/electron/electron.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { Workgroup } from './enums/workgroup.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +34,12 @@ export class UserService {
   }
   getUserGroupName(userGroup: number): string {
     switch (userGroup) {
-      case 9: return 'Претендент';
-      case 10: return 'Разработчик';
-      case 11: return 'Админ';
-      case 12: return 'Маппер';
-      case 13: return 'Редактор конфигурационных файлов';
-      case 14: return 'Бэкапер';
+      case Workgroup.Challenger: return 'Претендент';
+      case Workgroup.Dev: return 'Разработчик';
+      case Workgroup.Admin: return 'Админ';
+      case Workgroup.Mapper: return 'Маппер';
+      case Workgroup.CFR: return 'Редактор конфигурационных файлов';
+      case Workgroup.Backuper: return 'Бэкапер';
       default: return 'Игрок';
     }
   }
