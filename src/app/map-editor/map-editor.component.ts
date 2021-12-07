@@ -7,6 +7,11 @@ interface Viewport {
   dy: number;
 }
 
+type Position2 = {
+  x: number;
+  y: number;
+}
+
 class Vector2 {
   public x: number = 0;
   public y: number = 0
@@ -51,6 +56,10 @@ export class MapEditorComponent implements OnInit {
     dy: 0
   }
   dots: any;
+  positions = {
+    old: { x: 0, y: 0 },
+    new: { x: 0, y: 0 },
+  };
 
   constructor(private hostElem: ElementRef) {}
 
@@ -187,6 +196,22 @@ export class MapEditorComponent implements OnInit {
         }
      }
 
+     const drawPosDot = (oldPos: Position2, newPos: Position2) => {
+       ctx.fillStyle = '#4287f5';
+       ctx.strokeStyle = '#4287f5';
+       ctx.beginPath();
+       ctx.arc(oldPos.x , oldPos.y, 3, 0, 2 * Math.PI, false);
+       ctx.fill();
+       ctx.moveTo(oldPos.x, oldPos.y)
+       ctx.lineTo(newPos.x, newPos.y);
+       ctx.closePath();
+       ctx.stroke();
+       ctx.fillStyle = '#fdfdfd';
+       ctx.fillText(`Prev position`, oldPos.x , oldPos.y - 20);
+       ctx.fillStyle = '#fdfdfd70';
+       ctx.fillText(`${oldPos.x}\n ${oldPos.y}`, oldPos.x , oldPos.y - 10);
+     }
+
      const drawRect = (dots: any) => {
        ctx.font = '10px sans-serif'
        ctx.fillStyle = '#fdfdfd70';
@@ -212,14 +237,19 @@ export class MapEditorComponent implements OnInit {
          ctx.fillStyle = '#ffffff';
          ctx.lineWidth = 2;
          let center = getRectCenter();
+         if (!this.positions.old.x) {
+           this.positions.old = center;
+         }
          ctx.beginPath();
          ctx.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
          ctx.closePath();
          ctx.fill();
          ctx.stroke();
+         ctx.fillText(`Move`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
+         drawPosDot(this.positions.old, center);
        }
        if (rotate) {
-         ctx.fillText(`Rotate`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 20)
+         ctx.fillText(`Rotate`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
        }
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
@@ -258,6 +288,10 @@ export class MapEditorComponent implements OnInit {
       if (drag && !move) {
         this.viewport.x = this.viewport.x - (dragStart.x - dragEnd.x);
         this.viewport.y = this.viewport.y - (dragStart.y - dragEnd.y);
+        if (this.positions.old.x) {
+          this.positions.old.x = this.positions.old.x - (dragStart.x - dragEnd.x);
+          this.positions.old.y = this.positions.old.y - (dragStart.y - dragEnd.y);
+        }
         dragStart = dragEnd;
       }
       if (move) {
