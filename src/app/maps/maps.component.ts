@@ -82,6 +82,7 @@ export class MapsComponent implements OnInit {
   current: any;
   xml: string;
   currentFilePath: string;
+  currentFileName: string;
   progress: number = 0;
   mapObjects: any;
   mode: 'view' | 'move' | 'rotate' = 'view';
@@ -163,7 +164,7 @@ export class MapsComponent implements OnInit {
       {
         title: 'Сохранить карту как',
         buttonLabel: 'Сохранить',
-        defaultPath: this.current.name,
+        defaultPath: this.currentFileName,
         filters: [
           { name: 'Maps(*.map, *.off)', extensions: ['map', 'off'] },
           { name: 'All Files', extensions: ['*'] }
@@ -174,7 +175,7 @@ export class MapsComponent implements OnInit {
             if (err) throw err;
           });
           this.mapEditor.changed = false;
-          this.toast.show(`Карта <b>${ this.current.name }</b> успешно сохранена`,
+          this.toast.show(`Карта <b>${ this.currentFileName }</b> успешно сохранена`,
             {
               classname: 'bg-success text-light',
               delay: 3000,
@@ -221,7 +222,7 @@ export class MapsComponent implements OnInit {
       this.api.getMap(path.path).subscribe(map => {
         this.current = this.mapToObject(map);
         this.xml = map;
-        this.current.name = path.name;
+        this.currentFileName = path.name;
         this.api.loading = false;
       })
     } else {
@@ -244,7 +245,7 @@ export class MapsComponent implements OnInit {
           this.api.getMap(path.path).subscribe(map => {
             this.current = this.mapToObject(map);
             this.xml = map;
-            this.current.name = path.name;
+            this.currentFileName = path.name;
             this.api.loading = false;
           })
         }).finally(() => {
@@ -265,7 +266,7 @@ export class MapsComponent implements OnInit {
       val => {
         if (val.response === 0) {
           /*sub =*/ this.api.deleteMap(this.currentFilePath).subscribe(() => {
-            this.toast.show(`Карта <b>${ this.current.name }</b> удалена с сервера`,
+            this.toast.show(`Карта <b>${ this.currentFileName }</b> удалена с сервера`,
               {
                 classname: 'bg-success text-light',
                 delay: 3000,
@@ -295,7 +296,7 @@ export class MapsComponent implements OnInit {
           const blob = new Blob([this.objectToMap(this.mapEditor._objects)], { type: 'text/plain' })
           form.append('file', blob, this.currentFilePath);
           /*sub =*/ this.api.uploadFileMap(form).subscribe(() => {
-            this.toast.show(`Карта <b>${ this.current.name }</b> успешно перезаписана`,
+            this.toast.show(`Карта <b>${ this.currentFileName }</b> успешно перезаписана`,
               {
                 classname: 'bg-success text-light',
                 delay: 3000,
