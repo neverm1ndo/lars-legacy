@@ -1,6 +1,11 @@
 {
   "productName": "LARS",
   "copyright": "MIT © 2020 ${author}",
+  "appId": "ru.nmnd.lars",
+  "publish": {
+    "provider": "github",
+    "owner": "neverm1ndo",
+  },
   "directories": {
     "output": "release/"
   },
