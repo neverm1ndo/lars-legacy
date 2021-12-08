@@ -9,7 +9,7 @@ import { faMap, faPlus, faCubes, faDraftingCompass,
   faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
@@ -295,7 +295,7 @@ export class MapsComponent implements OnInit {
           const form = new FormData();
           const blob = new Blob([this.objectToMap(this.mapEditor._objects)], { type: 'text/plain' })
           form.append('file', blob, this.currentFilePath);
-          /*sub =*/ this.api.uploadFileMap(form).subscribe(() => {
+          /*sub =*/ this.api.uploadFileMap(form).pipe(take(1)).subscribe(() => {
             this.toast.show(`Карта <b>${ this.currentFileName }</b> успешно перезаписана`,
               {
                 classname: 'bg-success text-light',
