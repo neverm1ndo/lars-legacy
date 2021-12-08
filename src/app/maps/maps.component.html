@@ -13,7 +13,11 @@
             <div class="d-flex justify-content-stretch align-items-center flex-fill overflow-hidden">
               <div class="d-flex flex-column h-100 w-100">
                 <div class="d-flex justify-content-between flex-row overflow-hidden title w-100 map-top">
-                  <div><span class="badge badge-light"><fa-icon [icon]="fa.map"></fa-icon><span class="pre-badge">{{ current.name }}</span></span></div>
+                  <div>
+                    <span class="badge badge-light"><fa-icon [icon]="fa.map"></fa-icon>
+                      <span class="pre-badge">{{ current.name }}</span>
+                    </span>
+                  </div>
                   <div>
                     <span placement="left" [ngbTooltip]="limitOk" *ngIf="current.objects.length <= 380" class="badge badge-success">
                       <fa-icon [icon]="fa.cubes"></fa-icon>
@@ -49,7 +53,7 @@
               <button ngbTooltip="Переместить" (click)="mode = (mode === 'view'?'move':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
               <button disabled ngbTooltip="Повернуть" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
               <button ngbTooltip="Сохранить локально" placement="top" (click)="saveMapLocal()" type="button" class="btn btn-light"><fa-icon [icon]="fa.down"></fa-icon></button>
-              <button disabled ngbTooltip="Сохранить на сервере" placement="top" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
+              <button ngbTooltip="Сохранить на сервере" placement="top" (click)="saveMapCloud()" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
               <button ngbTooltip="Удалить" placement="top" (click)="deleteMapCloud()" type="button" class="btn btn-light"><fa-icon [icon]="fa.trash"></fa-icon></button>
             </div>
           </div>

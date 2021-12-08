@@ -3,19 +3,23 @@ import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { faMap, faPlus, faCubes, faDraftingCompass, faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash, faCheckCircle, faInfo, faSave, faMapSigns, faArchway, faCross } from '@fortawesome/free-solid-svg-icons';
+import { faMap, faPlus, faCubes, faDraftingCompass,
+  faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash,
+  faCheckCircle, faInfo, faSave, faMapSigns, faArchway,
+  faTimes } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
-import { mapload, panelSwitch } from '../app.animations';
+import { MapEditorComponent } from '../map-editor/map-editor.component';
+import { mapload, panelSwitch, extrudeToRight } from '../app.animations';
 
 @Component({
   selector: 'app-maps',
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.scss'],
-  animations: [ mapload, panelSwitch ]
+  animations: [ mapload, panelSwitch, extrudeToRight ]
 })
 export class MapsComponent implements OnInit {
 
@@ -67,6 +71,7 @@ export class MapsComponent implements OnInit {
    }
 
    @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
+   @ViewChild(MapEditorComponent) mapEditor: MapEditorComponent;
 
   files: TreeNode;
   expanded: string[] = [];
@@ -97,7 +102,7 @@ export class MapsComponent implements OnInit {
     replace: faRoute,
     rotate: faDraftingCompass,
     arch: faArchway,
-    cross: faCross
+    cross: faTimes
   }
 
   chooseDir(dir: string) {
@@ -108,6 +113,21 @@ export class MapsComponent implements OnInit {
     }
   }
 
+  objectToMap(object: any[]): string {
+    let res: string = '';
+    for (let i = 0; i < object.length; i++) {
+      Object.keys(object[i]).forEach((e: string, j: number) => {
+        if (j === 0) {
+          res += `<${object[i][e]} `
+        }
+        else { res += `${e}="${object[i][e]}" `};
+        if (j === Object.keys(object[i]).length - 1) {
+          res += `/>\n`;
+        }
+      });
+    }
+    return `<map edf:definitions="editor_main">\n` + res + '<!--\n LARS gta-liberty.ru\n-->\n' + '</map>';
+  }
   mapToObject(xml: string) {
     let parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
@@ -115,22 +135,31 @@ export class MapsComponent implements OnInit {
     let object: { objects: any[]} = {
       objects: []
     };
-    const elems = map.getElementsByTagName('map')[0].children;
-    for (let i = 0; i < elems.length; i++) {
-      const attrs = elems[i].attributes;
-      let obj = { name: elems[i].tagName };
-      for (let i = 0; i < attrs.length; i++) {
-        obj[attrs[i].name] = attrs[i].value;
+    if (map.getElementsByTagName('map')[0]) {
+      const elems = map.getElementsByTagName('map')[0].children;
+      for (let i = 0; i < elems.length; i++) {
+        const attrs = elems[i].attributes;
+        let obj = { name: elems[i].tagName };
+        for (let i = 0; i < attrs.length; i++) {
+          obj[attrs[i].name] = attrs[i].value;
+        }
+        if (obj.name !== 'parsererror') {
+          object.objects.push(obj);
+        }
       }
-      if (obj.name !== 'parsererror') {
-        object.objects.push(obj);
-      }
+      return object;
+    } else {
+      this.toast.show(`Ошибка парсинга карты: MAP_PRS_ERR`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: 'Отсутствует тег <map>'
+         });
     }
-    return object;
   }
-
-  saveMapLocal(): void {
-    this.electron.dialog.showSaveDialog(
+  async saveMapLocal() {
+    return this.electron.dialog.showSaveDialog(
       {
         title: 'Сохранить карту как',
         buttonLabel: 'Сохранить',
@@ -141,9 +170,10 @@ export class MapsComponent implements OnInit {
         ]
       }).then(res => {
         if (res.filePath && !res.canceled) {
-          this.electron.fs.writeFile(res.filePath, this.xml, 'utf8', (err) => {
+          this.electron.fs.writeFile(res.filePath, this.objectToMap(this.mapEditor._objects), 'utf8', (err) => {
             if (err) throw err;
           });
+          this.mapEditor.changed = false;
           this.toast.show(`Карта <b>${ this.current.name }</b> успешно сохранена`,
             {
               classname: 'bg-success text-light',
@@ -160,18 +190,49 @@ export class MapsComponent implements OnInit {
             icon: faInfo,
             subtext: res.message
            });
-        console.error(res);
       })
   }
 
-  getMap(path: { path: string, name?: string}) {
-    this.currentFilePath = path.path;
-    this.api.getMap(path.path).subscribe(map => {
-      this.current = this.mapToObject(map);
-      this.xml = map;
-      this.current.name = path.name;
-      this.api.loading = false;
-    })
+  isChanged(): boolean {
+    if (!this.mapEditor) return false;
+    return this.mapEditor.changed || this.mode !== 'view';
+  }
+  getMap(path: { path: string, name?: string}): void {
+    if (!this.isChanged()) {
+      this.currentFilePath = path.path;
+      this.api.getMap(path.path).subscribe(map => {
+        this.current = this.mapToObject(map);
+        this.xml = map;
+        this.current.name = path.name;
+        this.api.loading = false;
+      })
+    } else {
+      const dialogOpts = {
+          type: 'warning',
+          buttons: ['Да', 'Нет'],
+          title: `Подтверждение отмены изменений`,
+          message: `Есть несохраненные изменения в файле ${this.currentFilePath}. Сохранить изменения?`
+        }
+        this.electron.dialog.showMessageBox(dialogOpts).then(
+          val => {
+            if (val.response === 0) {
+              return this.saveMapLocal()
+            } else {
+              return Promise.resolve();
+            }
+          }
+        ).then(() => {
+          this.reloadFileTree();
+          this.api.getMap(path.path).subscribe(map => {
+            this.current = this.mapToObject(map);
+            this.xml = map;
+            this.current.name = path.name;
+            this.api.loading = false;
+          })
+        }).finally(() => {
+          this.mode = 'view';
+        });
+    }
   }
 
   deleteMapCloud(): void {
@@ -202,7 +263,34 @@ export class MapsComponent implements OnInit {
     });
   }
 
-  saveMapCloud(): void {}
+  saveMapCloud(): void {
+    const dialogOpts = {
+        type: 'info',
+        buttons: ['Сохранить', 'Отмена'],
+        title: `Подтверждение сохранения на сервере`,
+        message: `Вы точно хотите сохранить карту ${this.currentFilePath}? После подтверждения она будет перезаписана на сервере.`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then(
+      val => {
+        if (val.response === 0) {
+          const form = new FormData();
+          const blob = new Blob([this.objectToMap(this.mapEditor._objects)], { type: 'text/plain' })
+          form.append('file', blob, this.currentFilePath);
+          /*sub =*/ this.api.uploadFileMap(form).subscribe(() => {
+            this.toast.show(`Карта <b>${ this.current.name }</b> успешно перезаписана`,
+              {
+                classname: 'bg-success text-light',
+                delay: 3000,
+                icon: faSave,
+                subtext: this.currentFilePath
+              });
+          });
+        }
+      }
+    ).finally(() => {
+      this.reloadFileTree();
+    });
+  }
 
   addNewMap(event: any): void {
     let files: any[];
@@ -251,7 +339,6 @@ export class MapsComponent implements OnInit {
     this.route.queryParams.pipe(
       filter(params => (params.name || params.path))
     ).subscribe(params => {
-      console.log(params);
       this.currentFilePath = params.path;
       this.getMap({path: params.path, name: params.name});
     });

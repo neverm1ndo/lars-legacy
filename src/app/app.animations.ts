@@ -26,6 +26,32 @@ export const settings = trigger('settings', [
           ]))
         ])
 ]);
+export const extrudeToRight = trigger('extrudeRight', [
+  state('*', style({ opacity : '1', transform: 'scale(1, 1)', })),
+    state('void', style({
+       opacity : '0', transform: 'scale(0, 1)',
+    })),
+        transition('void => *', [
+          style({
+             opacity : '0', transform: 'scale(0, 1)',
+          }),
+          animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ opacity : '0', transform: 'scale(0, 1)', }),
+            style({ opacity : '1', transform: 'scale(1, 1)',  })
+          ]))
+        ]),
+        transition('* => void', [
+          style({
+             opacity : '1', transform: 'scale(1)'
+          }),
+          animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          keyframes([
+            style({ opacity : '1', transform: 'scale(1, 1)',  }),
+            style({ opacity : '0', transform: 'scale(0, 1)', })
+          ]))
+        ])
+]);
 export const panelSwitch = trigger('panelSwitch', [
   state('*', style({ opacity : '1', transform: 'translateY(0px)', position: 'fixed'  })),
     state('void', style({

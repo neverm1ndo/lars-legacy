@@ -24,6 +24,9 @@ class Vector2 {
     console.log(this.x, this.y);
     return Math.abs(this.x) + Math.abs(this.y);
   }
+  valueOf() {
+    return [this.x, this.y];
+  }
 }
 
 @Component({
@@ -42,7 +45,6 @@ export class MapEditorComponent implements OnInit {
   }
   @Input('mode') mode: 'move' | 'rotate' | 'view' = 'view';
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
-  @Output() changedMap: EventEmitter<string> = new EventEmitter<string>();
   @HostListener('window:resize', ['$event']) onResize() {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
@@ -60,6 +62,7 @@ export class MapEditorComponent implements OnInit {
     old: { x: 0, y: 0 },
     new: { x: 0, y: 0 },
   };
+  changed: boolean = false;
 
   constructor(private hostElem: ElementRef) {}
 
@@ -85,10 +88,6 @@ export class MapEditorComponent implements OnInit {
   private viewportTo(x: number, y: number): void {
     this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-0.33);
     this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*0.33);
-  }
-
-  saveChangedMap(map: string) {
-    this.changedMap.emit(map);
   }
 
   mapView(): void {
@@ -270,14 +269,17 @@ export class MapEditorComponent implements OnInit {
          rotate = false;
          drag = false;
          move = true;
+         if (!this.changed && (((dragStart.x - dragEnd.x) === 0) || ((dragStart.y - dragEnd.y) === 0))) {
+           this.changed = true;
+         }
        }
      }
     })
-    this.canvas.nativeElement.addEventListener('mouseup', function () {
+    this.canvas.nativeElement.addEventListener('mouseup', () => {
      drag = false;
      move = false;
      rotate = false;
-     this.style.cursor = '-webkit-grab';
+     this.canvas.nativeElement.style.cursor = '-webkit-grab';
     })
     this.canvas.nativeElement.addEventListener('mousemove', (event) => {
       dragEnd = {
@@ -304,7 +306,6 @@ export class MapEditorComponent implements OnInit {
         }
         // console.log(getRelativeRotationDegree(event.offsetX, event.offsetY))
         rotateObjects(getRelativeRotationDegree(event.offsetX, event.offsetY));
-        // console.log(this.dots);
       }
       // if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, radius: 10})) {
       //   this.canvas.nativeElement.style.cursor = 'move';
@@ -333,6 +334,11 @@ export class MapEditorComponent implements OnInit {
       dx: this.imgSize,
       dy: this.imgSize
     }
+    this.positions = {
+      old: { x: 0, y: 0 },
+      new: { x: 0, y: 0 },
+    };
+    this.changed = false;
     this.mapView();
   }
 

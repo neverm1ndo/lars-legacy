@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { faFolder, faMap, faFileCode, faDatabase, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { TreeNode } from '../interfaces/app.interfaces';
-import { ElectronService } from '../core/services/electron/electron.service';
 
 @Component({
   selector: 'file-tree-item',
@@ -36,7 +35,7 @@ export class FileTreeItemComponent implements OnInit {
     return name.includes('.db') || name.includes('.cadb');
   }
 
-  constructor(private electron: ElectronService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
