@@ -192,6 +192,24 @@ export class MapsComponent implements OnInit {
            });
       })
   }
+  cancelChanges() {
+    const dialogOpts = {
+        type: 'warning',
+        buttons: ['Да', 'Нет'],
+        title: `Подтверждение отмены изменений`,
+        message: `Есть несохраненные изменения в файле ${this.currentFilePath}. Отменить все изменения?`
+      }
+      if (this.mapEditor.changed) {
+        this.electron.dialog.showMessageBox(dialogOpts).then(
+          val => {
+            if (val.response === 0) {
+              this.mode = 'view';
+              this.current = this.mapToObject(this.xml);
+            }
+          }
+        )
+      }
+  }
 
   isChanged(): boolean {
     if (!this.mapEditor) return false;

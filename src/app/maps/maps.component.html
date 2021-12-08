@@ -47,7 +47,7 @@
           <div class="map-bottom d-flex flex-column flex-nowrap justify-content-center align-items-center">
             <div [@panelSwitch] *ngIf="mode !== 'view'" class="d-flex">
               <button ngbTooltip="Зафиксировать" (click)="mode = (mode === 'view'?'move':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.arch"></fa-icon></button>
-              <button ngbTooltip="Отменить" placement="top" type="button" class="btn btn-light  align-self-center"><fa-icon [icon]="fa.cross"></fa-icon></button>
+              <button ngbTooltip="Отменить" (click)="cancelChanges()" placement="top" type="button" class="btn btn-light  align-self-center"><fa-icon [icon]="fa.cross"></fa-icon></button>
             </div>
             <div [@panelSwitch] *ngIf="mode === 'view'" class="d-flex justify-content-center">
               <button ngbTooltip="Переместить" (click)="mode = (mode === 'view'?'move':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
