@@ -11,6 +11,13 @@
     "type": "git",
     "url": "https://github.com/neverm1ndo/lars.git"
   },
+  "build": {
+    "publish": [{
+        "provider": "github",
+        "owner": "neverm1ndo",
+        "repo": "lars"
+    }]
+  },
   "keywords": [],
   "main": "main.js",
   "private": true,
@@ -20,7 +27,7 @@
     "pack": "electron-builder --dir",
     "start": "npm-run-all -p electron:serve ng:serve",
     "build": "npm run electron:serve-tsc && ng build --base-href ./",
-    "deploy": "electron-builder build --publish always --x64 -c ./electron-builder.nsis.json",
+    "deploy": "electron-builder build --publish always --x64 --ia32 -c ./electron-builder.json",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
     "ng:serve": "ng serve -c web -o",
