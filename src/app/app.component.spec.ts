@@ -3,12 +3,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ElectronService } from './core/services';
+import { Router } from '@angular/router';
 
 describe('AppComponent', () => {
+
+  let router = {
+    navigate: jasmine.createSpy('navigate')
+  }
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
-      providers: [ElectronService],
+      providers: [ElectronService,
+      { provide: Router, useValue: router }  ],
       imports: [RouterTestingModule, TranslateModule.forRoot()]
     }).compileComponents();
   }));

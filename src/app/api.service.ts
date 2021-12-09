@@ -44,7 +44,7 @@ export class ApiService {
     private http: HttpClient,
     private user: UserService
   ) {
-    this.chunkSize = this.user.getUserSettings().lineChunk;
+    this.chunkSize = this.user.getUserSettings().lineChunk.toString();
   }
   getAdminsList(): Observable<any> {
     return this.http.get(this.URL_ADMINS_LIST);

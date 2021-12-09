@@ -124,6 +124,7 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
+            "codeCoverage": true,
             "scripts": [],
             "styles": [
               "src/styles.scss"

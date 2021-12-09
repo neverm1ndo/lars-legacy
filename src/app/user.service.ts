@@ -9,6 +9,13 @@ import { ElectronService } from './core/services/electron/electron.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Workgroup } from './enums/workgroup.enum';
 
+interface UserSettings {
+  tray: boolean;
+  lineChunk: number;
+  listStyle: string;
+  textEditorStyle: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,20 +50,19 @@ export class UserService {
       default: return 'Игрок';
     }
   }
-  getUserSettings(): any {
-    if (!localStorage.getItem('settings')) {
-      localStorage.setItem('settings', JSON.stringify({
-        tray: false,
-        lineChunk: 100,
-        listStyle: 'small',
-        textEditorStyle: 'material'
-      }));
+  getUserSettings(): UserSettings {
+    let userSettings = JSON.parse(window.localStorage.getItem('settings'));
+    const defaultSettings: UserSettings = {
+      tray: false,
+      lineChunk: 100,
+      listStyle: 'small',
+      textEditorStyle: 'material'
     }
-    if (localStorage.getItem('settings') !== null) {
-      return JSON.parse(localStorage.getItem('settings'));
-    } else {
-      return null;
+    if (!userSettings) {
+      window.localStorage.setItem('settings', JSON.stringify(defaultSettings));
+      return defaultSettings;
     }
+    return userSettings;
   }
 
   openUserProfile(id: number): void {
@@ -71,27 +77,31 @@ export class UserService {
     }
   }
   isAuthenticated(): boolean {
-    if (this.getUserInfo()) {
-      const token = this.getUserInfo().token;
-      if (token) return true;
-    } else {
-      return false;
+    const userInfo = this.getUserInfo();
+    if (userInfo?.token) {
+      return true;
     }
+    return false;
   }
+
+  setUpUser(user: UserData): Observable<number> {
+    return this.idbService.add('user', {
+      name: user.name,
+      avatar: user.avatar,
+      id: user.id,
+      group: user.gr
+    })
+  }
+
   loginUser(value: UserLoginData): Observable<UserData> {
     return this.http.post<UserLoginData>(this.URL_LOGIN, value, { headers: this.headers })
     .pipe(
       catchError((error) => this.handleError(error))
     ).pipe(
-      tap(user => {
+      tap((user: UserData) => {
         if (user && user.token) {
-          localStorage.setItem('user', JSON.stringify(user));
-          const addUserSub = this.idbService.add('user', {
-            name: user.name,
-            avatar: user.avatar,
-            id: user.id,
-            group: user.gr
-          }).subscribe(() => {
+          window.localStorage.setItem('user', JSON.stringify(user));
+          const addUserSub = this.setUpUser(user).subscribe(() => {
             const johnny = this.idbService.add('user', { name: 'JohnnyTheDog', id: 42, group: 12, avatar: './assets/images/doge.png'}).subscribe(() => johnny.unsubscribe());
             addUserSub.unsubscribe();
           });
@@ -100,19 +110,21 @@ export class UserService {
         return user;
     }))
   }
-  logOut(): void {
+  async logOut(): Promise<any> {
     const dialogOpts = {
         type: 'question',
         buttons: ['Да, выйти', 'Отмена'],
         title: 'Подтверждение выхода',
         message: 'Вы точно хотите выйти с аккаунта?'
       }
-    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    return this.electron.dialog.showMessageBox(dialogOpts)
+    .then((returnValue) => {
       if (returnValue.response === 0) {
         this.user.next(undefined);
         localStorage.removeItem('user');
-        this.router.navigate(['/login']);
+        return this.router.navigate(['/login']);
       }
+      throw 'REJECTED BY USER'
     })
   }
   private handleError(error: HttpErrorResponse): Observable<any> {

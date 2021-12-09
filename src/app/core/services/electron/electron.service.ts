@@ -28,9 +28,9 @@ export class ElectronService {
     if (this.isElectron) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
-      this.dialog = window.require('electron').remote.dialog;
       // If you wan to use remote object, pleanse set enableRemoteModule to true in main.ts
       this.remote = window.require('electron').remote;
+      this.dialog = this.remote.dialog;
       this.shell = window.require('electron').shell;
       this.clipboard = window.require('electron').clipboard;
       this.childProcess = window.require('child_process');

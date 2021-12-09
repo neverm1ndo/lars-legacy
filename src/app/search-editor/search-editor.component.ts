@@ -90,7 +90,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   search(query: any): void {
     let sq: SearchQuery = this.parseSearchQuery(query.query);
     this.chunks = [];
-    sq.lim = this.user.getUserSettings().lineChunk;
+    sq.lim = this.user.getUserSettings().lineChunk.toString();
     this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
     if (this.api.lastQuery !== sq) {
