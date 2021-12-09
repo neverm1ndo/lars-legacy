@@ -2,11 +2,32 @@ import { TestBed } from '@angular/core/testing';
 
 import { ElectronService } from './electron.service';
 
+
 describe('ElectronService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: ElectronService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [ElectronService]
+    });
+    service = TestBed.inject(ElectronService);
+  });
 
   it('should be created', () => {
-    const service: ElectronService = TestBed.get(ElectronService);
     expect(service).toBeTruthy();
   });
+  it('should define all necessary electron deps', () => {
+    expect(service.ipcRenderer).toBeTruthy();
+    expect(service.webFrame).toBeTruthy();
+    expect(service.remote).toBeTruthy();
+    expect(service.dialog).toBeTruthy();
+    expect(service.shell).toBeTruthy();
+    expect(service.clipboard).toBeTruthy();
+    expect(service.childProcess).toBeTruthy();
+    expect(service.fs).toBeTruthy();
+  });
+  it('should return false if running out of Electron', () => {
+    spyOnProperty(service, 'isElectron').and.returnValue(false);
+    expect(service.isElectron).toEqual(false);
+  })
 });
