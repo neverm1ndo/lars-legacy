@@ -206,6 +206,7 @@ export class MapsComponent implements OnInit {
             if (val.response === 0) {
               this.mode = 'view';
               this.current = this.mapToObject(this.xml);
+              this.mapEditor.changed = false;
             }
           }
         )

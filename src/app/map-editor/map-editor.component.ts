@@ -12,23 +12,6 @@ type Position2 = {
   y: number;
 }
 
-class Vector2 {
-  public x: number = 0;
-  public y: number = 0
-  constructor(x: number, y: number) {
-    console.log(x);
-    this.x = +x;
-    this.y = +y;
-  }
-  get module(): number {
-    console.log(this.x, this.y);
-    return Math.abs(this.x) + Math.abs(this.y);
-  }
-  valueOf() {
-    return [this.x, this.y];
-  }
-}
-
 @Component({
   selector: 'map-editor',
   templateUrl: './map-editor.component.html',
@@ -89,7 +72,7 @@ export class MapEditorComponent implements OnInit {
     this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-0.33);
     this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*0.33);
   }
-
+/** istambul ignore next **/
   mapView(): void {
     const ctx = this.canvas.nativeElement.getContext('2d');
     let drag: boolean = false;
@@ -115,7 +98,7 @@ export class MapEditorComponent implements OnInit {
        this._objects.forEach((obj) => {
          ctx.fillStyle = '#d63b50';
          ctx.strokeStyle = '#fdfdfd';
-          ctx.lineWidth = 1;
+         ctx.lineWidth = 1;
          ctx.beginPath();
          ctx.arc(+obj.posX * 0.33 + this.viewport.x + this.imgSize/2, +obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
          ctx.closePath();
