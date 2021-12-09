@@ -36,16 +36,25 @@ export class ApiService {
 
   currentPage: number = 0;
 
-  qtype: string;
-  chunkSize: string;
+  private qtype: string;
 
 
   constructor(
     private http: HttpClient,
     private user: UserService
-  ) {
-    this.chunkSize = this.user.getUserSettings().lineChunk.toString();
+  ) {}
+
+  get queryType() {
+    return this.qtype;
   }
+  set queryType(type: string) {
+    this.qtype = type;
+  }
+
+  getChunkSize(): string {
+    return this.user.getUserSettings().lineChunk.toString();
+  }
+
   getAdminsList(): Observable<any> {
     return this.http.get(this.URL_ADMINS_LIST);
   }
@@ -80,14 +89,14 @@ export class ApiService {
     return this.http.delete(this.URL_DELETE_FILE, { params: { path: path }});
   }
   getLast(): Observable<any> {
-    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.chunkSize}});
+    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize()}});
   }
   getLogFile(): Observable<any> {
     this.loading = true;
       return this.reloader$.pipe(
         switchMap(() => {
-          if (this.qtype == 'search') {
-            if (!this.lastQuery.lim) this.lastQuery.lim = this.chunkSize;
+          if (this.queryType === 'search') {
+            this.lastQuery.lim = this.getChunkSize();
             this.lastQuery.page = this.currentPage.toString();
             return this.search(this.lastQuery)
           } else {
@@ -132,37 +141,37 @@ export class ApiService {
     // this.loading = true;
     return this.http.get(this.URL_SEARCH, { params: query });
   }
-  addToRecent(key: string, val: any): void {
-    let last = JSON.parse(localStorage.getItem('last'));
-    function exists() {
-      for (let i = 0; i < last[key].length; i++) {
-        if (typeof last[key][i] == 'string') {
-          if (last[key][i] === val) {
-            return true;
-          }
-        } else {
-          if (last[key][i].path === val.path) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-    if (!exists()) {
+  addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
+    let last = JSON.parse(window.localStorage.getItem('last'));
+    if (!this.noteIsAlreadyExists(last, key, val)) {
       if (last[key].length >= (key=='search'?15:7)) {
         last[key].splice(-(last[key].length), 0, val);
         last[key].pop();
       } else {
         last[key].push(val);
       }
-      localStorage.setItem('last', JSON.stringify(last));
+      window.localStorage.setItem('last', JSON.stringify(last));
     }
   }
+  noteIsAlreadyExists(last: any, key: string, val: any): boolean {
+    for (let i = 0; i < last[key].length; i++) {
+      if (typeof last[key][i] == 'string') {
+        if (last[key][i] === val) {
+          return true;
+        }
+      } else {
+        if (last[key][i].path === val.path) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-  refresh() {
+  refresh(): void {
     this.reloader$.next(null);
   }
-  sync() {
+  sync(): void {
     this.loading = true;
     this.reloader$.next(null);
   }

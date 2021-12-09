@@ -99,7 +99,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         sq.dateTo = query.to;
       }
       this.api.lastQuery = sq;
-      this.api.qtype = 'search';
+      this.api.queryType = 'search';
       this.api.reloader$.next(null);
     }
   }
@@ -177,11 +177,11 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.chunks = [];
       this.direction = 1;
       if (params.query) {
-        this.api.qtype = 'search';
+        this.api.queryType = 'search';
         this.api.lastQuery = this.parseSearchQuery(params.query);
         this.showLines();
       } else {
-        this.api.qtype = 'last';
+        this.api.queryType = 'last';
         this.showLines();
       }
     });
