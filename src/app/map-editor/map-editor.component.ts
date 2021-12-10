@@ -50,16 +50,10 @@ export class MapEditorComponent implements OnInit {
   constructor(private hostElem: ElementRef) {}
 
   filter(objects: any[]): any[] {
-    let filtered: any[] = [];
-    objects.forEach((obj) => {
-      if (obj.name !== 'material' || obj.name !== 'text') {
-        filtered.push(obj);
-      }
-    });
-    return filtered;
+    return objects.filter((obj) => obj.name !== 'material' && obj.name !== 'text')
   }
 
-  easeIn(currentProgress: number, start: number, distance: number, steps: number, power: number) {
+  easeIn(currentProgress: number, start: number, distance: number, steps: number, power: number): number {
     currentProgress /= steps/2;
     if (currentProgress < 1) {
       return (distance/2)*(Math.pow(currentProgress, power)) + start;
@@ -68,11 +62,11 @@ export class MapEditorComponent implements OnInit {
     return distance/2*(Math.pow(currentProgress,power)+2) + start;
   }
 
-  private viewportTo(x: number, y: number): void {
+  viewportTo(x: number, y: number): void {
     this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-0.33);
     this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*0.33);
   }
-/** istambul ignore next **/
+/* istambul ignore mapView: not actualy testable */
   mapView(): void {
     const ctx = this.canvas.nativeElement.getContext('2d');
     let drag: boolean = false;
@@ -81,6 +75,7 @@ export class MapEditorComponent implements OnInit {
     let dragStart: any;
     let dragEnd: any;
     let origin: any;
+    /* istambul ignore else */
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
       this.map.src = './assets/images/sa_map4k.webp';
@@ -106,6 +101,7 @@ export class MapEditorComponent implements OnInit {
          ctx.stroke();
        });
      }
+     /* istambul ignore next */
      const jarvis = (objects: any[]) => {
        function getLeft(objs: any[]) {
           objs.sort((a, b) => { if (a.posX && b.posX) return a.posX - b.posX })
