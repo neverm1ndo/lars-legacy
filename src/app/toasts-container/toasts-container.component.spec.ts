@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToastsContainer} from './toasts-container.component';
 
+
 describe('ToastsContainerComponent', () => {
   let component: ToastsContainer;
   let fixture: ComponentFixture<ToastsContainer>;
@@ -19,7 +20,10 @@ describe('ToastsContainerComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should return false if toast is not templated', () => {
+    expect(component.isTemplate('Toasty')).toBeFalsy();
   });
 });
