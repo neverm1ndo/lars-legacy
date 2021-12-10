@@ -1,4 +1,5 @@
-export class Processes {
+export class Processes { // FIXME: convert all this stuff to enums
+  /* istambul ignore next */
   readonly sched2 = [
     {
       process: '<connection/connect>',
