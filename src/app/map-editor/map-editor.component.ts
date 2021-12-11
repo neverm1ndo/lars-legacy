@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@angular/core';
 
 interface Viewport {
   x: number;
@@ -51,6 +51,19 @@ export class MapEditorComponent implements OnInit {
 
   filter(objects: any[]): any[] {
     return objects.filter((obj) => obj.name !== 'material' && obj.name !== 'text')
+  }
+
+  getAveragePosZ(): number {
+    let count = 0;
+    const res = this._objects.reduce((acc, obj) => {
+      if (parseInt(obj.posZ) != NaN) {
+        count++;
+        return acc + parseInt(obj.posZ);
+      } else {
+        return acc;
+      }
+    }, 0);
+    return Number((res/count).toFixed(4));
   }
 
   easeIn(currentProgress: number, start: number, distance: number, steps: number, power: number): number {

@@ -6,7 +6,7 @@ import { TreeNode } from '../interfaces/app.interfaces';
 import { faMap, faPlus, faCubes, faDraftingCompass,
   faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash,
   faCheckCircle, faInfo, faSave, faMapSigns, faArchway,
-  faTimes } from '@fortawesome/free-solid-svg-icons';
+  faTimes, faRulerVertical } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
@@ -88,6 +88,7 @@ export class MapsComponent implements OnInit {
   mode: 'view' | 'move' | 'rotate' = 'view';
 
   loading: boolean = false;
+  levelingZ: boolean = false;
 
   fa = {
     map: faMap,
@@ -103,7 +104,10 @@ export class MapsComponent implements OnInit {
     replace: faRoute,
     rotate: faDraftingCompass,
     arch: faArchway,
-    cross: faTimes
+    cross: faTimes,
+    ruler: {
+      vert: faRulerVertical,
+    }
   }
 
   chooseDir(dir: string) {
@@ -112,6 +116,11 @@ export class MapsComponent implements OnInit {
     } else {
       this.expanded.push(dir);
     }
+  }
+
+  toViewMode() {
+    this.mode = 'view';
+    this.levelingZ = false;
   }
 
   objectToMap(object: any[]): string {
@@ -127,8 +136,9 @@ export class MapsComponent implements OnInit {
         }
       });
     }
-    return `<map edf:definitions="editor_main">\n` + res + '<!--\n LARS gta-liberty.ru\n-->\n' + '</map>';
+    return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru\n last change: ${Date.now()} \n-->\n` + '</map>';
   }
+
   mapToObject(xml: string) {
     let parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
@@ -193,7 +203,17 @@ export class MapsComponent implements OnInit {
            });
       })
   }
+  correctObjectsZLeveling(event: Event) {
+    this.levelingZ = false;
+  }
+  levelZ() {
+    this.levelingZ = true;
+  }
   cancelChanges() {
+    if (!this.mapEditor.changed) {
+      this.toViewMode();
+      return;
+    }
     const dialogOpts = {
         type: 'warning',
         buttons: ['Да', 'Нет'],
@@ -204,7 +224,7 @@ export class MapsComponent implements OnInit {
         this.electron.dialog.showMessageBox(dialogOpts).then(
           val => {
             if (val.response === 0) {
-              this.mode = 'view';
+              this.toViewMode();
               this.current = this.mapToObject(this.xml);
               this.mapEditor.changed = false;
             }
@@ -250,7 +270,7 @@ export class MapsComponent implements OnInit {
             this.api.loading = false;
           })
         }).finally(() => {
-          this.mode = 'view';
+          this.toViewMode();
         });
     }
   }

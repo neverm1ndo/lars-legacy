@@ -45,13 +45,17 @@
       padding-right: 1rem;
       // background: $topper;
       .btn {
-        height: 35px;
+        height: 38px;
+        width: 38px;
         margin-right: 5px;
         lty-icon {
           width: 16px;
           position: relative;
           height: auto;
         }
+      }
+      .badge {
+        height: 38px;
       }
     }
   }

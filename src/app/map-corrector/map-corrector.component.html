@@ -1,0 +1,8 @@
+<form class="d-flex align-items-center justify-content-center" [formGroup]="correctorForm" (ngSubmit)="correct()" autocomplete="off">
+  <div class="badge badge-light pr-2 mr-1 d-flex align-self-start justify-content-center align-items-center">
+    <fa-icon class="mr-2" [icon]="icon"></fa-icon>
+    <small>{{ title }}</small>
+  </div>
+  <input class="form-control shadow-none align-middle input-dark mr-1" type="text" name="correctorInput" formControlName="corrector" />
+  <button class="btn btn-light" type="submit" name="correctButton"><fa-icon [icon]="fa.check"></fa-icon></button>
+</form>
