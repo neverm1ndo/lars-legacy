@@ -20,11 +20,14 @@ type Position2 = {
 export class MapEditorComponent implements OnInit {
 
   _objects: any[];
+  d_objects: any[];
   @Input('objects') set objects (newObjects: any[]) {
     this._objects = this.filter(newObjects);
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
+    this.d_objects = this._objects.map(obj => Object.assign({...obj}));
+    // console.log(this._objects, this.d_objects);
   }
   @Input('mode') mode: 'move' | 'rotate' | 'view' = 'view';
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
@@ -46,6 +49,7 @@ export class MapEditorComponent implements OnInit {
     new: { x: 0, y: 0 },
   };
   changed: boolean = false;
+  ctr: any;
 
   constructor(private hostElem: ElementRef) {}
 
@@ -79,7 +83,7 @@ export class MapEditorComponent implements OnInit {
     this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-0.33);
     this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*0.33);
   }
-/* istambul ignore mapView: not actualy testable */
+/* istambul ignore mapView: PROTOTYPE ONLY */
   mapView(): void {
     const ctx = this.canvas.nativeElement.getContext('2d');
     let drag: boolean = false;
@@ -88,6 +92,7 @@ export class MapEditorComponent implements OnInit {
     let dragStart: any;
     let dragEnd: any;
     let origin: any;
+    let deg: number = 0;
     /* istambul ignore else */
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
@@ -159,25 +164,24 @@ export class MapEditorComponent implements OnInit {
          y: ((+this.dots.top.posY + +this.dots.bottom.posY)/2) * -0.33 + this.viewport.y + this.imgSize/2
        }
      }
-     const rotateObjects = (deg: number) => {
-       // X = x0 + (x - x0) * cos(a) - (y - y0) * sin(a);
-       // Y = y0 + (y - y0) * cos(a) + (x - x0) * sin(a);
-      // const origin = getRectCenter();
-      console.log(deg * 180/Math.PI);
+     const rotateObjects = () => {
        for (let i = 0; i < this._objects.length; i++) {
-         if (this._objects[i].posX) {
-              this._objects[i].posX = (+this._objects[i].posX - origin.x) * Math.cos(deg) - (+this._objects[i].posY - origin.y) * Math.sin(deg) + origin.x;
-              this._objects[i].posY = (+this._objects[i].posX - origin.x) * Math.sin(deg) + (+this._objects[i].posY - origin.y) * Math.cos(deg) + origin.y;
-          }
+         if (this._objects[i].posX ) {
+           this._objects[i].posX = (+this.d_objects[i].posX - origin.x) * Math.cos(deg) - (+this.d_objects[i].posY - origin.y) * Math.sin(deg) + origin.x;
+           this._objects[i].posY = (+this.d_objects[i].posX - origin.x) * Math.sin(deg) + (+this.d_objects[i].posY - origin.y) * Math.cos(deg) + origin.y;
         }
+      }
+    }
+    const rotatePoint = (x: number, y: number, origin: Position2): Position2 => {
+      return {
+        x: (x - origin.x) * Math.cos(-deg) - (y - origin.y) * Math.sin(-deg) + origin.x,
+        y: (x - origin.x) * Math.sin(-deg) + (y - origin.y) * Math.cos(-deg) + origin.y
+      }
+    }
+     const getRelativeRotationDegree = (deg: number, delta: number) => {
+      return deg*-delta;
      }
-     const getRelativeRotationDegree = (x: number, y: number) => {
-      // const origin = getRectCenter();
-      const cursor = {x: x* 0.33 + this.viewport.x + this.imgSize/2, y: y* 0.33 + this.viewport.y + this.imgSize/2}
-      const radius = Math.abs(cursor.x - origin.x) + Math.abs(cursor.y - origin.y);
-      console.log(cursor, origin, radius);
-      return Math.atan((origin.y - cursor.y)/(origin.x - cursor.x));
-     }
+
      const moveObjects = (deltaX: number, deltaY: number) => {
        for (let i = 0; i < this._objects.length; i++) {
          if (this._objects[i].posX) {
@@ -209,7 +213,7 @@ export class MapEditorComponent implements OnInit {
        ctx.fillText(`${dots.left.posX} , ${dots.top.posY}`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 20)
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
-       if (rotate || move) {
+       if (move) {
          ctx.fillStyle = '#4287f530';
          ctx.strokeStyle = '#4287f5';
        }
@@ -223,11 +227,11 @@ export class MapEditorComponent implements OnInit {
        ctx.closePath();
        ctx.fill();
        ctx.stroke();
-       if (rotate || move) {
+       let center = getRectCenter();
+       if (move) {
          ctx.strokeStyle = '#303030';
          ctx.fillStyle = '#ffffff';
          ctx.lineWidth = 2;
-         let center = getRectCenter();
          if (!this.positions.old.x) {
            this.positions.old = center;
          }
@@ -239,15 +243,55 @@ export class MapEditorComponent implements OnInit {
          ctx.fillText(`Move`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
          drawPosDot(this.positions.old, center);
        }
+     }
+     const drawRotateArc = (dots: any) => {
+       const center = getRectCenter();
+       let radius = Math.round(Math.sqrt(Math.pow(center.x - (dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2), 2) + Math.pow((dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)))
+       let margin = 14;
+       let marker = rotatePoint(center.x, center.y - radius - margin, center);
+       ctx.fillStyle = '#82AAFF30';
+       ctx.strokeStyle = '#82AAFF';
+       ctx.lineWidth = 3;
+       ctx.beginPath();
+       ctx.arc(center.x , center.y , radius + margin, 0, 2 * Math.PI, false);
+       ctx.closePath();
+       ctx.stroke();
+       ctx.beginPath();
+       // ctx.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
+       ctx.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
+       ctx.closePath();
+       ctx.fillStyle = '#82AAFF';
+       ctx.fill();
        if (rotate) {
-         ctx.fillText(`Rotate`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
+         ctx.beginPath();
+         ctx.moveTo(marker.x, marker.y);
+         ctx.lineTo(center.x , center.y);
+         ctx.closePath();
+         ctx.stroke();
+         ctx.beginPath();
+         ctx.arc(center.x, center.y, radius/2, 0, -deg , false);
+         // ctx.closePath();
+         ctx.strokeStyle = '#82AAFF50'
+         ctx.lineWidth = radius/2 + margin;
+         ctx.stroke();
+         // ctx.fill();
        }
+       ctx.beginPath();
+       ctx.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
+       ctx.closePath();
+       ctx.fillStyle = '#ffffff';
+       ctx.strokeStyle = '#ffffff';
+       ctx.fill();
+       ctx.fillText(`Rotate ${Math.round(deg*180/Math.PI)}°`, center.x - radius - 20, center.y - radius - 20)
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
        this.style.cursor = '-webkit-grab';
      });
      this.canvas.nativeElement.addEventListener('mouseleave', function () {
        this.style.cursor = 'pointer';
+       drag = false;
+       move = false;
+       rotate = false;
      });
     this.canvas.nativeElement.addEventListener('mousedown', (event) => {
       this.canvas.nativeElement.style.cursor = '-webkit-grabbing';
@@ -256,6 +300,22 @@ export class MapEditorComponent implements OnInit {
          y: event.pageY - this.canvas.nativeElement.offsetTop
        }
      drag = true;
+     if (this.dots && this.mode === 'rotate') {
+       // if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
+        if (event.button === 0) {
+          rotate = true;
+          drag = false;
+        }
+        if (event.button === 2) {
+          rotate = false;
+          drag = true;
+        }
+         move = false;
+         if (!this.changed && (((dragStart.x - dragEnd.x) === 0) || ((dragStart.y - dragEnd.y) === 0))) {
+           this.changed = true;
+         }
+       // }
+     }
      if (this.dots && this.mode === 'move') {
        if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
          rotate = false;
@@ -272,6 +332,13 @@ export class MapEditorComponent implements OnInit {
      move = false;
      rotate = false;
      this.canvas.nativeElement.style.cursor = '-webkit-grab';
+     if (this.mode == 'move') {
+       this.d_objects = this._objects.map(obj => Object.assign({...obj}));
+       origin = {
+         x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
+         y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
+       };
+     }
     })
     this.canvas.nativeElement.addEventListener('mousemove', (event) => {
       dragEnd = {
@@ -294,22 +361,23 @@ export class MapEditorComponent implements OnInit {
       }
       if (rotate) {
         if (!origin) {
-           origin = getRectCenter();
+           origin = {
+             x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
+             y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
+           };
         }
-        // console.log(getRelativeRotationDegree(event.offsetX, event.offsetY))
-        rotateObjects(getRelativeRotationDegree(event.offsetX, event.offsetY));
+        deg += getRelativeRotationDegree(0.01, (-(dragStart.x - dragEnd.x)));
+        rotateObjects();
+        dragStart = dragEnd;
       }
-      // if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, radius: 10})) {
-      //   this.canvas.nativeElement.style.cursor = 'move';
-      //   console.log(true);
-      // } else {
-      //   this.canvas.nativeElement.style.cursor = '-webkit-grab';
-      // };
     })
     const draw = () => {
       clear();
       ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
       drawDots();
+      if (this.mode == 'rotate') {
+        drawRotateArc(jarvis(this._objects));
+      }
       if (this.mode == 'move') {
         drawRect(jarvis(this._objects));
       }
