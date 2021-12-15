@@ -19,6 +19,12 @@
     img {
       width: 32px;
       height: auto;
+      transition: .2s ease-in-out;
+      &:hover {
+        z-index: 10;
+        border: 1px solid $text;
+        transform: scale(3) translateX(-8px);
+      }
     }
     .model-id {
       margin-left: 5px;

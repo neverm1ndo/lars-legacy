@@ -12,6 +12,8 @@ export class MapInspectorComponent implements OnInit {
     this._objects = value;
     if (this._objects.objects.length > 20) {
       this.toShow = this.objects.objects.slice(0, 20);
+    } else {
+      this.toShow = this.objects.objects.map(obj => Object.assign({...obj}));
     }
   };
   get objects() {
@@ -35,7 +37,7 @@ export class MapInspectorComponent implements OnInit {
     if (this.page*20 < (this.objects.objects.length - this.toShow.length)) {
       this.toShow = this.objects.objects.slice(0, this.toShow.length+20);
     } else {
-      this.toShow = this.objects.objects;
+      this.toShow = this.objects.objects.map(obj => Object.assign({...obj}));
     }
 
   }
