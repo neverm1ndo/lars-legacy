@@ -27,7 +27,10 @@ export class MapEditorComponent implements OnInit {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
     this.d_objects = this._objects.map(obj => Object.assign({...obj}));
-    // console.log(this._objects, this.d_objects);
+    this.radius = null;
+    this.arcCenter = null;
+    this.origin = null;
+    this.deg = 0;
   }
   @Input('mode') mode: 'move' | 'rotate' | 'view' = 'view';
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
@@ -50,6 +53,10 @@ export class MapEditorComponent implements OnInit {
   };
   changed: boolean = false;
   ctr: any;
+  radius: number;
+  arcCenter: Position2;
+  origin: Position2;
+  deg: number = 0;
 
   constructor(private hostElem: ElementRef) {}
 
@@ -91,8 +98,7 @@ export class MapEditorComponent implements OnInit {
     let rotate: boolean = false;
     let dragStart: any;
     let dragEnd: any;
-    let origin: any;
-    let deg: number = 0;
+    // let deg: number = 0;
     /* istambul ignore else */
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
@@ -130,16 +136,16 @@ export class MapEditorComponent implements OnInit {
           }
        }
        function getTop(objs: any[]) {
-         objs.sort((a, b) => { if (a.posY && b.posY) return a.posY - b.posY })
+         objs.sort((a, b) => { if (+a.posY && b.posY) return +a.posY - +b.posY })
          return objs[objs.length - 1];
        }
        function getRight(objs: any[]) {
-         objs.sort((a, b) => { if (a.posX && b.posX) return a.posX - b.posX })
+         objs.sort((a, b) => { if (+a.posX && b.posX) return +a.posX - +b.posX })
          return objs[objs.length - 1];
        }
        function getBottom(objs: any[]) {
-         objs.sort((a, b) => { if (a.posY && b.posY) return a.posY - b.posY })
-         if (objs[0].posX) {
+         objs.sort((a, b) => { if (+a.posY && b.posY) return +a.posY - +b.posY })
+         if (+objs[0].posX) {
            return objs[0];
          } else {
            return objs[1];
@@ -160,22 +166,22 @@ export class MapEditorComponent implements OnInit {
      }
      const getRectCenter = () => {
        return {
-         x: ((+this.dots.top.posX + +this.dots.bottom.posX)/2) * 0.33 + this.viewport.x + this.imgSize/2,
-         y: ((+this.dots.top.posY + +this.dots.bottom.posY)/2) * -0.33 + this.viewport.y + this.imgSize/2
+         x: (Number((+this.dots.left.posX + +this.dots.right.posX).toFixed(4))/2) * 0.33 + this.viewport.x + this.imgSize/2,
+         y: (Number((+this.dots.top.posY + +this.dots.bottom.posY).toFixed(4))/2) * -0.33 + this.viewport.y + this.imgSize/2
        }
      }
      const rotateObjects = () => {
        for (let i = 0; i < this._objects.length; i++) {
          if (this._objects[i].posX ) {
-           this._objects[i].posX = (+this.d_objects[i].posX - origin.x) * Math.cos(deg) - (+this.d_objects[i].posY - origin.y) * Math.sin(deg) + origin.x;
-           this._objects[i].posY = (+this.d_objects[i].posX - origin.x) * Math.sin(deg) + (+this.d_objects[i].posY - origin.y) * Math.cos(deg) + origin.y;
+           this._objects[i].posX = (+this.d_objects[i].posX - this.origin.x) * Math.cos(this.deg) - (+this.d_objects[i].posY - this.origin.y) * Math.sin(this.deg) + this.origin.x;
+           this._objects[i].posY = (+this.d_objects[i].posX - this.origin.x) * Math.sin(this.deg) + (+this.d_objects[i].posY - this.origin.y) * Math.cos(this.deg) + this.origin.y;
         }
       }
     }
     const rotatePoint = (x: number, y: number, origin: Position2): Position2 => {
       return {
-        x: (x - origin.x) * Math.cos(-deg) - (y - origin.y) * Math.sin(-deg) + origin.x,
-        y: (x - origin.x) * Math.sin(-deg) + (y - origin.y) * Math.cos(-deg) + origin.y
+        x: (x - origin.x) * Math.cos(-this.deg) - (y - origin.y) * Math.sin(-this.deg) + origin.x,
+        y: (x - origin.x) * Math.sin(-this.deg) + (y - origin.y) * Math.cos(-this.deg) + origin.y
       }
     }
      const getRelativeRotationDegree = (deg: number, delta: number) => {
@@ -245,15 +251,24 @@ export class MapEditorComponent implements OnInit {
        }
      }
      const drawRotateArc = (dots: any) => {
-       const center = getRectCenter();
-       let radius = Math.round(Math.sqrt(Math.pow(center.x - (dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2), 2) + Math.pow((dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)))
+       if (!this.arcCenter || !rotate) {
+         this.arcCenter = getRectCenter();
+       }
+       let center = this.arcCenter;
+       if (!this.radius) {
+         this.radius = Math.round(
+           Math.sqrt(
+             Math.pow((+dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2) - center.x, 2) +
+             Math.pow((+dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)
+           ))
+       }
        let margin = 14;
-       let marker = rotatePoint(center.x, center.y - radius - margin, center);
+       let marker = rotatePoint(center.x, center.y - this.radius - margin, center);
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
        ctx.lineWidth = 3;
        ctx.beginPath();
-       ctx.arc(center.x , center.y , radius + margin, 0, 2 * Math.PI, false);
+       ctx.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
        ctx.closePath();
        ctx.stroke();
        ctx.beginPath();
@@ -269,10 +284,15 @@ export class MapEditorComponent implements OnInit {
          ctx.closePath();
          ctx.stroke();
          ctx.beginPath();
-         ctx.arc(center.x, center.y, radius/2, 0, -deg , false);
+         if (this.deg >= 0.001) {
+           ctx.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
+         }
+         if (this.deg < -0.001) {
+           ctx.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
+         }
          // ctx.closePath();
          ctx.strokeStyle = '#82AAFF50'
-         ctx.lineWidth = radius/2 + margin;
+         ctx.lineWidth = this.radius/2 + margin;
          ctx.stroke();
          // ctx.fill();
        }
@@ -282,7 +302,7 @@ export class MapEditorComponent implements OnInit {
        ctx.fillStyle = '#ffffff';
        ctx.strokeStyle = '#ffffff';
        ctx.fill();
-       ctx.fillText(`Rotate ${Math.round(deg*180/Math.PI)}°`, center.x - radius - 20, center.y - radius - 20)
+       ctx.fillText(`Rotate ${Math.round(this.deg*180/Math.PI)}°`, center.x - this.radius - 20, center.y - this.radius - 20)
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
        this.style.cursor = '-webkit-grab';
@@ -302,6 +322,7 @@ export class MapEditorComponent implements OnInit {
      drag = true;
      if (this.dots && this.mode === 'rotate') {
        // if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
+       move = false;
         if (event.button === 0) {
           rotate = true;
           drag = false;
@@ -310,7 +331,6 @@ export class MapEditorComponent implements OnInit {
           rotate = false;
           drag = true;
         }
-         move = false;
          if (!this.changed && (((dragStart.x - dragEnd.x) === 0) || ((dragStart.y - dragEnd.y) === 0))) {
            this.changed = true;
          }
@@ -334,7 +354,7 @@ export class MapEditorComponent implements OnInit {
      this.canvas.nativeElement.style.cursor = '-webkit-grab';
      if (this.mode == 'move') {
        this.d_objects = this._objects.map(obj => Object.assign({...obj}));
-       origin = {
+       this.origin = {
          x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
          y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
        };
@@ -345,7 +365,7 @@ export class MapEditorComponent implements OnInit {
         x: event.pageX - this.canvas.nativeElement.offsetLeft,
         y: event.pageY - this.canvas.nativeElement.offsetTop
       }
-      if (drag && !move) {
+      if ((drag && !move) || (drag && !rotate)) {
         this.viewport.x = this.viewport.x - (dragStart.x - dragEnd.x);
         this.viewport.y = this.viewport.y - (dragStart.y - dragEnd.y);
         if (this.positions.old.x) {
@@ -357,16 +377,16 @@ export class MapEditorComponent implements OnInit {
       if (move) {
         moveObjects(-(dragStart.x - dragEnd.x)/0.33, (dragStart.y - dragEnd.y)/0.33);
         dragStart = dragEnd;
-        origin = getRectCenter();
+        this.origin = getRectCenter();
       }
       if (rotate) {
-        if (!origin) {
-           origin = {
+        if (!this.origin) {
+           this.origin = {
              x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
              y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
            };
         }
-        deg += getRelativeRotationDegree(0.01, (-(dragStart.x - dragEnd.x)));
+        this.deg += getRelativeRotationDegree(0.01, (-(dragStart.x - dragEnd.x)));
         rotateObjects();
         dragStart = dragEnd;
       }
@@ -377,6 +397,7 @@ export class MapEditorComponent implements OnInit {
       drawDots();
       if (this.mode == 'rotate') {
         drawRotateArc(jarvis(this._objects));
+        // drawRect(jarvis(this._objects));
       }
       if (this.mode == 'move') {
         drawRect(jarvis(this._objects));
