@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@angular/core';
+import { Key } from '../enums/keycode.enum';
 
 interface Viewport {
   x: number;
@@ -37,6 +38,15 @@ export class MapEditorComponent implements OnInit {
   @HostListener('window:resize', ['$event']) onResize() {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+  }
+  @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
+    if (this.mode == 'rotate') {
+      switch (event.keyCode) {
+        case Key.LeftArrow: this.deg+=Math.PI/180; break;
+        case Key.RightArrow: this.deg-=Math.PI/180; break;
+        default: break;
+      }
+    }
   }
   map: any;
   imgSize: number = 2000;
@@ -98,7 +108,6 @@ export class MapEditorComponent implements OnInit {
     let rotate: boolean = false;
     let dragStart: any;
     let dragEnd: any;
-    // let deg: number = 0;
     /* istambul ignore else */
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
@@ -290,11 +299,12 @@ export class MapEditorComponent implements OnInit {
          if (this.deg < -0.001) {
            ctx.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
          }
-         // ctx.closePath();
          ctx.strokeStyle = '#82AAFF50'
+         if ((this.deg*180/Math.PI > 360) || (this.deg*180/Math.PI < -360)) {
+           ctx.strokeStyle = '#ff000030'
+         }
          ctx.lineWidth = this.radius/2 + margin;
          ctx.stroke();
-         // ctx.fill();
        }
        ctx.beginPath();
        ctx.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
@@ -302,7 +312,7 @@ export class MapEditorComponent implements OnInit {
        ctx.fillStyle = '#ffffff';
        ctx.strokeStyle = '#ffffff';
        ctx.fill();
-       ctx.fillText(`Rotate ${Math.round(this.deg*180/Math.PI)}°`, center.x - this.radius - 20, center.y - this.radius - 20)
+       ctx.fillText(`Rotate ${Math.round(this.deg*180/Math.PI)}°`, center.x - this.radius - 20, center.y - this.radius - 20);
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
        this.style.cursor = '-webkit-grab';
@@ -321,20 +331,18 @@ export class MapEditorComponent implements OnInit {
        }
      drag = true;
      if (this.dots && this.mode === 'rotate') {
-       // if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
        move = false;
         if (event.button === 0) {
           rotate = true;
           drag = false;
         }
-        if (event.button === 2) {
-          rotate = false;
-          drag = true;
-        }
-         if (!this.changed && (((dragStart.x - dragEnd.x) === 0) || ((dragStart.y - dragEnd.y) === 0))) {
-           this.changed = true;
-         }
-       // }
+       if (event.button === 2) {
+         rotate = false;
+         drag = true;
+       }
+       if (!this.changed && (((dragStart.x - dragEnd.x) === 0) || ((dragStart.y - dragEnd.y) === 0))) {
+         this.changed = true;
+       }
      }
      if (this.dots && this.mode === 'move') {
        if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
@@ -397,7 +405,6 @@ export class MapEditorComponent implements OnInit {
       drawDots();
       if (this.mode == 'rotate') {
         drawRotateArc(jarvis(this._objects));
-        // drawRect(jarvis(this._objects));
       }
       if (this.mode == 'move') {
         drawRect(jarvis(this._objects));
