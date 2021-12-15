@@ -136,7 +136,7 @@ export class MapsComponent implements OnInit {
         }
       });
     }
-    return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru\n last change: ${Date.now()} \n-->\n` + '</map>';
+    return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru \n-->\n` + '</map>';
   }
 
   mapToObject(xml: string) {

@@ -23,7 +23,7 @@ export class MapEditorComponent implements OnInit {
   _objects: any[];
   d_objects: any[];
   @Input('objects') set objects (newObjects: any[]) {
-    this._objects = this.filter(newObjects);
+    this._objects = newObjects;
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
