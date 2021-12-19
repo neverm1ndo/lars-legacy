@@ -8,6 +8,12 @@ export class Processes { // FIXME: convert all this stuff to enums
       control: 'connect'
     },
     {
+      process: '<connection/deny/name_chars>',
+      translate: 'Подключение отклонено: недопустимые символы в нике',
+      type: 'danger',
+      control: 'connectDenyNameChars'
+    },
+    {
       process: '<disconnect/time_out>',
       translate: 'Выход с сервера после ожидания',
       type: 'dark',
