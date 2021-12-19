@@ -11,7 +11,7 @@ export class LoglineContentComponent implements OnInit {
 
   constructor(
     private idbService: NgxIndexedDBService,
-    private userService: UserService
+    public userService: UserService
   ) { }
 
   @Input('content') content: string;
@@ -30,17 +30,6 @@ export class LoglineContentComponent implements OnInit {
 
   userLink(id: number) {
     this.userService.openUserProfile(id);
-  }
-
-  userGroup(gr: number): string {
-    switch (gr) {
-      case 9: return 'Претендент';
-      case 10: return 'Разработчик';
-      case 11: return 'Админ';
-      case 12: return 'Маппер';
-      case 13: return 'Редактор конфигурационных файлов';
-      default: return 'Игрок';
-    }
   }
 
   ngOnInit(): void {
