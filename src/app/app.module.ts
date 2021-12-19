@@ -19,7 +19,7 @@ import { HomeModule } from './home/home.module';
 import { AppComponent } from './app.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LibertyIconsModule } from './libery-icons/liberty-icons.module';
+import { LibertyIconsModule } from './liberty-icons/liberty-icons.module';
 
 import { StatusPipe } from './pipes/status.pipe';
 
