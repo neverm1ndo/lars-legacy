@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, HostListener, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
@@ -13,15 +13,17 @@ import { ToastService } from '../toast.service';
   templateUrl: './text-editor.component.html',
   styleUrls: ['./text-editor.component.scss']
 })
-export class TextEditorComponent implements OnInit {
+export class TextEditorComponent implements OnInit, AfterViewInit {
 
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
   _texp: BehaviorSubject<string> = new BehaviorSubject('');
+
   @Input('file-info') path: string;
   @Input('file-stats') stats: any;
   @Input('textplain') set textp(val: string) {
     this._texp.next(val);
   };
+  @ViewChild('editor') editor: ElementRef<HTMLDivElement>;
   @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
@@ -35,6 +37,13 @@ export class TextEditorComponent implements OnInit {
           default : break;
         }
       }
+  }
+  @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
+    if (event.ctrlKey) {
+      const size = +this.editor.nativeElement.style.fontSize.substr(0, this.editor.nativeElement.style.fontSize.length - 2);
+        this.editor.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
+        window.localStorage.setItem('CE_fontSize', this.editor.nativeElement.style.fontSize);
+    }
   }
   plainArr: any[];
   textplain: string;
@@ -123,7 +132,7 @@ export class TextEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('settings')) {
+    if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
     this._texp.subscribe((tp) => {
@@ -131,5 +140,13 @@ export class TextEditorComponent implements OnInit {
       this.textplain = tp;
       this.checkChanges();
     })
+  }
+  ngAfterViewInit() {
+    if (!window.localStorage.getItem('CE_fontSize')) {
+      window.localStorage.setItem('CE_fontSize', '13px');
+      this.editor.nativeElement.style.fontSize = '13px';
+    } else {
+      this.editor.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
+    }
   }
 }
