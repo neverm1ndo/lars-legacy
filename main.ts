@@ -139,6 +139,7 @@ function downloadFile(configuration: any) {
   const w_stream = createWriteStream(configuration.localPath);
   axios.get('https://instr.gta-liberty.ru/v2/utils/download-file' ,
     { headers: { 'Authorization': 'Bearer ' + configuration.token },
+    httpsAgent: agent, 
     params: { path: configuration.remotePath },
     responseType: 'stream'
   })
