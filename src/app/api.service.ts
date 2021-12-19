@@ -77,8 +77,8 @@ export class ApiService {
     return this.http.get(this.URL_MAPS);
   }
   getConfigText(path: string): Observable<any> {
-     const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
-     return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'text'});
+     const headers = new HttpHeaders().set('Content-Type', 'application/json');
+     return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'json'});
   }
   getMap(path: string) {
     this.loading = true;

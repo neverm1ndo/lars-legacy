@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { faSave, faSync, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -18,9 +18,11 @@ export class TextEditorComponent implements OnInit {
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
   _texp: BehaviorSubject<string> = new BehaviorSubject('');
   @Input('file-info') path: string;
+  @Input('file-stats') stats: any;
   @Input('textplain') set textp(val: string) {
     this._texp.next(val);
   };
+  @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
@@ -49,7 +51,8 @@ export class TextEditorComponent implements OnInit {
   fa = {
     save: faSave,
     fetch: faSync,
-    copy: faCopy
+    copy: faCopy,
+    trash: faTrash
   }
   state: any;
 
@@ -105,6 +108,10 @@ export class TextEditorComponent implements OnInit {
         subtext: this.path
       });
     })).subscribe();
+  }
+
+  deleteFile() {
+    return this.delFile.emit(this.path);
   }
 
   checkChanges(): void {

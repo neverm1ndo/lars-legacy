@@ -3,6 +3,9 @@
   .textarea {
     overflow: auto;
   }
+  .word-wrap {
+    word-wrap: break-word;
+  }
   .supertextarea, textarea {
     padding-right: 1rem;
     width: 100%;
@@ -47,19 +50,25 @@
     font-size: 12px;
     line-height: 29px;
     color: $text;
-    .panel-left {
+    .panel-left, .panel-right {
       line-height: 29px;
+      overflow-x: auto;
+      overflow-y: hidden;
       span {
         line-height: 29px;
       }
+      .overlap {
+        width: 30%;
+      }
       .panel {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 13px;
+        padding-right: 13px;
         background: none;
         border: none;
         color: inherit;
         height: 30px;
         line-height: 29px;
+        white-space: nowrap;
         overflow: hidden;
         .autosave-led {
           display: inline-block;
@@ -101,6 +110,9 @@
           opacity: 0.7;
         }
       }
+    }
+    .panel-left {
+      flex: 1 1 33%;
     }
   }
 }

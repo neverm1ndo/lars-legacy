@@ -88,8 +88,10 @@ export class ConfigEditorComponent implements OnInit {
     }
     if (this.notBinary(path.name)) {
       this.showBinary = false;
-      const getConfSub = this.api.getConfigText(path.path).subscribe((textplain: string) => {
-        this.textplain = textplain;
+      const getConfSub = this.api.getConfigText(path.path).pipe().subscribe((file: { text: string; stats: any }) => {
+        console.log(file)
+        this.binStats = file.stats;
+        this.textplain = file.text;
         getConfSub.unsubscribe();
       });
     } else {
@@ -106,18 +108,19 @@ export class ConfigEditorComponent implements OnInit {
     this.reloader$.next(null);
   }
 
-  deleteFile(): void {
+  deleteFile(path?: string): void {
+    if (!path) path = this.currentFilePath;
     const dialogOpts = {
         type: 'warning',
         buttons: ['Удалить', 'Отмена'],
         title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить файл ${this.currentFilePath}? После подтверждения он будет безвозвратно удален с сервера.`
+        message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
       }
     this.electron.dialog.showMessageBox(dialogOpts).then(
       val => {
         if (val.response === 0) {
-           this.api.deleteMap(this.currentFilePath).subscribe(() => {});
-          this.toast.show(`Файл <b>${ this.currentFilePath }</b> удален с сервера`,
+           this.api.deleteMap(path).subscribe(() => {});
+          this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
             {
               classname: 'bg-success text-light',
               delay: 3000,

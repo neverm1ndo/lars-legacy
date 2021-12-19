@@ -37,7 +37,7 @@
               </div>
             </div>
           </div>
-          <text-editor [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined"></text-editor>
+          <text-editor (delete-file)="deleteFile($event)" [file-stats]="binStats" [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined"></text-editor>
         </div>
       </div>
     </div>
