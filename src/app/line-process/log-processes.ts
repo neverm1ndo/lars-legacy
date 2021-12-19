@@ -1,6 +1,15 @@
+type ProcessTypeColor = 'dark' | 'danger' | 'success' | 'primary' | 'info' | 'usual' | 'pickup' | 'secondary' | 'warning' | 'light' | 'adm' | 'dev' | 'dm' | 'tdm' | 'derby' | 'clothes';
+
+export interface Process {
+  process: string;
+  translate: string;
+  type: ProcessTypeColor;
+  control: string;
+}
+
 export class Processes { // FIXME: convert all this stuff to enums
   /* istambul ignore next */
-  readonly sched2 = [
+  readonly sched2: Process[] = [
     {
       process: '<connection/connect>',
       translate: 'Соединение с сервером',
