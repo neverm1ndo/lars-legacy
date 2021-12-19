@@ -20,8 +20,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
 
   @Input('file-info') path: string;
   @Input('file-stats') stats: any;
-  @Input('textplain') set textp(val: string) {
-    this._texp.next(val);
+  @Input('textplain') set textp(val: string | null) {
+    if (val) this._texp.next(val);
   };
   @ViewChild('editor') editor: ElementRef<HTMLDivElement>;
   @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
@@ -134,6 +134,11 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
+    }
+    switch (this.stats.mime) {
+      case 'text/xml': this.cmSettings.mode = 'xml'; break;
+      case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
+      default: break;
     }
     this._texp.subscribe((tp) => {
       this.initialTextplainPure = tp.replace(/\s/g, '');

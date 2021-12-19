@@ -32,6 +32,7 @@ export class ConfigEditorComponent implements OnInit {
   currentFilePath: string;
   progress: number = 0;
   dprogress: number = 0;
+  loading: boolean = false;
 
   fa = {
     conf: faFileSignature,
@@ -82,6 +83,8 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   getConfig(path: { path: string, name?: string }) {
+    this.loading = true;
+    this.textplain = undefined;
     this.currentFilePath = path.path;
     if (path.name) {
       this.api.addToRecent('files', path);
@@ -89,9 +92,9 @@ export class ConfigEditorComponent implements OnInit {
     if (this.notBinary(path.name)) {
       this.showBinary = false;
       const getConfSub = this.api.getConfigText(path.path).pipe().subscribe((file: { text: string; stats: any }) => {
-        console.log(file)
         this.binStats = file.stats;
         this.textplain = file.text;
+        this.loading = false;
         getConfSub.unsubscribe();
       });
     } else {
@@ -99,6 +102,7 @@ export class ConfigEditorComponent implements OnInit {
       const getFileSub = this.api.getFileInfo(path.path).subscribe((stats: any) => {
         this.binStats = stats;
         this.showBinary = true;
+        this.loading = false;
         getFileSub.unsubscribe();
       })
     }
