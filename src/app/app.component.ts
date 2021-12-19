@@ -21,11 +21,10 @@ export class AppComponent implements OnInit {
     if (electronService.isElectron && !AppConfig.production) {
       console.log('\x1b[33m[app]\x1b[0m', AppConfig);
       console.log('\x1b[33m[app]\x1b[0m', process.env);
-      console.log('\x1b[33m[app]\x1b[0m', 'Run in electron');
       console.log('\x1b[33m[app]\x1b[0m', 'Electron ipcRenderer', this.electronService.ipcRenderer);
       console.log('\x1b[33m[app]\x1b[0m', 'NodeJS childProcess', this.electronService.childProcess);
     } else {
-      console.log('\x1b[33m[app]\x1b[0m', 'Run in browser');
+      console.log('\x1b[33m[app]\x1b[0m', `Run in ${electronService.isElectron?'LARS Desktop application':'browser'}`);
     }
   }
   ngOnInit() {
