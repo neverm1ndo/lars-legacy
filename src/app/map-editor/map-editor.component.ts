@@ -77,7 +77,7 @@ export class MapEditorComponent implements OnInit {
   getAveragePosZ(): number {
     let count = 0;
     const res = this._objects.reduce((acc, obj) => {
-      if (parseInt(obj.posZ) != NaN) {
+      if (obj.posZ) {
         count++;
         return acc + parseInt(obj.posZ);
       } else {
