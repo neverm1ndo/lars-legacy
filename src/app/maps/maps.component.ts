@@ -203,7 +203,16 @@ export class MapsComponent implements OnInit {
            });
       })
   }
-  correctObjectsZLeveling(event: Event) {
+  correctObjectsZLeveling(event: number) {
+    const diff = event - this.mapEditor.getAveragePosZ();
+    if (diff === 0) { this.levelingZ = false; return; }
+    this.mapEditor.changePosZ(diff);
+    this.toast.show(`Успешное изменение posZ`,
+    {
+      classname: 'bg-success text-light',
+      delay: 5000,
+      icon: faInfo
+    });
     this.levelingZ = false;
   }
   levelZ() {

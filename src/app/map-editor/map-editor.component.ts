@@ -74,6 +74,14 @@ export class MapEditorComponent implements OnInit {
     return objects.filter((obj) => obj.name !== 'material' && obj.name !== 'text')
   }
 
+  changePosZ(diff: number): void {
+    this._objects.forEach((obj: any) => {
+      if (obj.posZ) {
+        obj.posZ = Number((+obj.posZ + diff).toFixed(4));
+      }
+    });
+  }
+
   getAveragePosZ(): number {
     let count = 0;
     const res = this._objects.reduce((acc, obj) => {
