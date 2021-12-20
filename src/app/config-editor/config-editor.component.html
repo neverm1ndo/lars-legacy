@@ -15,12 +15,12 @@
           </file-tree>
         </div>
         <div class="col-md-8 col-lg-9 col-xl-10 pl-0 pr-0 texteditor h-100">
-          <div *ngIf="!showBinary && !textplain && !loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
+          <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && !loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
             <div class="d-flex align-self-center w-100 text-center">
               <h4><fa-icon [icon]="fa.conf"></fa-icon><br>Выберите кофигурационный файл из списка, чтобы приступить к редактированию или добавьте новый, с помощью комбинации <span class="badge badge-dark"> ALT+A </span></h4>
             </div>
           </div>
-          <div *ngIf="!showBinary && !textplain && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
+          <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
             <div class="d-flex justify-content-center align-self-center w-100 text-center">
               <div class="loader d-flex align-self-center">
                 <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
@@ -44,7 +44,7 @@
               </div>
             </div>
           </div>
-          <text-editor (delete-file)="deleteFile($event)" [file-stats]="binStats" [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain"></text-editor>
+          <text-editor (delete-file)="deleteFile($event)" [file-stats]="binStats" [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined && textplain !== null"></text-editor>
         </div>
       </div>
     </div>
