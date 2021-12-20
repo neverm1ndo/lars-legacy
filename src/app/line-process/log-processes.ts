@@ -23,6 +23,12 @@ export class Processes { // FIXME: convert all this stuff to enums
       control: 'connectDenyNameChars'
     },
     {
+      process: '<connection/deny/name_length>',
+      translate: 'Недопустимое кол-во символов в нике',
+      type: 'danger',
+      control: 'connectDenyNameLength'
+    },
+    {
       process: '<disconnect/time_out>',
       translate: 'Выход с сервера после ожидания',
       type: 'dark',
