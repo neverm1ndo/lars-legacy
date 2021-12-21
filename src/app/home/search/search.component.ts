@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../../api.service';
 import { ToastService } from '../../toast.service';
+import { WebSocketService } from '../../web-socket.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -42,7 +43,8 @@ export class SearchComponent implements OnInit {
     public api: ApiService,
     public toast: ToastService,
     public router: Router,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public ws: WebSocketService
   ) { }
 
   get query() {
@@ -79,6 +81,7 @@ export class SearchComponent implements OnInit {
   }
 
   sync(): void {
+    this.ws.newLineCounter = 0;
     this.syncronize.emit(true);
   }
 

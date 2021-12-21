@@ -28,7 +28,7 @@
             </div>
           </div>
         </form>
-        <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="api.loading || api.lazy"><fa-icon [icon]="fa.sync"></fa-icon></button>
+        <button *ngIf="!quick" [attr.data-newlines]="ws.newLineCounter" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="api.loading || api.lazy"><fa-icon [icon]="fa.sync"></fa-icon><i *ngIf="ws.newLineCounter !== 0" class="bg-danger text-light new-line-counter">{{ws.newLineCounter}}</i></button>
         <button *ngIf="!quick" class="btn btn-dark" (click)="sync()" name="sync" disabled><fa-icon [icon]="fa.hist"></fa-icon></button>
       <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
       <div *ngIf="!quick" class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">

@@ -48,6 +48,7 @@ export interface SearchQuery {
   ss?: string;
   page?: string;
   lim?: string;
+  filter?: string;
 }
 
 export interface TreeNode {

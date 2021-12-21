@@ -17,6 +17,7 @@ export class WebSocketService {
 
   private ws: WebSocket;
   usersStates = {};
+  newLineCounter: number = 0;
   state: BehaviorSubject<'stoped' | 'rebooting' | 'live' | 'error' | 'loading'> = new BehaviorSubject('live');
   // activity: BehaviorSubject<UserActionType> = new BehaviorSubject('idle');
   constructor(
@@ -94,6 +95,10 @@ export class WebSocketService {
           this.clearUserData();
           this.disconnect();
           this.router.navigate(['/login']);
+          break;
+        }
+        case 'new-log-line': {
+          this.newLineCounter++;
           break;
         }
         default: console.error('%c[ws-service]', 'color: tomato', 'Unknown message event')
