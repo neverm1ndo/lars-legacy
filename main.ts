@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
@@ -12,6 +12,7 @@ let splash: BrowserWindow = null;
 const args: string[] = process.argv.slice(1),
       serve = args.some(val => val === '--serve');
 
+let tray: Tray;
 // FIXME: Insecure HACK (TLS/CA)
 const agent: Agent = new Agent({
   rejectUnauthorized: false
@@ -56,6 +57,7 @@ function createWindow(): BrowserWindow {
     defaultWidth: 1000,
     defaultHeight: 600
   });
+
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -122,7 +124,9 @@ function createWindow(): BrowserWindow {
   } else {
     win.loadURL('https://libertyapp.nmnd.ru');
   }
-
+  win.on('show', (event: any) => {
+    if (tray) tray.destroy();
+  })
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -135,11 +139,35 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
+function createTray(): Tray {
+    let appIcon = new Tray(path.join(__dirname, 'src/assets/icons/favicon.ico'));
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Развернуть LARS', click: function () {
+                win.show();
+            }
+        },
+        {
+            label: 'Закрыть', click: function () {
+                // app.isQuiting = true;
+                app.quit();
+            }
+        }
+    ]);
+
+    appIcon.on('double-click', function (event) {
+        win.show();
+    });
+    appIcon.setToolTip('LARS');
+    appIcon.setContextMenu(contextMenu);
+    return appIcon;
+}
+
 function downloadFile(configuration: any) {
   const w_stream = createWriteStream(configuration.localPath);
   axios.get('https://instr.gta-liberty.ru/v2/utils/download-file' ,
     { headers: { 'Authorization': 'Bearer ' + configuration.token },
-    httpsAgent: agent, 
+    httpsAgent: agent,
     params: { path: configuration.remotePath },
     responseType: 'stream'
   })
@@ -176,6 +204,11 @@ function downloadFile(configuration: any) {
 ipcMain.on('download-file', (event, conf) => {
   downloadFile(conf);
 });
+ipcMain.on('minimize-to-tray', (event) => {
+  event.preventDefault();
+  win.hide();
+  tray = createTray();
+})
 autoUpdater.on('update-available', () => {
   win.webContents.send('update_available');
 });

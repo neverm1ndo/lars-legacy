@@ -43,6 +43,10 @@ export class TopperComponent implements OnInit {
   window = {
     win: this.electron.remote.getCurrentWindow(),
     close: () => {
+      if (this.userService.getUserSettings().tray) {
+        this.electron.ipcRenderer.send('minimize-to-tray');
+        return;
+      }
       this.window.win.close();
     },
     min: () => {
@@ -58,7 +62,6 @@ export class TopperComponent implements OnInit {
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
   }
-
   ngOnInit(): void {
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
