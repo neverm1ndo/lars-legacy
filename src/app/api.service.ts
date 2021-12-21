@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
+import { SearchQuery } from './interfaces/app.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -88,19 +89,20 @@ export class ApiService {
   deleteMap(path: string) {
     return this.http.delete(this.URL_DELETE_FILE, { params: { path: path }});
   }
-  getLast(): Observable<any> {
-    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize()}});
+  getLast(filter?: string[]): Observable<any> {
+    if (!filter) filter = [];
+    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(): Observable<any> {
+  getLogFile(filter: string[]): Observable<any> {
     this.loading = true;
       return this.reloader$.pipe(
         switchMap(() => {
           if (this.queryType === 'search') {
             this.lastQuery.lim = this.getChunkSize();
             this.lastQuery.page = this.currentPage.toString();
-            return this.search(this.lastQuery)
+            return this.search(this.lastQuery, filter)
           } else {
-            return this.getLast();
+            return this.getLast(filter);
           }
         })
       )
@@ -129,16 +131,8 @@ export class ApiService {
       this.refresh();
     }
   }
-  search(query: {
-    nickname?: Array<string>;
-    date?: Array<string>;
-    process?: Array<string>;
-    as?: string;
-    ss?: string;
-    page?: string;
-    lim?: string
-  }): Observable<any> {
-    // this.loading = true;
+  search(query: any, filter?: string[]): Observable<any> {
+    if (filter) query['filter'] = filter.join(',');
     return this.http.get(this.URL_SEARCH, { params: query });
   }
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE

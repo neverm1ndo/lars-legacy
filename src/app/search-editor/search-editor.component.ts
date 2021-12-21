@@ -31,7 +31,9 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     public user: UserService,
     public route: ActivatedRoute
   ) {
-    this.glf$ = api.getLogFile().pipe(
+    const userFilter = JSON.parse(window.localStorage.getItem('filter'));
+    const filter = Object.keys(userFilter).filter((key: string) => userFilter[key] === false);
+    this.glf$ = api.getLogFile(filter).pipe(
       retryWhen(errors =>
         errors.pipe(
           delay(10*1000),
