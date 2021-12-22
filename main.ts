@@ -3,22 +3,29 @@ import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import axios from 'axios';
-import { Agent } from 'https';
-import { createWriteStream } from 'fs';
+import { verifyUserToken, downloadFile, createTray } from './utils.main';
 
-let win: BrowserWindow = null;
-let splash: BrowserWindow = null;
+/** Init main window
+* @type {BrowserWindow}
+*/
+export let win: BrowserWindow = null;
+/** Init splash window
+* @type {BrowserWindow}
+*/
+export let splash: BrowserWindow = null;
+
+/** Define launch arguments
+* @type {Array.<string>}
+*/
 const args: string[] = process.argv.slice(1),
       serve = args.some(val => val === '--serve');
 
+/** Init system tray
+* @type {Tray>}
+*/
 let tray: Tray;
-// FIXME: Insecure HACK (TLS/CA)
-const agent: Agent = new Agent({
-  rejectUnauthorized: false
-});
-
-// Windows
+/** Creates splash window
+*/
 function splashWindow() {
   splash = new BrowserWindow({
     width: 450,
@@ -50,16 +57,17 @@ function splashWindow() {
   });
 }
 
+/** Creates main window
+*/
 function createWindow(): BrowserWindow {
-
-  // const electronScreen: Electron.Screen = screen;
-  let state = winStateKeeper({
+  /** Window state manager. Keeps window size, position etc.
+  * @type {winStateKeeper.State}
+  */
+  let state: winStateKeeper.State = winStateKeeper({
     defaultWidth: 1000,
     defaultHeight: 600
   });
 
-
-  // Create the browser window.
   win = new BrowserWindow({
     x: state.x,
     y: state.y,
@@ -82,37 +90,28 @@ function createWindow(): BrowserWindow {
     },
   });
 
-
+  /** Main window Ready-To-Show event handler */
   win.once('ready-to-show', () => {
     if (!serve) autoUpdater.checkForUpdatesAndNotify();
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
-    win.webContents.executeJavaScript('localStorage.getItem("user");', true)
-    .then(result => {
-       return axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
-        httpsAgent: agent,
-        headers: {
-          'Authorization': 'Bearer ' + JSON.parse(result).token
-        }
+    verifyUserToken().then(() => {
+        splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
       })
-    })
-    .then(() => {
-      splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
-    })
-    .catch((err)=> {
-      win.webContents.send('token-verify-denied', true);
-      console.error(err);
-      splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
-    })
-    .catch((err) => {
-      win.webContents.send('token-verify-denied', true);
-      splash.webContents.executeJavaScript(`changeStatus("Токен отсутствует: ${err.message}", 100);`, true);
-    }).finally(() => {
-      setTimeout(() => {
-        splash.close();
-        win.show();
-        state.manage(win);
-      }, 2000);
-    })
+      .catch((err)=> {
+        win.webContents.send('token-verify-denied', true);
+        console.error(err);
+        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
+      })
+      .catch((err) => {
+        win.webContents.send('token-verify-denied', true);
+        splash.webContents.executeJavaScript(`changeStatus("Токен отсутствует: ${err.message}", 100);`, true);
+      }).finally(() => {
+        setTimeout(() => {
+          splash.close();
+          win.show();
+          state.manage(win);
+        }, 2000);
+      })
   });
 
   if (serve) {
@@ -139,68 +138,7 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
-function createTray(): Tray {
-    let appIcon = new Tray(path.join(__dirname, 'src/assets/icons/favicon.ico'));
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Развернуть LARS', click: function () {
-                win.show();
-            }
-        },
-        {
-            label: 'Закрыть', click: function () {
-                // app.isQuiting = true;
-                app.quit();
-            }
-        }
-    ]);
-
-    appIcon.on('double-click', function (event) {
-        win.show();
-    });
-    appIcon.setToolTip('LARS');
-    appIcon.setContextMenu(contextMenu);
-    return appIcon;
-}
-
-function downloadFile(configuration: any) {
-  const w_stream = createWriteStream(configuration.localPath);
-  axios.get('https://instr.gta-liberty.ru/v2/utils/download-file' ,
-    { headers: { 'Authorization': 'Bearer ' + configuration.token },
-    httpsAgent: agent,
-    params: { path: configuration.remotePath },
-    responseType: 'stream'
-  })
-  .then((res: any) => {
-    return new Promise((resolve, reject) => {
-      const totalSize = res.headers['content-length']
-      let error = null;
-      let downloaded = 0
-      res.data.pipe(w_stream);
-      res.data.on('data', (data) => {
-        downloaded += Buffer.byteLength(data);
-        win.webContents.send('download-progress', { total: totalSize, loaded: downloaded })
-      })
-      res.data.on('error', (error) => {
-        win.webContents.send('download-error', error)
-      })
-      w_stream.on('error', err => {
-        error = err;
-        w_stream.close();
-        reject(err);
-      });
-      w_stream.on('close', () => {
-        if (!error) {
-          resolve(true);
-          win.webContents.send('download-end');
-        }
-      });
-    });
-  })
-  .catch((err)=> {
-    win.webContents.send('download-error', err);
-  })
-}
+/** IPC */
 ipcMain.on('download-file', (event, conf) => {
   downloadFile(conf);
 });
@@ -209,6 +147,8 @@ ipcMain.on('minimize-to-tray', (event) => {
   win.hide();
   tray = createTray();
 })
+
+/** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
   win.webContents.send('update_available');
 });
@@ -233,6 +173,7 @@ autoUpdater.on('error', message => {
   console.error(message);
   dialog.showErrorBox('Ошибка при попытке обновить приложение', message.message);
 })
+/********************************************/
 
 try {
   // This method will be called when Electron has finished
