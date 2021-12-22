@@ -81,7 +81,6 @@ export class SearchComponent implements OnInit {
   }
 
   sync(): void {
-    this.ws.newLineCounter = 0;
     this.syncronize.emit(true);
   }
 
