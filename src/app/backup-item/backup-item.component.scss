@@ -1,0 +1,80 @@
+@import 'colors';
+
+.backups-list-item {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  // padding: 5px;
+  background-color: $secondary;
+  border-radius: 6px;
+  max-height: 60px;
+  .item {
+    padding: 0px 5px 0px 5px;
+    white-space: nowrap;
+    margin-right: 10px;
+    font-size: 12px;
+    &-elapsed {
+      .elapse {
+        max-width: 100px;
+        // justify-content: flex-start;
+        // div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      // }
+    }
+  }
+  &_avatar {
+    margin-left: 10px;
+    width: 31px;
+    height: 31px;
+    border-radius: 100%;
+    border: 2px solid $primary;
+  }
+  &_nickname {
+    text-align: center;
+    margin-left: 10px;
+    flex: 0 0 18%;
+    min-width: 10px;
+    overflow: hidden;
+  }
+  .sub {
+    min-width: 45px;
+  }
+  .marker {
+    width: 8px;
+    // height: 100%;
+    padding: 35px 0px 35px 0px;
+    background: red;
+    flex: 0 0 8px;
+    // position: absolute;
+    // &:after {
+    //   width: 7px;
+    //   height: 7px;
+    //   margin-top: -4px;
+    //   margin-left: -20px;
+    //   content: ' ';
+    //   border-radius: 100%;
+    //   background: red;
+    //   // position: absolute;
+    // }
+    // &:before {
+    //   width: 20px;
+    //   height: 3px;
+    //   margin-top: -2px;
+    //   margin-left: -20px;
+    //   content: ' ';
+    //   // border-radius: 100%;
+    //   background: red;
+    //   // position: absolute;
+    // }
+  }
+  button {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    min-height: 40px;
+    width: 40px;
+  }
+}

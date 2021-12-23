@@ -1,0 +1,40 @@
+@import 'colors';
+h1 {
+  font-weight: lighter;
+}
+p, a, span, button, div {
+  font-size: 13px;
+}
+.head {
+  background: #09090918;
+  border-bottom: 1px solid $secondary;
+}
+.history {
+  background: $secondary;
+  &-head {
+    border-bottom: 1px solid $underpanel;
+  }
+}
+.backups-list {
+}
+.binds {
+  margin-bottom: 5px;
+  position: relative;
+  .bind {
+    &:before {
+      position: relative;
+      background: inherit;
+      display: inline-block;
+      transform-origin: top left;
+      transform: rotate(-90deg);
+      width: auto;
+      top: 55%;
+      left: -6px;
+      padding: 0px 5px 0px 5px;
+      border-radius: 3px;
+      height: 16px;
+      font-size: 10px;
+      content: attr(data-filename);
+    }
+  }
+}

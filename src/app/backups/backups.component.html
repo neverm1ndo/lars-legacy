@@ -2,7 +2,49 @@
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="col-12 h-100">
       <div class="row h-100">
-        <p>backups works!</p>
+        <div class="col-8 h-100">
+          <div class="row h-100">
+            <div class="d-flex flex-column h-100 w-100">
+              <div class="d-flex align-self-start head w-100">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <h1 class="mt-4 mb-4">Раздел резервных копий</h1>
+                      <p>ВНИМАНИЕ: Удаление и перезапись бэкапов может привести к безвозвратному удалению данных с рабочего игрового сервера</p>
+                      <p>Время жизни бэкапа: 1 неделя</p>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <div class="row">
+                        <form (keyup.enter)="sendQuery()" class="col-8 pr-0" (ngSubmit)="sendQuery()" autocomplete="off">
+                          <div class="input-group">
+                            <input name="search" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Поиск по имени файла"/>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex h-100 flex-row overflow-auto pl-2">
+                <div #binds class="binds"></div>
+                <div #backupsList  class="d-flex flex-column backups-list w-100 pr-2">
+                  <app-backup-item *ngFor="let backup of backups" [attr.data-filename]="backup.file.name" [backup-info]="backup"></app-backup-item>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 h-100 history">
+          <div class="row h-100">
+            <div class="d-flex flex-column h-100 w-100">
+              <div class="w-100 d-flex align-self-start align-items-center justify-content-center">
+                <div class="p-3 history-head w-100 text-center">
+                  <span>История изменений файлов</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
