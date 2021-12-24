@@ -1,5 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ApiService } from '../api.service';
+import { ToastService } from '../toast.service';
+import { faClipboardCheck, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { catchError } from 'rxjs/operators'
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-backups',
@@ -14,6 +18,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   constructor(
     private renderer: Renderer2,
     private api: ApiService,
+    private toast: ToastService
   ) { }
 
   backups = [];
@@ -131,7 +136,41 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  restoreBackup() {
+    const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)
+    .pipe (
+      catchError(error => {
+        if (error.error instanceof ErrorEvent) {
+          console.error('An error occurred:', error.error.message);
+        } else {
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+        }
+        return throwError(error);
+      })
+    )
+    .subscribe(
+      (data) => {
+        console.log(data)
+      this.toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,             {
+        classname: 'bg-success text-light',
+        delay: 5000,
+        icon: faClipboardCheck,
+        subtext: this.current.file.path
+      });
+    }, err => {
+      console.error(err);
+      this.toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,             {
+          classname: 'bg-danger text-light word-wrap',
+          delay: 8000,
+          icon: faClipboard,
+          subtext: err.message
+        });
+    }, () => {
+      sub.unsubscribe();
+    });
+  }
 
   ngOnInit(): void {
     this.loading = true;

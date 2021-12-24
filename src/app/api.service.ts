@@ -131,7 +131,7 @@ export class ApiService {
     return this.http.get(this.URL_BACKUPS_LIST)
   }
   restoreBackup(path: string, unix: string): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_LIST, { params: { path, unix }})
+    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } })
   }
 
   lazyUpdate(page: number): void {
