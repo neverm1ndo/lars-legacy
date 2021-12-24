@@ -47,11 +47,26 @@ p, a, span, button, div {
       font-size: 10px;
       content: attr(data-filename);
     }
+    &-rib {
+      &:before {
+        position: absolute;
+        background: inherit;
+        // width: auto;
+        left: -2px;
+        top: -2px;
+        border-radius: 3px;
+        height: 7px;
+        width: 7px;
+        // font-size: 10px;
+        content: ' ';
+      }
+    }
   }
 }
 .viewer {
   border-top: 1px solid $secondary;
   max-height: 200px;
+  flex: 1 0;
   &-code {
     background: $filetree;
     pre {

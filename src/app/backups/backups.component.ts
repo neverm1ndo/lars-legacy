@@ -26,7 +26,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     line.style.background = color;
     line.style.width = '3px';
     line.style.marginLeft = right + 'px';
-    line.style.marginRight = '15px';
+    line.style.marginRight = '8px';
     line.dataset.filename = filename;
     line.style.top = top + 'px';
     line.style.position = 'relative';
@@ -35,6 +35,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
 
   createBindRib(width: number, color: string, top: number, left: number): HTMLDivElement {
     const line = this.renderer.createElement('div');
+    this.renderer.addClass(line, 'bind-rib')
     line.style.width = width + 3 + 'px';
     line.style.height = '3px';
     line.style.background = color;
@@ -45,7 +46,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
 
   drawBackbone(height, color, top, index: number, filename: string): void {
-     this.binds.nativeElement.append(this.createBindBackbone(height, color, top, (index) * 15, filename))
+     this.binds.nativeElement.append(this.createBindBackbone(height, color, top, (index) * 8, filename))
   }
   colorGenerator(filenames: any[]): string[] {
     function hashCode(str) {
@@ -78,7 +79,6 @@ export class BackupsComponent implements OnInit, AfterViewInit {
       const filename = childs[i].getAttribute('data-filename');
       ribs.add(filename);
     }
-
     colors = this.colorGenerator(Array.from(ribs));
 
     for (let i = 0; i < childs.length; i++) {
@@ -93,25 +93,36 @@ export class BackupsComponent implements OnInit, AfterViewInit {
       drawn.push(filenameA);
       let minTop = childs[i].getBoundingClientRect().top - topMarge;
       let maxTop = 0;
+      let rib;
       for (let j = 0; j < childs.length; j++) {
         const filenameB = childs[j].getAttribute('data-filename');
         if (i === j) continue;
+        if (orphans.includes(filenameB)) {  drawn = drawn.filter(bone => bone !== filenameB); continue; }
         if (filenameA !== filenameB) continue;
+        rib = {
+          left: 8 * (drawn.length),
+          width: 8 * (orphans.length - drawn.indexOf(filenameA)),
+        }
+        if (orphans.length == 0) {
+          rib.width = drawn.length - ribs.size;
+        }
         const top = childs[j].getBoundingClientRect().top - topMarge;
-        this.binds.nativeElement.append(this.createBindRib(15 * (ribs.size - drawn.length + 1), colors[drawn.indexOf(filenameA)], top - height - (3*ribsCounter), 15*(drawn.length - 1)));
-        ribsCounter++;
         if (maxTop < top) {
           maxTop = top;
         }
+        ribsCounter++;
+        this.binds.nativeElement.append(this.createBindRib(rib.width, colors[orphans.length + drawn.indexOf(filenameA)], top - height - (3*ribsCounter), rib.left));
       }
       if (maxTop !== 0) {
-        this.binds.nativeElement.append(this.createBindRib(15 * (ribs.size - drawn.length + 1), colors[drawn.indexOf(filenameA)], minTop - height - (3 * ribsCounter), 15*(drawn.length - 1)))
+        this.binds.nativeElement.append(this.createBindRib(rib.width, colors[orphans.length + drawn.indexOf(filenameA)], minTop - height - (3 * ribsCounter), rib.left))
         ribsCounter++;
-        this.drawBackbone(maxTop - minTop, colors[drawn.length - 1], (minTop - height) - (3*ribsCounter), drawn.length - 1, filenameA);
+        this.drawBackbone(maxTop - minTop, colors[orphans.length + drawn.indexOf(filenameA)], (minTop - height) - (3*ribsCounter), drawn.length, filenameA);
         height+= maxTop - minTop;
       } else {
-        ribs.delete(filenameA);
+        drawn = drawn.filter(bone => bone !== filenameA)
+        orphans.push(filenameA);
       }
+      console.log(drawn)
     }
   }
 
