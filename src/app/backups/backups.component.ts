@@ -154,9 +154,9 @@ export class BackupsComponent implements OnInit, AfterViewInit {
               } else {
                 console.error(
                   `Backend returned code ${error.status}, ` +
-                  `body was: ${error.error}`);
+                  `body was: ${error.error.message}`);
                 }
-                return throwError(error);
+                return throwError(error.error);
               })
             )
             .subscribe(
