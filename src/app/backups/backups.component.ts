@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
+import { ElectronService } from '../core/services/electron/electron.service';
 import { faClipboardCheck, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { catchError } from 'rxjs/operators'
 import { throwError } from 'rxjs';
@@ -8,7 +9,7 @@ import { throwError } from 'rxjs';
 @Component({
   selector: 'app-backups',
   templateUrl: './backups.component.html',
-  styleUrls: ['./backups.component.scss']
+  styleUrls: ['./backups.component.scss'],
 })
 export class BackupsComponent implements OnInit, AfterViewInit {
 
@@ -18,7 +19,8 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   constructor(
     private renderer: Renderer2,
     private api: ApiService,
-    private toast: ToastService
+    private toast: ToastService,
+    private electron: ElectronService
   ) { }
 
   backups = [];
@@ -26,6 +28,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   actions = {
     delete: 'удалил',
     change: 'изменил',
+    restore: 'восстановил'
   }
   loading: boolean = false;
 
@@ -111,10 +114,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
         if (filenameA !== filenameB) continue;
         rib = {
           left: 8 * (drawn.length),
-          width: 8 * (orphans.length - drawn.indexOf(filenameA)),
-        }
-        if (orphans.length == 0) {
-          rib.width = drawn.length - ribs.size;
+          width: Math.abs(8 * (ribs.size - orphans.length - drawn.indexOf(filenameA))),
         }
         const top = childs[j].getBoundingClientRect().top - topMarge;
         if (maxTop < top) {
@@ -137,39 +137,51 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
 
   restoreBackup() {
-    const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)
-    .pipe (
-      catchError(error => {
-        if (error.error instanceof ErrorEvent) {
-          console.error('An error occurred:', error.error.message);
-        } else {
-          console.error(
-            `Backend returned code ${error.status}, ` +
-            `body was: ${error.error}`);
+    const dialogOpts = {
+        type: 'warning',
+        buttons: ['Да, установить', 'Отмена'],
+        title: `Подтверждение установки бэкапа`,
+        message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then(
+      val => {
+        if (val.response === 0) {
+          const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)
+          .pipe (
+            catchError(error => {
+              if (error.error instanceof ErrorEvent) {
+                console.error('An error occurred:', error.error.message);
+              } else {
+                console.error(
+                  `Backend returned code ${error.status}, ` +
+                  `body was: ${error.error}`);
+                }
+                return throwError(error);
+              })
+            )
+            .subscribe(
+              (data) => {
+                console.log(data)
+                this.toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,             {
+                  classname: 'bg-success text-light',
+                  delay: 5000,
+                  icon: faClipboardCheck,
+                  subtext: this.current.file.path
+                });
+              }, err => {
+                console.error(err);
+                this.toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,             {
+                  classname: 'bg-danger text-light word-wrap',
+                  delay: 8000,
+                  icon: faClipboard,
+                  subtext: err.message
+                });
+              }, () => {
+                sub.unsubscribe();
+              });
         }
-        return throwError(error);
-      })
-    )
-    .subscribe(
-      (data) => {
-        console.log(data)
-      this.toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,             {
-        classname: 'bg-success text-light',
-        delay: 5000,
-        icon: faClipboardCheck,
-        subtext: this.current.file.path
-      });
-    }, err => {
-      console.error(err);
-      this.toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,             {
-          classname: 'bg-danger text-light word-wrap',
-          delay: 8000,
-          icon: faClipboard,
-          subtext: err.message
-        });
-    }, () => {
-      sub.unsubscribe();
-    });
+      }
+    );
   }
 
   ngOnInit(): void {
