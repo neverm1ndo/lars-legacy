@@ -30,7 +30,7 @@
     width: 31px;
     height: 31px;
     border-radius: 100%;
-    border: 2px solid $primary;
+    // border: 2px solid $primary;
   }
   &_nickname {
     text-align: center;
@@ -75,6 +75,5 @@
     margin-right: 10px;
     text-align: center;
     min-height: 40px;
-    width: 40px;
   }
 }

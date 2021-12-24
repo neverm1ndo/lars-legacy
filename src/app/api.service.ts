@@ -27,6 +27,7 @@ export class ApiService {
   readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
   readonly URL_ADMIN_SUB_GROUP: string = AppConfig.api.main + 'admins/sub-groups';
   readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
+  readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -124,6 +125,11 @@ export class ApiService {
   uploadFileCfg(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
+
+  getBackupsList(): Observable<any> {
+    return this.http.get(this.URL_BACKUPS_LIST)
+  }
+
   lazyUpdate(page: number): void {
     if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
       this.lazy = true;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 interface Backup {
   user: {
@@ -22,8 +22,13 @@ interface Backup {
 export class BackupItemComponent implements OnInit {
 
   @Input('backup-info') backup: Backup;
+  @Output() currentToView: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
+
+  toView(backup) {
+    this.currentToView.emit(backup);
+  }
 
   ngOnInit(): void {
   }

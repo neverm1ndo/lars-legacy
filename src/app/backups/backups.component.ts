@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-backups',
@@ -10,130 +11,13 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   @ViewChild('binds') binds: ElementRef<HTMLDivElement>;
   @ViewChild('backupsList') backupsItems: ElementRef<HTMLDivElement>;
 
-  constructor(private renderer: Renderer2) { }
+  constructor(
+    private renderer: Renderer2,
+    private api: ApiService,
+  ) { }
 
-  backups = [
-    {
-      user: {
-        nickname: 'Neverm1ndo',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'green',
-      file: {
-        name: 'test_map.map.offasdfasdf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Scavenger',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'orange',
-      file: {
-        name: 'config.conf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Neverm1ndo',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'green',
-      file: {
-        name: 'test_map.map.off',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Scavenger',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'orange',
-      file: {
-        name: 'config.conf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Scav',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'red',
-      file: {
-        name: 'conf.conf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Scavenger',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'orange',
-      file: {
-        name: 'config.conf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Scavenger',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'orange',
-      file: {
-        name: 'config.conf',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-    {
-      user: {
-        nickname: 'Neverm1ndo',
-        avatar: '',
-        group_id: 10
-      },
-      color: 'green',
-      file: {
-        name: 'test_map.map.off',
-        mime: 'text/xml',
-        created: '12 Dec 2021 12:12:12',
-        expires: '19 Dec 2021',
-        text: '<map></map>'
-      }
-    },
-  ]
+  backups = [];
+  current: any;
 
   createBindBackbone(height: number, color: string, top: number, right: number, filename: string): HTMLDivElement {
     const line = this.renderer.createElement('div');
@@ -234,10 +118,16 @@ export class BackupsComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    const sub = this.api.getBackupsList().subscribe((backups: any) => {
+      this.backups = backups;
+      sub.unsubscribe();
+      setTimeout(() => { // add macrotask
+        this.drawBinds();
+      }, 1);
+    });
   }
 
   ngAfterViewInit(): void {
-    this.drawBinds();
   }
 
 }

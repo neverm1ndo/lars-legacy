@@ -16,6 +16,17 @@ p, a, span, button, div {
   }
 }
 .backups-list {
+  // overflow-x: hidden;
+}
+.changes-card {
+  margin: 5px 15px 5px 15px;
+  background: $filetree;
+  & > div {
+    padding: 10px;
+  }
+  &-date {
+    width: 100px;
+  }
 }
 .binds {
   margin-bottom: 5px;
@@ -35,6 +46,36 @@ p, a, span, button, div {
       height: 16px;
       font-size: 10px;
       content: attr(data-filename);
+    }
+  }
+}
+.viewer {
+  border-top: 1px solid $secondary;
+  max-height: 200px;
+  &-code {
+    background: $filetree;
+    pre {
+      color: $text-secondary;
+      padding: 10px;
+      white-space: pre-wrap;
+      margin-bottom: 0px;
+    }
+  }
+  &-head {
+    background: $underpanel;
+    padding: 5px 30px 5px 0px;
+    span {
+      font-family: 'Consolas';
+    }
+    i {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      margin-right: 10px;
+      border-radius: 100%;
+    }
+    button {
+      min-height: 40px;
     }
   }
 }
