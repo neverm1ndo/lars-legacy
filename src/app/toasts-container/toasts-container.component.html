@@ -4,6 +4,7 @@
    [autohide]="true"
    [delay]="toast.delay || 50000"
    (hide)="toastService.remove(toast)"
+   (click)="toastService.remove(toast)"
    [@toast]
  >
    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
@@ -14,11 +15,9 @@
        <div *ngIf="toast.icon" class="d-flex toast-icon">
          <fa-icon [icon]="toast.icon"></fa-icon>
        </div>
-       <div class="d-flex flex-fill flex-column toast-text">
-         <div>
-           <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.textOrTpl"></span>
-           <span *ngIf="isTemplate(toast)">{{ toast.textOrTpl }}</span>
-         </div>
+       <div class="d-flex flex-fill flex-column toast-text w-100">
+         <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.textOrTpl"></span>
+         <span *ngIf="isTemplate(toast)">{{ toast.textOrTpl }}</span>
         <div>
           <div *ngIf="toast.subtext">
             <hr>
