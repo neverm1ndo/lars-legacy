@@ -28,6 +28,7 @@ export class ApiService {
   readonly URL_ADMIN_SUB_GROUP: string = AppConfig.api.main + 'admins/sub-groups';
   readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
   readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
+  readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -128,6 +129,9 @@ export class ApiService {
 
   getBackupsList(): Observable<any> {
     return this.http.get(this.URL_BACKUPS_LIST)
+  }
+  restoreBackup(path: string, unix: string): Observable<any> {
+    return this.http.get(this.URL_BACKUPS_LIST, { params: { path, unix }})
   }
 
   lazyUpdate(page: number): void {
