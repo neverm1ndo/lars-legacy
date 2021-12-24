@@ -4,21 +4,21 @@
   </div>
   <!-- <img class="backups-list-item_avatar d-flex" src="{{ backup.user.avatar }}" alt=""> -->
   <div class="backups-list-item_nickname d-flex">{{ backup.user.nickname }}</div>
-  <div class="item d-flex flex-column flex-fill">
+  <div class="item d-flex flex-column flex-fill no-select">
     <div class="d-flex item-elapsed">
       <span class="elapse" title="{{ backup.file.name }}">
         {{ backup.file.name }}
       </span>
     </div>
-    <div class="d-flex text-muted item-elapsed no-select">
+    <div class="d-flex text-muted item-elapsed">
       <span class="elapse" title="{{ backup.file.mime}}">
         {{ backup.file.mime}}
       </span>
     </div>
   </div>
-  <div class="item d-flex flex-column flex-fill">
+  <div class="item d-flex flex-column flex-fill no-select">
     <div class="d-flex item-elapsed">
-      <span class="text-muted sub">Создан:</span> <span class="elapse">{{ backup.date | date:'d MMM yy, HH:mm:ss'}}</span>
+      <span class="text-muted sub">Создан:</span> <span class="elapse" title="{{ backup.date | date:'d MMM yy, HH:mm:ss' }}">{{ backup.date | date:'d MMM yy, HH:mm:ss'}}</span>
     </div>
     <div class="d-flex">
       <span class="text-muted sub">До:</span> <span>{{ backup.expires | date:'d MMM yy'}}</span>

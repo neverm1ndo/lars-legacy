@@ -28,6 +28,12 @@ p, a, span, button, div {
     width: 100px;
   }
 }
+.elapse {
+  // width: 33%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .binds {
   margin-bottom: 5px;
   position: relative;
@@ -65,8 +71,8 @@ p, a, span, button, div {
 }
 .viewer {
   border-top: 1px solid $secondary;
-  max-height: 200px;
-  flex: 1 0;
+  min-height: 200px;
+  flex: 0 0 33%;
   &-code {
     background: $filetree;
     pre {
@@ -76,9 +82,16 @@ p, a, span, button, div {
       margin-bottom: 0px;
     }
   }
+  &-hide {
+    width: 45px;
+    margin-right: 10px;
+    svg {
+      width: 20px;
+    }
+  }
   &-head {
     background: $underpanel;
-    padding: 5px 30px 5px 0px;
+    padding: 5px 15px 5px 10px;
     span {
       font-family: 'Consolas';
     }

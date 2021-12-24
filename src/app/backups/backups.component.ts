@@ -18,6 +18,11 @@ export class BackupsComponent implements OnInit, AfterViewInit {
 
   backups = [];
   current: any;
+  actions = {
+    delete: 'удалил',
+    change: 'изменил',
+  }
+  loading: boolean = false;
 
   createBindBackbone(height: number, color: string, top: number, right: number, filename: string): HTMLDivElement {
     const line = this.renderer.createElement('div');
@@ -129,9 +134,11 @@ export class BackupsComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.loading = true;
     const sub = this.api.getBackupsList().subscribe((backups: any) => {
       this.backups = backups;
       sub.unsubscribe();
+      this.loading = false;
       setTimeout(() => { // add macrotask
         this.drawBinds();
       }, 1);
