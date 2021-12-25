@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppConfig } from '../../environments/environment';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -63,6 +65,7 @@ const dbConfig: DBConfig  = {
     ]
   }]
 };
+const socketConfig: SocketIoConfig = { url: AppConfig.api.socket, options: {} };
 
 @NgModule({
   declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent],
@@ -78,6 +81,7 @@ const dbConfig: DBConfig  = {
     ReactiveFormsModule,
     FontAwesomeModule,
     NgxIndexedDBModule.forRoot(dbConfig),
+    SocketIoModule.forRoot(socketConfig),
     NgSelectModule
   ],
   providers: [
