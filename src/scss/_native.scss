@@ -9,6 +9,9 @@
   user-select: none;
   cursor: inherit;
 }
+@mixin cursor-through {
+  pointer-events: none;
+}
 @mixin btn-native {
   width: 100%;
   height: 100%;
