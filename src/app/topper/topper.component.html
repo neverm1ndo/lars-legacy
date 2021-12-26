@@ -28,11 +28,11 @@
                  'led-error': ( server.state == 'error' ||  server.state == 'stoped')
               }"
               class="led">
-              </i>{{(ws.state | async) | status}}</div>
+              </i>{{(state | async) | status}}</div>
             <div class="dropdown-divider"></div>
-            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
-            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
-            <button [disabled]="(ws.state | async) == 'loading' || (ws.state | async) == 'rebooting' || (ws.state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
+            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
+            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
+            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
           </div>
         </div>
       </div>

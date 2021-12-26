@@ -12,11 +12,13 @@
     "url": "https://github.com/neverm1ndo/lars.git"
   },
   "build": {
-    "publish": [{
+    "publish": [
+      {
         "provider": "github",
         "owner": "neverm1ndo",
         "repo": "lars"
-    }]
+      }
+    ]
   },
   "keywords": [],
   "main": "main.js",
@@ -117,6 +119,7 @@
     "electron-tabs": "0.15.0",
     "electron-updater": "4.3.5",
     "electron-window-state": "5.0.3",
-    "ngx-indexed-db": "6.1.2"
+    "ngx-indexed-db": "6.1.2",
+    "ngx-socket-io": "4.1.0"
   }
 }

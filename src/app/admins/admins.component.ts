@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user.service';
@@ -8,6 +8,9 @@ import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { WebSocketService } from '../web-socket.service';
+import { Subscription } from 'rxjs';
+
+type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm';
 
 @Component({
   selector: 'app-admins',
@@ -15,7 +18,7 @@ import { WebSocketService } from '../web-socket.service';
   styleUrls: ['./admins.component.scss'],
   animations: [settings]
 })
-export class AdminsComponent implements OnInit {
+export class AdminsComponent implements OnInit, OnDestroy {
 
   admins: any[] = [];
 
@@ -27,6 +30,7 @@ export class AdminsComponent implements OnInit {
     map: faMap,
     conf: faFileSignature
   }
+  usersStates = {};
   popup: boolean = false;
 
   addAdminForm: FormGroup = new FormGroup({
@@ -37,7 +41,8 @@ export class AdminsComponent implements OnInit {
     group: new FormControl(9, [
       Validators.required
     ])
-  });;
+  });
+  $activies: Subscription;
 
   roles = [
     { id: 9, val: 'Претендент' },
@@ -56,6 +61,19 @@ export class AdminsComponent implements OnInit {
     private electron: ElectronService,
     public ws: WebSocketService
   ) { }
+
+  userActionTranslation(action: UserActivityType): string {
+    const actions = {
+      idle: 'Спит',
+      inlogs: 'Просматривает логи',
+      inmaps: 'В редакторе карт',
+      redacting: 'В редакторе конфигов',
+      inadm: 'В списке админов',
+    }
+    let act = actions[action];
+    if (!act) return '???';
+    return act;
+  }
 
 
   getAdmins() {
@@ -144,6 +162,12 @@ export class AdminsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getFullAdminsList();
+    this.$activies = this.ws.getUserActitvity().subscribe((act) => {
+      this.usersStates[act.user] = act.action;
+    })
+  }
+  ngOnDestroy(): void {
+    this.$activies.unsubscribe();
   }
 
 }

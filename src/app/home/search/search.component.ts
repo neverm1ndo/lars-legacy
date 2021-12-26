@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
@@ -6,13 +6,14 @@ import { ApiService } from '../../api.service';
 import { ToastService } from '../../toast.service';
 import { WebSocketService } from '../../web-socket.service';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
     query: new FormControl('', [
@@ -33,6 +34,8 @@ export class SearchComponent implements OnInit {
   }
   datepickers: boolean = false;
   filter: boolean = false;
+  $newLinesSub: Subscription;
+  newLineCounter: number = 0;
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
@@ -85,11 +88,21 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.quick) {
+      this.$newLinesSub = this.ws.getNewLogLines().subscribe(() => {
+        this.newLineCounter++;
+      })
+    }
     this.route.queryParams.pipe(
       filter(params => (params.query))
     ).subscribe(params => {
       this.searchForm.setValue({ query: params.query, dateFrom: '', dateTo: '' });
     });
+  }
+  ngOnDestroy() {
+    if (this.$newLinesSub) {
+      this.$newLinesSub.unsubscribe();
+    }
   }
 
 }

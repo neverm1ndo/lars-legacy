@@ -5,7 +5,7 @@ export const AppConfig = {
     forum: 'https://gta-liberty.ru/index.php'
   },
   api: {
-    ws: 'wss://localhost:8443/',
+    socket: 'wss://localhost:8443/',
     main: 'https://localhost:8443/v2/',
     auth: 'https://localhost:8443/v2/login',
     user: 'https://localhost:8443/v2/login/user',

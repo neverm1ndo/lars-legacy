@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
+import { WebSocketService } from '../web-socket.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -30,7 +31,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private ws: WebSocketService
   ) {
   }
 
@@ -46,6 +48,7 @@ export class LoginComponent implements OnInit {
           this.error = undefined;
           this.userService.user.next(response);
           this.router.navigate(['/home']);
+          this.ws.connect();
         },
       error => {
         this.loading = false;
