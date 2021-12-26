@@ -190,6 +190,7 @@ export class ConfigEditorComponent implements OnInit {
                     let list = '';
                     for (let file of files) {
                       list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
+                      this.api.addToRecent('upload', file.name)
                     };
                     return list;
                   }

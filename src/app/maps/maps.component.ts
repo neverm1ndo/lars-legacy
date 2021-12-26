@@ -359,6 +359,9 @@ export class MapsComponent implements OnInit {
                 this.progress = Math.round(100 * event.loaded / event.total);
               } else if (event instanceof HttpResponse) {
                 this.toast.show(`Карта <b>${ files[0].name }</b> успешно добавлена`, { classname: 'bg-success text-light', delay: 3000, icon: faSave });
+                for (let file of files) {
+                  this.api.addToRecent('upload', file.name)
+                }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
                 this.ftc.add.nativeElement.value = '';
