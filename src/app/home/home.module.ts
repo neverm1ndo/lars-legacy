@@ -65,7 +65,22 @@ const dbConfig: DBConfig  = {
     ]
   }]
 };
-const socketConfig: SocketIoConfig = { url: AppConfig.api.socket, options: {} };
+interface Auth {
+  auth?: {
+    token: string
+  }
+}
+type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
+interface AuthSocketIoConfig extends SocketIoConfig {
+  options?: Merge<Auth, SocketIoConfig['options']>
+}
+const socketConfig: AuthSocketIoConfig = {
+  url: AppConfig.api.socket,
+  options: {
+    auth: {
+      token: JSON.parse(localStorage.getItem('user')).token
+    }
+  }};
 
 @NgModule({
   declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent],

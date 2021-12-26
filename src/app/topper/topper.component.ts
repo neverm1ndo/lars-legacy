@@ -4,6 +4,10 @@ import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+
+type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
+
 
 @Component({
   selector: 'app-topper',
@@ -22,22 +26,22 @@ export class TopperComponent implements OnInit {
     update: faCloudDownloadAlt
   };
 
-
+  state: BehaviorSubject<ServerStateType> = new BehaviorSubject('live');
   isLoggedIn: boolean = false;
   authenticated: any;
   server = {
     state: 'loading',
     reboot: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Rebooting samp03svr...');
-      this.ws.send({ event: 'reboot-server' });
+      this.ws.send('reboot-server');
     },
     launch: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Launching samp03svr...');
-      this.ws.send({ event: 'launch-server' });
+      this.ws.send('launch-server');
     },
     stop: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Killing samp03svr...');
-      this.ws.send({ event: 'stop-server' });
+      this.ws.send('stop-server');
     }
   }
   window = {
@@ -65,13 +69,21 @@ export class TopperComponent implements OnInit {
   ngOnInit(): void {
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
-      this.ws.connect();
-      this.ws.state.subscribe((val: any) => {
+      // this.ws.connect();
+      this.state.subscribe((val: any) => {
         this.server.state = val;
       })
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());
+      this.ws.getServerState().subscribe((state) => {
+        console.log('%c[server]', 'color: magenta', 'status:', state);
+        this.state.next(state)
+      })
+      this.ws.getServerError().subscribe((stderr: string) => {
+         console.error('%c[server]', 'color: magenta', stderr);
+         this.state.next('error')
+       });
     }
   }
 
