@@ -132,7 +132,6 @@ export class BackupsComponent implements OnInit, AfterViewInit {
         drawn = drawn.filter(bone => bone !== filenameA)
         orphans.push(filenameA);
       }
-      console.log(drawn)
     }
   }
 
