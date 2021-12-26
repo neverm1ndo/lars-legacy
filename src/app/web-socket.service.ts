@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
-import { ToastService } from './toast.service';
+// import { ToastService } from './toast.service';
 import { UserService } from './user.service';
 // import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import { filter, map, take } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { Socket } from 'ngx-socket-io';
 export class WebSocketService {
   constructor(
     private router: Router,
-    private toast: ToastService,
+    // private toast: ToastService,
     private injector: Injector,
     private socket: Socket
   ) {
