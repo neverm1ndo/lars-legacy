@@ -343,12 +343,14 @@ export class MapsComponent implements OnInit {
 
   addNewMap(event: any): void {
     let files: any[];
+    let path: string;
     if (event.filelist) { files = event.filelist; }
     else { files = event.target.files; }
        if (files.length > 0) {
          let formData: FormData = new FormData();
          if (event.path) {
            formData.append('path', event.path)
+           path = event.path
          }
          for (let file of files) {
               formData.append('file', file);
@@ -360,7 +362,7 @@ export class MapsComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 this.toast.show(`Карта <b>${ files[0].name }</b> успешно добавлена`, { classname: 'bg-success text-light', delay: 3000, icon: faSave });
                 for (let file of files) {
-                  this.api.addToRecent('upload', file.name)
+                  this.api.addToRecent('upload', { path, name: file.name, type: 'map'})
                 }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)

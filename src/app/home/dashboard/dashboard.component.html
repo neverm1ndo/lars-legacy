@@ -24,7 +24,8 @@
             <h6><fa-icon [icon]="fa.dir"></fa-icon>Последние файлы</h6>
             <div class="col-12">
               <ul *ngIf="last.files.length > 0; else emptylist">
-                <li *ngFor="let item of last.files"><span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem">{{ item.path }}</span></span></li>
+                <li *ngFor="let item of last.files">
+                  <span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem">{{ item.path }}</span></span></li>
               </ul>
             </div>
           </div>
@@ -32,7 +33,16 @@
             <h6><fa-icon [icon]="fa.up"></fa-icon>Последние загрузки</h6>
             <div class="col-12">
               <ul *ngIf="last.upload.length > 0; else emptylist">
-                <li *ngFor="let item of last.upload">{{ item }}</li>
+                <li *ngFor="let item of last.upload">
+                  <span *ngIf="item.type === 'config'" class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
+                    <br>
+                    <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}/{{ item.name }}</span>
+                  </span>
+                  <span *ngIf="item.type === 'map'" class="history-item" [routerLink]="['/home/maps']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
+                    <br>
+                    <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.map"></fa-icon> {{ item.path }}/{{ item.name }}</span>
+                  </span>
+                </li>
               </ul>
               <ng-template #emptylist><small class="hint">История пуста</small></ng-template>
             </div>

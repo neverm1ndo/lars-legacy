@@ -164,7 +164,7 @@ export class ApiService {
           return true;
         }
       } else {
-        if (last[key][i].path === val.path) {
+        if (last[key][i].path === val.path && last[key][i].name === val.name) {
           return true;
         }
       }
