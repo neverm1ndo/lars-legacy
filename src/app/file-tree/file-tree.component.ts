@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { faPlus, faSyncAlt, faFile } from '@fortawesome/free-solid-svg-icons';
+import Keys from '../enums/keycode.enum';
 
+const { A } = Keys;
 
 @Component({
   selector: 'file-tree',
@@ -20,7 +22,7 @@ export class FileTreeComponent implements OnInit {
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.altKey) {
         switch (event.keyCode) {
-          case 65 : { // Alt + A
+          case A : {
             this.add.nativeElement.click();
             break;
           }

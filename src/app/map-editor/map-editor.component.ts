@@ -1,5 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@angular/core';
-import { Key } from '../enums/keycode.enum';
+import Keys from '../enums/keycode.enum';
+
+const { LeftArrow, RightArrow } = Keys;
 
 interface Viewport {
   x: number;
@@ -42,8 +44,8 @@ export class MapEditorComponent implements OnInit {
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
     if (this.mode == 'rotate') {
       switch (event.keyCode) {
-        case Key.LeftArrow: this.deg+=Math.PI/180; break;
-        case Key.RightArrow: this.deg-=Math.PI/180; break;
+        case LeftArrow: this.deg+=Math.PI/180; break;
+        case RightArrow: this.deg-=Math.PI/180; break;
         default: break;
       }
     }

@@ -1,4 +1,4 @@
-export enum Key {
+enum Keys {
     Backspace = 8,
     Tab = 9,
     Enter = 13,
@@ -125,3 +125,4 @@ export enum Key {
     ClosedBracket = 221,
     Quote = 222
 }
+export default Keys;

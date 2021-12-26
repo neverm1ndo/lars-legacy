@@ -7,6 +7,9 @@ import { catchError, tap } from 'rxjs/operators';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
+import Keys from '../enums/keycode.enum';
+
+const { S, Delete } = Keys;
 
 @Component({
   selector: 'text-editor',
@@ -28,10 +31,19 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
-          case 83 : { // Ctrl + S
+          case S : {
             if (this.changed.getValue()) {
               this.saveFile();
             }
+            break;
+          }
+          default : break;
+        }
+      }
+      if (event.shiftKey) {
+        switch (event.keyCode) {
+          case Delete : {
+            this.deleteFile();
             break;
           }
           default : break;
