@@ -1,16 +1,37 @@
 import { Injectable, Injector } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 // import { ToastService } from './toast.service';
 import { UserService } from './user.service';
 // import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
 import { filter, map, take } from 'rxjs/operators';
-import { Socket } from 'ngx-socket-io';
+import { Socket, SocketIoConfig } from 'ngx-socket-io';
+import { AppConfig } from '../environments/environment';
+
+interface Auth {
+  auth?: {
+    token: string
+  }
+}
+type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
+interface AuthSocketIoConfig extends SocketIoConfig {
+  options?: Merge<Auth, SocketIoConfig['options']>
+}
+export const socketConfig: AuthSocketIoConfig = {
+  url: AppConfig.api.socket,
+  options: {
+    auth: {
+      token: JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')).token:''
+    },
+    autoConnect: false
+  }
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
+  protected alerts: Subscription = new Subscription();
   constructor(
     private router: Router,
     // private toast: ToastService,
@@ -47,6 +68,12 @@ export class WebSocketService {
     socket.on('disconnect', (reason: string) => {
         console.log('%c[socket-service]', 'color: tomato', 'Disconnected with reason: ' + reason);
     })
+    this.injector.get(UserService).user.pipe(
+      filter((user) => !!user)
+    ).subscribe((user) => {
+      socketConfig.options.auth.token = user.token;
+      this.connect();
+    })
   }
 
   getServerState(): Observable<any> {
@@ -69,6 +96,10 @@ export class WebSocketService {
   }
   getNewLogLines(): Observable<any> {
     return this.socket.fromEvent('new-log-line');
+  }
+
+  getAlerts(): Observable<any> {
+    return this.socket.fromEvent('alert:guard-block-on');
   }
     //     case 'expire-token': {
     //       console.log('%c[ws-service]', 'color: tomato', m.msg);

@@ -111,6 +111,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ws.disconnect();
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
     this.animate();

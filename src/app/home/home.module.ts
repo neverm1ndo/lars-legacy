@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppConfig } from '../../environments/environment';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketIoModule } from 'ngx-socket-io';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -53,6 +52,8 @@ import { BackupItemComponent } from '../backup-item/backup-item.component';
 import { AlertsSettingsComponent } from '../alerts-settings/alerts-settings.component';
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
+import { socketConfig } from '../web-socket.service';
+
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
   version: 1,
@@ -67,22 +68,6 @@ const dbConfig: DBConfig  = {
     ]
   }]
 };
-interface Auth {
-  auth?: {
-    token: string
-  }
-}
-type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
-interface AuthSocketIoConfig extends SocketIoConfig {
-  options?: Merge<Auth, SocketIoConfig['options']>
-}
-const socketConfig: AuthSocketIoConfig = {
-  url: AppConfig.api.socket,
-  options: {
-    auth: {
-      token: JSON.parse(localStorage.getItem('user')).token
-    }
-  }};
 
 @NgModule({
   declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, AlertsSettingsComponent, GeneralSettingsComponent],
