@@ -1,4 +1,4 @@
-import { trigger, style, animate, transition, state, keyframes, query, stagger} from '@angular/animations';
+import { trigger, style, animate, transition, state, keyframes, query, stagger, animateChild, group } from '@angular/animations';
 
 export const settings = trigger('settings', [
   state('*', style({ opacity : '1', transform: 'scale(1)', position: 'fixed'  })),
@@ -227,3 +227,32 @@ export const preload = trigger('preload', [
         ]))
       ])
 ]);
+export const settingsRoute =
+  trigger('settingsRoute', [
+    transition('* => *', [
+      style({ opacity : 1, transform: 'scale(1)' }),
+      query(':enter, :leave', [
+        style({
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%'
+        })
+      ], { optional: true }),
+      query(':enter', [
+        style({ transform: 'scale(0.99)', opacity: 0 })
+      ], { optional: true }),
+      query(':leave', animateChild(), { optional: true }),
+      group([
+        query(':leave', [
+          animate('0.06s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ transform: 'scale(0.9)', opacity: 0 }))
+        ], { optional: true }),
+        query(':enter', [
+          animate('0.23s cubic-bezier(0.4, 0.0, 0.2, 1)',
+          style({ opacity: 1, transform: 'scale(1)' }))
+        ], { optional: true })
+      ]),
+      query(':enter', animateChild(), { optional: true }),
+    ])
+  ]);

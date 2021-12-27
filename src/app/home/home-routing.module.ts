@@ -15,6 +15,9 @@ import { MapsComponent } from '../maps/maps.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { AdminsComponent } from '../admins/admins.component';
 import { BackupsComponent } from '../backups/backups.component';
+import { FilterComponent } from '../filter/filter.component';
+import { AlertsSettingsComponent } from '../alerts-settings/alerts-settings.component';
+import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -22,7 +25,12 @@ const routes: Routes = [
     { path: 'dash', component: DashboardComponent },
     { path: 'search', component: SearchEditorComponent, canActivate: [IsCommonGuard] },
     { path: 'config-editor', component: ConfigEditorComponent, canActivate: [IsConfiguratorGuard] },
-    { path: 'settings', component: SettingsComponent },
+    { path: 'settings', component: SettingsComponent, children: [
+      { path: '', pathMatch: 'full', redirectTo: 'general' },
+      { path: 'general', component: GeneralSettingsComponent, data: { animation: 'general' } },
+      { path: 'filter', component: FilterComponent, data: { animation: 'filter' } },
+      { path: 'alerts', component: AlertsSettingsComponent, data: { animation: 'alerts' } },
+    ]},
     { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard] },
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] },

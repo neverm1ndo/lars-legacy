@@ -1,5 +1,6 @@
-<div class="row pb-4">
-  <div class="col-12">
+
+<div class="d-flex flex-fill h-100 overflow-auto">  
+  <div class="col-12 pt-3 pb-3">
     <h6>Фильтр</h6>
     <small>Отображает только нужные процессы, остальные выпадают из поиска.</small>
     <form class="filter-form" [formGroup]="filterForm" (change)="setFilter()">

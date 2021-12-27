@@ -50,6 +50,8 @@ import { AdminsComponent } from '../admins/admins.component';
 import { MapCorrectorComponent } from '../map-corrector/map-corrector.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
+import { AlertsSettingsComponent } from '../alerts-settings/alerts-settings.component';
+import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
@@ -83,7 +85,7 @@ const socketConfig: AuthSocketIoConfig = {
   }};
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, AlertsSettingsComponent, GeneralSettingsComponent],
   imports: [
     CommonModule,
     SharedModule,

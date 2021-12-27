@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { settingsRoute } from '../app.animations';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  animations: [ settingsRoute ]
+  selector: 'app-general-settings',
+  templateUrl: './general-settings.component.html',
+  styleUrls: ['./general-settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class GeneralSettingsComponent implements OnInit {
 
   constructor(private electron: ElectronService) { }
 
@@ -36,14 +33,14 @@ export class SettingsComponent implements OnInit {
     textEditorStyle: new FormControl(JSON.parse(localStorage.getItem('settings')).textEditorStyle),
   });
   textplain: string = `# Create a safe reference to the Underscore object for use below.
-_ = (obj) -> new wrapper(obj)
-# Export the Underscore object for **CommonJS**.
-if typeof(exports) != 'undefined' then exports._ = _
-# Export Underscore to global scope.
-root._ = _
+  _ = (obj) -> new wrapper(obj)
+  # Export the Underscore object for **CommonJS**.
+  if typeof(exports) != 'undefined' then exports._ = _
+  # Export Underscore to global scope.
+  root._ = _
 
-# Current version.
-_.VERSION = '1.1.0'`;
+  # Current version.
+  _.VERSION = '1.1.0'`;
 
   get listStyle(): string {
     return this.settings.value.listStyle;
@@ -58,10 +55,6 @@ _.VERSION = '1.1.0'`;
     mode: 'coffeescript',
     theme: this.textEditorStyle,
     readOnly: true
-  }
-
-  prepareRoute(outlet: RouterOutlet) {
-    return outlet?.activatedRouteData?.['animation'];
   }
 
   setup() {
