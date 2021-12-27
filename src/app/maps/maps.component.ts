@@ -14,6 +14,10 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { mapload, panelSwitch, extrudeToRight } from '../app.animations';
+import Keys from '../enums/keycode.enum';
+import { MapObject } from '../interfaces/map.interfaces';
+
+const { S, X } = Keys;
 
 @Component({
   selector: 'app-maps',
@@ -27,7 +31,7 @@ export class MapsComponent implements OnInit {
     if (this.current) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
-          case 83 : { // Ctrl + S
+          case S : { // Ctrl + S
             this.saveMapLocal();
             break;
           }
@@ -36,7 +40,7 @@ export class MapsComponent implements OnInit {
       }
       if (event.altKey) {
         switch (event.keyCode) {
-          case 88 : { // Alt + X
+          case X : { // Alt + X
             this.deleteMapCloud();
             break;
           }
@@ -139,11 +143,11 @@ export class MapsComponent implements OnInit {
     return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru \n-->\n` + '</map>';
   }
 
-  mapToObject(xml: string) {
+  mapToObject(xml: string): { objects: MapObject[]} {
     let parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
     let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
-    let object: { objects: any[]} = {
+    let object: { objects: MapObject[]} = {
       objects: []
     };
     if (map.getElementsByTagName('map')[0]) {
@@ -152,7 +156,8 @@ export class MapsComponent implements OnInit {
         const attrs = elems[i].attributes;
         let obj = { name: elems[i].tagName };
         for (let i = 0; i < attrs.length; i++) {
-          obj[attrs[i].name] = attrs[i].value;
+          const float = parseFloat(attrs[i].value);
+          obj[attrs[i].name] = !isNaN(float) ? float : attrs[i].value;
         }
         if (obj.name !== 'parsererror') {
           object.objects.push(obj);
