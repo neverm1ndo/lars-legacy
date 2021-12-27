@@ -27,7 +27,7 @@ electron-builder.nsis.json
 *.launch
 .settings/
 *.sublime-workspace
-
+.vs/
 # IDE - VSCode
 .vscode/*
 .vscode/settings.json

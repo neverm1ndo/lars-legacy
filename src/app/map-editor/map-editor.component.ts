@@ -1,14 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@angular/core';
 import Keys from '../enums/keycode.enum';
+import { MapObject, Viewport } from '../interfaces/map.interfaces';
 
 const { LeftArrow, RightArrow } = Keys;
-
-interface Viewport {
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
-}
 
 type Position2 = {
   x: number;
@@ -22,9 +16,9 @@ type Position2 = {
 })
 export class MapEditorComponent implements OnInit {
 
-  _objects: any[];
-  d_objects: any[];
-  @Input('objects') set objects (newObjects: any[]) {
+  _objects: MapObject[];
+  d_objects: MapObject[];
+  @Input('objects') set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
@@ -89,7 +83,7 @@ export class MapEditorComponent implements OnInit {
     const res = this._objects.reduce((acc, obj) => {
       if (obj.posZ) {
         count++;
-        return acc + parseInt(obj.posZ);
+        return acc + obj.posZ;
       } else {
         return acc;
       }
@@ -133,20 +127,20 @@ export class MapEditorComponent implements OnInit {
        ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
      }
      const drawDots = () => {
-       this._objects.forEach((obj) => {
+       this._objects.forEach((obj: MapObject) => {
          ctx.fillStyle = '#d63b50';
          ctx.strokeStyle = '#fdfdfd';
          ctx.lineWidth = 1;
          ctx.beginPath();
-         ctx.arc(+obj.posX * 0.33 + this.viewport.x + this.imgSize/2, +obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
+         ctx.arc(obj.posX * 0.33 + this.viewport.x + this.imgSize/2, obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
          ctx.closePath();
          ctx.fill();
          ctx.stroke();
        });
      }
      /* istambul ignore next */
-     const jarvis = (objects: any[]) => {
-       function getLeft(objs: any[]) {
+     const jarvis = (objects: MapObject[]) => {
+       function getLeft(objs: MapObject[]) {
           objs.sort((a, b) => { if (a.posX && b.posX) return a.posX - b.posX })
           if (objs[0].posX) {
             return objs[0];
@@ -154,16 +148,16 @@ export class MapEditorComponent implements OnInit {
             return objs[1];
           }
        }
-       function getTop(objs: any[]) {
-         objs.sort((a, b) => { if (+a.posY && b.posY) return +a.posY - +b.posY })
+       function getTop(objs: MapObject[]) {
+         objs.sort((a, b) => { if (a.posY && b.posY) return a.posY - +b.posY })
          return objs[objs.length - 1];
        }
-       function getRight(objs: any[]) {
-         objs.sort((a, b) => { if (+a.posX && b.posX) return +a.posX - +b.posX })
+       function getRight(objs: MapObject[]) {
+         objs.sort((a, b) => { if (a.posX && b.posX) return a.posX - +b.posX })
          return objs[objs.length - 1];
        }
-       function getBottom(objs: any[]) {
-         objs.sort((a, b) => { if (+a.posY && b.posY) return +a.posY - +b.posY })
+       function getBottom(objs: MapObject[]) {
+         objs.sort((a, b) => { if (a.posY && b.posY) return a.posY - +b.posY })
          if (+objs[0].posX) {
            return objs[0];
          } else {
@@ -185,15 +179,15 @@ export class MapEditorComponent implements OnInit {
      }
      const getRectCenter = () => {
        return {
-         x: (Number((+this.dots.left.posX + +this.dots.right.posX).toFixed(4))/2) * 0.33 + this.viewport.x + this.imgSize/2,
-         y: (Number((+this.dots.top.posY + +this.dots.bottom.posY).toFixed(4))/2) * -0.33 + this.viewport.y + this.imgSize/2
+         x: (Number((this.dots.left.posX + this.dots.right.posX).toFixed(4))/2) * 0.33 + this.viewport.x + this.imgSize/2,
+         y: (Number((this.dots.top.posY + this.dots.bottom.posY).toFixed(4))/2) * -0.33 + this.viewport.y + this.imgSize/2
        }
      }
-     const rotateObjects = () => {
+     const rotateObjects = (): void => {
        for (let i = 0; i < this._objects.length; i++) {
          if (this._objects[i].posX ) {
-           this._objects[i].posX = (+this.d_objects[i].posX - this.origin.x) * Math.cos(this.deg) - (+this.d_objects[i].posY - this.origin.y) * Math.sin(this.deg) + this.origin.x;
-           this._objects[i].posY = (+this.d_objects[i].posX - this.origin.x) * Math.sin(this.deg) + (+this.d_objects[i].posY - this.origin.y) * Math.cos(this.deg) + this.origin.y;
+           this._objects[i].posX = (this.d_objects[i].posX - this.origin.x) * Math.cos(this.deg) - (this.d_objects[i].posY - this.origin.y) * Math.sin(this.deg) + this.origin.x;
+           this._objects[i].posY = (this.d_objects[i].posX - this.origin.x) * Math.sin(this.deg) + (this.d_objects[i].posY - this.origin.y) * Math.cos(this.deg) + this.origin.y;
         }
       }
     }
@@ -203,20 +197,20 @@ export class MapEditorComponent implements OnInit {
         y: (x - origin.x) * Math.sin(-this.deg) + (y - origin.y) * Math.cos(-this.deg) + origin.y
       }
     }
-     const getRelativeRotationDegree = (deg: number, delta: number) => {
+     const getRelativeRotationDegree = (deg: number, delta: number): number => {
       return deg*-delta;
      }
 
-     const moveObjects = (deltaX: number, deltaY: number) => {
+     const moveObjects = (deltaX: number, deltaY: number): void => {
        for (let i = 0; i < this._objects.length; i++) {
          if (this._objects[i].posX) {
-              this._objects[i].posX = +this._objects[i].posX + deltaX;
-              this._objects[i].posY = +this._objects[i].posY + deltaY;
+              this._objects[i].posX = this._objects[i].posX + deltaX;
+              this._objects[i].posY = this._objects[i].posY + deltaY;
           }
         }
      }
 
-     const drawPosDot = (oldPos: Position2, newPos: Position2) => {
+     const drawPosDot = (oldPos: Position2, newPos: Position2): void => {
        ctx.fillStyle = '#4287f5';
        ctx.strokeStyle = '#4287f5';
        ctx.beginPath();
@@ -277,8 +271,8 @@ export class MapEditorComponent implements OnInit {
        if (!this.radius) {
          this.radius = Math.round(
            Math.sqrt(
-             Math.pow((+dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2) - center.x, 2) +
-             Math.pow((+dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)
+             Math.pow((dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2) - center.x, 2) +
+             Math.pow((dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)
            ))
        }
        let margin = 14;
@@ -371,10 +365,10 @@ export class MapEditorComponent implements OnInit {
      rotate = false;
      this.canvas.nativeElement.style.cursor = '-webkit-grab';
      if (this.mode == 'move') {
-       this.d_objects = this._objects.map(obj => Object.assign({...obj}));
+       this.d_objects = this._objects.map((obj: MapObject) => Object.assign({...obj}));
        this.origin = {
-         x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
-         y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
+         x: (this.dots.top.posX + this.dots.bottom.posX)/2,
+         y: (this.dots.top.posY + this.dots.bottom.posY)/2
        };
      }
     })
@@ -400,8 +394,8 @@ export class MapEditorComponent implements OnInit {
       if (rotate) {
         if (!this.origin) {
            this.origin = {
-             x: (+this.dots.top.posX + +this.dots.bottom.posX)/2,
-             y: (+this.dots.top.posY + +this.dots.bottom.posY)/2
+             x: (this.dots.top.posX + this.dots.bottom.posX)/2,
+             y: (this.dots.top.posY + this.dots.bottom.posY)/2
            };
         }
         this.deg += getRelativeRotationDegree(0.01, (-(dragStart.x - dragEnd.x)));
@@ -427,8 +421,8 @@ export class MapEditorComponent implements OnInit {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
     this.viewport = {
-      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+this._objects[1].posX*-0.33),
-      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+this._objects[1].posY*0.33),
+      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-0.33),
+      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*0.33),
       dx: this.imgSize,
       dy: this.imgSize
     }
