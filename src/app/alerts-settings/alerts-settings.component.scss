@@ -1,4 +1,14 @@
 @import "colors";
+h6 {
+  margin-bottom: 0em;
+  font-weight: 700;
+}
+small {
+  opacity: 0.7;
+  line-height: 10px;
+  position: relative;
+  bottom: 3px;
+}
 .switch {
   display: inline-block;
   height: 34px;

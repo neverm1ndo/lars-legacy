@@ -56,10 +56,18 @@ export class UserService {
       tray: false,
       lineChunk: 100,
       listStyle: 'small',
-      textEditorStyle: 'material'
+      textEditorStyle: 'material',
+    }
+    const defaultAlerts = {
+      playerReport: true,
+      autoBan: true,
+      autoBlock: true,
+      serverShutdown: true,
+      serverRestart: true,
     }
     if (!userSettings) {
       window.localStorage.setItem('settings', JSON.stringify(defaultSettings));
+      window.localStorage.setItem('alerts', JSON.stringify(defaultAlerts));
       return defaultSettings;
     }
     return userSettings;
