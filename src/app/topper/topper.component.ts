@@ -75,9 +75,9 @@ export class TopperComponent implements OnInit {
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());
-      this.ws.getServerState().subscribe((state: boolean) => {
-        console.log('%c[server]', 'color: magenta', 'status:', state?'live':'stoped');
-        this.state.next(state?'live':'stoped')
+      this.ws.getServerState().subscribe((state) => {
+        console.log('%c[server]', 'color: magenta', 'status:', state);
+        this.state.next(state)
       })
       this.ws.getServerError().subscribe((stderr: string) => {
          console.error('%c[server]', 'color: magenta', stderr);
