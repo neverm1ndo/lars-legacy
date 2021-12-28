@@ -2,7 +2,7 @@
   <img src="{{user.avatar}}"/>
   <a (click)="userLink(user.id)">{{ user.name }}</a>
   <span class="badge badge-dark">{{user.id}}</span>
-  <small>{{user.getUserGroupName(user.group)}}</small>
+  <small>{{userService.getUserGroupName(user.group)}}</small>
 </div>
 <ng-template #default>
   <span>{{content}} </span>
