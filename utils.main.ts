@@ -1,6 +1,6 @@
 import { createWriteStream } from 'fs';
 import * as path from 'path';
-import { app, Menu, Tray, Notification, NotificationConstructorOptions } from 'electron';
+import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage } from 'electron';
 import axios from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
@@ -69,7 +69,8 @@ const verifyUserToken = async (): Promise<any> => {
 * @returns {Tray} Returns tray icon with context menu
 */
 const createTray = (): Tray => {
-    let appIcon = new Tray(path.join(__dirname, 'src/assets/icons/favicon.ico'));
+    let appIcon = new Tray(nativeImage.createEmpty());
+    appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, 'dist/assets/icons/favicon.ico')));
     const contextMenu = Menu.buildFromTemplate([
         {
             label: 'Развернуть LARS', click: function () {
