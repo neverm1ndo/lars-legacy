@@ -69,21 +69,32 @@ export class TopperComponent implements OnInit {
   ngOnInit(): void {
     this.userService.user.subscribe((user) =>{
       this.authenticated = user;
-      // this.ws.connect();
       this.state.subscribe((val: any) => {
         this.server.state = val;
       })
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());
-      this.ws.getServerState().subscribe((state) => {
-        console.log('%c[server]', 'color: magenta', 'status:', state);
-        this.state.next(state)
+      this.ws.getServerState().subscribe((state: boolean) => {
+        console.log('%c[server]', 'color: magenta', 'status:', state?'live':'stoped');
+        this.state.next(state?'live':'stoped')
       })
       this.ws.getServerError().subscribe((stderr: string) => {
          console.error('%c[server]', 'color: magenta', stderr);
          this.state.next('error')
-       });
+      });
+      this.ws.getServerReboot().subscribe(() => {
+         console.log('%c[server]', 'color: magenta', 'server rebooted');
+         this.state.next('live')
+      });
+      this.ws.getServerStop().subscribe(() => {
+         console.log('%c[server]', 'color: magenta', 'server stoped');
+         this.state.next('stoped');
+      });
+      this.ws.getServerLaunch().subscribe(() => {
+         console.log('%c[server]', 'color: magenta', 'server launched');
+         this.state.next('live');
+      });
     }
   }
 

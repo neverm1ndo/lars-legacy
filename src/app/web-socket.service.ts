@@ -78,9 +78,16 @@ export class WebSocketService {
   }
 
   getServerState(): Observable<any> {
-    return this.socket.fromEvent('server-status').pipe(
-      map((data) => data
-    ));
+    return this.socket.fromEvent('server-status');
+  }
+  getServerReboot(): Observable<any> {
+    return this.socket.fromEvent('server-rebooted');
+  }
+  getServerStop(): Observable<any> {
+    return this.socket.fromEvent('server-stoped');
+  }
+  getServerLaunch(): Observable<any> {
+    return this.socket.fromEvent('server-launched');
   }
   getServerError(): Observable<string> {
     return this.socket.fromEvent('server-error');
