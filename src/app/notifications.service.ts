@@ -42,5 +42,12 @@ export class NotificationsService {
         this.spawnNotification(`Кикбан ${line.nickname}`, `${new Date(line.unix).toDateString()} ${line.nickname} кикнут системой по причине ${line.content}`)
       })
     )
+    this.notifications.add(
+      this.ws.getAlertReport()
+      .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).playerReport))
+      .subscribe((line) => {
+        this.spawnNotification(`Жалоба ${line.nickname}`, `${new Date(line.unix).toDateString()} ${line.content}`)
+      })
+    )
   }
 }
