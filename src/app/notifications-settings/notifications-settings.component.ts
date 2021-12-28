@@ -11,6 +11,7 @@ export class NotificationsSettingsComponent implements OnInit {
   constructor() { }
 
   settings = new FormGroup({
+    silent: new FormControl(false),
     playerReport: new FormControl(true),
     autoBan: new FormControl(true),
     autoBlock: new FormControl(true),

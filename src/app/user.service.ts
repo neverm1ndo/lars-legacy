@@ -59,6 +59,7 @@ export class UserService {
       textEditorStyle: 'material',
     }
     const defaultAlerts = {
+      silent: false,
       playerReport: true,
       autoBan: true,
       autoBlock: true,

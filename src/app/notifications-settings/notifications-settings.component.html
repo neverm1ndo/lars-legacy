@@ -5,6 +5,17 @@
   <form [formGroup]="settings" (change)="setup()">
     <div class="d-flex justify-content-between align-content-center mb-2">
       <div class="">
+        <h6>Включить звук оповещения</h6>
+        <small>Включить системный звук при оповещении</small>
+      </div>
+      <label class="switch" for="checkbox6">
+        <input formControlName="silent" type="checkbox" id="checkbox6" />
+        <div class="slider round"></div>
+      </label>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="">
         <h6>Оповещения о жалобе на игрока</h6>
         <small>Жалобы на читеров, мат и т.д</small>
       </div>

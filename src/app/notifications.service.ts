@@ -18,7 +18,7 @@ export class NotificationsService {
     let options: NotificationOptions;
       options = {
         body: body,
-        silent: true,
+        silent: !JSON.parse(localStorage.getItem('alerts')).silent,
       }
     new Notification(title, options);
   }
