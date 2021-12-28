@@ -1,9 +1,9 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, Tray } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Tray } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { verifyUserToken, downloadFile, createTray } from './utils.main';
+import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
 
 /** Init main window
 * @type {BrowserWindow}
@@ -147,6 +147,9 @@ ipcMain.on('minimize-to-tray', (event) => {
   win.hide();
   tray = createTray();
 })
+ipcMain.on('notification', (event, options) => {
+  showNotification(options)
+});
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {

@@ -7,6 +7,7 @@ import { UserService } from './user.service';
 import { filter, map, take } from 'rxjs/operators';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { AppConfig } from '../environments/environment';
+import { LogLine } from './interfaces/app.interfaces';
 
 interface Auth {
   auth?: {
@@ -98,8 +99,12 @@ export class WebSocketService {
     return this.socket.fromEvent('new-log-line');
   }
 
-  getAlerts(): Observable<any> {
+  getAlertGuardBlockOn(): Observable<LogLine> {
     return this.socket.fromEvent('alert:guard-block-on');
+  }
+
+  getAlertKickban(): Observable<LogLine> {
+    return this.socket.fromEvent('alert:kickban');
   }
     //     case 'expire-token': {
     //       console.log('%c[ws-service]', 'color: tomato', m.msg);

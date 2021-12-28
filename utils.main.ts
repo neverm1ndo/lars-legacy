@@ -1,6 +1,6 @@
 import { createWriteStream } from 'fs';
 import * as path from 'path';
-import { app, Menu, Tray } from 'electron';
+import { app, Menu, Tray, Notification, NotificationConstructorOptions } from 'electron';
 import axios from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
@@ -91,4 +91,11 @@ const createTray = (): Tray => {
     return appIcon;
 }
 
-export { downloadFile, verifyUserToken, createTray };
+/** Show currently running operating system's native notification
+  @param {NotificationConstructorOptions} options Notification options
+*/
+const showNotification = (options: NotificationConstructorOptions) => {
+  new Notification(options).show()
+}
+
+export { downloadFile, verifyUserToken, createTray, showNotification };

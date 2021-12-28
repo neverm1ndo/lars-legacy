@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-alerts-settings',
-  templateUrl: './alerts-settings.component.html',
-  styleUrls: ['./alerts-settings.component.scss']
+  selector: 'notifications-settings',
+  templateUrl: './notifications-settings.component.html',
+  styleUrls: ['./notifications-settings.component.scss']
 })
-export class AlertsSettingsComponent implements OnInit {
+export class NotificationsSettingsComponent implements OnInit {
 
   constructor() { }
 

@@ -49,7 +49,7 @@ import { AdminsComponent } from '../admins/admins.component';
 import { MapCorrectorComponent } from '../map-corrector/map-corrector.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
-import { AlertsSettingsComponent } from '../alerts-settings/alerts-settings.component';
+import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
 import { socketConfig } from '../web-socket.service';
@@ -70,7 +70,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, AlertsSettingsComponent, GeneralSettingsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent],
   imports: [
     CommonModule,
     SharedModule,
