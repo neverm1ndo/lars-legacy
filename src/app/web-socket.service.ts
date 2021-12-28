@@ -56,14 +56,6 @@ export class WebSocketService {
       });
     socket.on('connect', () => {
         console.log('%c[socket-service]', 'color: tomato', `Connected to Liberty-Admin-Node`);
-        this.getRoomName().pipe(take(1)).subscribe((room) => {
-          console.log(room)
-          if (room.includes('devs')) {
-            console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
-            this.send('get-status');
-            return;
-          }
-        })
         this.send('get-room');
     })
     socket.on('disconnect', (reason: string) => {
@@ -93,7 +85,7 @@ export class WebSocketService {
     return this.socket.fromEvent('server-error');
   }
 
-  getRoomName(): Observable<'devs' | 'main'> {
+  getRoomName(): Observable<any> {
     return this.socket.fromEvent('room-name');
   }
 

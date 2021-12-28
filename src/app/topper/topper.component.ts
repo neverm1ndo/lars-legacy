@@ -95,6 +95,12 @@ export class TopperComponent implements OnInit {
          console.log('%c[server]', 'color: magenta', 'server launched');
          this.state.next('live');
       });
+      this.ws.getRoomName().subscribe((room) => {
+        if (room.includes('devs')) {
+          console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
+          this.ws.send('get-status');
+        }
+      })
     }
   }
 
