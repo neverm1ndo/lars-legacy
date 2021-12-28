@@ -1,15 +1,18 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 interface Backup {
+  unix: number;
+  date: Date,
+  expires: Date,
+  action: 'change' | 'delete';
   user: {
     nickname: string;
-    avatar: string;
+    group_id: string;
   },
   file: {
     name: string;
     mime: string;
-    created: string;
-    expires: string;
+    path: string;
     text?: string;
   }
 }
