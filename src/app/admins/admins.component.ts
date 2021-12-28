@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user.service';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
@@ -10,7 +10,7 @@ import { ElectronService } from '../core/services/electron/electron.service';
 import { WebSocketService } from '../web-socket.service';
 import { Subscription } from 'rxjs';
 
-type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm';
+type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
 
 @Component({
   selector: 'app-admins',
@@ -28,7 +28,8 @@ export class AdminsComponent implements OnInit, OnDestroy {
     search: faSearch,
     wind: faWind,
     map: faMap,
-    conf: faFileSignature
+    conf: faFileSignature,
+    box: faBoxOpen
   }
   usersStates = {};
   popup: boolean = false;

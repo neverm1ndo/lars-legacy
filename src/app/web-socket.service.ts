@@ -49,6 +49,7 @@ export class WebSocketService {
             case '/home/config-editor': { socket.emit('user-action', 'redacting'); break; }
             case '/home/maps': { socket.emit('user-action', 'inmaps'); break; }
             case '/home/admins': { socket.emit('user-action', 'inadm'); break };
+            case '/home/backups': { socket.emit('user-action', 'inbacks'); break };
             case '/login': { this.disconnect(); break; }
             default: break;
           }
