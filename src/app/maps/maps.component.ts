@@ -330,15 +330,15 @@ export class MapsComponent implements OnInit {
           const form = new FormData();
           const blob = new Blob([this.objectToMap(this.mapEditor._objects)], { type: 'text/plain' })
           form.append('file', blob, this.currentFilePath);
-          /*sub =*/ this.api.uploadFileMap(form).pipe(take(1)).subscribe(() => {
-            this.toast.show(`Карта <b>${ this.currentFileName }</b> успешно перезаписана`,
-              {
-                classname: 'bg-success text-light',
-                delay: 3000,
-                icon: faSave,
-                subtext: this.currentFilePath
-              });
-          });
+          /*sub =*/ this.api.uploadFileMap(form).subscribe(() => {}, () => {}, () => {
+          this.toast.show(`Карта <b>${ this.currentFileName }</b> успешно перезаписана`,
+            {
+              classname: 'bg-success text-light',
+              delay: 3000,
+              icon: faSave,
+              subtext: this.currentFilePath
+            });
+        });
         }
       }
     ).finally(() => {
