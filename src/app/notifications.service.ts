@@ -39,7 +39,7 @@ export class NotificationsService {
       this.ws.getAlertKickban()
       .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).autoBan))
       .subscribe((line) => {
-        this.spawnNotification(`Кикбан ${line.nickname}`, `${new Date(line.unix).toDateString()} ${line.nickname} кикнут системой по причине ${line.content}`)
+        this.spawnNotification(`Кикбан ${line.nickname}`, `${new Date(line.unix).toDateString()} ${line.nickname} кикнут системой`)
       })
     )
     this.notifications.add(
