@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } fr
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services/electron/electron.service';
-import { faClipboardCheck, faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardCheck, faClipboard, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take } from 'rxjs/operators'
 import { throwError } from 'rxjs';
 
@@ -29,6 +29,9 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     delete: 'удалил',
     change: 'изменил',
     restore: 'восстановил'
+  }
+  fa = {
+    sign: faFileSignature
   }
   loading: boolean = false;
 
@@ -136,7 +139,8 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
 
   getBackupFile(name: string, unix: number) {
-    return this.api.getBackupFile(name, unix).pipe(
+  if (this.current.file.binary) return;
+    this.api.getBackupFile(name, unix).pipe(
       catchError(error => {
         if (error.error instanceof ErrorEvent) {
           console.error('An error occurred:', error.error.message);
@@ -148,7 +152,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
           return throwError(JSON.parse(error.error));
         })
       ).pipe(take(1)).subscribe((data) => {
-        this.current.file.text = data;
+          this.current.file.text = data;
       }, (err) => {
         console.error(err);
         this.toast.show(`Бэкап файла ${this.current.file.name} не был загружен для просмотра по причине:`,             {
