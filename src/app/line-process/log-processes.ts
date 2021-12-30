@@ -161,6 +161,12 @@ export class Processes { // FIXME: convert all this stuff to enums
       control: 'healthPick'
     },
     {
+      process: '<health/buy>',
+      translate: 'Покупка здоровья',
+      type: 'usual',
+      control: 'healthBuy'
+    },
+    {
       process: '<armour/buy>',
       translate: 'Покупка брони',
       type: 'usual',
@@ -243,6 +249,18 @@ export class Processes { // FIXME: convert all this stuff to enums
       translate: 'Блокировка чата: флуд',
       type: 'warning',
       control: 'chatBlockFlood'
+    },
+    {
+      process: '<chat/block/not_in_game>',
+      translate: 'Блокировка чата: не в игре',
+      type: 'warning',
+      control: 'chatBlockNin'
+    },
+    {
+      process: '<chat/block/repeated>',
+      translate: 'Блокировка чата: повторение',
+      type: 'warning',
+      control: 'chatBlockRep'
     },
     {
       process: '<chat/unmute/hand>',
@@ -423,6 +441,18 @@ export class Processes { // FIXME: convert all this stuff to enums
       translate: 'Вход в Магазин одежды',
       type: 'clothes',
       control: 'clotEnter'
-    }
+    },
+    {
+      process: '<player/cn/get>',
+      translate: 'CN GET',
+      type: 'info',
+      control: 'playerCnGet'
+    },
+    {
+      process: '<player/cn/response>',
+      translate: 'CN RES',
+      type: 'info',
+      control: 'playerCnRes'
+    },
   ];
 }
