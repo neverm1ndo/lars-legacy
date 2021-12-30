@@ -68,7 +68,7 @@
                   [(ngModel)]="admin.secondary_group">
                 </ng-select>
               </td>
-              <td class="td-rm"><button (click)="removeAdmin(admin.username)" [disabled]="userService.getUserInfo().gr !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userService.getUserInfo().gr !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
               <td class="td-rm"><button (click)="closeAdminSession(admin.username)" [disabled]="userService.getUserInfo().gr !== 10" ngbTooltip="Сбросить токен доступа" class="btn btn-dark btn-36" type="button" name="button"><fa-icon [icon]="fa.poo"></fa-icon></button></td>
             </tr>
               </tbody>
