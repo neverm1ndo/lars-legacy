@@ -23,9 +23,8 @@ export class ApiService {
   readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
   readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
   readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
-  readonly URL_ADMINS_ALL: string = AppConfig.api.main + 'admins/all';
   readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
-  readonly URL_ADMIN_SUB_GROUP: string = AppConfig.api.main + 'admins/sub-groups';
+  readonly URL_ADMIN_CHANGE_SECONDARY_GROUP: string = AppConfig.api.main + 'admins/change-secondary-group';
   readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
   readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
   readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
@@ -62,17 +61,14 @@ export class ApiService {
   getAdminsList(): Observable<any> {
     return this.http.get(this.URL_ADMINS_LIST);
   }
-  getAdminsAll(): Observable<any> {
-    return this.http.get(this.URL_ADMINS_LIST);
+  setAdminGroup(id: number, group: number) {
+    return this.http.put(this.URL_ADMIN_CHANGE_GROUP, { id, group: group })
   }
-  setAdminGroup(username: string, group: number) {
-    return this.http.put(this.URL_ADMIN_CHANGE_GROUP, { username: username, group: group })
+  setAdminSecondaryGroup(id: number, group: number) {
+    return this.http.put(this.URL_ADMIN_CHANGE_SECONDARY_GROUP, { id, group: group })
   }
   closeAdminSession(username: string): Observable<any> {
     return this.http.get(this.URL_ADMIN_TOKEN_EXPIRATION, { params: { username: username }})
-  }
-  getAdminSubGroup() {
-    return this.http.get(this.URL_ADMIN_SUB_GROUP)
   }
   getConfigsDir(): Observable<any> {
     return this.http.get(this.URL_CONFIGS);

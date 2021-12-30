@@ -39,9 +39,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.minLength(1)
     ]),
-    group: new FormControl(9, [
+    mainGroup: new FormControl(9, [
       Validators.required
-    ])
+    ]),
+    secondaryGroup: new FormControl(9)
   });
   $activies: Subscription;
 
@@ -70,6 +71,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
       inmaps: 'В редакторе карт',
       redacting: 'В редакторе конфигов',
       inadm: 'В списке админов',
+      inbacks: 'Просматривает бэкапы'
     }
     let act = actions[action];
     if (!act) return '???';
@@ -97,22 +99,17 @@ export class AdminsComponent implements OnInit, OnDestroy {
     });
   }
   getFullAdminsAll() {
-    this.api.getAdminsAll().subscribe((admins: any) => {
+    this.api.getAdminsList().subscribe((admins: any) => {
       this.admins = admins;
-    });
-  }
-  getAdminSubGroup() {
-    this.api.getAdminSubGroup().subscribe((admins: any) => {
-      console.log(admins);
     });
   }
 
   addNewAdmin() {
-      this.changeAdminGroup(this.addAdminForm.value.nickname, this.addAdminForm.value.group);
+      // this.changeAdminGroup(this.addAdminForm.value.nickname, this.addAdminForm.value.group);
       this.popup = false;
       this.getFullAdminsList();
   }
-  removeAdmin(username: string) {
+  removeAdmin(username: string, id: number) {
     const dialogOpts = {
         type: 'question',
         buttons: ['Исключить', 'Отмена'],
@@ -121,7 +118,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
       }
     this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) {
-        this.changeAdminGroup(username, 2);
+        this.changeAdminGroup(username, id, 2);
         setTimeout(() => {
           this.getFullAdminsList();
         }, 500);
@@ -150,8 +147,18 @@ export class AdminsComponent implements OnInit, OnDestroy {
     })
   }
 
-  changeAdminGroup(username: string, group: number) {
-    this.api.setAdminGroup(username, group).subscribe(() => {
+  changeAdminGroup(username: string, id: number, group: number) {
+    this.api.setAdminGroup(id, group).subscribe(() => {
+      this.toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this.userService.getUserGroupName(group)}</b>`,
+        {
+          classname: 'bg-success text-light',
+          delay: 3000,
+          icon: faUserSecret
+        });
+    });
+  }
+  changeSecondaryAdminGroup(username: string, id: number, group: number) {
+    this.api.setAdminSecondaryGroup(id, group).subscribe(() => {
       this.toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this.userService.getUserGroupName(group)}</b>`,
         {
           classname: 'bg-success text-light',

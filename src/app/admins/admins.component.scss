@@ -1,6 +1,9 @@
 @import 'colors';
 :host {
   font-size: 11px;
+  .playerlog {
+    background: $texteditor;
+  }
   .btn-36 {
     height: 36px;
     width: 36px;
@@ -21,6 +24,12 @@
     color: #fdfdfd;
     margin-bottom: 0px;
     height: 100%;
+    th {
+      border: none;
+      background-color: $underpanel-hover;
+      text-align: center;
+      font-weight: lighter;
+    }
     tr {
       &:hover {
         background: rgba(0, 0, 0, 0.03);
@@ -37,15 +46,15 @@
         border: none;
       }
     }
-    thead {
-      position: relative;
-      th {
-        border: none;
-        &:nth-child(even) {
-          background: #31333e90;
-        }
-      }
-    }
+    // thead {
+    //   position: relative;
+    //   th {
+    //     border: none;
+    //     &:nth-child(even) {
+    //       background: #31333e90;
+    //     }
+    //   }
+    // }
   }
   a {
     margin-left: 5px;
