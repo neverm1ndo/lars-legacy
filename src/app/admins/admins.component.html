@@ -57,13 +57,13 @@
                   </ng-select>
                 </td>
                 <td>
-                  <ng-select [items]="roles"
+                  <ng-select [items]="subRoles"
                   bindLabel="val"
                   [searchable]="false"
                   [clearable]="false"
                   bindValue="id"
                   class="custom"
-                  [disabled]="userService.getUserInfo().gr !== 10"
+                  [disabled]="userService.getUserInfo().gr !== 10 && admin.main_group == 10 && dmin.main_group == 9"
                   (change)="changeSecondaryAdminGroup(admin.username, admin.user_id, admin.secondary_group)"
                   [(ngModel)]="admin.secondary_group">
                 </ng-select>
