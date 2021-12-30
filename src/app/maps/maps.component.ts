@@ -209,7 +209,7 @@ export class MapsComponent implements OnInit {
       })
   }
   correctObjectsZLeveling(event: number) {
-    const diff = event - this.mapEditor.getAveragePosZ();
+    const diff = event - this.mapEditor.getAverage('posZ');
     if (diff === 0) { this.levelingZ = false; return; }
     this.mapEditor.changePosZ(diff);
     this.toast.show(`Успешное изменение posZ`,

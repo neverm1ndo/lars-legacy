@@ -78,12 +78,12 @@ export class MapEditorComponent implements OnInit {
     });
   }
 
-  getAveragePosZ(): number {
+  getAverage(key: keyof Omit<MapObject, 'id' | 'name' | 'dimension' | 'model' | 'interior'>): number {
     let count = 0;
     const res = this._objects.reduce((acc, obj) => {
-      if (obj.posZ) {
+      if (obj[key]) {
         count++;
-        return acc + obj.posZ;
+        return acc + obj[key];
       } else {
         return acc;
       }
@@ -188,6 +188,7 @@ export class MapEditorComponent implements OnInit {
          if (this._objects[i].posX ) {
            this._objects[i].posX = (this.d_objects[i].posX - this.origin.x) * Math.cos(this.deg) - (this.d_objects[i].posY - this.origin.y) * Math.sin(this.deg) + this.origin.x;
            this._objects[i].posY = (this.d_objects[i].posX - this.origin.x) * Math.sin(this.deg) + (this.d_objects[i].posY - this.origin.y) * Math.cos(this.deg) + this.origin.y;
+           this._objects[i].rotZ = this.d_objects[i].rotZ - Math.round(this.deg*180/Math.PI);
         }
       }
     }
@@ -367,8 +368,8 @@ export class MapEditorComponent implements OnInit {
      if (this.mode == 'move') {
        this.d_objects = this._objects.map((obj: MapObject) => Object.assign({...obj}));
        this.origin = {
-         x: (this.dots.top.posX + this.dots.bottom.posX)/2,
-         y: (this.dots.top.posY + this.dots.bottom.posY)/2
+         x: this.getAverage('posX'),
+         y: this.getAverage('posY')
        };
      }
     })
@@ -394,8 +395,8 @@ export class MapEditorComponent implements OnInit {
       if (rotate) {
         if (!this.origin) {
            this.origin = {
-             x: (this.dots.top.posX + this.dots.bottom.posX)/2,
-             y: (this.dots.top.posY + this.dots.bottom.posY)/2
+             x: this.getAverage('posX'),
+             y: this.getAverage('posY')
            };
         }
         this.deg += getRelativeRotationDegree(0.01, (-(dragStart.x - dragEnd.x)));

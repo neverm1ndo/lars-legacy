@@ -46,7 +46,7 @@
                 </div>
           <div class="map-bottom d-flex flex-column flex-nowrap justify-content-center align-items-center">
             <div [@panelSwitch] *ngIf="levelingZ" class="d-flex align-items-center justify-content-center">
-              <map-corrector [toCorrect]="mapEditor.getAveragePosZ()" [icon]="fa.ruler.vert" [title]="'Выравнивание по Z координате'" (corrected)="correctObjectsZLeveling($event)"></map-corrector>
+              <map-corrector [toCorrect]="mapEditor.getAverage('posZ')" [icon]="fa.ruler.vert" [title]="'Выравнивание по Z координате'" (corrected)="correctObjectsZLeveling($event)"></map-corrector>
             </div>
             <div [@panelSwitch] *ngIf="mode !== 'view' && !levelingZ" class="d-flex">
               <button ngbTooltip="Выровнить по Z" (click)="levelZ()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.ruler.vert"></fa-icon></button>
