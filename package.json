@@ -28,7 +28,7 @@
     "ng": "ng",
     "pack": "electron-builder --dir",
     "start": "npm-run-all -p electron:serve ng:serve",
-    "build": "npm run electron:serve-tsc && ng build --base-href ./",
+    "build": "npm run electron:serve-tsc && ng build --base-href /",
     "deploy": "electron-builder build --publish always --x64 --ia32 -c ./electron-builder.json",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
