@@ -26,9 +26,8 @@ const { S, Delete, F } = Keys;
 export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  _texp: BehaviorSubject<string> = new BehaviorSubject('');
 
-  search: boolean = true;
+  search: boolean = false;
 
   // @Input('file-info') path: string;
   // @Input('file-stats') stats: any;
@@ -57,7 +56,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (event.shiftKey) {
         switch (event.keyCode) {
           case Delete : {
-            // this.deleteFile();
+            this.deleteFile();
             break;
           }
           default : break;
