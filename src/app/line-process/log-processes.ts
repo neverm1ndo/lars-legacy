@@ -263,6 +263,12 @@ export class Processes { // FIXME: convert all this stuff to enums
       control: 'chatBlockRep'
     },
     {
+      process: '<chat/block/domain>',
+      translate: 'Блокировка чата: ссылка',
+      type: 'warning',
+      control: 'chatBlockDomain'
+    },
+    {
       process: '<chat/unmute/hand>',
       translate: 'Ручная разблокировка чата',
       type: 'adm',
@@ -273,6 +279,12 @@ export class Processes { // FIXME: convert all this stuff to enums
       translate: 'Ручная блокировка чата',
       type: 'info',
       control: 'chatHandBlock'
+    },
+    {
+      process: '<chat/mute/auto>',
+      translate: 'Автоматическая блокировка чата',
+      type: 'info',
+      control: 'chatAutoBlock'
     },
     {
       process: '<spectate/leave>',
@@ -437,7 +449,7 @@ export class Processes { // FIXME: convert all this stuff to enums
       control: 'spectateDerbyChange'
     },
     {
-      process: '<clothes_shop/enter>',
+      process: '<shop/enter>',
       translate: 'Вход в Магазин одежды',
       type: 'clothes',
       control: 'clotEnter'
