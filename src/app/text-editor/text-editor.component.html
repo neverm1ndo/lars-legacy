@@ -69,7 +69,7 @@
             <div class="panel-right">
               <div class="w-100 d-flex flex-row justify-content-end">
                 <button class="panel">
-                  <i [class.led-loading]="loading" [class.led-error]="(error | async)?.message" class="autosave-led"></i>
+                  <i [class.led-loading]="loading" [class.led-error]="(configs.error | async)?.message" class="autosave-led"></i>
                 </button>
                 <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
                   <fa-icon [icon]="fa.save"></fa-icon> <span class="d-sm-none d-md-inline">Сохранить</span>

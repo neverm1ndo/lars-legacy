@@ -91,7 +91,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private configs: ConfigsService,
+    public configs: ConfigsService,
     private toast: ToastService
   ) {}
 
