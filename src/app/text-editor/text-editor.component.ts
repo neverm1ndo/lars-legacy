@@ -111,6 +111,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.configs.deleteFile(this.path);
   }
 
+  pathToClipboard() {
+    this.configs.pathToClipboard(this.path);
+  }
   saveFile() {
     this.loading = true;
     this.configs.saveFile(this.path, this.textplain).subscribe(() => {
@@ -144,6 +147,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(tap(params => { this.loading = true; this.path = params.path; return params}))
     .pipe(switchMap(params => this.configs.getConfig(params.path)))
     .subscribe(([file, info]) => {
+
       this.textplain = file.text;
       this.origin = Buffer.from(file.text, 'utf-8');
       this.stats = info;
