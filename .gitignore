@@ -13,6 +13,9 @@ src/**/*.js
 *.js
 *.log
 
+# exclude codemirror addons
+!src/addon/**/*.js
+
 # prod builder conf
 electron-builder.nsis.json
 
