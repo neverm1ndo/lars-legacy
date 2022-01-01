@@ -46,7 +46,7 @@ export class ConfigEditorComponent implements OnInit {
     public toast: ToastService,
     private electron: ElectronService,
     private ngZone: NgZone,
-    private configs: ConfigsService
+    public configs: ConfigsService
   ) {
     this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => {
