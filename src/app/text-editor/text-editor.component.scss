@@ -44,6 +44,47 @@
       font-family: monospace, sans-serif;
     }
   }
+  .infile-search {
+    &-hide {
+      width: 45px;
+      margin-right: 10px;
+      svg {
+        width: 20px;
+      }
+    }
+    &-head {
+      background: $underpanel;
+      padding: 5px 15px 5px 10px;
+      span {
+        font-family: 'Consolas';
+      }
+      i {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 100%;
+      }
+      button {
+        min-height: 40px;
+      }
+    }
+    &-body {
+      background: $filetree;
+      button, input {
+        font-size: 13px!important;
+        border: none!important;
+      }
+      input {
+        font-family: 'Consolas';
+      }
+      button {
+        width: 200px;
+        margin-left: 15px;
+        height: 32px;
+      }
+    }
+  }
   .texteditor-underpanel {
     height: 31px;
     background: $underpanel;

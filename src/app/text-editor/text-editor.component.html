@@ -1,3 +1,32 @@
+<!-- <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && !loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
+  <div class="d-flex align-self-center w-100 text-center">
+    <h4><fa-icon [icon]="fa.conf"></fa-icon><br>Выберите кофигурационный файл из списка, чтобы приступить к редактированию или добавьте новый, с помощью комбинации <span class="badge badge-dark"> ALT+A </span></h4>
+  </div>
+</div>
+<div *ngIf="!showBinary && (textplain == undefined || textplain == null) && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
+  <div class="d-flex justify-content-center align-self-center w-100 text-center">
+    <div class="loader d-flex align-self-center">
+      <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
+    </div>
+  </div>
+</div>
+<div *ngIf="showBinary && binStats" class="text-edit-block d-flex flex-column justify-content-center align-content-center">
+  <div class="d-flex progress">
+    <div class="progress-bar" [style.width.%]="dprogress" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div class="pl-3 pr-3 d-flex align-self-center justify-content-center align-content-center w-100 text-center flex-column flex-fill">
+    <h3><fa-icon [icon]="fa.conf"></fa-icon><br>{{ currentFilePath }}</h3>
+    <table class="w-50 align-self-center mt-2 mb-2">
+      <tr><td>MIME-type</td><td>{{binStats.mime}}</td></tr>
+      <tr><td>Посл. изм.</td><td>{{binStats.lastm | date:'d MMM yy, HH:mm:ss'}}</td></tr>
+      <tr><td>Размер</td><td>{{binStats.size | FileSize }}</td></tr>
+    </table>
+    <div *ngIf="user.getUserInfo().gr == 10">
+      <button [disabled]="dprogress !== 0" (click)="downloadFile()" type="button" class="btn btn-light mr-2 ml-2"><fa-icon [icon]="fa.save"></fa-icon> <span class="ml-2">Скачать</span></button>
+      <button (click)="deleteFile()" type="button" class="btn btn-danger mr-2 ml-2"><fa-icon [icon]="fa.del"></fa-icon> <span class="ml-2">Удалить</span></button>
+    </div>
+  </div>
+</div> -->
 <div class="h-100">
   <div class="d-flex align-items-start flex-column h-100 w-100">
     <div #editor class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
@@ -11,6 +40,7 @@
         (keydown.backspace)="checkChanges()"
         (keydown.control.z)="checkChanges()"
         (keydown.control.y)="checkChanges()"
+        (keydown.control.v)="checkChanges()"
         [options]="cmSettings"
         [autoFocus]="true"
       ></ngx-codemirror>
@@ -21,8 +51,28 @@
         </div>
       </div> -->
     </div>
+    <div *ngIf="search" class="d-flex flex-column infile-search w-100">
+      <div class="d-flex flex-row justify-content-between align-items-center infile-search-head">
+        <div class="d-flex align-items-center">
+          <button (click)="search = false" class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+          <small class="">Поиск в текущем файле</small>
+        </div>
+      </div>
+      <div class="d-flex flex-fill flex-column p-2 infile-search-body">
+        <div class="d-flex flex-row justify-content-stretch">
+          <input [autofocus] name="query" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Найти в текущем буфере"/>
+          <button class="btn btn-light flex-grow-1"type="button" name="button">Найти</button>
+          <button class="btn btn-light flex-grow-1"type="button" name="button">Найти все</button>
+        </div>
+        <div class="d-flex flex-row justify-content-stretch mt-2">
+          <input name="query" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Заменить в текущем буфере"/>
+          <button class="btn btn-light flex-grow-1"type="button" name="button">Заменить</button>
+          <button class="btn btn-light flex-grow-1"type="button" name="button">Заменить все</button>
+        </div>
+      </div>
+    </div>
     <div class="texteditor-underpanel no-select align-self-end w-100">
-      <div class="col-12">
+      <div *ngIf="stats" class="col-12">
         <div class="row">
           <div class="w-100 d-flex flex-row justify-content-between">
             <div class="panel-left">
@@ -40,9 +90,6 @@
             </div>
             <div class="panel-right">
               <div class="w-100 d-flex flex-row justify-content-end">
-                <!-- <div [class.text-warning]="(changed | async)" class="panel">
-                  {{ (changed | async)?'ИЗМЕНЕНО':'НЕ ИЗМЕНЕНО' }}
-                </div> -->
                 <button class="panel">
                   <i [class.led-loading]="loading" [class.led-error]="(error | async)?.message" class="autosave-led"></i>
                 </button>

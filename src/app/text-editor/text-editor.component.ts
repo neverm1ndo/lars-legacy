@@ -1,33 +1,40 @@
-import { Component, OnInit, AfterViewInit, Input, HostListener, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { isEqual } from 'lodash';
+
 import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
-import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+
+import { BehaviorSubject, Observable, Subject, throwError, combineLatest } from 'rxjs';
+import { catchError, tap, filter, switchMap, take } from 'rxjs/operators';
+
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
-import Keys from '../enums/keycode.enum';
 
-const { S, Delete } = Keys;
+import Keys from '../enums/keycode.enum';
+const { S, Delete, F } = Keys;
 
 @Component({
   selector: 'text-editor',
   templateUrl: './text-editor.component.html',
   styleUrls: ['./text-editor.component.scss']
 })
-export class TextEditorComponent implements OnInit, AfterViewInit {
+export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
   _texp: BehaviorSubject<string> = new BehaviorSubject('');
 
-  @Input('file-info') path: string;
-  @Input('file-stats') stats: any;
-  @Input('textplain') set textp(val: string | null) {
-    if (val) this._texp.next(val);
-  };
+  search: boolean = false;
+
+  // @Input('file-info') path: string;
+  // @Input('file-stats') stats: any;
+  // @Input('textplain') set textp(val: string | null) {
+  //   if (val) this._texp.next(val);
+  // };
   @ViewChild('editor') editor: ElementRef<HTMLDivElement>;
-  @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
+  // @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
@@ -37,13 +44,17 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
             }
             break;
           }
+          case F : {
+            this.search = !this.search;
+            break;
+          }
           default : break;
         }
       }
       if (event.shiftKey) {
         switch (event.keyCode) {
           case Delete : {
-            this.deleteFile();
+            // this.deleteFile();
             break;
           }
           default : break;
@@ -68,7 +79,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     mode: 'coffeescript'
   }
 
-  initialTextplainPure: string;
+  origin: Buffer;
   fa = {
     save: faSave,
     fetch: faSync,
@@ -76,11 +87,14 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     trash: faTrash
   }
   state: any;
+  path: string;
+  stats: any;
 
   constructor(
-    public api: ApiService,
-    public electron: ElectronService,
-    public toast: ToastService
+    private api: ApiService,
+    private electron: ElectronService,
+    private toast: ToastService,
+    private route: ActivatedRoute,
   ) {}
 
   private handleError(error: HttpErrorResponse): Observable<any> {
@@ -114,6 +128,31 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     });
   }
 
+  deleteFile(): void {
+    const dialogOpts = {
+        type: 'warning',
+        buttons: ['Удалить', 'Отмена'],
+        title: `Подтверждение удаления`,
+        message: `Вы точно хотите удалить файл ${this.path}? После подтверждения он будет безвозвратно удален с сервера.`
+      }
+    this.electron.dialog.showMessageBox(dialogOpts).then(
+      val => {
+        if (val.response === 0) {
+           this.api.deleteMap(this.path).subscribe(() => {});
+          this.toast.show(`Файл <b>${ this.path }</b> удален с сервера`,
+            {
+              classname: 'bg-success text-light',
+              delay: 3000,
+              icon: faTrash
+            });
+          // this.showBinary = false;
+        }
+      }
+    ).finally(() => {
+      // this.reloadFileTree();
+    });
+  }
+
   saveFile() {
     this.loading = true;
     this.error.next(null);
@@ -121,7 +160,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     .pipe(catchError((error) => this.handleError(error)))
     .pipe(tap(()=> {
       this.loading = false;
-      this._texp.next(this.textplain);
+      this.origin = Buffer.from(this.textplain, 'utf8');
+      this.changed.next(false);
       this.toast.show( `Конфигурационный файл успешно сохранен`, {
         classname: 'bg-success text-light',
         delay: 3000,
@@ -131,12 +171,15 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     })).subscribe();
   }
 
-  deleteFile() {
-    return this.delFile.emit(this.path);
+  getConfig(path: string): Observable<any> {
+    return combineLatest([
+      this.api.getConfigText(path),
+      this.api.getFileInfo(path)
+    ])
   }
 
   checkChanges(): void {
-    if (this.initialTextplainPure == this.textplain.replace(/\s/g, '')) {
+    if (isEqual(this.origin, Buffer.from(this.textplain, 'utf8'))) {
       this.changed.next(false);
     } else {
       this.changed.next(true);
@@ -147,16 +190,20 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
-    switch (this.stats.mime) {
-      case 'text/xml': this.cmSettings.mode = 'xml'; break;
-      case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
-      default: break;
-    }
-    this._texp.subscribe((tp) => {
-      this.initialTextplainPure = tp.replace(/\s/g, '');
-      this.textplain = tp;
-      this.checkChanges();
-    })
+    this.route.queryParams
+    .pipe(tap(params => { this.path = params.path; return params}))
+    .pipe(switchMap(params => this.getConfig(params.path)))
+    .subscribe(([file, info]) => {
+      console.log(file, info)
+      this.textplain = file.text;
+      this.origin = Buffer.from(file.text, 'utf-8');
+      this.stats = info;
+      switch (this.stats.mime) {
+        case 'text/xml': this.cmSettings.mode = 'xml'; break;
+        case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
+        default: break;
+      }
+    });
   }
   ngAfterViewInit() {
     if (!window.localStorage.getItem('CE_fontSize')) {
@@ -165,5 +212,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     } else {
       this.editor.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
     }
+  }
+  ngOnDestroy() {
+
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { filter, switchMap } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
@@ -44,7 +44,7 @@ export class ConfigEditorComponent implements OnInit {
 
   constructor(
     public api: ApiService,
-    public route: ActivatedRoute,
+    private router: Router,
     public toast: ToastService,
     private electron: ElectronService,
     private ngZone: NgZone,
@@ -82,58 +82,30 @@ export class ConfigEditorComponent implements OnInit {
     }
   }
 
-  getConfig(path: { path: string, name?: string }) {
-    this.loading = true;
-    this.textplain = undefined;
-    this.currentFilePath = path.path;
-    if (path.name) {
-      this.api.addToRecent('files', path);
-    }
-    if (this.notBinary(path.name)) {
-      this.showBinary = false;
-      const getConfSub = this.api.getConfigText(path.path).pipe().subscribe((file: { text: string; stats: any }) => {
-        this.binStats = file.stats;
-        this.textplain = file.text;
-        this.loading = false;
-        getConfSub.unsubscribe();
-      });
-    } else {
-      if (this.textplain) this.textplain = undefined;
-      const getFileSub = this.api.getFileInfo(path.path).subscribe((stats: any) => {
-        this.binStats = stats;
-        this.showBinary = true;
-        this.loading = false;
-        getFileSub.unsubscribe();
-      })
-    }
+  toConfig(path: { path: string, name?: string }) {
+    console.log(path)
+    this.router.navigate(['/home/config-editor/doc'], { queryParams: { path: path.path , name: path.name }})
+    // this.loading = true;
+    // this.textplain = undefined;
+    // this.currentFilePath = path.path;
+    // if (path.name) {
+    //   this.api.addToRecent('files', path);
+    // }
+    // if (this.notBinary(path.name)) {
+    //   this.showBinary = false;
+    // } else {
+    //   if (this.textplain) this.textplain = undefined;
+    //   const getFileSub = this.api.getFileInfo(path.path).subscribe((stats: any) => {
+    //     this.binStats = stats;
+    //     this.showBinary = true;
+    //     this.loading = false;
+    //     getFileSub.unsubscribe();
+    //   })
+    // }
   }
 
   reloadFileTree(): void {
     this.reloader$.next(null);
-  }
-
-  deleteFile(path?: string): void {
-    if (!path) path = this.currentFilePath;
-    const dialogOpts = {
-        type: 'warning',
-        buttons: ['Удалить', 'Отмена'],
-        title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
-      }
-    this.electron.dialog.showMessageBox(dialogOpts).then(
-      val => {
-        if (val.response === 0) {
-           this.api.deleteMap(path).subscribe(() => {});
-          this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
-            {
-              classname: 'bg-success text-light',
-              delay: 3000,
-              icon: faTrash
-            });
-          this.showBinary = false;
-        }
-      }
-    ).finally(() => { this.reloadFileTree(); });
   }
 
   downloadFile(): void {
@@ -241,12 +213,6 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(
-      filter(params => (params.path || params.name))
-    ).subscribe(params => {
-      this.currentFilePath = params.path;
-      this.getConfig({path: params.path, name: params.name});
-    });
     this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
       this.ngZone.run(() => {
         this.dprogress = Math.round(100 * progress.loaded / progress.total);

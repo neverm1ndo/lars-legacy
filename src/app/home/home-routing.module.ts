@@ -18,13 +18,17 @@ import { BackupsComponent } from '../backups/backups.component';
 import { FilterComponent } from '../filter/filter.component';
 import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
+import { TextEditorComponent } from '../text-editor/text-editor.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
     { path: '', pathMatch: 'full', redirectTo: 'dash' },
     { path: 'dash', component: DashboardComponent },
     { path: 'search', component: SearchEditorComponent, canActivate: [IsCommonGuard] },
-    { path: 'config-editor', component: ConfigEditorComponent, canActivate: [IsConfiguratorGuard] },
+    { path: 'config-editor', component: ConfigEditorComponent, canActivate: [IsConfiguratorGuard], children: [
+        // { path: '', pathMatch: 'full', redirectTo: 'empty' },
+        { path: 'doc', component: TextEditorComponent }
+    ]},
     { path: 'settings', component: SettingsComponent, children: [
       { path: '', pathMatch: 'full', redirectTo: 'general' },
       { path: 'general', component: GeneralSettingsComponent, data: { animation: 'general' } },
