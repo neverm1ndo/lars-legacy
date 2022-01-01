@@ -8,43 +8,17 @@
           </div>
           <file-tree
             (resync)="reloadFileTree()"
-            (chooseFileEvent)="getConfig($event)"
+            (chooseFileEvent)="toConfig($event)"
             (chooseDirEvent)="chooseDir($event)"
             [items]="files" [current]="currentFilePath"
             (addNew)="addNewFile($event)">
           </file-tree>
         </div>
         <div class="col-md-8 col-lg-9 col-xl-10 pl-0 pr-0 texteditor h-100">
-          <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && !loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
-            <div class="d-flex align-self-center w-100 text-center">
-              <h4><fa-icon [icon]="fa.conf"></fa-icon><br>Выберите кофигурационный файл из списка, чтобы приступить к редактированию или добавьте новый, с помощью комбинации <span class="badge badge-dark"> ALT+A </span></h4>
-            </div>
+          <div class="d-flex progress">
+            <div class="progress-bar" [style.width.%]="configs.dprogress | async" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
-            <div class="d-flex justify-content-center align-self-center w-100 text-center">
-              <div class="loader d-flex align-self-center">
-                <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="showBinary && binStats" class="text-edit-block d-flex flex-column justify-content-center align-content-center">
-            <div class="d-flex progress">
-              <div class="progress-bar" [style.width.%]="dprogress" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <div class="pl-3 pr-3 d-flex align-self-center justify-content-center align-content-center w-100 text-center flex-column flex-fill">
-              <h3><fa-icon [icon]="fa.conf"></fa-icon><br>{{ currentFilePath }}</h3>
-              <table class="w-50 align-self-center mt-2 mb-2">
-                <tr><td>MIME-type</td><td>{{binStats.mime}}</td></tr>
-                <tr><td>Посл. изм.</td><td>{{binStats.lastm | date:'d MMM yy, HH:mm:ss'}}</td></tr>
-                <tr><td>Размер</td><td>{{binStats.size | FileSize }}</td></tr>
-              </table>
-              <div *ngIf="user.getUserInfo().gr == 10">
-                <button [disabled]="dprogress !== 0" (click)="downloadFile()" type="button" class="btn btn-light mr-2 ml-2"><fa-icon [icon]="fa.save"></fa-icon> <span class="ml-2">Скачать</span></button>
-                <button (click)="deleteFile()" type="button" class="btn btn-danger mr-2 ml-2"><fa-icon [icon]="fa.del"></fa-icon> <span class="ml-2">Удалить</span></button>
-              </div>
-            </div>
-          </div>
-          <text-editor (delete-file)="deleteFile($event)" [file-stats]="binStats" [file-info]="currentFilePath" [textplain]="textplain" *ngIf="textplain !== undefined && textplain !== null"></text-editor>
+          <router-outlet></router-outlet>
         </div>
       </div>
     </div>

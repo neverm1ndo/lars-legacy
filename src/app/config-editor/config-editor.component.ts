@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { filter, switchMap } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
@@ -9,7 +9,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { ElectronService } from '../core/services/electron/electron.service';
-import { UserService } from '../user.service';
+import { ConfigsService } from '../configs.service';
 
 @Component({
   selector: 'app-config-editor',
@@ -23,7 +23,6 @@ export class ConfigEditorComponent implements OnInit {
   files: TreeNode;
   expanded: string[] = [];
   showBinary: boolean = false;
-  binStats: { size: number; mime: string; lastm: Date }
 
   directories$: Observable<any>;
 
@@ -31,7 +30,6 @@ export class ConfigEditorComponent implements OnInit {
 
   currentFilePath: string;
   progress: number = 0;
-  dprogress: number = 0;
   loading: boolean = false;
 
   fa = {
@@ -44,11 +42,11 @@ export class ConfigEditorComponent implements OnInit {
 
   constructor(
     public api: ApiService,
-    public route: ActivatedRoute,
+    private router: Router,
     public toast: ToastService,
     private electron: ElectronService,
     private ngZone: NgZone,
-    public user: UserService
+    public configs: ConfigsService
   ) {
     this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => {
@@ -82,87 +80,27 @@ export class ConfigEditorComponent implements OnInit {
     }
   }
 
-  getConfig(path: { path: string, name?: string }) {
-    this.loading = true;
-    this.textplain = undefined;
+  toConfig(path: { path: string, name?: string }) {
+    console.log(path)
+    // this.loading = true;
+    // this.textplain = undefined;
     this.currentFilePath = path.path;
     if (path.name) {
       this.api.addToRecent('files', path);
     }
     if (this.notBinary(path.name)) {
-      this.showBinary = false;
-      const getConfSub = this.api.getConfigText(path.path).pipe().subscribe((file: { text: string; stats: any }) => {
-        this.binStats = file.stats;
-        this.textplain = file.text;
-        this.loading = false;
-        getConfSub.unsubscribe();
-      });
+      this.router.navigate(['/home/config-editor/doc'], { queryParams: { path: path.path , name: path.name }})
     } else {
-      if (this.textplain) this.textplain = undefined;
-      const getFileSub = this.api.getFileInfo(path.path).subscribe((stats: any) => {
-        this.binStats = stats;
-        this.showBinary = true;
-        this.loading = false;
-        getFileSub.unsubscribe();
-      })
+      this.router.navigate(['/home/config-editor/binary'], { queryParams: { path: path.path , name: path.name }})
     }
+    //   this.showBinary = false;
+    // } else {
+    //   if (this.textplain) this.textplain = undefined;
+    // }
   }
 
   reloadFileTree(): void {
     this.reloader$.next(null);
-  }
-
-  deleteFile(path?: string): void {
-    if (!path) path = this.currentFilePath;
-    const dialogOpts = {
-        type: 'warning',
-        buttons: ['Удалить', 'Отмена'],
-        title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
-      }
-    this.electron.dialog.showMessageBox(dialogOpts).then(
-      val => {
-        if (val.response === 0) {
-           this.api.deleteMap(path).subscribe(() => {});
-          this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
-            {
-              classname: 'bg-success text-light',
-              delay: 3000,
-              icon: faTrash
-            });
-          this.showBinary = false;
-        }
-      }
-    ).finally(() => { this.reloadFileTree(); });
-  }
-
-  downloadFile(): void {
-    let filename: string = ((): string => {
-      const spl = this.currentFilePath.split('/');
-      return spl[spl.length - 1];
-    })();
-    this.electron.dialog.showSaveDialog(
-      {
-        title: 'Сохранить карту как',
-        buttonLabel: 'Сохранить',
-        defaultPath: filename,
-        filters: [
-          { name: 'All Files', extensions: ['*'] }
-        ]
-      }).then(res => {
-        if (res.filePath && !res.canceled) {
-          this.electron.ipcRenderer.send('download-file', { remotePath: this.currentFilePath, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token })
-        }
-      }).catch( res => {
-        this.toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
-          {
-            classname: 'bg-warning text-dark',
-            delay: 5000,
-            icon: faInfo,
-            subtext: res.message
-           });
-        console.error(res);
-      })
   }
 
   addNewFile(event: any): void {
@@ -241,20 +179,14 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(
-      filter(params => (params.path || params.name))
-    ).subscribe(params => {
-      this.currentFilePath = params.path;
-      this.getConfig({path: params.path, name: params.name});
-    });
     this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
       this.ngZone.run(() => {
-        this.dprogress = Math.round(100 * progress.loaded / progress.total);
+        this.configs.dprogress.next(Math.round(100 * progress.loaded / progress.total));
       })
     });
     this.electron.ipcRenderer.on('download-error', (event: any, err) => {
       this.ngZone.run(() => {
-        this.dprogress = 0;
+        this.configs.dprogress.next(0);
         this.toast.show(`Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`,
           {
             classname: 'bg-danger text-dark',
@@ -273,7 +205,7 @@ export class ConfigEditorComponent implements OnInit {
           icon: faInfo
          });
         setTimeout(() => {
-          this.dprogress = 0;
+          this.configs.dprogress.next(0);
         }, 2000);
       });
     });

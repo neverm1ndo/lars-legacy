@@ -1,33 +1,36 @@
-import { Component, OnInit, AfterViewInit, Input, HostListener, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { isEqual } from 'lodash';
+
 import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
-import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { ApiService } from '../api.service';
-import { ElectronService } from '../core/services/electron/electron.service';
-import { ToastService } from '../toast.service';
-import Keys from '../enums/keycode.enum';
 
-const { S, Delete } = Keys;
+import { BehaviorSubject, Observable, Subject, throwError, combineLatest } from 'rxjs';
+import { catchError, tap, filter, switchMap, take } from 'rxjs/operators';
+
+import { ToastService } from '../toast.service';
+import { ConfigsService } from '../configs.service';
+
+import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
+
+import Keys from '../enums/keycode.enum';
+const { S, Delete, F } = Keys;
 
 @Component({
   selector: 'text-editor',
   templateUrl: './text-editor.component.html',
   styleUrls: ['./text-editor.component.scss']
 })
-export class TextEditorComponent implements OnInit, AfterViewInit {
+export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  _texp: BehaviorSubject<string> = new BehaviorSubject('');
 
-  @Input('file-info') path: string;
-  @Input('file-stats') stats: any;
-  @Input('textplain') set textp(val: string | null) {
-    if (val) this._texp.next(val);
-  };
-  @ViewChild('editor') editor: ElementRef<HTMLDivElement>;
-  @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
+  search: boolean = false;
+
+  @ViewChild('editor') editor: CodemirrorComponent;
+  @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
+
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
@@ -35,6 +38,10 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
             if (this.changed.getValue()) {
               this.saveFile();
             }
+            break;
+          }
+          case F : {
+            this.search = true;
             break;
           }
           default : break;
@@ -52,14 +59,13 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
   }
   @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
     if (event.ctrlKey) {
-      const size = +this.editor.nativeElement.style.fontSize.substr(0, this.editor.nativeElement.style.fontSize.length - 2);
-        this.editor.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
-        window.localStorage.setItem('CE_fontSize', this.editor.nativeElement.style.fontSize);
+      const size = +this.editorStyle.nativeElement.style.fontSize.substr(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
+        this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
+        window.localStorage.setItem('CE_fontSize', this.editorStyle.nativeElement.style.fontSize);
     }
   }
   plainArr: any[];
   textplain: string;
-  error: Subject<any> = new Subject();
   loading: boolean = false;
   cmSettings = {
     lineNumbers: true,
@@ -68,7 +74,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     mode: 'coffeescript'
   }
 
-  initialTextplainPure: string;
+  origin: Buffer;
   fa = {
     save: faSave,
     fetch: faSync,
@@ -76,94 +82,93 @@ export class TextEditorComponent implements OnInit, AfterViewInit {
     trash: faTrash
   }
   state: any;
+  path: string;
+  stats: any;
+  query = {
+    find: '',
+    replace: ''
+  };
 
   constructor(
-    public api: ApiService,
-    public electron: ElectronService,
-    public toast: ToastService
+    private route: ActivatedRoute,
+    public configs: ConfigsService,
+    private toast: ToastService
   ) {}
 
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-      this.error.next(error.error);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-        this.error.next(error);
-    }
-    this.loading = false;
-    this.toast.show(error.statusText,
-      {
-        classname: 'bg-danger text-light',
-        delay: 7000,
-        icon: faExclamationTriangle,
-        subtext: error.message
-      });
-    return throwError(error);
+  searchIn() {
+    this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
+  }
+  replaceIn() {
+    this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.checkChanges();
+  }
+  replaceInAll() {
+    this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.checkChanges();
   }
 
-  pathToClipboard(): void {
-    this.electron.clipboard.writeText(this.path);
-    this.toast.show('Путь скопирован в буффер обмена',
-    {
-      classname: 'bg-success text-light',
-      delay: 3000,
-      icon: faCopy
-    });
+  deleteFile() {
+    this.configs.deleteFile(this.path);
   }
 
+  pathToClipboard() {
+    this.configs.pathToClipboard(this.path);
+  }
   saveFile() {
     this.loading = true;
-    this.error.next(null);
-    this.api.saveFile(this.path, this.textplain)
-    .pipe(catchError((error) => this.handleError(error)))
-    .pipe(tap(()=> {
+    this.configs.saveFile(this.path, this.textplain).subscribe(() => {
       this.loading = false;
-      this._texp.next(this.textplain);
+      this.origin = Buffer.from(this.textplain, 'utf8');
+      this.changed.next(false);
       this.toast.show( `Конфигурационный файл успешно сохранен`, {
         classname: 'bg-success text-light',
         delay: 3000,
         icon: faSave,
         subtext: this.path
       });
-    })).subscribe();
-  }
-
-  deleteFile() {
-    return this.delFile.emit(this.path);
+    })
   }
 
   checkChanges(): void {
-    if (this.initialTextplainPure == this.textplain.replace(/\s/g, '')) {
+    if (isEqual(this.origin, Buffer.from(this.textplain, 'utf8'))) {
       this.changed.next(false);
     } else {
       this.changed.next(true);
     }
   }
 
+
+
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
-    switch (this.stats.mime) {
-      case 'text/xml': this.cmSettings.mode = 'xml'; break;
-      case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
-      default: break;
-    }
-    this._texp.subscribe((tp) => {
-      this.initialTextplainPure = tp.replace(/\s/g, '');
-      this.textplain = tp;
-      this.checkChanges();
-    })
+    this.route.queryParams
+    .pipe(tap(params => { this.loading = true; this.path = params.path; return params}))
+    .pipe(switchMap(params => this.configs.getConfig(params.path)))
+    .subscribe(([file, info]) => {
+
+      this.textplain = file.text;
+      this.origin = Buffer.from(file.text, 'utf-8');
+      this.stats = info;
+      switch (this.stats.mime) {
+        case 'text/xml': this.cmSettings.mode = 'xml'; break;
+        case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
+        default: break;
+      }
+      this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
+      this.loading = false;
+    });
   }
   ngAfterViewInit() {
     if (!window.localStorage.getItem('CE_fontSize')) {
       window.localStorage.setItem('CE_fontSize', '13px');
-      this.editor.nativeElement.style.fontSize = '13px';
+      this.editorStyle.nativeElement.style.fontSize = '13px';
     } else {
-      this.editor.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
+      this.editorStyle.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
     }
+  }
+  ngOnDestroy() {
+
   }
 }

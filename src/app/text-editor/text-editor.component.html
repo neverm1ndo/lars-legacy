@@ -1,16 +1,25 @@
+<!-- <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
+  <div class="d-flex justify-content-center align-self-center w-100 text-center">
+    <div class="loader d-flex align-self-center">
+      <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
+    </div>
+  </div>
+</div> -->
 <div class="h-100">
   <div class="d-flex align-items-start flex-column h-100 w-100">
-    <div #editor class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
+    <div #editorStyle class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
       <!-- <div class="texteditor-line-indexes">
         <div *ngFor="let line of plainArr; index as i" contenteditable="false" class="index no-select">{{ i }}</div>
       </div> -->
       <!-- <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea> -->
       <ngx-codemirror
+        #editor
         [(ngModel)]="textplain"
         (input)="checkChanges()"
         (keydown.backspace)="checkChanges()"
         (keydown.control.z)="checkChanges()"
         (keydown.control.y)="checkChanges()"
+        (keydown.control.v)="checkChanges()"
         [options]="cmSettings"
         [autoFocus]="true"
       ></ngx-codemirror>
@@ -21,8 +30,27 @@
         </div>
       </div> -->
     </div>
+    <div *ngIf="search" class="d-flex flex-column infile-search w-100">
+      <div class="d-flex flex-row justify-content-between align-items-center infile-search-head">
+        <div class="d-flex align-items-center">
+          <button (click)="search = false" class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+          <small class="">Поиск</small>
+        </div>
+      </div>
+      <div class="d-flex flex-fill flex-column p-2 infile-search-body">
+        <div class="d-flex flex-row justify-content-stretch">
+          <input (keyup.enter)="searchIn()" [(ngModel)]="query.find" [autofocus] name="queryFind" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Найти в текущем буфере"/>
+          <button (click)="searchIn()" class="btn btn-dark findButton"type="button" name="buttonFind">Найти</button>
+        </div>
+        <div class="d-flex flex-row justify-content-stretch mt-2">
+          <input (keyup.enter)="replaceIn()" [(ngModel)]="query.replace" name="queryReplace" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Заменить в текущем буфере"/>
+          <button (click)="replaceIn()" class="btn btn-dark flex-grow-1" type="button" name="buttonReplace">Заменить</button>
+          <button (click)="replaceInAll()" class="btn btn-dark flex-grow-1" type="button" name="buttonReplaceAll">Заменить все</button>
+        </div>
+      </div>
+    </div>
     <div class="texteditor-underpanel no-select align-self-end w-100">
-      <div class="col-12">
+      <div *ngIf="stats" class="col-12">
         <div class="row">
           <div class="w-100 d-flex flex-row justify-content-between">
             <div class="panel-left">
@@ -40,11 +68,8 @@
             </div>
             <div class="panel-right">
               <div class="w-100 d-flex flex-row justify-content-end">
-                <!-- <div [class.text-warning]="(changed | async)" class="panel">
-                  {{ (changed | async)?'ИЗМЕНЕНО':'НЕ ИЗМЕНЕНО' }}
-                </div> -->
                 <button class="panel">
-                  <i [class.led-loading]="loading" [class.led-error]="(error | async)?.message" class="autosave-led"></i>
+                  <i [class.led-loading]="loading" [class.led-error]="(configs.error | async)?.message" class="autosave-led"></i>
                 </button>
                 <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
                   <fa-icon [icon]="fa.save"></fa-icon> <span class="d-sm-none d-md-inline">Сохранить</span>

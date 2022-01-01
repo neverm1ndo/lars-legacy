@@ -53,6 +53,8 @@ import { NotificationsSettingsComponent } from '../notifications-settings/notifi
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
 import { socketConfig } from '../web-socket.service';
+import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
+import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
@@ -70,7 +72,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent],
   imports: [
     CommonModule,
     SharedModule,

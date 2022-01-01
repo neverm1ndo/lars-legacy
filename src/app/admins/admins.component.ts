@@ -9,6 +9,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { WebSocketService } from '../web-socket.service';
 import { Subscription } from 'rxjs';
+import { Workgroup } from '../enums/workgroup.enum';
 
 type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
 
@@ -47,12 +48,16 @@ export class AdminsComponent implements OnInit, OnDestroy {
   $activies: Subscription;
 
   roles = [
-    { id: 9, val: 'Претендент' },
-    { id: 10, val: 'Разработчик' },
-    { id: 12, val: 'Маппер' },
-    { id: 11, val: 'Админ' },
-    { id: 13, val: 'Редактор конфигов' },
-    { id: 14, val: 'Бэкапер' }
+    { id: Workgroup.Challenger, val: 'Претендент' },
+    { id: Workgroup.Dev, val: 'Разработчик' },
+    { id: Workgroup.Admin, val: 'Админ' },
+  ]
+  subRoles = [
+    { id: Workgroup.Challenger, val: 'Претендент' },
+    { id: Workgroup.Dev, val: 'Разработчик' },
+    { id: Workgroup.Mapper, val: 'Маппер' },
+    { id: Workgroup.CFR, val: 'Редактор конфигов' },
+    { id: Workgroup.Backuper, val: 'Бэкапер' }
   ]
 
   constructor(
