@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
@@ -13,6 +13,8 @@ import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
 
+import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
+
 import Keys from '../enums/keycode.enum';
 const { S, Delete, F } = Keys;
 
@@ -26,14 +28,15 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
   _texp: BehaviorSubject<string> = new BehaviorSubject('');
 
-  search: boolean = false;
+  search: boolean = true;
 
   // @Input('file-info') path: string;
   // @Input('file-stats') stats: any;
   // @Input('textplain') set textp(val: string | null) {
   //   if (val) this._texp.next(val);
   // };
-  @ViewChild('editor') editor: ElementRef<HTMLDivElement>;
+  @ViewChild('editor') editor: CodemirrorComponent;
+  @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
   // @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
@@ -45,7 +48,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             break;
           }
           case F : {
-            this.search = !this.search;
+            this.search = true;
             break;
           }
           default : break;
@@ -63,9 +66,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
     if (event.ctrlKey) {
-      const size = +this.editor.nativeElement.style.fontSize.substr(0, this.editor.nativeElement.style.fontSize.length - 2);
-        this.editor.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
-        window.localStorage.setItem('CE_fontSize', this.editor.nativeElement.style.fontSize);
+      const size = +this.editorStyle.nativeElement.style.fontSize.substr(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
+        this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
+        window.localStorage.setItem('CE_fontSize', this.editorStyle.nativeElement.style.fontSize);
     }
   }
   plainArr: any[];
@@ -89,12 +92,17 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   state: any;
   path: string;
   stats: any;
+  query = {
+    find: '',
+    replace: ''
+  };
 
   constructor(
     private api: ApiService,
     private electron: ElectronService,
     private toast: ToastService,
     private route: ActivatedRoute,
+    private zone: NgZone,
   ) {}
 
   private handleError(error: HttpErrorResponse): Observable<any> {
@@ -126,6 +134,18 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       delay: 3000,
       icon: faCopy
     });
+  }
+
+  searchIn() {
+    this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
+  }
+  replaceIn() {
+    this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.checkChanges();
+  }
+  replaceInAll() {
+    this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.checkChanges();
   }
 
   deleteFile(): void {
@@ -203,14 +223,15 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
         default: break;
       }
+      this.editor.codeMirror.setOption('mode', this.cmSettings.mode)
     });
   }
   ngAfterViewInit() {
     if (!window.localStorage.getItem('CE_fontSize')) {
       window.localStorage.setItem('CE_fontSize', '13px');
-      this.editor.nativeElement.style.fontSize = '13px';
+      this.editorStyle.nativeElement.style.fontSize = '13px';
     } else {
-      this.editor.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
+      this.editorStyle.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
     }
   }
   ngOnDestroy() {

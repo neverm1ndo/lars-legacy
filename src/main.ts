@@ -11,6 +11,8 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/shell/shell';
 import 'codemirror/mode/coffeescript/coffeescript';
 
+import './addon/search/search';
+
 if (AppConfig.production) {
   enableProdMode();
 }

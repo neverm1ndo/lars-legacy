@@ -22,7 +22,8 @@
               "codemirror/mode/clike/clike",
               "codemirror/mode/markdown/markdown",
               "codemirror/mode/javascript/javascript",
-              "codemirror/mode/xml/xml"
+              "codemirror/mode/xml/xml",
+              "codemirror/mode/shell/shell"
             ],
             "assets": [
               "src/assets"
@@ -35,7 +36,8 @@
                  "src/scss"
                ]
              },
-            "scripts": [],
+            "scripts": [
+            ],
             "customWebpackConfig": {
               "path": "./angular.webpack.js"
             }
