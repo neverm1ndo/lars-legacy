@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
@@ -9,9 +9,8 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, Observable, Subject, throwError, combineLatest } from 'rxjs';
 import { catchError, tap, filter, switchMap, take } from 'rxjs/operators';
 
-import { ApiService } from '../api.service';
-import { ElectronService } from '../core/services/electron/electron.service';
 import { ToastService } from '../toast.service';
+import { ConfigsService } from '../configs.service';
 
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
 
@@ -29,14 +28,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   search: boolean = false;
 
-  // @Input('file-info') path: string;
-  // @Input('file-stats') stats: any;
-  // @Input('textplain') set textp(val: string | null) {
-  //   if (val) this._texp.next(val);
-  // };
   @ViewChild('editor') editor: CodemirrorComponent;
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
-  // @Output('delete-file') delFile: EventEmitter<string> = new EventEmitter<string>();
+
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
@@ -72,7 +66,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   plainArr: any[];
   textplain: string;
-  error: Subject<any> = new Subject();
   loading: boolean = false;
   cmSettings = {
     lineNumbers: true,
@@ -97,43 +90,10 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   constructor(
-    private api: ApiService,
-    private electron: ElectronService,
-    private toast: ToastService,
     private route: ActivatedRoute,
-    private zone: NgZone,
+    private configs: ConfigsService,
+    private toast: ToastService
   ) {}
-
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-      this.error.next(error.error);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-        this.error.next(error);
-    }
-    this.loading = false;
-    this.toast.show(error.statusText,
-      {
-        classname: 'bg-danger text-light',
-        delay: 7000,
-        icon: faExclamationTriangle,
-        subtext: error.message
-      });
-    return throwError(error);
-  }
-
-  pathToClipboard(): void {
-    this.electron.clipboard.writeText(this.path);
-    this.toast.show('Путь скопирован в буффер обмена',
-    {
-      classname: 'bg-success text-light',
-      delay: 3000,
-      icon: faCopy
-    });
-  }
 
   searchIn() {
     this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
@@ -147,37 +107,13 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkChanges();
   }
 
-  deleteFile(): void {
-    const dialogOpts = {
-        type: 'warning',
-        buttons: ['Удалить', 'Отмена'],
-        title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить файл ${this.path}? После подтверждения он будет безвозвратно удален с сервера.`
-      }
-    this.electron.dialog.showMessageBox(dialogOpts).then(
-      val => {
-        if (val.response === 0) {
-           this.api.deleteMap(this.path).subscribe(() => {});
-          this.toast.show(`Файл <b>${ this.path }</b> удален с сервера`,
-            {
-              classname: 'bg-success text-light',
-              delay: 3000,
-              icon: faTrash
-            });
-          // this.showBinary = false;
-        }
-      }
-    ).finally(() => {
-      // this.reloadFileTree();
-    });
+  deleteFile() {
+    this.configs.deleteFile(this.path);
   }
 
   saveFile() {
     this.loading = true;
-    this.error.next(null);
-    this.api.saveFile(this.path, this.textplain)
-    .pipe(catchError((error) => this.handleError(error)))
-    .pipe(tap(()=> {
+    this.configs.saveFile(this.path, this.textplain).subscribe(() => {
       this.loading = false;
       this.origin = Buffer.from(this.textplain, 'utf8');
       this.changed.next(false);
@@ -187,14 +123,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: faSave,
         subtext: this.path
       });
-    })).subscribe();
-  }
-
-  getConfig(path: string): Observable<any> {
-    return combineLatest([
-      this.api.getConfigText(path),
-      this.api.getFileInfo(path)
-    ])
+    })
   }
 
   checkChanges(): void {
@@ -205,15 +134,16 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+
+
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
     this.route.queryParams
-    .pipe(tap(params => { this.path = params.path; return params}))
-    .pipe(switchMap(params => this.getConfig(params.path)))
+    .pipe(tap(params => { this.loading = true; this.path = params.path; return params}))
+    .pipe(switchMap(params => this.configs.getConfig(params.path)))
     .subscribe(([file, info]) => {
-      console.log(file, info)
       this.textplain = file.text;
       this.origin = Buffer.from(file.text, 'utf-8');
       this.stats = info;
@@ -222,7 +152,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
         default: break;
       }
-      this.editor.codeMirror.setOption('mode', this.cmSettings.mode)
+      this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
+      this.loading = false;
     });
   }
   ngAfterViewInit() {

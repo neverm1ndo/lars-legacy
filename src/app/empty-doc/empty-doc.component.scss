@@ -1,0 +1,15 @@
+@import "colors";
+:host {
+  color: $text;
+  text-align: center;
+  height: 100%;
+  h4 {
+    width: 100%;
+    opacity: 0.2;
+    font-weight: 300;
+  }
+  h3 {
+    width: 100%;
+    font-weight: 300;
+  }
+}

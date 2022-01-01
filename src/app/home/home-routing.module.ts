@@ -19,6 +19,8 @@ import { FilterComponent } from '../filter/filter.component';
 import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
+import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
+import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -26,7 +28,9 @@ const routes: Routes = [
     { path: 'dash', component: DashboardComponent },
     { path: 'search', component: SearchEditorComponent, canActivate: [IsCommonGuard] },
     { path: 'config-editor', component: ConfigEditorComponent, canActivate: [IsConfiguratorGuard], children: [
-        // { path: '', pathMatch: 'full', redirectTo: 'empty' },
+        { path: '', pathMatch: 'full', redirectTo: 'empty' },
+        { path: 'empty', component: EmptyDocComponent },
+        { path: 'binary', component: BinaryDocComponent },
         { path: 'doc', component: TextEditorComponent }
     ]},
     { path: 'settings', component: SettingsComponent, children: [

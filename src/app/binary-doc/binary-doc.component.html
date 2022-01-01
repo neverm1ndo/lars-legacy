@@ -1,0 +1,14 @@
+<div *ngIf="binStats" class="text-edit-block d-flex flex-column justify-content-center align-content-center">
+  <div class="pl-3 pr-3 d-flex align-self-center justify-content-center align-content-center w-100 text-center flex-column flex-fill">
+    <h3><fa-icon [icon]="fa.conf"></fa-icon><br>{{ path }}</h3>
+    <table class="w-50 align-self-center mt-2 mb-2">
+      <tr><td>MIME-type</td><td>{{binStats.mime}}</td></tr>
+      <tr><td>Посл. изм.</td><td>{{binStats.lastm | date:'d MMM yy, HH:mm:ss'}}</td></tr>
+      <tr><td>Размер</td><td>{{binStats.size | FileSize }}</td></tr>
+    </table>
+    <div *ngIf="user.getUserInfo().gr == 10">
+      <button [disabled]="(config.dprogress | async) !== 0" (click)="downloadFile()" type="button" class="btn btn-light mr-2 ml-2"><fa-icon [icon]="fa.save"></fa-icon> <span class="ml-2">Скачать</span></button>
+      <button (click)="deleteFile()" type="button" class="btn btn-danger mr-2 ml-2"><fa-icon [icon]="fa.del"></fa-icon> <span class="ml-2">Удалить</span></button>
+    </div>
+  </div>
+</div>
