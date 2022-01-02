@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
 import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
-import { BehaviorSubject, Observable, Subject, throwError, combineLatest } from 'rxjs';
-import { catchError, tap, filter, switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 
 import { ToastService } from '../toast.service';
 import { ConfigsService } from '../configs.service';
@@ -132,7 +131,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toast.show( `Конфигурационный файл не был сохранен по причине:`, {
         classname: 'bg-danger text-light',
         delay: 6000,
-        icon: faSave,
+        icon: faExclamationTriangle,
         subtext: err.message
       });
     })
