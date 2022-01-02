@@ -155,6 +155,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(tap(params => { this.loading = true; this.path = params.path; return params}))
     .pipe(switchMap(params => this.configs.getConfig(params.path)))
     .subscribe(([file, info]) => {
+      this.stats = info;
       switch (this.stats.mime) {
         case 'text/xml': this.cmSettings.mode = 'xml'; break;
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
@@ -163,7 +164,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
       this.textplain = file.text;
       this.origin = Buffer.from(file.text, 'utf-8');
-      this.stats = info;
       this.loading = false;
     });
   }
