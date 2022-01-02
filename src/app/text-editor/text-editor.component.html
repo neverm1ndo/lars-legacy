@@ -1,17 +1,6 @@
-<!-- <div *ngIf="!showBinary && (textplain == undefined || textplain == null) && loading" class="pl-3 pr-3 text-edit-block d-flex flex-row">
-  <div class="d-flex justify-content-center align-self-center w-100 text-center">
-    <div class="loader d-flex align-self-center">
-      <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
-    </div>
-  </div>
-</div> -->
 <div class="h-100">
   <div class="d-flex align-items-start flex-column h-100 w-100">
     <div #editorStyle class="col-12 pl-0 pr-0 textarea align-self-start d-flex flex-fill w-100">
-      <!-- <div class="texteditor-line-indexes">
-        <div *ngFor="let line of plainArr; index as i" contenteditable="false" class="index no-select">{{ i }}</div>
-      </div> -->
-      <!-- <textarea *ngIf="textplain !== undefined" class="w-100" name="name" (input)="checkChanges()" [(ngModel)]="textplain"></textarea> -->
       <ngx-codemirror
         #editor
         [(ngModel)]="textplain"
@@ -21,14 +10,8 @@
         (keydown.control.y)="checkChanges()"
         (keydown.control.v)="checkChanges()"
         [options]="cmSettings"
-        [autoFocus]="true"
-      ></ngx-codemirror>
-      <!-- <div contenteditable="true" class="supertextarea w-100">
-        <div *ngFor="let line of plainArr; index as i" class="super-line d-flex flex-row">
-          <div contenteditable="false" class="index no-select"> {{ i }}</div>
-          <div class="text">{{ line }}</div>
-        </div>
-      </div> -->
+        [autoFocus]="true">
+      </ngx-codemirror>
     </div>
     <div *ngIf="search" class="d-flex flex-column infile-search w-100">
       <div class="d-flex flex-row justify-content-between align-items-center infile-search-head">
@@ -73,9 +56,6 @@
                 </button>
                 <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
                   <fa-icon [icon]="fa.save"></fa-icon> <span class="d-sm-none d-md-inline">Сохранить</span>
-                </button>
-                <button class="panel" disabled>
-                  <fa-icon [icon]="fa.fetch"></fa-icon> <span class="d-sm-none d-md-inline">Обновить</span>
                 </button>
                 <button (click)="deleteFile()" class="panel">
                   <fa-icon [icon]="fa.trash"></fa-icon> <span class="d-sm-none d-md-inline">Удалить</span>
