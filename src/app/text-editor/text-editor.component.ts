@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
@@ -91,18 +91,25 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     public configs: ConfigsService,
-    private toast: ToastService
+    private toast: ToastService,
+    private zone: NgZone,
   ) {}
 
   searchIn() {
-    this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
+    })
   }
   replaceIn() {
-    this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace)
+    })
     this.checkChanges();
   }
   replaceInAll() {
-    this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace)
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace)
+    })
     this.checkChanges();
   }
 
@@ -161,11 +168,13 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
         default: break;
       }
+      this.editor.codeMirror.clearHistory();
       this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
       this.textplain = file.text;
       this.origin = Buffer.from(file.text, 'utf-8');
       this.loading = false;
-    });
+      this.editor.codeMirror.clearHistory();
+    }, () => {});
   }
   ngAfterViewInit() {
     if (!window.localStorage.getItem('CE_fontSize')) {
