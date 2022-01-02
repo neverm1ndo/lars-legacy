@@ -45,13 +45,17 @@
                   {{ stats.mime }}
                 </div>
                 <div class="panel flex-grow">
-                  {{ stats.charset }}
+                  ANSI
                 </div>
+                <div placement="top" [ngbTooltip]="bufferSize" class="panel flex-grow">
+                  {{ stats.size | FileSize }}
+                </div>
+                <ng-template #bufferSize><strong>{{ stats.size }}</strong> bytes</ng-template>
               </div>
             </div>
             <div class="panel-right">
               <div class="w-100 d-flex flex-row justify-content-end">
-                <button class="panel">
+                <button placement="top" ngbTooltip="{{ (configs.error | async)?.message }}"  class="panel">
                   <i [class.led-loading]="loading" [class.led-error]="(configs.error | async)?.message" class="autosave-led"></i>
                 </button>
                 <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">

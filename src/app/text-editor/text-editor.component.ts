@@ -116,7 +116,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   saveFile() {
     this.loading = true;
-    this.configs.saveFile(this.path, this.textplain).subscribe(() => {
+    this.configs.saveFile(this.path, this.textplain)
+    .subscribe(() => {
       this.loading = false;
       this.origin = Buffer.from(this.textplain, 'utf8');
       this.changed.next(false);
@@ -125,6 +126,14 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         delay: 3000,
         icon: faSave,
         subtext: this.path
+      });
+    },
+    (err) => {
+      this.toast.show( `Конфигурационный файл не был сохранен по причине:`, {
+        classname: 'bg-danger text-light',
+        delay: 6000,
+        icon: faSave,
+        subtext: err.message
       });
     })
   }
@@ -147,7 +156,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(tap(params => { this.loading = true; this.path = params.path; return params}))
     .pipe(switchMap(params => this.configs.getConfig(params.path)))
     .subscribe(([file, info]) => {
-
       this.textplain = file.text;
       this.origin = Buffer.from(file.text, 'utf-8');
       this.stats = info;
