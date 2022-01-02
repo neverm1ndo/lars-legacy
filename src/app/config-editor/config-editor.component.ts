@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { filter, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ConfigsService } from '../configs.service';
 
@@ -17,8 +16,6 @@ import { ConfigsService } from '../configs.service';
   styleUrls: ['./config-editor.component.scss']
 })
 export class ConfigEditorComponent implements OnInit {
-
-  @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
 
   files: TreeNode;
   expanded: string[] = [];
@@ -38,8 +35,6 @@ export class ConfigEditorComponent implements OnInit {
     del: faTrash
   }
 
-  reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
-
   constructor(
     public api: ApiService,
     private router: Router,
@@ -48,7 +43,7 @@ export class ConfigEditorComponent implements OnInit {
     private ngZone: NgZone,
     public configs: ConfigsService
   ) {
-    this.directories$ = this.reloader$.pipe(switchMap(() => api.getConfigsDir()));
+    this.directories$ = this.configs.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directories$.subscribe(items => {
       const expandIfExpandedBefore = (nodes: TreeNode) => {
         for (let item of nodes.items) {
@@ -81,9 +76,6 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   toConfig(path: { path: string, name?: string }) {
-    console.log(path)
-    // this.loading = true;
-    // this.textplain = undefined;
     this.currentFilePath = path.path;
     if (path.name) {
       this.api.addToRecent('files', path);
@@ -93,14 +85,10 @@ export class ConfigEditorComponent implements OnInit {
     } else {
       this.router.navigate(['/home/config-editor/binary'], { queryParams: { path: path.path , name: path.name }})
     }
-    //   this.showBinary = false;
-    // } else {
-    //   if (this.textplain) this.textplain = undefined;
-    // }
   }
 
   reloadFileTree(): void {
-    this.reloader$.next(null);
+    this.configs.reloadFileTree()
   }
 
   addNewFile(event: any): void {
@@ -149,7 +137,6 @@ export class ConfigEditorComponent implements OnInit {
                 }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
-                this.ftc.add.nativeElement.value = '';
               }
             },
             err => {
@@ -173,7 +160,6 @@ export class ConfigEditorComponent implements OnInit {
               }
               console.error(err);
               this.reloadFileTree();
-              this.ftc.add.nativeElement.value = '';
             });
     }
   }

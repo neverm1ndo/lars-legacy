@@ -23,6 +23,7 @@ export class ConfigsService {
   ) { }
 
   error: Subject<any> = new Subject();
+  public reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
   public dprogress: BehaviorSubject<number> = new BehaviorSubject(0);
 
   private handleError(error: HttpErrorResponse): Observable<any> {
@@ -89,14 +90,18 @@ export class ConfigsService {
     this.router.navigate(['/home/config-editor/empty']);
   }
 
-  deleteFile(path: string): void {
+  reloadFileTree() {
+    this.reloader$.next(null);
+  }
+
+  deleteFile(path: string): Promise<any> {
     const dialogOpts = {
         type: 'warning',
         buttons: ['Удалить', 'Отмена'],
         title: `Подтверждение удаления`,
         message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
       }
-    this.electron.dialog.showMessageBox(dialogOpts).then(
+    return this.electron.dialog.showMessageBox(dialogOpts).then(
       val => {
         if (val.response === 0) {
            this.api.deleteMap(path).subscribe(() => {});
@@ -107,11 +112,10 @@ export class ConfigsService {
               icon: faTrash
             });
             this.toEmpty();
-          // this.showBinary = false;
         }
       }
     ).finally(() => {
-      // this.reloadFileTree();
+      this.reloadFileTree();
     });
   }
 
