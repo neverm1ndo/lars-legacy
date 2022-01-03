@@ -25,7 +25,7 @@ import { StatusPipe } from './pipes/status.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, 'lars://assets/i18n/', '.json');
 }
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';

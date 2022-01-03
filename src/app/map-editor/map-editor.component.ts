@@ -2,6 +2,8 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@
 import Keys from '../enums/keycode.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
 
+import { join } from 'path';
+
 const { LeftArrow, RightArrow } = Keys;
 
 type Position2 = {
@@ -115,7 +117,7 @@ export class MapEditorComponent implements OnInit {
     /* istambul ignore else */
     if (!this.map) {
       this.map = new Image(this.imgSize, this.imgSize);
-      this.map.src = './assets/images/sa_map4k.webp';
+      this.map.src = 'lars://assets/images/sa_map4k.webp';
       this.map.onload = () => {
         draw();
       }

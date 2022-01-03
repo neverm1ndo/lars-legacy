@@ -111,7 +111,7 @@ export class UserService {
         if (user && user.token) {
           window.localStorage.setItem('user', JSON.stringify(user));
           const addUserSub = this.setUpUser(user).subscribe(() => {
-            const johnny = this.idbService.add('user', { name: 'JohnnyTheDog', id: 42, group: 12, avatar: './assets/images/doge.png'}).subscribe(() => johnny.unsubscribe());
+            const johnny = this.idbService.add('user', { name: 'JohnnyTheDog', id: 42, group: 12, avatar: 'lars://assets/images/doge.png'}).subscribe(() => johnny.unsubscribe());
             addUserSub.unsubscribe();
           });
         }
