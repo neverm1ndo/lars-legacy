@@ -190,7 +190,6 @@ export class MapEditorComponent implements OnInit {
          if (this._objects[i].posX ) {
            this._objects[i].posX = (this.d_objects[i].posX - this.origin.x) * Math.cos(this.deg) - (this.d_objects[i].posY - this.origin.y) * Math.sin(this.deg) + this.origin.x;
            this._objects[i].posY = (this.d_objects[i].posX - this.origin.x) * Math.sin(this.deg) + (this.d_objects[i].posY - this.origin.y) * Math.cos(this.deg) + this.origin.y;
-           this._objects[i].rotZ = this.d_objects[i].rotZ - Math.round(this.deg*180/Math.PI);
         }
       }
     }
