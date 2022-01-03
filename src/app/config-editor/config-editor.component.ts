@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, filter } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -167,9 +167,9 @@ export class ConfigEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams
-    .pipe(
-      take(1)
-    ).subscribe((params) => {
+    .pipe(take(1))
+    .pipe(filter(params => params.path))
+    .subscribe((params) => {
       this.toConfig({ path: params.path, name: params.name })
     })
     this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
