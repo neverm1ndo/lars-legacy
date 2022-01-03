@@ -66,10 +66,10 @@
     </div>
   </div>
 </div>
-<div *ngIf="api.loading" class="loader">
+<div *ngIf="loading" class="loader">
   <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
 </div>
-<div *ngIf="chunks.length === 0 && !api.loading" class="list-empty d-flex flex-row align-items-center">
+<div *ngIf="chunks[0].length ==0 && !loading" class="list-empty d-flex flex-row align-items-center">
   <div class="d-flex w-100 align-self-center">
     <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
   </div>

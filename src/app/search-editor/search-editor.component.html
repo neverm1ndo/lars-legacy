@@ -1,7 +1,7 @@
 <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
   <app-search (searchQuery)="search($event)" [lineCounter]="lines" (syncronize)="sync()"></app-search>
   <div #wrapper class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
-    <search-results [searchResult]="chunks"></search-results>
+    <search-results [loading]="loading" [searchResult]="chunks"></search-results>
   </div>
   <div [@lazy] *ngIf="api.lazy" class="lazy-loader">
     <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>

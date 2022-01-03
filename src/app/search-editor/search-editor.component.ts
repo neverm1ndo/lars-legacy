@@ -5,7 +5,7 @@ import { UserService } from '../user.service';
 import { retryWhen, tap, delay } from 'rxjs/operators';
 import { SearchQuery } from '../interfaces/app.interfaces';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, fromEvent } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { lazy } from '../app.animations';
 
@@ -22,9 +22,9 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   lines: number = 0;
   chunks: LogLine[][] = [];
   scroll: any;
-  glf$: Observable<any>;
-  glfSubber: any;
-  direction: number = 1;
+  glfSubber: Subscription = new Subscription();
+  filter: any;
+  loading: boolean = true;
 
   constructor(
     public api: ApiService,
@@ -32,13 +32,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     public route: ActivatedRoute
   ) {
     const userFilter = JSON.parse(window.localStorage.getItem('filter'));
-    const filter = Object.keys(userFilter).filter((key: string) => userFilter[key] === false);
-    this.glf$ = api.getLogFile(filter).pipe(
-      retryWhen(errors =>
-        errors.pipe(
-          delay(10*1000),
-          tap(val => console.log(val))
-        )));
+    this.filter = Object.keys(userFilter).filter((key: string) => userFilter[key] === false);
   }
 
   parseSearchQuery(query: string): SearchQuery {
@@ -92,6 +86,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   search(query: any): void {
     let sq: SearchQuery = this.parseSearchQuery(query.query);
     this.chunks = [];
+    this.loading = true;
     sq.lim = this.user.getUserSettings().lineChunk.toString();
     this.api.currentPage = 0;
     sq.page = this.api.currentPage.toString();
@@ -117,26 +112,27 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showLines() {
-    this.glfSubber = this.glf$.subscribe((lines: LogLine[])=> {
-      if (lines.length) {
-        if (this.direction > 0) {
-          this.chunks.push(...[lines]);
-        } else {
-          this.chunks.unshift(...[lines]);
-        }
+    this.glfSubber.add(this.api.getLogFile(this.filter).pipe(
+      tap(() => {this.loading = true;})
+    ).pipe(
+      retryWhen(errors =>
+        errors.pipe(
+          delay(10*1000),
+          tap(val => console.log(val))
+        ))
+      )
+      .subscribe((lines: LogLine[])=> {
+      if (lines) {
+        this.chunks.push(...[lines]);
         this.lines += lines.length;
       }
       if (this.lines > 600) {
-        this.lines = this.lines - lines.length;
-        if (this.direction > 0) {
-          this.chunks = this.chunks.splice(1, 600/this.user.getUserSettings().lineChunk);
-        } else {
-          this.chunks.pop();
-        }
+        this.lines -= lines.length;
+        this.chunks = this.chunks.splice(1, 600/this.user.getUserSettings().lineChunk);
       }
-      this.api.loading = false;
       this.api.lazy = false;
-    });
+      this.loading = false;
+    }));
   }
 
   isBottom(): boolean {
@@ -159,25 +155,17 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     ).subscribe(() => {
       if (this.isBottom()) {
         if (this.lines % +this.user.getUserSettings().lineChunk == 0) {
-          this.direction = 1;
           this.api.lazyUpdate(1);
         }
       }
-      // if (this.isTop()) {
-      //   if (this.lines % +this.user.getUserSettings().lineChunk == 0) {
-      //     this.direction = -1;
-      //     this.api.lazyUpdate(-1);
-      //   }
-      // }
     });
   }
 
   ngOnInit(): void {
     this.api.currentPage = 0;
-    this.route.queryParams.subscribe(params => {
+    this.glfSubber.add(this.route.queryParams.subscribe(params => {
       this.lines = 0;
       this.chunks = [];
-      this.direction = 1;
       if (params.query) {
         this.api.queryType = 'search';
         this.api.lastQuery = this.parseSearchQuery(params.query);
@@ -186,12 +174,11 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.api.queryType = 'last';
         this.showLines();
       }
-    });
+    }));
   }
   ngOnDestroy(): void {
     if (this.glfSubber) {
       this.glfSubber.unsubscribe();
-      this.glfSubber = null;
     }
   }
 }

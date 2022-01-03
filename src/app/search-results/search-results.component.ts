@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
-import { ApiService } from '../api.service';
 import { Processes } from '../line-process/log-processes';
 import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,9 +10,8 @@ import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 })
 export class SearchResultsComponent implements OnInit {
 
-  // chunks: LogLine[][];
-
   @Input('searchResult') chunks: LogLine[][];
+  @Input('loading') loading: boolean = true;
 
   fa = {
     sad: faFrownOpen
@@ -22,7 +20,6 @@ export class SearchResultsComponent implements OnInit {
   style: string = 'small';
 
   constructor(
-    public api: ApiService,
     public processes: Processes
   ) { }
 

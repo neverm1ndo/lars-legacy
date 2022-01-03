@@ -32,7 +32,6 @@ export class ApiService {
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  public loading: boolean = false;
   public lazy: boolean = false;
 
   lastQuery: any = { page: '0', lim: '50'};
@@ -81,7 +80,6 @@ export class ApiService {
      return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'json'});
   }
   getMap(path: string) {
-    this.loading = true;
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
     return this.http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
   }
@@ -93,18 +91,17 @@ export class ApiService {
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
   getLogFile(filter: string[]): Observable<any> {
-    this.loading = true;
-      return this.reloader$.pipe(
-        switchMap(() => {
-          if (this.queryType === 'search') {
-            this.lastQuery.lim = this.getChunkSize();
-            this.lastQuery.page = this.currentPage.toString();
-            return this.search(this.lastQuery, filter)
-          } else {
-            return this.getLast(filter);
-          }
-        })
-      )
+    return this.reloader$.pipe(
+      switchMap(() => {
+        if (this.queryType === 'search') {
+          this.lastQuery.lim = this.getChunkSize();
+          this.lastQuery.page = this.currentPage.toString();
+          return this.search(this.lastQuery, filter)
+        } else {
+          return this.getLast(filter);
+        }
+      })
+    )
   }
   getFileInfo(path: string): Observable<any> {
     return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
@@ -176,7 +173,6 @@ export class ApiService {
     this.reloader$.next(null);
   }
   sync(): void {
-    this.loading = true;
     this.reloader$.next(null);
   }
 }

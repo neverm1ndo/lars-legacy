@@ -258,7 +258,6 @@ export class MapsComponent implements OnInit {
         this.current = this.mapToObject(map);
         this.xml = map;
         this.currentFileName = path.name;
-        this.api.loading = false;
       })
     } else {
       const dialogOpts = {
@@ -281,7 +280,6 @@ export class MapsComponent implements OnInit {
             this.current = this.mapToObject(map);
             this.xml = map;
             this.currentFileName = path.name;
-            this.api.loading = false;
           })
         }).finally(() => {
           this.toViewMode();
