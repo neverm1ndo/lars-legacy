@@ -14,7 +14,7 @@ import { ConfigsService } from '../configs.service';
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
 
 import Keys from '../enums/keycode.enum';
-const { S, Delete, F } = Keys;
+const { S, Delete, F, Space } = Keys;
 
 @Component({
   selector: 'text-editor',
@@ -30,7 +30,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editor') editor: CodemirrorComponent;
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
 
-  @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
+  @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
       if (event.ctrlKey) {
         switch (event.keyCode) {
           case S : {
@@ -41,6 +41,12 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           case F : {
             this.search = true;
+            break;
+          }
+          case Space : {
+            this.zone.runOutsideAngular(() => {
+              this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
+            })
             break;
           }
           default : break;
@@ -183,6 +189,11 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.editorStyle.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
     }
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.autocomplete = (cm: any) => {
+        this.editor.codeMirror.showHint({hint: this.editor.codeMirrorGlobal.hint.anyword});
+      }
+    })
   }
   ngOnDestroy() {
 

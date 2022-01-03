@@ -11,6 +11,9 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/shell/shell';
 import 'codemirror/mode/coffeescript/coffeescript';
 
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/anyword-hint';
+
 import './addon/search/search';
 
 if (AppConfig.production) {
