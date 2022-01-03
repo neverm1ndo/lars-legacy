@@ -76,8 +76,7 @@ export class ApiService {
     return this.http.get(this.URL_MAPS);
   }
   getConfigText(path: string): Observable<any> {
-     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-     return this.http.get(this.URL_CONFIG, { params: { path: path }, headers, responseType: 'json'});
+     return this.http.get(this.URL_CONFIG, { params: { path: path }, responseType: 'text'});
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');

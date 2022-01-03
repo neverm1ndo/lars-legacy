@@ -172,15 +172,22 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       switch (this.stats.mime) {
         case 'text/xml': this.cmSettings.mode = 'xml'; break;
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
-        default: break;
+        default: this.cmSettings.mode = 'coffeescript'; break;
       }
-      this.editor.codeMirror.clearHistory();
       this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
-      this.textplain = file.text;
-      this.origin = Buffer.from(file.text, 'utf-8');
+      this.editor.codeMirror.clearHistory();
+      this.textplain = file;
+      this.origin = Buffer.from(file, 'utf-8');
       this.loading = false;
       this.editor.codeMirror.clearHistory();
-    }, () => {});
+    }, (err) => {
+      this.toast.show(`Конфигурационный файл не был загружен по причине:`, {
+        classname: 'bg-danger text-light',
+        delay: 6000,
+        icon: faExclamationTriangle,
+        subtext: `${err.status} ${err.statusText}`
+      });
+    });
   }
   ngAfterViewInit() {
     if (!window.localStorage.getItem('CE_fontSize')) {
