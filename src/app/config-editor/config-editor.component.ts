@@ -1,8 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
+import { switchMap, take } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -38,6 +38,7 @@ export class ConfigEditorComponent implements OnInit {
   constructor(
     public api: ApiService,
     private router: Router,
+    private route: ActivatedRoute,
     public toast: ToastService,
     private electron: ElectronService,
     private ngZone: NgZone,
@@ -165,6 +166,12 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams
+    .pipe(
+      take(1)
+    ).subscribe((params) => {
+      this.toConfig({ path: params.path, name: params.name })
+    })
     this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
       this.ngZone.run(() => {
         this.configs.dprogress.next(Math.round(100 * progress.loaded / progress.total));

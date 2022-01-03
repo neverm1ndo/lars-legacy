@@ -74,7 +74,6 @@ export class MapsComponent implements OnInit {
      });
    }
 
-   @ViewChild(FileTreeComponent) ftc: FileTreeComponent;
    @ViewChild(MapEditorComponent) mapEditor: MapEditorComponent;
 
   files: TreeNode;
@@ -371,7 +370,6 @@ export class MapsComponent implements OnInit {
                 }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
-                this.ftc.add.nativeElement.value = '';
               }
             },
             err => {
@@ -383,9 +381,7 @@ export class MapsComponent implements OnInit {
                   icon: faInfo,
                   subtext: err.message
                  });
-              console.error(err);
               this.reloadFileTree();
-              this.ftc.add.nativeElement.value = '';
             });
     }
   }
@@ -395,11 +391,14 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(
+    this.route.queryParams
+    .pipe(
+      take(1)
+    ).pipe(
       filter(params => (params.name || params.path))
     ).subscribe(params => {
       this.currentFilePath = params.path;
-      this.getMap({path: params.path, name: params.name});
+      this.getMap({path: params.path + params.name , name: params.name});
     });
   }
 
