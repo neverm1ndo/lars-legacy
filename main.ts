@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, ProtocolRequest } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
@@ -120,6 +120,10 @@ function createWindow(): BrowserWindow {
       electron: require(`${__dirname}/node_modules/electron`)
     });
     win.loadURL('http://localhost:4200');
+    protocol.registerFileProtocol('lars', (request, callback) => {
+      const url = request.url.substr(7);
+      callback({path: path.join(__dirname, '/dist/', url)});
+    })
   } else {
     win.loadURL('https://libertyapp.nmnd.ru');
   }
