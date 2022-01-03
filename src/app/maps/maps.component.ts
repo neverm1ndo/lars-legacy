@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { mapload, panelSwitch, extrudeToRight } from '../app.animations';
 import Keys from '../enums/keycode.enum';
