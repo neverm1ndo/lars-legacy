@@ -24,7 +24,9 @@
               "codemirror/mode/markdown/markdown",
               "codemirror/mode/javascript/javascript",
               "codemirror/mode/xml/xml",
-              "codemirror/mode/shell/shell"
+              "codemirror/mode/shell/shell",
+              "codemirror/addon/hint/show-hint",
+              "codemirror/addon/hint/anyword-hint",
             ],
             "assets": [
               "src/assets"
