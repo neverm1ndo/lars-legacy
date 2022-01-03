@@ -25,7 +25,7 @@
             <div class="col-12">
               <ul *ngIf="last.files.length > 0; else emptylist">
                 <li *ngFor="let item of last.files">
-                  <span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem">{{ item.path }}</span></span></li>
+                  <span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
               </ul>
             </div>
           </div>
