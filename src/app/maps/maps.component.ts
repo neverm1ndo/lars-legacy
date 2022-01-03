@@ -397,7 +397,7 @@ export class MapsComponent implements OnInit {
       filter(params => (params.name || params.path))
     ).subscribe(params => {
       this.currentFilePath = params.path;
-      this.getMap({path: params.path + params.name , name: params.name});
+      this.getMap({path: params.path + '/' + params.name , name: params.name});
     });
   }
 
