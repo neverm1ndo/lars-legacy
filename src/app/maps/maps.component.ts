@@ -253,11 +253,13 @@ export class MapsComponent implements OnInit {
   }
   getMap(path: { path: string, name?: string}): void {
     if (!this.isChanged()) {
+      this.loading = true;
       this.currentFilePath = path.path;
       this.api.getMap(path.path).subscribe(map => {
         this.current = this.mapToObject(map);
         this.xml = map;
         this.currentFileName = path.name;
+        this.loading = false;
       })
     } else {
       const dialogOpts = {

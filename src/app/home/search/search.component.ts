@@ -40,6 +40,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
   @Input('quick') quick: boolean = false;
+  @Input('loading') loading: boolean = true;
   @Input('lineCounter') lineCounter: number = 0;
 
   constructor(
