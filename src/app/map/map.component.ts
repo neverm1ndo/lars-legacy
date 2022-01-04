@@ -135,12 +135,8 @@ export class MapComponent implements OnInit {
       this.current.objects = file;
       this.loading = false;
     }, (err) => {
-      // this.toast.show(`Конфигурационный файл не был загружен по причине:`, {
-      //   classname: 'bg-danger text-light',
-      //   delay: 6000,
-      //   icon: faExclamationTriangle,
-      //   subtext: `${err.status} ${err.statusText}`
-      // });
+      console.error(err)
+      this.maps.mapNotLoaded(err);
     });
   }
 

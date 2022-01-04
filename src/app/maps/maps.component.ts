@@ -124,11 +124,9 @@ export class MapsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams
-    .pipe(
-      take(1)
-    ).pipe(
-      filter(params => (params.name || params.path))
-    ).subscribe(params => {
+    .pipe(take(1))
+    .pipe(filter(params => (params.name || params.path)))
+    .subscribe(params => {
       console.log(params)
       this.currentFilePath = params.path;
       this.toMap({path: params.path , name: params.name});

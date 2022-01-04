@@ -65,17 +65,8 @@ export class MapsService {
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
     let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
     let objects: MapObject[] = [];
-    if (!map) throw 'NOT_XML';
-    if (!map.getElementsByTagName('map')[0]) {
-      this.toast.show(`Ошибка парсинга карты: MAP_PRS_ERR`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: 'Отсутствует тег <map>'
-        });
-      throw 'MAP_TAG_IS_MISSING';
-    }
+    if (map.getElementsByTagName('parsererror')[0]) throw `NOT_XML: ${map.getElementsByTagName('parsererror')[0].children[1].textContent}`;
+    if (!map.getElementsByTagName('map')[0]) throw 'MAP_TAG_IS_MISSING: map tag is not exists in this document';
     const elems = map.getElementsByTagName('map')[0].children;
     for (let i = 0; i < elems.length; i++) {
       const attrs = elems[i].attributes;
@@ -172,7 +163,7 @@ export class MapsService {
         err?reject(err):resolve();
       });
     }))))
-    .pipe(catchError((err) => throwError(err)))
+    .pipe(catchError((err) => this.handleError(err)))
 
 
       // .then(res => {
@@ -213,8 +204,9 @@ export class MapsService {
       // ,
     return this.api.getMap(path.path)
       // .pipe(switchMap(() => this.api.getMap(path.path)))
-      .pipe(catchError((err) => this.handleError(err)))
+      // .pipe(catchError((err) => this.handleError(err)))
       .pipe(map((xml: string) => this.mapToObject(xml)))
+      .pipe(catchError((err) => throwError(err)))
 
       // .subscribe(map => {
         // this.current = this.mapToObject(map);
@@ -255,7 +247,7 @@ export class MapsService {
         classname: 'bg-danger text-light',
         delay: 6000,
         icon: faExclamationTriangle,
-        subtext: `${err.status} ${err.statusText}`
+        subtext: err
       });
     }
 }
