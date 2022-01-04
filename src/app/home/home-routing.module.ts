@@ -21,6 +21,7 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
+import { MapComponent } from '../map/map.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -39,7 +40,11 @@ const routes: Routes = [
       { path: 'filter', component: FilterComponent, data: { animation: 'filter' } },
       { path: 'alerts', component: NotificationsSettingsComponent, data: { animation: 'alerts' } },
     ]},
-    { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard] },
+    { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard], children: [
+      { path: '', pathMatch: 'full', redirectTo: 'empty' },
+      { path: 'empty', component: EmptyDocComponent },
+      { path: 'map', component: MapComponent },
+    ]},
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] },
     { path: 'backups', component: BackupsComponent, canActivate: [IsDevGuard] },
