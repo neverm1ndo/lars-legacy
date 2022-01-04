@@ -2,8 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@
 import Keys from '../enums/keycode.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
 
-import { join } from 'path';
-
 const { LeftArrow, RightArrow } = Keys;
 
 type Position2 = {
@@ -18,20 +16,33 @@ type Position2 = {
 })
 export class MapEditorComponent implements OnInit {
 
-  _objects: MapObject[];
-  d_objects: MapObject[];
-  @Input('objects') set objects (newObjects: MapObject[]) {
+  private _objects: MapObject[] = [];
+  private d_objects: MapObject[];
+  set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
+    this.viewport = {
+      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-0.33),
+      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*0.33),
+      dx: this.imgSize,
+      dy: this.imgSize
+    }
+    this.positions = {
+      old: { x: 0, y: 0 },
+      new: { x: 0, y: 0 },
+    };
     this.d_objects = this._objects.map(obj => Object.assign({...obj}));
     this.radius = null;
     this.arcCenter = null;
     this.origin = null;
     this.deg = 0;
   }
-  @Input('mode') mode: 'move' | 'rotate' | 'view' = 'view';
+  get objects() {
+    return this._objects;
+  }
+  mode: 'move' | 'rotate' | 'view' = 'view';
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
   @HostListener('window:resize', ['$event']) onResize() {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
@@ -422,16 +433,6 @@ export class MapEditorComponent implements OnInit {
   ngOnInit(): void {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
-    this.viewport = {
-      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-0.33),
-      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*0.33),
-      dx: this.imgSize,
-      dy: this.imgSize
-    }
-    this.positions = {
-      old: { x: 0, y: 0 },
-      new: { x: 0, y: 0 },
-    };
     this.changed = false;
     this.mapView();
   }

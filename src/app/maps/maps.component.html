@@ -8,7 +8,7 @@
           </div>
           <file-tree
             (chooseDirEvent)="chooseDir($event)"
-            (chooseFileEvent)="getMap($event)"
+            (chooseFileEvent)="toMap($event)"
             [items]="files"
             [current]="currentFilePath"
             (addNew)="addNewMap($event)"

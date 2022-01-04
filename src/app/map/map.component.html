@@ -1,1 +1,70 @@
-<p>map works!</p>
+<div *ngIf="current; else load" class="mb-0 h-100 w-100 d-flex justify-content-stretch overflow-auto">
+   <div class="d-flex justify-content-stretch align-items-center flex-fill overflow-hidden">
+     <div class="d-flex flex-column h-100 w-100">
+       <div class="d-flex justify-content-between flex-row overflow-hidden title w-100 map-top no-select cursor-through">
+         <div>
+           <span class="badge badge-light"><fa-icon [icon]="fa.map"></fa-icon>
+             <span class="pre-badge">{{ current.name }}</span>
+           </span>
+         </div>
+         <div>
+           <span placement="left" [ngbTooltip]="limitOk" *ngIf="current.objects.length <= 380" class="badge badge-success">
+             <fa-icon [icon]="fa.cubes"></fa-icon>
+             <span class="pre-badge">{{ current.objects.length }}</span>
+             <ng-template #limitOk><fa-icon class="ttp-icon" [icon]="fa.check"></fa-icon>Лимит не превышен</ng-template>
+           </span>
+           <span placement="left" [ngbTooltip]="limitWarn" *ngIf="current.objects.length >= 380 && current.objects < 400" class="badge badge-warning">
+             <fa-icon [icon]="fa.cubes"></fa-icon>
+             <span class="pre-badge">{{ current.objects.length }}</span>
+             <ng-template #limitWarn><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Близко к лимиту</ng-template>
+           </span>
+           <span placement="left" [ngbTooltip]="limitDanger" *ngIf="current.objects.length >= 400" class="badge badge-danger">
+             <fa-icon [icon]="fa.cubes"></fa-icon>
+             <span class="pre-badge">{{ current.objects.length }}</span>
+             <ng-template #limitDanger><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Превышен лимит</ng-template>
+           </span>
+         </div>
+       </div>
+       <div class="d-flex flex-fill map">
+         <map-editor [@mapload]="loading"></map-editor>
+         <div *ngIf="loading" class="blured-fix mb-0 d-flex justify-content-center">
+           <div class="loader d-flex align-self-center">
+             <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
+           </div>
+         </div>
+       </div>
+ <div class="map-bottom d-flex flex-column flex-nowrap justify-content-center align-items-center">
+   <div [@panelSwitch] *ngIf="levelingZ" class="d-flex align-items-center justify-content-center">
+     <map-corrector [toCorrect]="mapEditor.getAverage('posZ')" [icon]="fa.ruler.vert" [title]="'Выравнивание по Z координате'" (corrected)="correctObjectsZLeveling($event)"></map-corrector>
+   </div>
+   <div [@panelSwitch] *ngIf="mode !== 'view' && !levelingZ" class="d-flex">
+     <button ngbTooltip="Выровнить по Z" (click)="levelZ()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.ruler.vert"></fa-icon></button>
+     <button ngbTooltip="Зафиксировать" (click)="mode = 'view'" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.arch"></fa-icon></button>
+     <button ngbTooltip="Отменить" (click)="cancelChanges()" placement="top" type="button" class="btn btn-light  align-self-center"><fa-icon [icon]="fa.cross"></fa-icon></button>
+   </div>
+   <div [@panelSwitch] *ngIf="mode === 'view'" class="d-flex justify-content-center">
+     <button ngbTooltip="Переместить" (click)="mode = (mode === 'view'?'move':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
+     <button ngbTooltip="Повернуть" (click)="mode = (mode === 'view'?'rotate':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
+     <button ngbTooltip="Сохранить локально" placement="top" (click)="saveMapLocal()" type="button" class="btn btn-light"><fa-icon [icon]="fa.down"></fa-icon></button>
+     <button ngbTooltip="Сохранить на сервере" placement="top" (click)="saveMapCloud()" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
+     <button ngbTooltip="Удалить" placement="top" (click)="deleteMapCloud()" type="button" class="btn btn-light"><fa-icon [icon]="fa.trash"></fa-icon></button>
+   </div>
+ </div>
+     </div>
+   </div>
+   <div class="d-flex flex-column inspector h-100">
+     <div class="d-flex text-center map-inspector-top justify-content-center">
+       <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Map inspector</div>
+     </div>
+     <div class="d-flex flex-fill overflow-auto">
+       <map-inspector [mapObjects]="current.objects"></map-inspector>
+     </div>
+   </div>
+ </div>
+ <ng-template #load>
+   <div *ngIf="!current && !loading" class="jumbotron mb-0 h-100 w-100 d-flex justify-content-center">
+     <div class="pr d-flex align-self-center text-center">
+       <h3><fa-icon [icon]="fa.map"></fa-icon> <br>Выберите карту из списка или добавьте новую с помощью комбинации <span class="badge badge-dark"> ALT+A </span></h3>
+     </div>
+   </div>
+ </ng-template>
