@@ -7,7 +7,7 @@ import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
   selector: 'search-results',
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class SearchResultsComponent implements OnInit {
 

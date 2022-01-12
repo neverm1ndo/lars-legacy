@@ -34,6 +34,7 @@ export class ApiService {
   public lazy: boolean = false;
 
   currentPage: number = 0;
+  currentQuery: string = '';
 
 
   constructor(
@@ -77,9 +78,13 @@ export class ApiService {
     if (!filter) filter = [];
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(query: string, page: string, lim: string, filter: string[]): Observable<any> {
+  getLogFile(query: string, lim: string, filter: string[]): Observable<any> {
+    if (query !== this.currentQuery) {
+      this.currentPage = 0;
+    }
+    this.currentQuery = query;
     return this.reloader$.pipe(
-      switchMap(() => this.search(query, page, lim, filter))
+      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter))
     )
   }
   getFileInfo(path: string): Observable<any> {

@@ -68,6 +68,8 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
 
+
+
   ngAfterViewInit(): void {
     this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
     .pipe(
@@ -85,14 +87,20 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.api.currentPage = 0;
     this.glfSubber.add(
     this.route.queryParams
-    .pipe(tap(() => {
-      this.loading = true;
-      this.lines = 0;
-      this.chunks = [];
+    .pipe(tap((params: Params) => {
+      if (this.api.currentPage === 0) {
+        this.loading = true;
+        this.lines = 0;
+        this.chunks = [];
+      }
+      if (params.query !== this.api.currentQuery) {
+        this.sync();
+      }
     }))
-    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', '0', this.lim, this.filter)))
+    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter)))
     .subscribe((lines: LogLine[]) => {
       this.loading = false;
+      this.api.lazy = false;
       this.chunks.push(...[lines]);
       this.lines += lines.length;
     }));
