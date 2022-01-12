@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } fr
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { UserService } from '../user.service';
-import { mergeMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
@@ -90,7 +90,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.lines = 0;
       this.chunks = [];
     }))
-    .pipe(mergeMap((params: Params) => this.api.getLogFile(params.query?params.query:'', '0', this.lim, this.filter)))
+    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', '0', this.lim, this.filter)))
     .subscribe((lines: LogLine[]) => {
       this.loading = false;
       this.chunks.push(...[lines]);
