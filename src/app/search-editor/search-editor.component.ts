@@ -2,11 +2,10 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } fr
 import { LogLine } from '../interfaces/app.interfaces';
 import { ApiService } from '../api.service';
 import { UserService } from '../user.service';
-import { retryWhen, tap, delay } from 'rxjs/operators';
-import { SearchQuery } from '../interfaces/app.interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { mergeMap } from 'rxjs/operators';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { lazy } from '../app.animations';
 
 @Component({
@@ -25,114 +24,35 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   glfSubber: Subscription = new Subscription();
   filter: any;
   loading: boolean = true;
+  lim: string = String(this.user.getUserSettings().lineChunk);
 
   constructor(
     public api: ApiService,
     public user: UserService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    private router: Router,
   ) {
     const userFilter = JSON.parse(window.localStorage.getItem('filter'));
     this.filter = Object.keys(userFilter).filter((key: string) => userFilter[key] === false);
   }
 
-  parseSearchQuery(query: string): SearchQuery {
-    let result: SearchQuery = {};
-    let splited: any[] = [];
-    if (query.includes('&')) {
-      splited = query.split('&');
-    } else {
-      splited = [query];
-    }
-     if ((splited.length > 1) || (splited[0].includes(':'))) {
-       result.nickname = [];
-       result.ip = [];
-       for (let i = 0; i < splited.length; i++) {
-         if (splited[i].includes(':')) {
-           let q = {
-             type : splited[i].split(':')[0],
-             val: splited[i].split(':')[1]
-           };
-           if ((q.type === 'nickname') || (q.type === 'nn')) {
-             result.nickname.push(q.val);
-           }
-           if (q.type === 'ip') {
-             result.ip.push(q.val);
-           }
-           if ((q.type === 'serals') || (q.type === 'srl')) {
-             result.as = q.val.split('*')[0];
-             result.ss = q.val.split('*')[1];
-           }
-         } else {
-           if (i === 0) {
-             result.nickname.push(splited[i]);
-           } else if ( i < splited.length - 1 ) {
-             result.nickname.push(splited[i]);
-           } else {
-             result.nickname.push(splited[i]);
-           }
-         }
-       }
-     } else {
-       result.nickname = [splited[0]];
-     }
-    for (let key of Object.keys(result)) {
-      if (result[key].length === 0) {
-        delete result[key];
-      }
-    }
-    return result;
-  }
-
   search(query: any): void {
-    let sq: SearchQuery = this.parseSearchQuery(query.query);
     this.chunks = [];
     this.loading = true;
-    sq.lim = this.user.getUserSettings().lineChunk.toString();
-    this.api.currentPage = 0;
-    sq.page = this.api.currentPage.toString();
-    if (this.api.lastQuery !== sq) {
-      if (sq.dateFrom && sq.dateTo) {
-        sq.dateFrom = query.from;
-        sq.dateTo = query.to;
-      }
-      this.api.lastQuery = sq;
-      this.api.queryType = 'search';
-      this.api.reloader$.next(null);
-    }
+    this.lines = 0;
+    this.router.navigate(['/home/search'], { queryParams: { query: query.query }})
   }
 
   refresh(): void {
+    this.loading = true;
     this.api.refresh();
   }
 
   sync(): void {
+    this.loading = true;
     this.lines = 0;
     this.chunks = [];
-    this.api.sync();
-  }
-
-  showLines() {
-    this.glfSubber.add(this.api.getLogFile(this.filter).pipe(
-      tap(() => {this.loading = true;})
-    ).pipe(
-      retryWhen(errors =>
-        errors.pipe(
-          delay(10*1000),
-          tap(val => console.log(val))
-        ))
-      )
-      .subscribe((lines: LogLine[])=> {
-      if (lines) {
-        this.chunks.push(...[lines]);
-        this.lines += lines.length;
-      }
-      if (this.lines > 600) {
-        this.lines -= lines.length;
-        this.chunks = this.chunks.splice(1, 600/this.user.getUserSettings().lineChunk);
-      }
-      this.api.lazy = false;
-      this.loading = false;
-    }));
+    this.api.refresh();
   }
 
   isBottom(): boolean {
@@ -163,17 +83,18 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.api.currentPage = 0;
-    this.glfSubber.add(this.route.queryParams.subscribe(params => {
+    this.glfSubber.add(
+    this.route.queryParams
+    .pipe(tap(() => {
+      this.loading = true;
       this.lines = 0;
       this.chunks = [];
-      if (params.query) {
-        this.api.queryType = 'search';
-        this.api.lastQuery = this.parseSearchQuery(params.query);
-        this.showLines();
-      } else {
-        this.api.queryType = 'last';
-        this.showLines();
-      }
+    }))
+    .pipe(mergeMap((params: Params) => this.api.getLogFile(params.query?params.query:'', '0', this.lim, this.filter)))
+    .subscribe((lines: LogLine[]) => {
+      this.loading = false;
+      this.chunks.push(...[lines]);
+      this.lines += lines.length;
     }));
   }
   ngOnDestroy(): void {

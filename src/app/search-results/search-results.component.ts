@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { Processes } from '../line-process/log-processes';
 import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
@@ -6,7 +6,8 @@ import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'search-results',
   templateUrl: './search-results.component.html',
-  styleUrls: ['./search-results.component.scss']
+  styleUrls: ['./search-results.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchResultsComponent implements OnInit {
 
