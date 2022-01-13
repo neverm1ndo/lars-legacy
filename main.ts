@@ -125,7 +125,6 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const url = request.url.substr(7);
-    console.log(path.join(__dirname, 'dist', url))
     callback({path: path.join(__dirname, 'dist', url)});
   })
   win.on('show', (event: any) => {
