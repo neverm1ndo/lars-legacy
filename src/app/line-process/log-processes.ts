@@ -388,10 +388,15 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'adm',
       control: 'spectateDerbyChange'
     },
-    '<shop/enter>': {
+    '<clothes_shop/enter>': {
       translate: 'Вход в Магазин одежды',
       type: 'clothes',
       control: 'clotEnter'
+    },
+    '<clothes_shop/leave>': {
+      translate: 'Выход из Магазина одежды',
+      type: 'clothes',
+      control: 'clotLeave'
     },
     '<cn/request>': {
       translate: 'Запрос CN',
