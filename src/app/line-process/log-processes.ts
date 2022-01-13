@@ -6,6 +6,11 @@ export interface Process {
   control: string;
 }
 
+const UnknownProcess: Process = {
+  translate: 'Неизвестная команда',
+  type: 'warning',
+  control: 'UnknownProcess'
+}
 /* istambul ignore next */
 const Processes = { // FIXME: convert all this stuff to enums ???
     '<connection/connect>': {
@@ -400,7 +405,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
     },
     '<cn/response/not_found>': {
       translate: 'CN не найден',
-      type: 'info',
+      type: 'danger',
       control: 'сnResNotFound'
     },
     '<unban/cn/auto>': {
@@ -411,6 +416,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
 }
 
 export const getProcessTranslation = (processname: keyof typeof Processes): Process => {
+  if (!Processes[processname as string]) return UnknownProcess;
   return Processes[processname as string];
 }
 
