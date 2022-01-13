@@ -1,6 +1,6 @@
 {
   "productName": "LARS",
-  "copyright": "MIT © 2020 ${author}",
+  "copyright": "MIT © 2022 ${author}",
   "appId": "ru.nmnd.lars",
   "publish": {
     "provider": "github",
@@ -18,7 +18,6 @@
       "!package-lock.json",
       "!src/",
       "!e2e/",
-      "!dist/assets/images",
       "!hooks/",
       "!angular.json",
       "!_config.yml",

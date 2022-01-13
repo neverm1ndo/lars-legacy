@@ -37,7 +37,7 @@
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build:portable": "npm run build:prod && electron-builder build -c ./electron-builder.portable.json",
-    "electron:build:nsis": "npm run build:prod && electron-builder build --ia32 --x64 -c ./electron-builder.nsis.json",
+    "electron:build:nsis": "electron-builder build --ia32 --x64 -c ./electron-builder.nsis.json",
     "electron:build:installer": "npm run build:prod && electron-builder build -c ./electron-builder.json",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
