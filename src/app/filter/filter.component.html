@@ -1,11 +1,11 @@
 
-<div class="d-flex flex-fill h-100 overflow-auto">  
+<div class="d-flex flex-fill h-100 overflow-auto">
   <div class="col-12 pt-3 pb-3">
     <h6>Фильтр</h6>
     <small>Отображает только нужные процессы, остальные выпадают из поиска.</small>
     <form class="filter-form" [formGroup]="filterForm" (change)="setFilter()">
       <div class="row">
-        <div *ngFor="let process of processes.sched2" class="col-6">
+        <div *ngFor="let process of processes" class="col-6">
           <!-- <label class="pseudo" for="weap">
           </label> -->
           <label class="form-check-label pseudo" for="{{process.control}}">
@@ -16,7 +16,7 @@
             [name]="process.control"
             [formControlName]="process.control">
             <i></i>
-            <span class="badge no-select badge-{{process.type}}">{{process.translate}} <br><small>{{process.process}}</small></span>
+            <span class="badge no-select badge-{{process.type}}">{{process.translate}} <br><small>{{process.name}}</small></span>
           </label>
         </div>
       </div>

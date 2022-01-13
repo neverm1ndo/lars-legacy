@@ -16,7 +16,6 @@ import { SearchComponent } from './search/search.component';
 import { SharedModule } from '../shared/shared.module';
 import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { AuthGuard } from '../guards/auth.guard';
-import { Processes } from '../line-process/log-processes';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -90,7 +89,6 @@ const dbConfig: DBConfig  = {
   ],
   providers: [
     AuthGuard,
-    Processes,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JWTInterceptor,
