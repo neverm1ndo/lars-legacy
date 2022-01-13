@@ -6,6 +6,7 @@
       </div>
       <div [@extrudeRight] *ngIf="update" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end btn-group top-btn" role="remote-group">
           <button
+          (click)="reload()"
           type="button"
           class="btn btn-topnative pl-2 pr-2 top-btn update"
           name="profile-button">

@@ -66,6 +66,9 @@ export class TopperComponent implements OnInit {
     public ws: WebSocketService
   ) {}
 
+  reload() {
+    this.window.win.reload();
+  }
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
   }
