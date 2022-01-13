@@ -120,13 +120,13 @@ function createWindow(): BrowserWindow {
       electron: require(`${__dirname}/node_modules/electron`)
     });
     win.loadURL('http://localhost:4200');
-    protocol.registerFileProtocol('lars', (request, callback) => {
-      const url = request.url.substr(7);
-      callback({path: path.join(__dirname, '/dist/', url)});
-    })
   } else {
     win.loadURL('https://libertyapp.nmnd.ru');
   }
+  protocol.registerFileProtocol('lars', (request, callback) => {
+    const url = request.url.substr(7);
+    callback({path: path.join(__dirname, '/dist/', url)});
+  })
   win.on('show', (event: any) => {
     if (tray) tray.destroy();
   })
