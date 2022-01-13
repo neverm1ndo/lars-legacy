@@ -30,6 +30,7 @@
     "start": "npm-run-all -p electron:serve ng:serve",
     "build": "npm run electron:serve-tsc && ng build --base-href /",
     "deploy": "electron-builder build --publish always --x64 --ia32 -c ./electron-builder.json",
+    "front-deployer": "ts-node ./frontend.deployer.ts",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
     "ng:serve": "ng serve -c web -o",

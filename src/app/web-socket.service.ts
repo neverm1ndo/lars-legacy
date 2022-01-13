@@ -109,6 +109,9 @@ export class WebSocketService {
   getAlertReport(): Observable<LogLine> {
     return this.socket.fromEvent('alert:report');
   }
+  getUpdateMessage(): Observable<LogLine> {
+    return this.socket.fromEvent('update:soft');
+  }
     //     case 'expire-token': {
     //       console.log('%c[ws-service]', 'color: tomato', m.msg);
     //       this.toast.show(`Ваша прошлая сессия была прекращена. Токен доступа сброшен.`,

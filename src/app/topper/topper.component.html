@@ -4,7 +4,7 @@
         <lty-icon name="lty-logo"></lty-icon>
         <small class="native-dragzone label no-select">LARS</small>
       </div>
-      <div *ngIf="false" class="d-flex align-self-end btn-group top-btn" role="remote-group">
+      <div [@extrudeRight] *ngIf="update" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end btn-group top-btn" role="remote-group">
           <button
           type="button"
           class="btn btn-topnative pl-2 pr-2 top-btn update"

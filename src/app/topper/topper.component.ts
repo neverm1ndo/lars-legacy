@@ -4,7 +4,8 @@ import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { extrudeToRight } from '../app.animations';
 
 type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
 
@@ -12,7 +13,8 @@ type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
 @Component({
   selector: 'app-topper',
   templateUrl: './topper.component.html',
-  styleUrls: ['./topper.component.scss']
+  styleUrls: ['./topper.component.scss'],
+  animations: [extrudeToRight]
 })
 export class TopperComponent implements OnInit {
 
@@ -29,6 +31,7 @@ export class TopperComponent implements OnInit {
   state: BehaviorSubject<ServerStateType> = new BehaviorSubject('live');
   isLoggedIn: boolean = false;
   authenticated: any;
+  update: boolean = false;
   server = {
     state: 'loading',
     reboot: () => {
@@ -94,6 +97,10 @@ export class TopperComponent implements OnInit {
       this.ws.getServerLaunch().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server launched');
          this.state.next('live');
+      });
+      this.ws.getUpdateMessage().subscribe(() => {
+         console.log('%c[update]', 'color: cyan', 'soft update is ready');
+         this.update = true;
       });
       this.ws.getRoomName().subscribe((room) => {
         if (room.includes('devs')) {
