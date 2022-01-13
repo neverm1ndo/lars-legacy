@@ -1,8 +1,8 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy} from '@angular/core';
 import { ApiService } from '../api.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, take, filter } from 'rxjs/operators';
+import { switchMap, take, filter, takeUntil } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { ConfigsService } from '../configs.service';
   templateUrl: './config-editor.component.html',
   styleUrls: ['./config-editor.component.scss']
 })
-export class ConfigEditorComponent implements OnInit {
+export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   files: TreeNode;
   expanded: string[] = [];
@@ -28,6 +28,8 @@ export class ConfigEditorComponent implements OnInit {
   currentFilePath: string;
   progress: number = 0;
   loading: boolean = false;
+
+  uploadsSubscriptions: Subscription = new Subscription();
 
   fa = {
     conf: faFileSignature,
@@ -106,7 +108,8 @@ export class ConfigEditorComponent implements OnInit {
          for (let file of files) {
             formData.append('file', file);
          }
-         this.api.uploadFileCfg(formData).subscribe(
+        const sub = this.api.uploadFileCfg(formData)
+         .subscribe(
            event => {
               if (event.type === HttpEventType.UploadProgress) {
                 this.progress = Math.round(100 * event.loaded / event.total);
@@ -138,6 +141,7 @@ export class ConfigEditorComponent implements OnInit {
                 }
                 this.reloadFileTree();
                 setTimeout(() => { this.progress = 0; }, 1000)
+                this.uploadsSubscriptions.remove(sub)
               }
             },
             err => {
@@ -161,7 +165,9 @@ export class ConfigEditorComponent implements OnInit {
               }
               console.error(err);
               this.reloadFileTree();
+              this.uploadsSubscriptions.remove(sub)
             });
+            this.uploadsSubscriptions.add(sub);
     }
   }
 
@@ -202,5 +208,8 @@ export class ConfigEditorComponent implements OnInit {
         }, 2000);
       });
     });
+  }
+  ngOnDestroy(): void {
+    this.uploadsSubscriptions.unsubscribe();
   }
 }
