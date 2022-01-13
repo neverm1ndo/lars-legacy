@@ -8,7 +8,7 @@
         {{ line.process }}
       </div>
       <div class="col-3 col-md-2 col-lg-2 text-center">
-        <strong>{{ line.nickname }}</strong>
+        <a class="nickname" [routerLink]="['/home/search']" [queryParams]="{query: 'nn:' + line.nickname}"><strong>{{ line.nickname }}</strong></a>
         <br>
         <span class="line-id">id: {{ line.id }}</span>
       </div>
@@ -30,7 +30,7 @@
       </div>
       <div class="col-2">
         <div class="h-100 d-flex align-items-center">
-          <strong>{{ line.nickname }}</strong><span> ({{ line.id }})</span>
+          <a class="mr-1 nickname" [routerLink]="['/home/search']" [queryParams]="{query: 'nn:' + line.nickname}"><strong>{{ line.nickname }}</strong></a><span>({{ line.id }})</span>
         </div>
       </div>
       <div class="col-4">
