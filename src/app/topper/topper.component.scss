@@ -47,11 +47,15 @@
     100% { opacity: 0; transform: scale(2.5);}
   }
   lty-icon {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+    margin-top: 3px;
     margin-left: 16px;
     position: relative;
     top: 0px;
+    .lty-icon {
+      stroke-width: 5px;
+    }
   }
   .label {
     position: relative;
