@@ -1,3 +1,4 @@
+@import 'badges';
 :host {
   font-size: inherit;
   .badge {
@@ -9,51 +10,5 @@
     padding-top: 2px;
     padding-right: 15px;
     margin-bottom: 3px;
-  }
-  .badge-dev {
-    background-color: #7b4888;
-  }
-  .badge-usual {
-    background-color: #545454;
-  }
-  .badge-adm {
-    background-color: #da6e00;
-  }
-  .badge-derby {
-    background-color: #666254;
-  }
-  .badge-dm {
-    background: rgb(33,99,110);
-    background: linear-gradient(90deg, rgba(33,99,110,1) 0%, rgba(0,167,129,1) 50%, rgba(33,99,110,1) 100%);
-  }
-  .badge-tdm {
-    position: relative;
-    z-index: 1;
-    $border: 1px;
-    border: solid $border transparent; /* !importanté */
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      z-index: -2;
-      margin: -$border;
-      border-radius: inherit;
-      background: linear-gradient(127deg, rgba(33,99,110,1) 0%, rgba(0,144,167,1) 50%, rgba(193,105,61,1) 50%, rgba(147,0,0,1) 100%)
-    }
-    &:after{
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      z-index: -1;
-      margin: 0px;
-      border-radius: inherit;
-      background: #3d3e4a;
-    }
-  }
-  .badge-pickup {
-    background-color: #a12f63;
-  }
-  .badge-clothes {
-    background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(252,176,69,1) 100%);
   }
 }

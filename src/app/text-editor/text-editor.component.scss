@@ -1,4 +1,5 @@
 @import 'colors';
+@import 'animations';
 :host {
   .textarea {
     overflow: auto;
@@ -130,6 +131,7 @@
           top: -1px;
           transition: 0.2s linear;
         }
+        @include blink();
         .led-loading {
           background: #ffc107!important;
           animation-name: blink;
@@ -165,9 +167,4 @@
       flex: 1 1 33%;
     }
   }
-}
-@keyframes blink {
-  0% { opacity: 1 }
-  50% { opacity: 0 }
-  100% { opacity: 1 }
 }

@@ -1,4 +1,5 @@
 @import 'colors';
+@import 'badges';
 @mixin css-checkbox(
         $size: '16px',
         $selectedColor: #444,
@@ -112,42 +113,5 @@
     margin-bottom: 5px;
     margin-right: 10px;
     word-wrap: normal;
-    &-dev {
-      background-color: #7b4888;
-    }
-    &-usual {
-      background-color: #545454;
-    }
-    &-adm {
-      background-color: #da6e00;
-    }
-    &-dm {
-      background: rgb(33,99,110);
-      background: linear-gradient(90deg, rgba(33,99,110,1) 0%, rgba(0,167,129,1) 50%, rgba(33,99,110,1) 100%);
-    }
-    &-tdm {
-      position: relative;
-      z-index: 1;
-      $border: 1px;
-      border: solid $border transparent; /* !importanté */
-      &:before {
-        content: '';
-        position: absolute;
-        top: 0; right: 0; bottom: 0; left: 0;
-        z-index: -2;
-        margin: -$border;
-        border-radius: inherit;
-        background: linear-gradient(127deg, rgba(33,99,110,1) 0%, rgba(0,144,167,1) 50%, rgba(193,105,61,1) 50%, rgba(147,0,0,1) 100%)
-      }
-    }
-    &-pickup {
-      background-color: #a12f63;
-    }
-    &-clothes {
-      background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(252,176,69,1) 100%);
-    }
-    &-derby {
-      background-color: #666254;
-    }
   }
 }

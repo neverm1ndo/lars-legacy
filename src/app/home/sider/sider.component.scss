@@ -45,7 +45,7 @@
         outline: none;
       }
       &::after {
-        margin-left: 24px;
+        margin-left: 20px;
       }
     }
   }
@@ -129,6 +129,7 @@
     &:not(:disabled):hover {
       @include active-panel;
       &::after {
+        position: absolute;
         display: inline-block;
         opacity: 0;
         animation-name: labfade;
@@ -139,6 +140,7 @@
         -webkit-box-shadow: 0px 0px 10px 0px #11111150;
       }
       &::before {
+        position: absolute;
         animation-name: labfade2;
         animation-duration: 0.1s;
         animation-delay: 0.5s;
@@ -148,17 +150,17 @@
       }
     }
     @keyframes labfade {
-      from {opacity: 0; margin-left: 10px;}
-      to {opacity: 1;  margin-left: 25px;}
+      from {opacity: 0; left: 40px;}
+      to {opacity: 1;  left: 45px;}
     }
     @keyframes labfade2 {
       from {
         opacity: 0;
-        margin-left: 20px;
+        left: 43px;
       }
       to {
         opacity: 1;
-        margin-left: 25px;
+        left: 48px;
       }
     }
     span {
