@@ -218,6 +218,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'light',
       control: 'chatTeam'
     },
+    '<chat/pm>': {
+      translate: 'ЛС',
+      type: 'light',
+      control: 'chatPm'
+    },
     '<chat/admin>': {
       translate: 'Админ чат',
       type: 'light',
@@ -337,6 +342,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Смерть от падения',
       type: 'death',
       control: 'dthSplat'
+    },
+    '<death/killed>': {
+      translate: 'Cмерть от игрока',
+      type: 'death',
+      control: 'dthKilled'
     },
     '<death_match/leave>': {
       translate: 'Выход из DM',
