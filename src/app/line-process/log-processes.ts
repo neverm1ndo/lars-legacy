@@ -48,6 +48,16 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'danger',
       control: 'disconnectKickBan'
     },
+    '<disconnect/kick>': {
+      translate: 'Кик',
+      type: 'danger',
+      control: 'disconnectKick'
+    },
+    '<disconnect/ban>': {
+      translate: 'Бан',
+      type: 'danger',
+      control: 'disconnectBan'
+    },
     '<auth/incorrect>': {
       translate: 'Неудачная аутентификация',
       type: 'danger',
@@ -253,6 +263,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'info',
       control: 'chatAutoBlock'
     },
+    '<chat/report>': {
+      translate: 'Жалоба на игрока',
+      type: 'report',
+      control: 'chatReport'
+    },
     '<spectate/leave>': {
       translate: 'Выход из наблюдения',
       type: 'adm',
@@ -414,9 +429,19 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       control: 'сnResNotFound'
     },
     '<unban/cn/auto>': {
-      translate: 'Авторазбан CN',
+      translate: 'Автоблокировка CN',
       type: 'info',
       control: 'unbanCnAuto'
+    },
+    '<ban/cn/hand>': {
+      translate: 'Ручная блокировка CN',
+      type: 'danger',
+      control: 'banCnHand'
+    },
+    '<unban/cn/hand>': {
+      translate: 'Ручная разблокировка CN',
+      type: 'info',
+      control: 'unbanCnHand'
     },
 }
 
