@@ -243,7 +243,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'warning',
       control: 'chatBlockRep'
     },
-    '<chat/block/domain>': {
+    '<chat/block/domains>': {
       translate: 'Блокировка чата: ссылка',
       type: 'warning',
       control: 'chatBlockDomain'
@@ -332,6 +332,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'PICKUP: Артефакт',
       type: 'pickup',
       control: 'pickArt'
+    },
+    '<death/splat>': {
+      translate: 'Смерть от падения',
+      type: 'death',
+      control: 'dthSplat'
     },
     '<death_match/leave>': {
       translate: 'Выход из DM',
