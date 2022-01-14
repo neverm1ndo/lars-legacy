@@ -343,6 +343,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'death',
       control: 'dthSplat'
     },
+    '<death/drown>': {
+      translate: 'Смерть от утопления',
+      type: 'death',
+      control: 'dthDrown'
+    },
     '<death/killed>': {
       translate: 'Cмерть от игрока',
       type: 'death',
