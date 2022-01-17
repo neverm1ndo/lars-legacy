@@ -1,6 +1,12 @@
 <div class="col-12 pt-3 pb-3">
-  <h6 class="display-6">Оповещения</h6>
-  <small>Включает или отключает системные оповещения</small>
+  <div class="d-flex justify-content-between align-content-center mb-2">
+    <div class="">
+      <h6 class="display-6">Оповещения</h6>
+      <small>Включает или отключает системные оповещения</small>
+    </div>
+    <button class="btn btn-success" type="button" (click)="testNotification()" name="button">Тест оповещений</button>
+  </div>
+
   <hr>
   <form [formGroup]="settings" (change)="setup()">
     <div class="d-flex justify-content-between align-content-center mb-2">
