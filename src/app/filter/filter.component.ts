@@ -36,12 +36,18 @@ export class FilterComponent implements OnInit {
     localStorage.setItem('filter', JSON.stringify(changedOpt));
   }
 
-  ngOnInit(): void {
-    if (localStorage.getItem('filter')) {
+  getFilterFromStorage(): void {
+    try {
+      if (!localStorage.getItem('filter')) throw new Error('EMPTY_FILTER');
       this.filterForm.setValue(JSON.parse(localStorage.getItem('filter')))
-    } else {
+    } catch(err) {
       this.setFilter();
+      console.warn(err.message, 'Filter reset  to default');
     }
+  }
+
+  ngOnInit(): void {
+    this.getFilterFromStorage();
   }
 
 }
