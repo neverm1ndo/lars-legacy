@@ -19,6 +19,10 @@ src/**/*.js
 # prod builder conf
 electron-builder.nsis.json
 
+# frontend deployer
+frontend.deployer.ts
+frontend.deploy.env
+
 # dependencies
 /node_modules
 

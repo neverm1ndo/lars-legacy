@@ -8,7 +8,7 @@
         {{ line.process }}
       </div>
       <div class="col-3 col-md-2 col-lg-2 text-center">
-        <strong>{{ line.nickname }}</strong>
+        <a class="nickname" [routerLink]="['/home/search']" [queryParams]="{query: 'nn:' + line.nickname}"><strong>{{ line.nickname }}</strong></a>
         <br>
         <span class="line-id">id: {{ line.id }}</span>
       </div>
@@ -30,12 +30,12 @@
       </div>
       <div class="col-2">
         <div class="h-100 d-flex align-items-center">
-          <strong>{{ line.nickname }}</strong><span> ({{ line.id }})</span>
+          <a class="mr-1 nickname" [routerLink]="['/home/search']" [queryParams]="{query: 'nn:' + line.nickname}"><strong>{{ line.nickname }}</strong></a><span>({{ line.id }})</span>
         </div>
       </div>
       <div class="col-4">
         <div class="h-100 w-100 d-flex align-items-center">
-          <logline-content *ngIf="line.content" [content]="line.content" [type]="check(line.process)"></logline-content>
+          <logline-content *ngIf="line.content" [content]="line.content" [type]="getProcessTranslation(line.process)"></logline-content>
         </div>
       </div>
       <div class=" col-12 col-md-12 offset-lg-2 col-lg-10">
@@ -69,7 +69,7 @@
 <div *ngIf="loading" class="loader">
   <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
 </div>
-<div *ngIf="chunks[0].length ==0 && !loading" class="list-empty d-flex flex-row align-items-center">
+<div *ngIf="!chunks[0] && !loading" class="list-empty d-flex flex-row align-items-center">
   <div class="d-flex w-100 align-self-center">
     <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
   </div>

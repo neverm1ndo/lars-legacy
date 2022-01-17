@@ -27,13 +27,29 @@ export class NotificationsSettingsComponent implements OnInit {
     localStorage.setItem('alerts', JSON.stringify(this.sets));
   }
 
-  ngOnInit(): void {
-    let userSettings = JSON.parse(localStorage.getItem('alerts'));
-    if (userSettings) {
-      this.settings.setValue(userSettings)
-    } else {
+  getNotificationsSettingsFromStorage(): void {
+    try {
+      if (!localStorage.getItem('alerts')) throw new Error('EMPTY_NOTIFICATIONS_SETTINGS');
+      this.settings.setValue(JSON.parse(localStorage.getItem('alerts')))
+    } catch(err) {
       this.setup();
+      console.warn(err.message, 'Notifications settings reset to default');
     }
+  }
+
+  testNotification(): void {
+    new Notification('Это тестовое оповещение!', {
+      body: 'Это оповещение вызвано кнопокой "Тест оповещений"',
+      timestamp: Date.now(),
+      lang: 'ru-RU',
+      silent: !this.sets.silent,
+      icon: 'lars://assets/icons/favicon.ico',
+      requireInteraction: true
+    });
+  }
+
+  ngOnInit(): void {
+    this.getNotificationsSettingsFromStorage();
   }
 
 }

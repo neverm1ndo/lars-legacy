@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Processes } from '../line-process/log-processes';
+import Processes, { Process } from '../line-process/log-processes';
+
+interface ProcessWithName extends Process {
+  name?: keyof typeof Processes | string
+}
 
 @Component({
   selector: 'filter',
@@ -9,31 +13,41 @@ import { Processes } from '../line-process/log-processes';
 })
 export class FilterComponent implements OnInit {
 
-  filterForm = new FormGroup((() => {
+  filterForm = new FormGroup((() => { // FIXME: fix form constructor
     let controls = {};
-    this.processes.sched2.forEach(process => {
-      controls[process.control] = new FormControl(true);
+    Object.keys(Processes).forEach((process: string) => {
+      controls[Processes[process].control] = new FormControl(true);
     });
     return controls;
   })());
 
- _processes: any[];
-
   constructor(
-    public processes: Processes
   ) {}
 
-  setFilter() {
+  get processes(): ProcessWithName[] {
+    return Object.values(Processes).map((val: ProcessWithName, i: number) => {
+      val.name = Object.keys(Processes)[i];
+      return val;
+    });
+  }
+
+  setFilter(): void {
     let changedOpt = this.filterForm.getRawValue();
     localStorage.setItem('filter', JSON.stringify(changedOpt));
   }
 
-  ngOnInit(): void {
-    if (localStorage.getItem('filter')) {
+  getFilterFromStorage(): void {
+    try {
+      if (!localStorage.getItem('filter')) throw new Error('EMPTY_FILTER');
       this.filterForm.setValue(JSON.parse(localStorage.getItem('filter')))
-    } else {
+    } catch(err) {
       this.setFilter();
+      console.warn(err.message, 'Filter reset  to default');
     }
+  }
+
+  ngOnInit(): void {
+    this.getFilterFromStorage();
   }
 
 }

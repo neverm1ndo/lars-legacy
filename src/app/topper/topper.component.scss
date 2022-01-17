@@ -1,5 +1,6 @@
 @import '_colors';
 @import '_native';
+@import "animations";
 
 :host {
   .status {
@@ -37,21 +38,18 @@
       }
     }
   }
-  @keyframes blink {
-    0% { opacity: 1 }
-    50% { opacity: 0 }
-    100% { opacity: 1 }
-  }
-  @keyframes blinknscale {
-    0% { opacity: 1; transform: scale(1);}
-    100% { opacity: 0; transform: scale(2.5);}
-  }
+  @include blink();
+  @include blinknscale(1, 2.5);
   lty-icon {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+    margin-top: 3px;
     margin-left: 16px;
     position: relative;
     top: 0px;
+    .lty-icon {
+      stroke-width: 5px;
+    }
   }
   .label {
     position: relative;
@@ -93,24 +91,14 @@
   .btn-group > .btn:not(:first-child), .btn-group > .btn-group:not(:first-child) {
     margin-left: 0px!important;
   }
+  @include open();
   .ddOpened {
     animation: open .15s cubic-bezier(0.4, 0.0, 0.2, 1);
     transform: translate(0px, 0%);
   }
-
-  @keyframes open {
-    0% {  visibility: hidden; opacity: 0; transform: translate(0px, 20%);}
-    100% { visibility: visible; opacity: 1; }
-  }
-
+  @include close();
   .ddClosed {
     animation: close .15s cubic-bezier(0.4, 0.0, 0.2, 1);
     transform: translate(0px, -10%);
-  }
-
-  @keyframes close {
-    0% { display: block!important; opacity: 1 !important; }
-    99% { opacity: 0; transform: translate(0px, 0%); }
-    100% { display: none!important;}
   }
 }

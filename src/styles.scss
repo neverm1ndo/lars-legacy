@@ -245,21 +245,16 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   }
   .spinner-logo {
      path, use {
-       stroke-width: 18;
+       stroke-width: 5;
        stroke: #ffffff;
        fill: transparent;
        fill-opacity: 10;
        stroke-dasharray: 100, 200;
        stroke-dashoffset: 0;
-       animation: dash 1.5s ease-in-out infinite;
+       animation: dash-one 2.5s ease-in-out infinite;
        stroke-linecap: round;
       }
   }
-  // @keyframes rotate {
-  //   100% {
-  //     transform: rotate(360deg);
-  //   }
-  // }
   .blur {
     filter: blur(10px);
   }
@@ -281,6 +276,24 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
     }
     100% {
       stroke-dasharray: 1, 10;
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes dash-one {
+    0% {
+      stroke-dasharray: 50, 100;
+      stroke-dashoffset: 0;
+    }
+    25% {
+      stroke-dasharray: 60, 200;
+      stroke-dashoffset: -35px;
+    }
+    50% {
+      stroke-dasharray: 60, 200;
+      stroke-dashoffset: -135px;
+    }
+    100% {
+      stroke-dasharray: 50, 100;
       stroke-dashoffset: 0;
     }
   }

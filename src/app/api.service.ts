@@ -4,7 +4,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
-import { SearchQuery } from './interfaces/app.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -34,24 +33,14 @@ export class ApiService {
 
   public lazy: boolean = false;
 
-  lastQuery: any = { page: '0', lim: '50'};
-
   currentPage: number = 0;
-
-  private qtype: string;
+  currentQuery: string = '';
 
 
   constructor(
     private http: HttpClient,
     private user: UserService
   ) {}
-
-  get queryType() {
-    return this.qtype;
-  }
-  set queryType(type: string) {
-    this.qtype = type;
-  }
 
   getChunkSize(): string {
     return this.user.getUserSettings().lineChunk.toString();
@@ -89,17 +78,13 @@ export class ApiService {
     if (!filter) filter = [];
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(filter: string[]): Observable<any> {
+  getLogFile(query: string, lim: string, filter: string[]): Observable<any> {
+    if (query !== this.currentQuery) {
+      this.currentPage = 0;
+    }
+    this.currentQuery = query;
     return this.reloader$.pipe(
-      switchMap(() => {
-        if (this.queryType === 'search') {
-          this.lastQuery.lim = this.getChunkSize();
-          this.lastQuery.page = this.currentPage.toString();
-          return this.search(this.lastQuery, filter)
-        } else {
-          return this.getLast(filter);
-        }
-      })
+      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter))
     )
   }
   getFileInfo(path: string): Observable<any> {
@@ -137,9 +122,8 @@ export class ApiService {
       this.refresh();
     }
   }
-  search(query: any, filter?: string[]): Observable<any> {
-    if (filter) query['filter'] = filter.join(',');
-    return this.http.get(this.URL_SEARCH, { params: query });
+  search(query: any, page: string, lim: string, filter?: string[]): Observable<any> {
+    return this.http.get(this.URL_SEARCH, { params: { search: query , page, lim, filter: filter?filter.join(','):''}});
   }
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
     let last = JSON.parse(window.localStorage.getItem('last'));
@@ -169,9 +153,6 @@ export class ApiService {
   }
 
   refresh(): void {
-    this.reloader$.next(null);
-  }
-  sync(): void {
     this.reloader$.next(null);
   }
 }

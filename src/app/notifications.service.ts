@@ -19,6 +19,9 @@ export class NotificationsService {
       options = {
         body: body,
         silent: !JSON.parse(localStorage.getItem('alerts')).silent,
+        timestamp: Date.now(),
+        lang: 'ru-RU',
+        icon: 'lars://assets/icons/favicon.ico'
       }
     new Notification(title, options);
   }
