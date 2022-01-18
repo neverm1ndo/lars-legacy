@@ -68,7 +68,7 @@ export class MapsService {
     let objects: MapObject[] = [];
     if (map.getElementsByTagName('parsererror')[0]) {
       let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
-      throw new Error(`NOT_XML: ${errormsg}`);
+      console.warn(new Error(`NOT_XML: ${errormsg}`));
     }
     if (!map.getElementsByTagName('map')[0]) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
     const elems = map.getElementsByTagName('map')[0].children;
