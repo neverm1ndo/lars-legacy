@@ -426,7 +426,7 @@ export class MapEditorComponent implements OnInit {
       }
     })
     const times = [];
-    let fps;
+    let fps: number;
 
     const draw = () => {
       clear();
