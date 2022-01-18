@@ -44,7 +44,12 @@
                   </div>
                 </div>
                 <div class="d-flex flex-fill viewer-code overflow-auto">
-                  <pre *ngIf="current.file.text && !current.file.binary" class="w-100 h-100 overflow-auto">{{ current.file.text }}</pre>
+                  <ngx-codemirror
+                    *ngIf="current.file.text && !current.file.binary"
+                    #editor
+                    [(ngModel)]="current.file.text"
+                    [options]="cmSettings">
+                  </ngx-codemirror>
                   <div *ngIf="current.file.binary" class="d-flex flex-fill justify-content-center align-items-center flex-column">
                     <h3 class="text-muted"><fa-icon [icon]="fa.sign"></fa-icon></h3>
                     <span class="text-muted">Binary File</span>

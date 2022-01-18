@@ -39,6 +39,12 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
   admins: any;
   loading: boolean = false;
+  cmSettings = {
+    lineNumbers: true,
+    theme: 'dracula',
+    lineWrapping: true,
+    readOnly: true
+  }
 
   willBeDeletedSoon(date: Date): boolean {
     return (Math.round(new Date(date).getTime() / 1000) - Math.round(new Date().getTime() / 1000)) < 86400*2;
@@ -234,6 +240,9 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if (window.localStorage.getItem('settings')) {
+      this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
+    }
     this.getAdminList();
     this.loading = true;
     combineLatest([this.getAdminList(), this.api.getBackupsList().pipe(take(1))])
