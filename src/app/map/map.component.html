@@ -37,14 +37,14 @@
    <div [@panelSwitch] *ngIf="levelingZ" class="d-flex align-items-center justify-content-center">
      <map-corrector [toCorrect]="mapEditor.getAverage('posZ')" [icon]="fa.ruler.vert" [title]="'Выравнивание по Z координате'" (corrected)="correctObjectsZLeveling($event)"></map-corrector>
    </div>
-   <div [@panelSwitch] *ngIf="mode !== 'view' && !levelingZ" class="d-flex">
+   <div [@panelSwitch] *ngIf="!isViewMode() && !levelingZ" class="d-flex">
      <button ngbTooltip="Выровнить по Z" (click)="levelZ()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.ruler.vert"></fa-icon></button>
-     <button ngbTooltip="Зафиксировать" (click)="mode = 'view'" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.arch"></fa-icon></button>
+     <button ngbTooltip="Зафиксировать" (click)="toViewMode()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.arch"></fa-icon></button>
      <button ngbTooltip="Отменить" (click)="cancelChanges()" placement="top" type="button" class="btn btn-light  align-self-center"><fa-icon [icon]="fa.cross"></fa-icon></button>
    </div>
-   <div [@panelSwitch] *ngIf="mode === 'view'" class="d-flex justify-content-center">
-     <button ngbTooltip="Переместить" (click)="mode = (mode === 'view'?'move':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
-     <button ngbTooltip="Повернуть" (click)="mode = (mode === 'view'?'rotate':'view')" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
+   <div [@panelSwitch] *ngIf="isViewMode()" class="d-flex justify-content-center">
+     <button ngbTooltip="Переместить" (click)="toMoveMode()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.replace"></fa-icon></button>
+     <button ngbTooltip="Повернуть" (click)="toRotateMode()" placement="top" type="button" class="btn btn-light"><fa-icon [icon]="fa.rotate"></fa-icon></button>
      <button ngbTooltip="Сохранить локально" placement="top" (click)="saveMapLocal()" type="button" class="btn btn-light"><fa-icon [icon]="fa.down"></fa-icon></button>
      <button ngbTooltip="Сохранить на сервере" placement="top" (click)="saveMapCloud()" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
      <button ngbTooltip="Удалить" placement="top" (click)="deleteMapCloud()" type="button" class="btn btn-light"><fa-icon [icon]="fa.trash"></fa-icon></button>

@@ -71,7 +71,6 @@ export class MapsComponent implements OnInit {
   }
 
   toMap(path: { path: string, name?: string }) {
-    console.log(path);
     this.currentFilePath = path.path;
     this.router.navigate(['/home/maps/map'], { queryParams: { path: path.path , name: path.name }})
   }
@@ -127,7 +126,6 @@ export class MapsComponent implements OnInit {
     .pipe(take(1))
     .pipe(filter(params => (params.name || params.path)))
     .subscribe(params => {
-      console.log(params)
       this.currentFilePath = params.path;
       this.toMap({path: params.path , name: params.name});
     });

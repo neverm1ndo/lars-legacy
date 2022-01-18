@@ -1,5 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
 import Keys from '../enums/keycode.enum';
+import { EditorMode } from '../enums/map.editor.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
 
 const { LeftArrow, RightArrow } = Keys;
@@ -42,14 +43,14 @@ export class MapEditorComponent implements OnInit {
   get objects() {
     return this._objects;
   }
-  mode: 'move' | 'rotate' | 'view' = 'view';
+  mode: EditorMode = EditorMode.VIEW;
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
   @HostListener('window:resize', ['$event']) onResize() {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
   }
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
-    if (this.mode == 'rotate') {
+    if (this.mode == EditorMode.ROTATE) {
       switch (event.keyCode) {
         case LeftArrow: this.deg+=Math.PI/180; break;
         case RightArrow: this.deg-=Math.PI/180; break;
@@ -89,6 +90,14 @@ export class MapEditorComponent implements OnInit {
         obj.posZ = Number((+obj.posZ + diff).toFixed(4));
       }
     });
+  }
+
+  toFloat32Array(objects: MapObject[]): Float32Array {
+    const arr = [];
+    objects.forEach((obj: MapObject) => {
+      arr.push(Object.values(obj).slice(2, 8))
+    });
+    return new Float32Array(arr);
   }
 
   getAverage(key: keyof Omit<MapObject, 'id' | 'name' | 'dimension' | 'model' | 'interior'>): number {
@@ -347,7 +356,7 @@ export class MapEditorComponent implements OnInit {
          y: event.pageY - this.canvas.nativeElement.offsetTop
        }
      drag = true;
-     if (this.dots && this.mode === 'rotate') {
+     if (this.dots && this.mode === EditorMode.ROTATE) {
        move = false;
         if (event.button === 0) {
           rotate = true;
@@ -361,7 +370,7 @@ export class MapEditorComponent implements OnInit {
          this.changed = true;
        }
      }
-     if (this.dots && this.mode === 'move') {
+     if (this.dots && this.mode === EditorMode.MOVE) {
        if (isOnRect(event.offsetX, event.offsetY, {x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10})) {
          rotate = false;
          drag = false;
@@ -377,7 +386,7 @@ export class MapEditorComponent implements OnInit {
      move = false;
      rotate = false;
      this.canvas.nativeElement.style.cursor = '-webkit-grab';
-     if (this.mode == 'move') {
+     if (this.mode == EditorMode.MOVE) {
        this.d_objects = this._objects.map((obj: MapObject) => Object.assign({...obj}));
        this.origin = {
          x: this.getAverage('posX'),
@@ -416,16 +425,28 @@ export class MapEditorComponent implements OnInit {
         dragStart = dragEnd;
       }
     })
+    const times = [];
+    let fps;
+
     const draw = () => {
       clear();
       ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
       drawDots();
-      if (this.mode == 'rotate') {
+      if (this.mode === EditorMode.ROTATE) {
         drawRotateArc(jarvis(this._objects));
       }
-      if (this.mode == 'move') {
+      if (this.mode === EditorMode.MOVE) {
         drawRect(jarvis(this._objects));
       }
+      const now = performance.now();
+      while (times.length > 0 && times[0] <= now - 1000) {
+        times.shift();
+      }
+      times.push(now);
+      fps = times.length;
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#ffffff';
+      ctx.fillText(`${fps} FPS`, 20, ctx.canvas.clientHeight - 20);
       window.requestAnimationFrame(draw);
     }
   }
@@ -435,6 +456,9 @@ export class MapEditorComponent implements OnInit {
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
     this.changed = false;
     this.mapView();
+    // const float_multiply_array = WebAssembly.Module.cwrap(
+    //   'float_multiply_array', null, ['number', 'number', 'number']
+    //   );
   }
 
 }
