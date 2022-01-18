@@ -13,7 +13,7 @@
              <span class="pre-badge">{{ current.objects.length }}</span>
              <ng-template #limitOk><fa-icon class="ttp-icon" [icon]="fa.check"></fa-icon>Лимит не превышен</ng-template>
            </span>
-           <span placement="left" [ngbTooltip]="limitWarn" *ngIf="current.objects.length >= 380 && current.objects < 400" class="badge badge-warning">
+           <span placement="left" [ngbTooltip]="limitWarn" *ngIf="current.objects.length >= 380 && current.objects.length < 400" class="badge badge-warning">
              <fa-icon [icon]="fa.cubes"></fa-icon>
              <span class="pre-badge">{{ current.objects.length }}</span>
              <ng-template #limitWarn><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Близко к лимиту</ng-template>
