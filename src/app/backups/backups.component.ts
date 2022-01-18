@@ -61,18 +61,21 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     return line;
   }
 
-  drawBackbone(height, color, top, index: number, filename: string): void {
+  drawBackbone(height: number, color: string, top: number, index: number, filename: string): void {
      this.binds.nativeElement.append(this.createBindBackbone(height, color, top, (index) * 8, filename))
   }
+  drawRib(width: number, color: string, top: number, left: number): void {
+     this.binds.nativeElement.append(this.createBindRib(width, color, top, left * 8))
+  }
   colorGenerator(filenames: any[]): string[] {
-    function hashCode(str) {
+    function hashCode(str: string) {
         let hash = 0;
         for (var i = 0; i < str.length; i++) {
            hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         return hash;
     }
-    function intToRGB(i){
+    function intToRGB(i: number){
       let c = (i & 0x00FFFFFF)
           .toString(16)
           .toUpperCase();
@@ -81,61 +84,58 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     return filenames.map((filename: string) => '#' + intToRGB(hashCode(filename)));
   }
 
-  drawBinds(): void {
-    let drawn: string[] = [];
+  drawGraph(): void {
     const childs = this.backupsItems.nativeElement.children;
-    const ribs = new Set();
-    let height = 0;
-    let ribsCounter = 0;
     let topMarge = this.binds.nativeElement.getBoundingClientRect().top - 35;
-    const orphans = [];
-    let colors: string[];
-
-    for (let i = 0; i < childs.length; i++) {
-      const filename = childs[i].getAttribute('data-filename');
-      ribs.add(filename);
-    }
-    colors = this.colorGenerator(Array.from(ribs));
-
-    for (let i = 0; i < childs.length; i++) {
-      const filename = childs[i].getAttribute('data-filename');
-      this.renderer.setStyle(childs[i].querySelector('.marker'), 'background', colors[Array.from(ribs).indexOf(filename)])
-    }
-
-
-    for (let i = 0; i < childs.length; i++) {
-      const filenameA = childs[i].getAttribute('data-filename');
-      if (drawn.includes(filenameA)) continue;
-      drawn.push(filenameA);
-      let minTop = childs[i].getBoundingClientRect().top - topMarge;
-      let maxTop = 0;
-      let rib;
-      for (let j = 0; j < childs.length; j++) {
-        const filenameB = childs[j].getAttribute('data-filename');
-        if (i === j) continue;
-        if (orphans.includes(filenameB)) {  drawn = drawn.filter(bone => bone !== filenameB); continue; }
-        if (filenameA !== filenameB) continue;
-        rib = {
-          left: 8 * (drawn.length),
-          width: Math.abs(8 * (ribs.size - orphans.length - drawn.indexOf(filenameA))),
-        }
-        const top = childs[j].getBoundingClientRect().top - topMarge;
-        if (maxTop < top) {
-          maxTop = top;
-        }
-        ribsCounter++;
-        this.binds.nativeElement.append(this.createBindRib(rib.width, colors[orphans.length + drawn.indexOf(filenameA)], top - height - (3*ribsCounter), rib.left));
+    let bb: any;
+    let prevHeight = 0;
+    const drawBackbones = () => {
+      const uniqueFileNames: Set<string> = new Set();
+      for (let i = 0; i < childs.length; i++) {
+        const filename = childs[i].getAttribute('data-filename');
+        this.renderer.setStyle(childs[i].querySelector('.marker'), 'background', this.colorGenerator([filename])[0])
+        uniqueFileNames.add(filename);
       }
-      if (maxTop !== 0) {
-        this.binds.nativeElement.append(this.createBindRib(rib.width, colors[orphans.length + drawn.indexOf(filenameA)], minTop - height - (3 * ribsCounter), rib.left))
-        ribsCounter++;
-        this.drawBackbone(maxTop - minTop, colors[orphans.length + drawn.indexOf(filenameA)], (minTop - height) - (3*ribsCounter), drawn.length, filenameA);
-        height+= maxTop - minTop;
-      } else {
-        drawn = drawn.filter(bone => bone !== filenameA)
-        orphans.push(filenameA);
+      bb = Array.from(uniqueFileNames)
+                      .reduce((acc, curr) => {
+                        return {...acc, [curr]: { color: this.colorGenerator([curr])[0] }}
+                      }, {})
+      for (let j = childs.length - 1; j >= 0; j--) {
+        const filename = childs[j].getAttribute('data-filename');
+        if (bb[filename] && !bb[filename].maxTop) {
+          bb[filename].maxTop = childs[j].getBoundingClientRect().top - topMarge;
+        }
+        if (bb[filename]) {
+          bb[filename].minTop = childs[j].getBoundingClientRect().top - topMarge;
+        }
+      }
+      Object.keys(bb).forEach((key: string) => {
+        if (bb[key].maxTop === bb[key].minTop) delete bb[key]
+      });
+      Object.keys(bb).forEach((key: string, index: number) => {
+        this.drawBackbone(
+          bb[key].maxTop - bb[key].minTop,
+          bb[key].color,
+          bb[key].minTop - prevHeight,
+          index,
+          key
+        );
+        prevHeight += bb[key].maxTop - bb[key].minTop
+      });
+    }
+    let ribs = 0;
+    const drawRibs = () => {
+      const bbs = Object.keys(bb);
+      for (let i = 0; i < childs.length; i++) {
+        const filename = childs[i].getAttribute('data-filename');
+        if (bbs.includes(filename)) {
+          ribs++;
+          this.drawRib((bbs.length - 1 - bbs.indexOf(filename)+1)*8, bb[filename].color, childs[i].getBoundingClientRect().top - topMarge - prevHeight - ribs*3, bbs.indexOf(filename))
+        }
       }
     }
+    drawBackbones();
+    drawRibs();
   }
 
   getBackupFile(name: string, unix: number) {
@@ -219,7 +219,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
       this.loading = false;
       if (backups.length > 0) {
         setTimeout(() => { // add macrotask
-          this.drawBinds();
+          this.drawGraph();
         }, 1);
       }
     });
