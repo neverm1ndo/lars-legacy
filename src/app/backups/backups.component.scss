@@ -37,6 +37,7 @@ p, a, span, button, div {
 .binds {
   margin-bottom: 5px;
   position: relative;
+  z-index: 1;
   .bind {
     &:before {
       position: relative;
@@ -52,6 +53,11 @@ p, a, span, button, div {
       height: 16px;
       font-size: 10px;
       content: attr(data-filename);
+      // filter: invert(1) grayscale(1) contrast(9);
+      // background-clip: text;
+      content: attr(data-filename);
+      text-shadow: 1px 0 0 #00000030, -1px 0 0 #00000030, 0 1px 0 #00000030, 0 -1px 0 #00000030, 1px 1px #00000030, -1px -1px 0 #00000030, 1px -1px 0 #00000030, -1px 1px 0 #00000030;
+      z-index: 1;
     }
     &-rib {
       &:before {
@@ -65,6 +71,7 @@ p, a, span, button, div {
         width: 7px;
         // font-size: 10px;
         content: ' ';
+        z-index: 0;
       }
     }
   }
