@@ -48,6 +48,7 @@
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownTopper">
             <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
+            <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
             <div class="dropdown-divider"></div>
             <button ngbDropdownItem (click)="userService.logOut()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
           </div>

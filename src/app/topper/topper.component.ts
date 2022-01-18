@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
+import { ExecException } from 'child_process';
+import { join } from 'path';
 import { UserService } from '../user.service';
-import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
 import { BehaviorSubject } from 'rxjs';
@@ -25,7 +27,8 @@ export class TopperComponent implements OnInit {
     play: faPlay,
     redo: faRedo,
     stop: faStop,
-    update: faCloudDownloadAlt
+    update: faCloudDownloadAlt,
+    gamepad: faGamepad
   };
 
   state: BehaviorSubject<ServerStateType> = new BehaviorSubject('live');
@@ -68,6 +71,14 @@ export class TopperComponent implements OnInit {
 
   reload() {
     this.window.win.reload();
+  }
+  launchSAMP(): void {
+    const launchSettings = JSON.parse(localStorage.getItem('launcher'));
+    const command = `sampcmd.exe -c -h 185.104.113.34 -p 7777 -n ${launchSettings.nickname}`;
+    this.electron.childProcess.exec(command.trim(), {cwd: launchSettings.samp}, (err: ExecException, stdout: string, stderr: string) => {
+      if (err) return console.error(err);
+      console.log('%c[launcher]', 'color: brown', command)
+    })
   }
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
