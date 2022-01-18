@@ -11,7 +11,7 @@
   .item {
     padding: 0px 5px 0px 5px;
     white-space: nowrap;
-    margin-right: 10px;
+    margin-right: 3px;
     font-size: 12px;
     &-elapsed {
       .elapse {
@@ -34,7 +34,6 @@
   }
   &_nickname {
     text-align: center;
-    margin-left: 10px;
     flex: 0 0 18%;
     min-width: 10px;
     overflow: hidden;
