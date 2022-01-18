@@ -75,7 +75,7 @@ export class TopperComponent implements OnInit {
   launchSAMP(): void {
     const launchSettings = JSON.parse(localStorage.getItem('launcher'));
     const command = `sampcmd.exe -c -h 185.104.113.34 -p 7777 -n ${launchSettings.nickname}`;
-    this.electron.childProcess.exec(command.trim(), {cwd: launchSettings.samp}, (err: ExecException, stdout: string, stderr: string) => {
+    this.electron.childProcess.exec(command.trim(), {cwd: launchSettings.samp}, (err: ExecException) => {
       if (err) return console.error(err);
       console.log('%c[launcher]', 'color: brown', command)
     })
