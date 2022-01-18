@@ -22,6 +22,7 @@ import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 import { MapComponent } from '../map/map.component';
+import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -39,6 +40,7 @@ const routes: Routes = [
       { path: 'general', component: GeneralSettingsComponent, data: { animation: 'general' } },
       { path: 'filter', component: FilterComponent, data: { animation: 'filter' } },
       { path: 'alerts', component: NotificationsSettingsComponent, data: { animation: 'alerts' } },
+      { path: 'launcher', component: LauncherSettingsComponent, data: { animation: 'alerts' } },
     ]},
     { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard], children: [
       { path: '', pathMatch: 'full', redirectTo: 'empty' },
