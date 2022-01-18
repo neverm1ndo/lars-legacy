@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { join } from 'path';
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { ElectronService } from '../core/services';
+import { OpenDialogReturnValue } from 'electron'
 
 @Component({
   selector: 'app-launcher-settings',
@@ -11,6 +13,7 @@ import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 export class LauncherSettingsComponent implements OnInit {
 
   constructor(
+    private electron: ElectronService
   ) { }
 
   fa = {
@@ -25,6 +28,20 @@ export class LauncherSettingsComponent implements OnInit {
 
   get sets() {
     return this.settings.value;
+  }
+
+  setPath() {
+    this.electron.dialog.showOpenDialog({
+      title: 'Путь до клиента SAMP',
+      defaultPath: this.sets.samp,
+      properties: ['openDirectory']
+    }).then((res: OpenDialogReturnValue) => {
+      if (res.canceled) return;
+      this.settings.controls['samp'].setValue(res.filePaths[0])
+      this.setup();
+    }).catch((err) => {
+      console.error(err);
+    })
   }
 
   setup() {
