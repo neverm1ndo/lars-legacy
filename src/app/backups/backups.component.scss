@@ -1,5 +1,5 @@
 @import 'colors';
-h1 {
+h3 {
   font-weight: lighter;
 }
 p, a, span, button, div {
@@ -70,9 +70,8 @@ p, a, span, button, div {
   }
 }
 .viewer {
-  border-top: 1px solid $secondary;
-  min-height: 200px;
-  flex: 0 0 33%;
+  // min-height: 200px;
+  flex: 0 0 30%;
   &-code {
     background: $filetree;
     pre {
@@ -87,6 +86,7 @@ p, a, span, button, div {
     margin-right: 10px;
     svg {
       width: 20px;
+      transform: rotate(-90deg);
     }
   }
   &-head {
@@ -104,6 +104,14 @@ p, a, span, button, div {
     }
     button {
       min-height: 40px;
+    }
+  }
+  &-bottom {
+    border-top: 1px solid $secondary;
+    background: $underpanel;
+    padding: 5px;
+    button {
+      min-height: 20px;
     }
   }
 }

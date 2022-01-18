@@ -2,9 +2,10 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } fr
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services/electron/electron.service';
-import { faClipboardCheck, faClipboard, faFileSignature } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take } from 'rxjs/operators'
-import { throwError } from 'rxjs';
+import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { catchError, take, map } from 'rxjs/operators'
+import { throwError, combineLatest } from 'rxjs';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Component({
   selector: 'app-backups',
@@ -20,7 +21,8 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private api: ApiService,
     private toast: ToastService,
-    private electron: ElectronService
+    private electron: ElectronService,
+    private idbService: NgxIndexedDBService,
   ) { }
 
   backups = [];
@@ -31,9 +33,16 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     restore: 'восстановил'
   }
   fa = {
-    sign: faFileSignature
+    sign: faFileSignature,
+    trash: faTrash,
+    exCircle: faExclamationCircle
   }
+  admins: any;
   loading: boolean = false;
+
+  willBeDeletedSoon(date: Date): boolean {
+    return (Math.round(new Date(date).getTime() / 1000) - Math.round(new Date().getTime() / 1000)) < 86400*2;
+  }
 
   createBindBackbone(height: number, color: string, top: number, right: number, filename: string): HTMLDivElement {
     const line = this.renderer.createElement('div');
@@ -211,11 +220,23 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     );
   }
 
+  getAdminList() {
+    return this.idbService.getAll('user')
+    .pipe(take(1))
+    .pipe(map((users) => {
+      return users.reduce((acc, curr) => {
+        return {...acc, [curr.name]: { avatar: curr.avatar }}
+      }, {})
+    }))
+  }
+
   ngOnInit(): void {
+    this.getAdminList();
     this.loading = true;
-    const sub = this.api.getBackupsList().subscribe((backups: any) => {
+    combineLatest([this.getAdminList(), this.api.getBackupsList().pipe(take(1))])
+    .subscribe(([admins, backups]) => {
+      this.admins = admins;
       this.backups = backups;
-      sub.unsubscribe();
       this.loading = false;
       if (backups.length > 0) {
         setTimeout(() => { // add macrotask

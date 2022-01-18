@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { faTrash, faPencilAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface Backup {
   unix: number;
@@ -25,7 +26,17 @@ interface Backup {
 export class BackupItemComponent implements OnInit {
 
   @Input('backup-info') backup: Backup;
+  @Input('admin-info') admin: any;
+  @Input('willBeDeletedSoon') wbd: boolean;
   @Output() currentToView: EventEmitter<any> = new EventEmitter();
+
+  fa = {
+    pen: faPencilAlt,
+    trash: faTrash,
+    exCircle: faExclamationCircle
+  }
+
+
 
   constructor() { }
 
