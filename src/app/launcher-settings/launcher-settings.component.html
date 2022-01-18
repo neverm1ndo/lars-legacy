@@ -1,1 +1,46 @@
-<p>launcher-settings works!</p>
+<div class="col-12 pt-3 pb-3">
+  <div class="d-flex justify-content-between align-content-center mb-2">
+    <div class="">
+      <h6 class="display-6">Лаунчер SAMP</h6>
+      <small>Настройки запуска клиента SAMP</small>
+    </div>
+  </div>
+  <hr>
+  <form [formGroup]="settings" (change)="setup()">
+    <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="mr-4">
+        <h6>Путь до клиента SAMP</h6>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <button class="btn btn-light" type="button" name="button">
+            <fa-icon [icon]="fa.folder"></fa-icon>
+          </button>
+        </div>
+        <input class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" readonly formControlName="samp" type="text" id="samp" />
+      </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="">
+        <h6>Никнейм</h6>
+      </div>
+      <input formControlName="nickname" type="text" id="nickname" />
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="">
+        <h6>Пароль</h6>
+        <small>Пароль для входа на сервер, если требуется</small>
+      </div>
+      <input formControlName="password" type="password" id="password" />
+    </div>
+    <hr>
+    <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="">
+        <h6 class="display-6">Лаунчер open.mp</h6>
+        <small>Настройки запуска клиента open.mp</small>
+      </div>
+    </div>
+  </form>
+</div>
