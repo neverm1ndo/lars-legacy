@@ -12,6 +12,7 @@ src/**/*.js
 *.js.map
 *.js
 *.log
+*.exe
 
 # exclude codemirror addons
 !src/addon/**/*.js
