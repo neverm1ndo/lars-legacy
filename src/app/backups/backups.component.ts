@@ -172,6 +172,9 @@ export class BackupsComponent implements OnInit, AfterViewInit {
         });
       })
   }
+  removeBackup() {
+    console.log('removeBackup no implemented')
+  }
   restoreBackup() {
     const dialogOpts = {
         type: 'warning',
