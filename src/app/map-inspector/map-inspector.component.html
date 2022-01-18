@@ -1,4 +1,4 @@
-<div *ngIf="_objects?.objects">
+<div *ngIf="_objects">
   <div class="col-12 d-flex flex-column tab" *ngFor="let obj of toShow; index as i">
       <div class="d-flex flex-row justify-content-between">
         <div><span [ngClass]="{
@@ -22,7 +22,7 @@
       <div class="d-flex" *ngIf="obj.txd"><img src="http://textures.xyin.ws/textures/texvol2/{{obj.txd}}/{{obj.texture}}.png" [alt]="obj.texture"></div>
     </div>
 </div>
-<div *ngIf="objects.objects.length > toShow.length">
+<div *ngIf="objects.length > toShow.length">
   <button (click)="showOther()" class="btn btn-dark w-100" name="button">Показать еще {{ getCount() }}</button>
 </div>
 </div>
