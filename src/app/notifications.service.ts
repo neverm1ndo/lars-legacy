@@ -52,5 +52,19 @@ export class NotificationsService {
         this.spawnNotification(`Жалоба ${line.nickname}`, `${new Date(line.unix*1000).toDateString()} ${line.content}`)
       })
     )
+    this.notifications.add(
+      this.ws.getServerStopNotification()
+      .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).serverShutdown))
+      .subscribe((user) => {
+        this.spawnNotification('Сервер остановлен', `${user.username} остановил работу сервера`)
+      })
+    )
+    this.notifications.add(
+      this.ws.getServerRebootNotification()
+      .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).serverRestart))
+      .subscribe((user) => {
+        this.spawnNotification('Сервер перезапускается', `${user.username} запустил перезагрузку сервера`)
+      })
+    )
   }
 }

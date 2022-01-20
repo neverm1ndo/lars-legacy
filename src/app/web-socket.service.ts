@@ -115,6 +115,12 @@ export class WebSocketService {
   getUpdateMessage(): Observable<LogLine> {
     return this.socket.fromEvent('update:soft');
   }
+  getServerStopNotification(): Observable<any> {
+    return this.socket.fromEvent('alert:server-stoped');
+  }
+  getServerRebootNotification(): Observable<any> {
+    return this.socket.fromEvent('alert:server-rebooting');
+  }
     //     case 'expire-token': {
     //       console.log('%c[ws-service]', 'color: tomato', m.msg);
     //       this.toast.show(`Ваша прошлая сессия была прекращена. Токен доступа сброшен.`,
