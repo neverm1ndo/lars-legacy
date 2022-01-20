@@ -74,11 +74,19 @@ export class TopperComponent implements OnInit {
   }
   launchSAMP(): void {
     const launchSettings = JSON.parse(localStorage.getItem('launcher'));
-    const command = `sampcmd.exe -c -h 185.104.113.34 -p 7777 -n ${launchSettings.nickname}`;
-    this.electron.childProcess.exec(command.trim(), {cwd: launchSettings.samp}, (err: ExecException) => {
-      if (err) return console.error(err);
-      console.log('%c[launcher]', 'color: brown', command)
-    })
+    const ip = '185.104.113.34';
+    const port = 7777;
+    this.electron.childProcess.execFile(
+      join(launchSettings.samp, 'samp.exe'),
+      [
+        `-n ${launchSettings.nickname}`,
+        `-h ${ip}`,
+        `-p ${port}`
+      ],
+      (err: ExecException, stdout: string) => {
+        if (err) return console.log(`Err`, err);
+        console.log('%c[launcher]', 'color: brown', stdout)
+      });
   }
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
