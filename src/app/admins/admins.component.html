@@ -34,13 +34,13 @@
                   <td class="td-username">
                     <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
                     <small>{{ admin.user_email }}</small><br>
-                    <small *ngIf="usersStates[admin.username]">
-                      <fa-icon *ngIf="usersStates[admin.username] == 'idle'" [icon]="fa.wind"></fa-icon>
-                      <fa-icon *ngIf="usersStates[admin.username] == 'inmaps'" [icon]="fa.map"></fa-icon>
-                      <fa-icon *ngIf="usersStates[admin.username] == 'inlogs'" [icon]="fa.search"></fa-icon>
-                      <fa-icon *ngIf="usersStates[admin.username] == 'redacting'" [icon]="fa.conf"></fa-icon>
-                      <fa-icon *ngIf="usersStates[admin.username] == 'inadm'" [icon]="fa.agent"></fa-icon>
-                      <fa-icon *ngIf="usersStates[admin.username] == 'inbacks'" [icon]="fa.box"></fa-icon>
+                    <small *ngIf="ws.usersStates[admin.username]">
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'idle'" [icon]="fa.wind"></fa-icon>
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inmaps'" [icon]="fa.map"></fa-icon>
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inlogs'" [icon]="fa.search"></fa-icon>
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'redacting'" [icon]="fa.conf"></fa-icon>
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inadm'" [icon]="fa.agent"></fa-icon>
+                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inbacks'" [icon]="fa.box"></fa-icon>
                       {{ userActionTranslation(ws.usersStates[admin.username]) }}
                     </small>
                   </td>
