@@ -21,7 +21,9 @@ export class LauncherSettingsComponent implements OnInit {
   }
 
   settings = new FormGroup({
-    samp: new FormControl(join(process.env['ProgramFiles(x86)'], 'GTASanAndreas')),
+    samp: new FormControl(
+      join(process.env['ProgramFiles(x86)'], 'GTASanAndreas')
+    ),
     nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name, [
       Validators.required,
       Validators.minLength(3),
@@ -43,6 +45,16 @@ export class LauncherSettingsComponent implements OnInit {
     return this.settings.value;
   }
 
+  fileExisteValidator(path: string) {
+    const filePath = join(path, 'samp.exe');
+    return new Promise((resolve, reject) => {
+      this.electron.fs.stat(filePath, (err: NodeJS.ErrnoException, stats: any) => {
+        if (stats) resolve(path);
+        reject(err);
+      });
+    })
+  }
+
   setPath() {
     this.electron.dialog.showOpenDialog({
       title: 'Путь до клиента SAMP',
@@ -50,10 +62,13 @@ export class LauncherSettingsComponent implements OnInit {
       properties: ['openDirectory']
     }).then((res: OpenDialogReturnValue) => {
       if (res.canceled) return;
-      this.settings.controls['samp'].setValue(res.filePaths[0])
+      return this.fileExisteValidator(res.filePaths[0]);
+    }).then((path: string) => {
+      this.settings.controls['samp'].setValue(path)
       this.setup();
     }).catch((err) => {
       console.error(err);
+      this.setPath();
     })
   }
 
