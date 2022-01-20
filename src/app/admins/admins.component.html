@@ -41,7 +41,7 @@
                       <fa-icon *ngIf="usersStates[admin.username] == 'redacting'" [icon]="fa.conf"></fa-icon>
                       <fa-icon *ngIf="usersStates[admin.username] == 'inadm'" [icon]="fa.agent"></fa-icon>
                       <fa-icon *ngIf="usersStates[admin.username] == 'inbacks'" [icon]="fa.box"></fa-icon>
-                      {{ userActionTranslation(usersStates[admin.username]) }}
+                      {{ userActionTranslation(ws.usersStates[admin.username]) }}
                     </small>
                   </td>
                   <td>

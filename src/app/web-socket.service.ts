@@ -1,10 +1,8 @@
 import { Injectable, Injector } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
-// import { ToastService } from './toast.service';
 import { UserService } from './user.service';
-// import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { AppConfig } from '../environments/environment';
 import { LogLine } from './interfaces/app.interfaces';
@@ -33,9 +31,11 @@ export const socketConfig: AuthSocketIoConfig = {
 })
 export class WebSocketService {
   protected alerts: Subscription = new Subscription();
+  protected activies: Subscription;
+
+  public usersStates = {};
   constructor(
     private router: Router,
-    // private toast: ToastService,
     private injector: Injector,
     private socket: Socket
   ) {
@@ -68,6 +68,9 @@ export class WebSocketService {
       socketConfig.options.auth.token = user.token;
       this.connect();
     })
+    this.activies = this.getUserActitvity().subscribe((act) => {
+      this.usersStates[act.user] = act.action;
+    });
   }
 
   getServerState(): Observable<any> {

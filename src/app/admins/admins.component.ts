@@ -8,7 +8,6 @@ import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { WebSocketService } from '../web-socket.service';
-import { Subscription } from 'rxjs';
 import { Workgroup } from '../enums/workgroup.enum';
 
 type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
@@ -32,7 +31,6 @@ export class AdminsComponent implements OnInit, OnDestroy {
     conf: faFileSignature,
     box: faBoxOpen
   }
-  usersStates = {};
   popup: boolean = false;
 
   addAdminForm: FormGroup = new FormGroup({
@@ -45,7 +43,6 @@ export class AdminsComponent implements OnInit, OnDestroy {
     ]),
     secondaryGroup: new FormControl(9)
   });
-  $activies: Subscription;
 
   roles = [
     { id: Workgroup.Challenger, val: 'Претендент' },
@@ -175,12 +172,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getFullAdminsList();
-    this.$activies = this.ws.getUserActitvity().subscribe((act) => {
-      this.usersStates[act.user] = act.action;
-    })
+
   }
   ngOnDestroy(): void {
-    this.$activies.unsubscribe();
+    // this.$activies.unsubscribe();
   }
 
 }
