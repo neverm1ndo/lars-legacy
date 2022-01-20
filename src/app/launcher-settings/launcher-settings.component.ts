@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { join } from 'path';
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../core/services';
-import { OpenDialogReturnValue } from 'electron'
+import { OpenDialogReturnValue } from 'electron';
 
 @Component({
   selector: 'app-launcher-settings',
@@ -22,8 +22,21 @@ export class LauncherSettingsComponent implements OnInit {
 
   settings = new FormGroup({
     samp: new FormControl(join(process.env['ProgramFiles(x86)'], 'GTASanAndreas')),
-    nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name),
-    password: new FormControl('')
+    nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name, [
+      Validators.required,
+      Validators.minLength(3),
+    ]),
+    password: new FormControl(''),
+    ip: new FormControl('185.104.113.34', [
+      Validators.required,
+      Validators.pattern('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+    ]),
+    port: new FormControl(7777,
+      [
+        Validators.required,
+        Validators.min(0),
+      ]
+    ),
   });
 
   get sets() {
@@ -60,6 +73,7 @@ export class LauncherSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLauncherSettingsFromStorage();
+    this.settings.markAsTouched();
   }
 
 }
