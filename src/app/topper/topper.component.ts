@@ -8,6 +8,7 @@ import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
 import { BehaviorSubject } from 'rxjs';
 import { extrudeToRight } from '../app.animations';
+import { Router } from '@angular/router';
 
 type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
 
@@ -66,27 +67,35 @@ export class TopperComponent implements OnInit {
   constructor(
     public electron: ElectronService,
     public userService: UserService,
-    public ws: WebSocketService
+    public ws: WebSocketService,
+    private router: Router,
   ) {}
 
   reload() {
     this.window.win.reload();
   }
   launchSAMP(): void {
-    const launchSettings = JSON.parse(localStorage.getItem('launcher'));
-    const ip = '185.104.113.34';
-    const port = 7777;
-    this.electron.childProcess.execFile(
-      join(launchSettings.samp, 'samp.exe'),
-      [
-        `-n ${launchSettings.nickname}`,
-        `-h ${ip}`,
-        `-p ${port}`
-      ],
-      (err: ExecException, stdout: string) => {
-        if (err) return console.log(`Err`, err);
-        console.log('%c[launcher]', 'color: brown', stdout)
-      });
+    try {
+      const launchSettings = localStorage.getItem('launcher');
+      console.log(launchSettings)
+      if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings')
+      const settings = JSON.parse(launchSettings);
+      this.electron.childProcess.execFile(
+        join(settings.samp, 'samp.exe'),
+        [
+          `-n ${settings.nickname}`,
+          `-h ${settings.ip}`,
+          `-p ${settings.port}`
+        ],
+        (err: ExecException, stdout: string) => {
+          if (err) return console.log(`Err`, err);
+          if (stdout) console.log('%c[launcher]', 'color: brown', stdout);
+          console.log('%c[launcher]', 'color: brown', 'Launched SAMP client')
+        });
+    } catch (err) {
+      console.error(err);
+      this.router.navigate(['/home/settings/launcher'])
+    }
   }
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
