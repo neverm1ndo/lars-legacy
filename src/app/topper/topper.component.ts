@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ElectronService } from '../core/services/electron/electron.service';
 import { ExecException } from 'child_process';
 import { join } from 'path';
@@ -69,6 +69,7 @@ export class TopperComponent implements OnInit {
     public userService: UserService,
     public ws: WebSocketService,
     private router: Router,
+    private zone: NgZone
   ) {}
 
   reload() {
@@ -77,7 +78,6 @@ export class TopperComponent implements OnInit {
   launchSAMP(): void {
     try {
       const launchSettings = localStorage.getItem('launcher');
-      console.log(launchSettings)
       if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings')
       const settings = JSON.parse(launchSettings);
       this.electron.childProcess.execFile(
@@ -88,7 +88,12 @@ export class TopperComponent implements OnInit {
           `-p ${settings.port}`
         ],
         (err: ExecException, stdout: string) => {
-          if (err) return console.log(`Err`, err);
+          if (err) {
+            this.zone.run(() => {
+              this.router.navigate(['/home/settings/launcher']);
+            })
+            throw err;
+          }
           if (stdout) console.log('%c[launcher]', 'color: brown', stdout);
           console.log('%c[launcher]', 'color: brown', 'Launched SAMP client')
         });
