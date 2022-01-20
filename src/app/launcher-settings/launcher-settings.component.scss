@@ -3,15 +3,24 @@
 .was-validated .form-control:invalid {
   border-color: red;
 }
+.input-group {
+  .input-group-prepend {
+    margin-right: 0px;
+  }
+  .form-control {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+}
 input[type="text"],
 input[type="password"],
 input[type="ip"],
 input[type="number"] {
   height: 35px;
   border-radius: 5px;
-  border: 2px solid transparent;
+  border: 2px solid $topper;
   font-size: 13px;
-  background: $topper;
+  background-color: $topper!important;
   color: $text;
   text-align: center;
   padding-left: 20px;

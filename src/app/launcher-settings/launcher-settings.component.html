@@ -10,8 +10,8 @@
       <div class="mr-4">
         <h6>Путь до клиента SAMP</h6>
       </div>
-      <div class="form-group col-6 mb-0">
-        <div (click)="setPath()" class="input-group mb-3">
+      <div class="col-6 form-group mb-0">
+        <div (click)="setPath()" class="input-group has-validation">
           <div class="input-group-prepend">
             <button class="btn btn-light" type="button" name="button">
               <fa-icon [icon]="fa.folder"></fa-icon>
@@ -24,16 +24,21 @@
             type="text"
             id="samp"
             [ngClass]="{
-              'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched),
-              'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched)
+              'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched) || clientExists === false,
+              'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched) || clientExists === true
             }"
             readonly
             required
-          />
-        </div>
-        <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['nickname'].errors">
-          <span *ngIf="settings.controls['nickname'].errors.minlength">Минимальное кол-во вимволов в нике {{ settings.controls['nickname'].errors.minlength.requiredLength }}</span>
-          <span *ngIf="settings.controls['nickname'].errors.required">Для входа необходим никнейм</span>
+          >
+          <div class="invalid-feedback" *ngIf="settings.controls['samp'].errors">
+            <span *ngIf="settings.controls['samp'].errors.required"> Укажите путь до samp.exe</span>
+          </div>
+          <div class="invalid-feedback" *ngIf="!clientExists && !settings.controls['samp'].errors">
+            <span><fa-icon [icon]="fa.err"></fa-icon> Не обнаружен samp.exe</span>
+          </div>
+          <div class="valid-feedback" *ngIf="clientExists && !settings.controls['samp'].errors">
+            <span><fa-icon [icon]="fa.ok"></fa-icon> samp.exe обнаружен</span>
+          </div>
         </div>
       </div>
     </div>
@@ -53,8 +58,8 @@
         }"
         />
         <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['nickname'].errors">
-          <span *ngIf="settings.controls['nickname'].errors.minlength">Минимальное кол-во вимволов в нике {{ settings.controls['nickname'].errors.minlength.requiredLength }}</span>
-          <span *ngIf="settings.controls['nickname'].errors.required">Для входа необходим никнейм</span>
+          <span *ngIf="settings.controls['nickname'].errors.minlength"><fa-icon [icon]="fa.err"></fa-icon> Минимальное кол-во вимволов в нике {{ settings.controls['nickname'].errors.minlength.requiredLength }}</span>
+          <span *ngIf="settings.controls['nickname'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Для входа необходим никнейм</span>
         </div>
       </div>
     </div>
@@ -76,8 +81,8 @@
         required
         />
         <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['ip'].errors">
-          <span *ngIf="settings.controls['ip'].errors.required">Необходим IP сервера</span>
-          <span *ngIf="settings.controls['ip'].errors.pattern">IP невалиден</span>
+          <span *ngIf="settings.controls['ip'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Укажите IP сервера</span>
+          <span *ngIf="settings.controls['ip'].errors.pattern"><fa-icon [icon]="fa.err"></fa-icon> IP невалиден</span>
         </div>
       </div>
     </div>
@@ -100,8 +105,8 @@
           required
         />
         <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['port'].errors">
-          <span *ngIf="settings.controls['port'].errors.required">Необходим IP сервера</span>
-          <span *ngIf="settings.controls['port'].errors.min">Номер порта должен быть больше 0</span>
+          <span *ngIf="settings.controls['port'].errors.required"> Укажите порт сервера</span>
+          <span *ngIf="settings.controls['port'].errors.min"> Номер порта должен быть больше 0</span>
         </div>
       </div>
     </div>

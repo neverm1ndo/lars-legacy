@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { join } from 'path';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faFolderOpen, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../core/services';
 import { OpenDialogReturnValue } from 'electron';
 
@@ -17,12 +17,17 @@ export class LauncherSettingsComponent implements OnInit {
   ) { }
 
   fa = {
-    folder: faFolderOpen
+    folder: faFolderOpen,
+    ok: faCheckCircle,
+    err: faExclamationTriangle
   }
+
+  clientExists: boolean;
 
   settings = new FormGroup({
     samp: new FormControl(
-      join(process.env['ProgramFiles(x86)'], 'GTASanAndreas')
+      join(process.env['ProgramFiles(x86)'], 'GTASanAndreas'),
+      [ Validators.required ]
     ),
     nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name, [
       Validators.required,
@@ -64,11 +69,12 @@ export class LauncherSettingsComponent implements OnInit {
       if (res.canceled) return;
       return this.fileExisteValidator(res.filePaths[0]);
     }).then((path: string) => {
-      this.settings.controls['samp'].setValue(path)
+      this.settings.controls['samp'].setValue(path);
+      this.clientExists = true;
       this.setup();
     }).catch((err) => {
       console.error(err);
-      this.setPath();
+      this.clientExists = false;
     })
   }
 
@@ -88,6 +94,9 @@ export class LauncherSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLauncherSettingsFromStorage();
+    this.fileExisteValidator(this.sets.samp)
+    .then(() => { this.clientExists = true; })
+    .catch(() => { this.clientExists = false; });
     this.settings.markAsTouched();
   }
 
