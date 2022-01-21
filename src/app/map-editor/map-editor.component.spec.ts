@@ -33,31 +33,31 @@ describe('MapEditorComponent', () => {
     fixture = TestBed.createComponent(MapEditorComponent);
     component = fixture.componentInstance;
     fakeElem = TestBed.inject(ElementRef);
-    component._objects = [{
+    component.objects = [{
       name: 'object',
       id: 'testObject',
-      model: '331',
-      posX: '-1856.7600100',
-      posY: '15.4910000',
-      posZ: '1061.2430400',
-      rotX: '0.0000000',
-      rotY: '0.0000000',
-      rotZ: '90.0000000',
-      dimension: '0',
-      interior: '14'
+      model: 331,
+      posX: -1856.7600100,
+      posY: 15.4910000,
+      posZ: 1061.2430400,
+      rotX: 0.0000000,
+      rotY: 0.0000000,
+      rotZ: 90.0000000,
+      dimension: 0,
+      interior: 14
     },
     {
       name: 'vehicle',
       id: 'testVehicle',
-      model: '331',
-      posX: '-1856.7600100',
-      posY: '15.4910000',
-      posZ: '1061.2430400',
-      rotX: '0.0000000',
-      rotY: '0.0000000',
-      rotZ: '90.0000000',
-      dimension: '0',
-      interior: '14'
+      model: 331,
+      posX: -1856.7600100,
+      posY: 15.4910000,
+      posZ: 1061.2430400,
+      rotX: 0.0000000,
+      rotY: 0.0000000,
+      rotZ: 90.0000000,
+      dimension: 0,
+      interior: 14
     }]
     fixture.detectChanges();
   });
@@ -66,7 +66,7 @@ describe('MapEditorComponent', () => {
     spyOn(component, 'mapView').and.callFake(() => {})
     fixture.whenStable();
     expect(component).toBeTruthy();
-    expect(component._objects).toBeTruthy();
+    expect(component.objects).toBeTruthy();
     expect(component.canvas).toBeTruthy();
     expect(component.viewport.x).not.toBe(0);
     expect(component.viewport.y).not.toBe(0);

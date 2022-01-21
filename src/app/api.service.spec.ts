@@ -29,9 +29,7 @@ describe('ApiService', () => {
       last: '{ "search": ["John Doe", "Mary", "Alice", "ip:127.0.0.1"], "files": [{ "path": "/conf/conf.cfg", "name": "conf.cfg" }]}'
     };
   });
-  /**
-  * {"search":["punk","srl:0*EFDD080DED4549D0A59F0ED9EC854CE48588D894","srl:12389*8C8C900CEF0C5EFD8C08ACE4F4D989E994E085A9","awkng.Awakener","ip:176.193.65.97","srl:12345*8C5EE8AAFD459854D8F9DDCC5A4E8C","srl:12389*A44FD59EDD4409A0995D48449FD09D0AED8E95DC"],"upload":[],"files":[{"path":"/home/svr_sa/freemode/mta10/bugs.map","name":"bugs.map"},{"path":"/home/svr_sa/start.sh","name":"start.sh"},{"path":"/home/svr_sa/server.cfg","name":"server.cfg"},{"path":"/home/svr_sa/mysql_log.txt","name":"mysql_log.txt"},{"path":"/home/svr_sa/nohup.out","name":"nohup.out"},{"path":"/home/svr_sa/server_log.txt","name":"server_log.txt"},{"path":"/home/svr_sa/lookatme.txt","name":"lookatme.txt"}]}
-  **/
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

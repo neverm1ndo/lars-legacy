@@ -12,9 +12,14 @@ import { ToastService } from '../toast.service';
 import { ConfigsService } from '../configs.service';
 
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
+import { EditorFromTextArea } from 'codemirror';
 
 import Keys from '../enums/keycode.enum';
 const { S, Delete, F, Space } = Keys;
+
+interface EditorFromTextAreaExpanded extends EditorFromTextArea {
+  showHint: ({hint: any}) => {}
+}
 
 @Component({
   selector: 'text-editor',
@@ -198,7 +203,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.autocomplete = (cm: any) => {
-        this.editor.codeMirror.showHint({hint: this.editor.codeMirrorGlobal.hint.anyword});
+        const editor = this.editor.codeMirror as EditorFromTextAreaExpanded;
+        editor.showHint({hint: this.editor.codeMirrorGlobal.hint.anyword});
       }
     })
   }
