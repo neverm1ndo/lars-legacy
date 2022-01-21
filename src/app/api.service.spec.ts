@@ -50,18 +50,8 @@ describe('ApiService', () => {
     httpMock.verify();
   })
 
-  it('should return list of all admins', (done) => {
-    service.getAdminsAll().subscribe((list) => {
-      expect(list).toEqual([]);
-      done();
-    })
-    let req = httpMock.expectOne(service.URL_ADMINS_LIST);
-    req.flush([]);
-    httpMock.verify();
-  })
-
   it('should set admin group', (done) => {
-    service.setAdminGroup('John', 10).subscribe((res) => {
+    service.setAdminGroup(123, 10).subscribe((res) => {
       expect(res).toEqual(200);
       done();
     })
@@ -77,16 +67,6 @@ describe('ApiService', () => {
     })
     let req = httpMock.expectOne(service.URL_ADMIN_TOKEN_EXPIRATION + '?username=John');
     req.flush(200);
-    httpMock.verify();
-  })
-
-  it('should return list of sub groups', (done) => {
-    service.getAdminSubGroup().subscribe((res) => {
-      expect(res).toEqual([]);
-      done();
-    })
-    let req = httpMock.expectOne(service.URL_ADMIN_SUB_GROUP);
-    req.flush([]);
     httpMock.verify();
   })
 
@@ -202,18 +182,8 @@ describe('ApiService', () => {
   it('should return log file with the last lines', (done) => {
     spyOn(service, 'search').and.returnValue(of([{ process: '<start/pre-start>' }]))
     spyOn(service, 'getLast').and.returnValue(of([{ process: '<end/end>' }]))
-    service.getLogFile().subscribe((res) => {
+    service.getLogFile('nn:neverm1ndo', '200',  []).subscribe((res) => {
       expect(res).toEqual([{ process: '<end/end>' }]);
-      done();
-    })
-  })
-  it('should return log file with the last lines', (done) => {
-    spyOn(service, 'search').and.returnValue(of([{ process: '<start/pre-start>' }]))
-    spyOn(service, 'getLast').and.returnValue(of([{ process: '<end/end>' }]))
-    spyOnProperty(service, 'queryType').and.returnValue('search');
-    service.getLogFile().subscribe((res) => {
-      expect(res).toEqual([{ process: '<start/pre-start>' }]);
-      expect(service.lastQuery.lim).toBe('100');
       done();
     })
   })
