@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { ExecException } from 'child_process';
 import { join } from 'path';
 import { UserService } from '../user.service';

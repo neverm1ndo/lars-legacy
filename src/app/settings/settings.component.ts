@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { settingsRoute } from '../app.animations';
 import { RouterOutlet } from '@angular/router';

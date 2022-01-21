@@ -6,7 +6,7 @@ import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { WebSocketService } from '../web-socket.service';
 import { Workgroup } from '../enums/workgroup.enum';
 

@@ -8,7 +8,7 @@ import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { Router } from '@angular/router';
 
 import { UserService } from './user.service';
-import { ElectronService } from './core/services/electron/electron.service';
+import { ElectronService } from './core/services';
 import { Workgroup } from './enums/workgroup.enum';
 
 describe('UserService', () => {

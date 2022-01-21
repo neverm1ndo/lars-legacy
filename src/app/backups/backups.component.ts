@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map } from 'rxjs/operators'
 import { throwError, combineLatest } from 'rxjs';

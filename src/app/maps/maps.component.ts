@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';

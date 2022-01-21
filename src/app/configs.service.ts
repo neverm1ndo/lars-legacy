@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
-import { ElectronService } from './core/services/electron/electron.service';
+import { ElectronService } from './core/services';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Subject, Observable, throwError, combineLatest } from 'rxjs';

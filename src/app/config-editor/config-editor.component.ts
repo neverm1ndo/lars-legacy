@@ -7,7 +7,7 @@ import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ElectronService } from '../core/services/electron/electron.service';
+import { ElectronService } from '../core/services';
 import { ConfigsService } from '../configs.service';
 
 @Component({
