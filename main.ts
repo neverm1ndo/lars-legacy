@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, ProtocolRequest } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Tray, protocol } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';

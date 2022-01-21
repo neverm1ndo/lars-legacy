@@ -14,9 +14,12 @@ const agent: Agent = new Agent({
 /** Downloads file
 * @returns {Promise.<any>}
 */
+
+const API = 'https://svr.gta-liberty.ru/v2/'
+
 const downloadFile = async (configuration: any): Promise<any> => {
   const w_stream = createWriteStream(configuration.localPath);
-  return axios.get('https://instr.gta-liberty.ru/v2/utils/download-file' ,
+  return axios.get(API + 'utils/download-file' ,
     { headers: { 'Authorization': 'Bearer ' + configuration.token },
     httpsAgent: agent,
     params: { path: configuration.remotePath },
@@ -56,7 +59,7 @@ const downloadFile = async (configuration: any): Promise<any> => {
 const verifyUserToken = async (): Promise<any> => {
   return win.webContents.executeJavaScript('localStorage.getItem("user");', true)
   .then(result => {
-     return axios.get('https://instr.gta-liberty.ru/v2/login/check-token', {
+     return axios.get(API + 'login/check-token', {
       httpsAgent: agent,
       headers: {
         'Authorization': 'Bearer ' + JSON.parse(result).token
