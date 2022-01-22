@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -7,6 +10,11 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -42,15 +50,15 @@
             "scripts": [
             ],
             "customWebpackConfig": {
-              "path": "./angular.webpack.js"
+              "path": "./angular.webpack.js",
+              "replaceDuplicatePlugins": true
             }
           },
           "configurations": {
             "dev": {
               "optimization": false,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": false,
               "aot": false,
               "extractLicenses": true,
@@ -65,9 +73,8 @@
             },
             "web": {
               "optimization": false,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": false,
               "aot": false,
               "extractLicenses": true,
@@ -84,7 +91,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
