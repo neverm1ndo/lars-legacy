@@ -23,6 +23,7 @@ import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 import { MapComponent } from '../map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -50,6 +51,7 @@ const routes: Routes = [
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] },
     { path: 'backups', component: BackupsComponent, canActivate: [IsDevGuard] },
+    { path: 'stats', component: StatisticsComponent, canActivate: [IsDevGuard] },
   ]},
 ];
 
