@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LoglineContentComponent } from './logline-content.component';
 
@@ -6,12 +6,12 @@ describe('LoglineContentComponent', () => {
   let component: LoglineContentComponent;
   let fixture: ComponentFixture<LoglineContentComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ LoglineContentComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoglineContentComponent);

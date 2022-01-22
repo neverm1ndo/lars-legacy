@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EmptyDocComponent } from './empty-doc.component';
 
@@ -6,12 +6,12 @@ describe('EmptyDocComponent', () => {
   let component: EmptyDocComponent;
   let fixture: ComponentFixture<EmptyDocComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ EmptyDocComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EmptyDocComponent);
