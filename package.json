@@ -24,7 +24,7 @@
     "webpack": "^5.0.0"
   },
   "keywords": [],
-  "main": "main.js",
+  "main": "app/main.js",
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -125,7 +125,7 @@
     "electron-tabs": "0.15.0",
     "electron-updater": "4.3.5",
     "electron-window-state": "5.0.3",
-    "ngx-indexed-db": "6.1.2",
+    "ngx-indexed-db": "9.4.2",
     "ngx-socket-io": "4.1.0",
     "postcss": "8.4.5"
   }

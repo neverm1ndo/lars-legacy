@@ -9,21 +9,21 @@
   "directories": {
     "output": "release/"
   },
+  "extraResources": [
+    {
+      "from": "dist",
+      "to": "app",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
   "files": [
-      "**/*",
-      "!**/*.ts",
-      "!*.code-workspace",
-      "!LICENSE.md",
-      "!package.json",
-      "!package-lock.json",
-      "!src/",
-      "!e2e/",
-      "!hooks/",
-      "!angular.json",
-      "!_config.yml",
-      "!karma.conf.js",
-      "!tsconfig.json",
-      "!tslint.json"
+    "**/*",
+    "!**/*.ts",
+    "!*.map",
+    "!package.json",
+    "!package-lock.json"
   ],
   "nsis": {
     "installerIcon": "dist/assets/icons/favicon.ico",
