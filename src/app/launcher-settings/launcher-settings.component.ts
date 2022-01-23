@@ -26,7 +26,7 @@ export class LauncherSettingsComponent implements OnInit {
 
   settings = new FormGroup({
     samp: new FormControl(
-      join(process.env['ProgramFiles(x86)'], 'GTASanAndreas'),
+      join('C:\ProgramFiles(x86)', 'GTASanAndreas'),
       [ Validators.required ]
     ),
     nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name, [
