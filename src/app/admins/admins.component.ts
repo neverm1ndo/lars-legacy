@@ -9,6 +9,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services';
 import { WebSocketService } from '../web-socket.service';
 import { Workgroup } from '../enums/workgroup.enum';
+import { IDBUser } from '../interfaces';
 
 type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
 
@@ -38,10 +39,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.minLength(1)
     ]),
-    mainGroup: new FormControl(9, [
+    mainGroup: new FormControl(Workgroup.Challenger, [
       Validators.required
     ]),
-    secondaryGroup: new FormControl(9)
+    secondaryGroup: new FormControl(Workgroup.Challenger)
   });
 
   roles = [
@@ -82,7 +83,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
 
 
   getAdmins() {
-    this.idbService.getAll('user').subscribe((users) => {
+    this.idbService.getAll('user').subscribe((users: IDBUser[]) => {
       users.forEach((user) => {
         if ((user.group == 9) || (user.group == 10) || (user.group == 11) || (user.group == 12)) {
           this.admins.push(user);

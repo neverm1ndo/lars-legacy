@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LineProcessComponent } from './line-process.component';
 
@@ -6,12 +6,12 @@ describe('LineProcessComponent', () => {
   let component: LineProcessComponent;
   let fixture: ComponentFixture<LineProcessComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ LineProcessComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LineProcessComponent);

@@ -6,8 +6,8 @@
 /out-tsc
 /app-builds
 /release
-main.js
 src/**/*.js
+app/**/*.js
 !src/karma.conf.js
 *.js.map
 *.js
@@ -44,6 +44,7 @@ frontend.deploy.env
 !.vscode/extensions.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage

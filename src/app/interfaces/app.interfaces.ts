@@ -1,3 +1,5 @@
+import Processes from '../line-process/log-processes';
+
 export interface WsMessage {
   event: 'reboot-server' | 'launch-server' | 'stop-server' | 'get-status' | 'user-action';
   msg?: string,
@@ -31,7 +33,7 @@ export interface GeoData {
 export interface LogLine {
   unix: number;
   date: string;
-  process: string;
+  process: keyof typeof Processes;
   nickname?: string;
   id: number;
   geo?: GeoData;

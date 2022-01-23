@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BanhammerComponent } from './banhammer.component';
 
@@ -6,12 +6,12 @@ describe('BanhammerComponent', () => {
   let component: BanhammerComponent;
   let fixture: ComponentFixture<BanhammerComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ BanhammerComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BanhammerComponent);

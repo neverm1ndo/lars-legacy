@@ -6,6 +6,7 @@ import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, fa
 import { catchError, take, map } from 'rxjs/operators'
 import { throwError, combineLatest } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { IDBUser } from '../interfaces';
 
 @Component({
   selector: 'app-backups',
@@ -233,7 +234,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     return this.idbService.getAll('user')
     .pipe(take(1))
     .pipe(map((users) => {
-      return users.reduce((acc, curr) => {
+      return users.reduce((acc: Object, curr: IDBUser) => {
         return {...acc, [curr.name]: { avatar: curr.avatar }}
       }, {})
     }))

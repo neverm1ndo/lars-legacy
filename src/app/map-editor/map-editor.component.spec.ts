@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MapEditorComponent } from './map-editor.component';
 import { ElementRef, Injectable } from '@angular/core';
@@ -19,15 +19,15 @@ describe('MapEditorComponent', () => {
 
   let fakeElem: ElementRef;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ MapEditorComponent ],
       providers: [
         { provide: ElementRef, useValue: new MockElementRef()}
       ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MapEditorComponent);

@@ -41,7 +41,7 @@ const routes: Routes = [
       { path: 'general', component: GeneralSettingsComponent, data: { animation: 'general' } },
       { path: 'filter', component: FilterComponent, data: { animation: 'filter' } },
       { path: 'alerts', component: NotificationsSettingsComponent, data: { animation: 'alerts' } },
-      { path: 'launcher', component: LauncherSettingsComponent, data: { animation: 'alerts' } },
+      { path: 'launcher', component: LauncherSettingsComponent, data: { animation: 'launcher' } },
     ]},
     { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard], children: [
       { path: '', pathMatch: 'full', redirectTo: 'empty' },
