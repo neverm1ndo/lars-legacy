@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SocketIoModule } from 'ngx-socket-io';
+import { NgChartsModule } from 'ng2-charts';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -105,7 +106,8 @@ const dbConfig: DBConfig  = {
     FontAwesomeModule,
     NgxIndexedDBModule.forRoot(dbConfig),
     SocketIoModule.forRoot(socketConfig),
-    NgSelectModule
+    NgSelectModule,
+    NgChartsModule,
   ],
   providers: [
     AuthGuard,
