@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { UserData, UserLoginData } from './interfaces/app.interfaces';
+import { UserData, UserLoginData, IDBUser } from './interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
 import { ElectronService } from './core/services';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Workgroup } from './enums/workgroup.enum';
+import { Workgroup } from './enums';
 
 interface UserSettings {
   tray: boolean;
@@ -93,7 +93,7 @@ export class UserService {
     return false;
   }
 
-  setUpUser(user: UserData): Observable<number> {
+  setUpUser(user: UserData): Observable<IDBUser> {
     return this.idbService.add('user', {
       name: user.name,
       avatar: user.avatar,

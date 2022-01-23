@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { FormGroup, FormControl } from '@angular/forms';
+import { GeoData } from '../interfaces';
 
 @Component({
   selector: 'app-general-settings',
@@ -14,11 +15,11 @@ export class GeneralSettingsComponent implements OnInit {
   version: string = this.electron.remote.app.getVersion();
 
   date: Date = new Date(Date.now());
-  sampleGeo = {
+  sampleGeo: GeoData = {
     country: 'Russian Federation',
     cc: 'RU',
     ip: '127.0.0.1',
-    as: '12345',
+    as: 12345,
     ss: '8C5EE8AAFD459854D8F9DDCC5A4E8C',
     org: 'Rostelecom OJSC',
     c: '0.3.7'

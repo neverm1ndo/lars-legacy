@@ -5,6 +5,11 @@ import Keys from '../enums/keycode.enum';
 
 const { A } = Keys;
 
+interface FilePathName {
+  path: string,
+  name?: string,
+}
+
 @Component({
   selector: 'file-tree',
   templateUrl: './file-tree.component.html',
@@ -13,7 +18,7 @@ const { A } = Keys;
 export class FileTreeComponent implements OnInit {
 
   @Input('items') node: TreeNode;
-  @Output() chooseFileEvent = new EventEmitter<string>();
+  @Output() chooseFileEvent = new EventEmitter<FilePathName>();
   @Output() chooseDirEvent = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
   @Output() resync = new EventEmitter<any>();
@@ -39,7 +44,7 @@ export class FileTreeComponent implements OnInit {
 
   constructor() { }
 
-  getConfig(path: string) {
+  getConfig(path: FilePathName) {
     this.chooseFileEvent.emit(path);
   }
   chooseDir(path: string) {

@@ -13,7 +13,7 @@ export class MapCorrectorComponent implements OnInit {
   @Input('toCorrect') toCorrect: number;
   @Input('icon') icon: any;
   @Input('title') title: string;
-  @Output('corrected') corrected: EventEmitter<string> = new EventEmitter<string>();
+  @Output('corrected') corrected: EventEmitter<number> = new EventEmitter<number>();
 
   fa = {
     check: faCheckCircle

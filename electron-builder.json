@@ -6,6 +6,7 @@
     "provider": "github",
     "owner": "neverm1ndo",
   },
+  "asar": false,
   "directories": {
     "output": "release/"
   },
