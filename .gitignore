@@ -21,8 +21,7 @@ app/**/*.js
 electron-builder.nsis.json
 
 # frontend deployer
-frontend.deployer.ts
-frontend.deploy.env
+/deployer
 
 # dependencies
 /node_modules
