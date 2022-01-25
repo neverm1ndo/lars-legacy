@@ -38,6 +38,7 @@ export interface LogLine {
   id: number;
   geo?: GeoData;
   content?: string;
+  multiplier?: number;
 }
 
 export interface SearchQuery {

@@ -35,6 +35,7 @@
       </div>
       <div class="col-4">
         <div class="h-100 w-100 d-flex align-items-center">
+          <span class="badge badge-dark mr-2" *ngIf="line.multiplier"> x{{ line.multiplier + 1}} </span>
           <logline-content *ngIf="line.content" [content]="line.content" [type]="getProcessTranslation(line.process)"></logline-content>
         </div>
       </div>
