@@ -57,25 +57,9 @@ import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 import { MapComponent } from '../map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 
-// Ahead of time compiles requires an exported function for factories
-export function migrationFactory() {
-  // The animal table was added with version 2 but none of the existing tables or data needed
-  // to be modified so a migrator for that version is not included.
-  return {
-    1: (db, transaction) => {
-      const store = transaction.objectStore('people');
-      store.createIndex('country', 'country', { unique: false });
-    },
-    3: (db, transaction) => {
-      const store = transaction.objectStore('people');
-      store.createIndex('age', 'age', { unique: false });
-    }
-  };
-}
-
 const dbConfig: DBConfig  = {
   name: 'LibertyUsers',
-  version: 3,
+  version: 1,
   objectStoresMeta: [{
     store: 'user',
     storeConfig: { keyPath: 'id', autoIncrement: true },
@@ -85,8 +69,7 @@ const dbConfig: DBConfig  = {
       { name: 'id', keypath: 'id', options: { unique: true } },
       { name: 'group', keypath: 'group', options: { unique: false } },
     ]
-  }],
-  migrationFactory
+  }]
 };
 
 @NgModule({
