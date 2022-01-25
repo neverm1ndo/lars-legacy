@@ -243,6 +243,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'warning',
       control: 'chatBlockNin'
     },
+    '<chat/block/no_group>': {
+      translate: 'Блокировка чата: не в группе',
+      type: 'warning',
+      control: 'chatBlockNinGr'
+    },
     '<chat/block/repeated>': {
       translate: 'Блокировка чата: повторение',
       type: 'warning',
@@ -292,6 +297,21 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Проверка взрывом',
       type: 'adm',
       control: 'checkExpl'
+    },
+    '<check/explosion/vehicle>': {
+      translate: 'Проверка взрывом транспорта',
+      type: 'adm',
+      control: 'checkExplVeh'
+    },
+    '<check/health/player>': {
+      translate: 'Проверка GM',
+      type: 'adm',
+      control: 'checkHp'
+    },
+    '<check/health/vehicle>': {
+      translate: 'Проверка GM транспорта',
+      type: 'adm',
+      control: 'checkHpVeh'
     },
     '<check/scroll/false>': {
       translate: 'Проверка автоскролла: FALSE',
@@ -352,6 +372,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Cмерть от игрока',
       type: 'death',
       control: 'dthKilled'
+    },
+    '<death/suicide>': {
+      translate: 'Суицид',
+      type: 'death',
+      control: 'dthSuicide'
     },
     '<death_match/leave>': {
       translate: 'Выход из DM',
@@ -492,6 +517,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'ACHEAT WARN: PLAYER_WEAPON',
       type: 'acheat',
       control: 'warnPlayerWeap'
+    },
+    '<warn/player/ammo>': {
+      translate: 'ACHEAT WARN: PLAYER_AMMO',
+      type: 'acheat',
+      control: 'warnPlayerAmmo'
     },
 }
 
