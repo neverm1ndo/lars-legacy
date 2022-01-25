@@ -1,5 +1,5 @@
 <div *ngFor="let chunk of chunks">
-  <div *ngFor="let line of chunk" class="col-12 logline" [ngClass]="{legacy: style == 'legacy', expanded: style == 'big'}">
+  <div *ngFor="let line of chunk" class="col-12 logline" [class.banned]="isBanned(line.process)" [ngClass]="{legacy: style == 'legacy', expanded: style == 'big'}">
     <div *ngIf="style == 'big' || style == 'small'" class="row">
       <div class="col-3 col-md-2 col-lg-2">
         <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>

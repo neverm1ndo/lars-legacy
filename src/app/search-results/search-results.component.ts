@@ -23,6 +23,11 @@ export class SearchResultsComponent implements OnInit {
   constructor(
   ) { }
 
+  isBanned(processname: any) {
+    const banned = ['<disconnect/ban>', '<disconnect/kick>'];
+    return banned.includes(processname);
+  }
+
   getProcessTranslation(processname: any) {
     return getProcessTranslation(processname);
   }
