@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
 import { Process } from '../line-process/log-processes';
@@ -9,7 +9,7 @@ import { take, map, switchMap, filter, tap } from 'rxjs/operators';
   templateUrl: './logline-content.component.html',
   styleUrls: ['./logline-content.component.scss']
 })
-export class LoglineContentComponent implements OnInit, AfterViewChecked {
+export class LoglineContentComponent implements OnInit {
 
   constructor(
     private idb: NgxIndexedDBService,
@@ -39,10 +39,6 @@ export class LoglineContentComponent implements OnInit, AfterViewChecked {
 
   userLink(id: number) {
     this.user.openUserProfile(id);
-  }
-
-
-  ngAfterViewChecked (): void {
   }
 
   ngOnInit(): void {

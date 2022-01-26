@@ -4,7 +4,7 @@
       <img src="{{userContent.avatar}}"/>
       <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
       <span class="badge badge-dark">{{userContent.id}}</span>
-      <small>{{userContent.group}}</small>
+      <small>{{userContent.group | role }}</small>
     </div>
   </ng-template>
   <ng-template [ngIf]="isBanned()" #ban>
