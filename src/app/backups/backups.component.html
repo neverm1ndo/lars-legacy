@@ -5,7 +5,7 @@
         <div class="col-12 h-100">
           <div class="row h-100">
             <div class="d-flex flex-row h-100 w-100">
-              <div class="d-flex flex-fill flex-column h-100 w-100">
+              <div class="d-flex list flex-column h-100">
                 <div class="d-flex align-self-start head w-100">
                   <div class="col-12">
                     <div class="row">
@@ -37,10 +37,15 @@
                 </div>
               </div>
               <div *ngIf="current" class="d-flex flex-column viewer">
-                <div class="d-flex flex-row justify-content-between viewer-head align-items-center flex-wrap">
-                  <div class="d-flex align-items-center pr-3">
-                    <button (click)="current = undefined" class="btn btn-dark viewer-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
-                    <span class=""><i [style.background]="colorGenerator([current.file.name])[0]"></i>{{current.file.name}}</span>
+                <div class="d-flex flex-row justify-content-between viewer-head align-items-center">
+                  <div class="d-flex flex-row align-items-center overflow-hidden">
+                    <button (click)="current = undefined" class="d-flex btn btn-dark viewer-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+                    <div class="d-flex viewer-head-elapse">
+                      <!-- <span class=""> -->
+                        <!-- <i [style.background]="colorGenerator([current.file.name])[0]"></i> -->
+                        {{current.file.name}}
+                      <!-- </span> -->
+                    </div>
                   </div>
                 </div>
                 <div class="d-flex flex-fill viewer-code overflow-auto">
@@ -58,11 +63,13 @@
                     <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
                   </div>
                 </div>
-                <div class="d-flex flex-row justify-content-between viewer-bottom align-items-center flex-wrap">
-                  <div class="p-1 d-flex flex-column">
-                    <small class="text-muted elapse">{{current.date | date:'d MMM yy, HH:mm:ss'}}</small>
+                <div class="d-flex flex-column justify-content-between viewer-bottom align-items-start">
+                  <span class="d-flex elapse">
+                    <small class="text-muted">{{current.date | date:'d MMM yy, HH:mm:ss'}}</small>
+                  </span>
+                  <span class="d-flex elapse">
                     <small class=" elapse">{{current.file.path}}</small>
-                  </div>
+                  </span>
                   <div class="p-1 d-flex align-items-center justify-content-between">
                     <button [disabled]="!current.file.text && !current.file.binary" (click)="restoreBackup()" class="btn btn-success" type="button" name="button">Установить</button>
                     <button [disabled]="!current.file.text && !current.file.binary" (click)="removeBackup()" class="btn btn-danger ml-3" type="button" name="button"><fa-icon [icon]="fa.trash"></fa-icon></button>

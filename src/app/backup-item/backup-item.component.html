@@ -1,31 +1,39 @@
-<div class="backups-list-item d-flex flex-row align-items-center justify-content-between overflow-hidden">
+<div class="backups-list-item d-flex flex-row align-items-center overflow-hidden">
   <div class="d-flex h-100">
     <div data-width="-50" class="marker d-flex flex-fill"></div>
   </div>
-  <img class="backups-list-item_avatar d-flex" src="{{ admin.avatar }}" alt="">
-  <div class="backups-list-item_nickname d-flex">{{ backup.user.nickname }}</div>
-  <div class="d-flex mr-2 text-muted">
-    <fa-icon [icon]="backup.action === 'delete'?fa.trash:fa.pen"></fa-icon>
+  <div class="d-flex flex-row justify-content-stretch h-100 align-items-center flex-fill">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+      <img class="backups-list-item_avatar d-flex" src="{{ admin.avatar }}" alt=""/>
+      <div class="backups-list-item_nickname d-flex">{{ backup.user.nickname }}</div>
+    </div>
+    <div class="d-flex mr-2 text-muted">
+      <fa-icon [icon]="backup.action === 'delete'?fa.trash:fa.pen"></fa-icon>
+    </div>
+    <div class="item d-flex flex-column no-select">
+      <div class="d-flex flex-fill">
+        <span class="item-elapsed" title="{{ backup.file.name }}">
+          {{ backup.file.name }}
+        </span>
+      </div>
+      <div class="d-flex text-muted flex-fill">
+        <span class="item-elapsed" title="{{ backup.file.mime}}">
+          {{ backup.file.mime}}
+        </span>
+      </div>
+    </div>
+    <div class="item d-flex flex-column no-select flex-fill">
+        <div class="d-flex flex-fill">
+          <div class="item-elapsed">
+            <span class="text-muted sub">Создан:</span> <span class="elapse" title="{{ backup.date | date:'d MMM yy, HH:mm:ss' }}">{{ backup.date | date:'d MMM yy, HH:mm:ss'}}</span>
+          </div>
+        </div>
+        <div class="d-flex flex-fill">
+          <div class="d-flex flex-fill">
+            <span class="text-muted sub">До:</span> <span [class.text-danger]="wbd"><fa-icon *ngIf="wbd" class="mr-1" [icon]="fa.exCircle"></fa-icon> {{ backup.expires | date:'d MMM yy'}}</span>
+          </div>
+        </div>
+    </div>
+    <button class="btn btn-light text-center" (click)="toView(backup)">Открыть</button>
   </div>
-  <div class="item d-flex flex-column flex-fill no-select">
-    <div class="d-flex item-elapsed">
-      <span class="elapse" title="{{ backup.file.name }}">
-        {{ backup.file.name }}
-      </span>
-    </div>
-    <div class="d-flex text-muted item-elapsed">
-      <span class="elapse" title="{{ backup.file.mime}}">
-        {{ backup.file.mime}}
-      </span>
-    </div>
-  </div>
-  <div class="item d-flex flex-column flex-fill no-select">
-    <div class="d-flex item-elapsed">
-      <span class="text-muted sub">Создан:</span> <span class="elapse" title="{{ backup.date | date:'d MMM yy, HH:mm:ss' }}">{{ backup.date | date:'d MMM yy, HH:mm:ss'}}</span>
-    </div>
-    <div class="d-flex">
-      <span class="text-muted sub">До:</span> <span [class.text-danger]="wbd"><fa-icon *ngIf="wbd" class="mr-1" [icon]="fa.exCircle"></fa-icon> {{ backup.expires | date:'d MMM yy'}}</span>
-    </div>
-  </div>
-  <button class="btn btn-light text-center" (click)="toView(backup)">Открыть</button>
 </div>
