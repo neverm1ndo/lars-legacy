@@ -36,7 +36,7 @@ function splashWindow() {
     frame: false,
     show: false,
     webPreferences: {
-      worldSafeExecuteJavaScript: true,
+      // worldSafeExecuteJavaScript: true,
       contextIsolation: true,
       allowRunningInsecureContent: true
     }
@@ -81,12 +81,10 @@ function createWindow(): BrowserWindow {
     icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
-      worldSafeExecuteJavaScript: true,
       nodeIntegration: true,
       webSecurity: (serve)? false: true,
       allowRunningInsecureContent: true,
       contextIsolation: false,  // false if you want to run 2e2 test with Spectron
-      enableRemoteModule : true // true if you want to run 2e2 test  with Spectron or use remote module in renderer context (ie. Angular)
     },
   });
 
