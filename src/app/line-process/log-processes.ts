@@ -523,6 +523,21 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'acheat',
       control: 'warnPlayerAmmo'
     },
+    '<warn/player/airbreak>': {
+      translate: 'ACHEAT WARN: AIRBREAK',
+      type: 'acheat',
+      control: 'warnPlayerAirBk'
+    },
+    '<warn/player/speedhack>': {
+      translate: 'ACHEAT WARN: SPEEDHACK',
+      type: 'acheat',
+      control: 'warnPlayerSh'
+    },
+    '<warn/player/unsync>': {
+      translate: 'ACHEAT WARN: UNSYNC',
+      type: 'acheat',
+      control: 'warnPlayerUnSync'
+    },
 }
 
 export const getProcessTranslation = (processname: keyof typeof Processes): Process => {
