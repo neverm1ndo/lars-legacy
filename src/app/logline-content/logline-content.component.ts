@@ -1,24 +1,27 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, Input, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
 import { Process } from '../line-process/log-processes';
+import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'logline-content',
   templateUrl: './logline-content.component.html',
   styleUrls: ['./logline-content.component.scss']
 })
-export class LoglineContentComponent implements OnInit {
+export class LoglineContentComponent implements OnInit, AfterViewChecked {
 
   constructor(
-    private idbService: NgxIndexedDBService,
-    public userService: UserService
+    private idb: NgxIndexedDBService,
+    private user: UserService
   ) { }
 
   @Input('content') content: string;
   @Input('type') type: Process;
 
-  user: any;
+  customTemplate: boolean;
+
+  userContent: any;
 
   controltype():boolean {
     switch (this.type.control) {
@@ -29,25 +32,48 @@ export class LoglineContentComponent implements OnInit {
     }
   }
 
+  isBanned() {
+    const banned = ['disconnectBan', 'disconnectKick']
+    return banned.includes(this.type.control);
+  }
+
   userLink(id: number) {
-    this.userService.openUserProfile(id);
+    this.user.openUserProfile(id);
+  }
+
+
+  ngAfterViewChecked (): void {
   }
 
   ngOnInit(): void {
+    if (this.isBanned() || this.controltype()) {
+      this.customTemplate = true;
+    }
     if (this.controltype()) {
-      const idbUserSub = this.idbService.getByIndex('user', 'name', this.content).subscribe((user) => {
-        if (!user) {
-          const getusrsub = this.userService.getUser(this.content).subscribe((user) => {
-            this.user = user;
-            this.idbService.add('user', { name: user.name, avatar: user.avatar, id: user.id, group: user.gr })
-            getusrsub.unsubscribe();
-          });
-        } else {
-          this.user = user;
-        }
-        idbUserSub.unsubscribe();
+      this.idb.getByIndex('user', 'name', this.content)
+        .pipe(take(1))
+        .pipe(tap((user) => {
+          if (user) {
+            this.userContent = user;
+          }
+          return user
+        }))
+        .pipe(filter((user) => !user))
+        .pipe(switchMap(() => this.user.getUser(this.content)
+        .pipe(map((user) => {
+          return {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+            group: user.gr
+          }
+        }))
+        .pipe(switchMap((user) => this.idb.add('user', user)))
+      ))
+      .subscribe((user) => {
+        this.userContent = user;
       });
+      return;
     }
   }
-
 }

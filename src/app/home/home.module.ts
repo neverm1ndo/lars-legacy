@@ -60,7 +60,7 @@ import { LauncherSettingsComponent } from '../launcher-settings/launcher-setting
 import { RulesPipe } from '../pipes/rules.pipe';
 
 const dbConfig: DBConfig  = {
-  name: 'LibertyUsers',
+  name: 'lty_users',
   version: 1,
   objectStoresMeta: [{
     store: 'user',

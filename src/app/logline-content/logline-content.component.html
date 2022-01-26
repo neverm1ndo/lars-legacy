@@ -1,9 +1,19 @@
-<div *ngIf="controltype() && user; else default" class="user w-100 bg-shade-{{type.type}}">
-  <img src="{{user.avatar}}"/>
-  <a (click)="userLink(user.id)">{{ user.name }}</a>
-  <span class="badge badge-dark">{{user.id}}</span>
-  <small>{{userService.getUserGroupName(user.group)}}</small>
-</div>
+<ng-template [ngIf]="customTemplate" [ngIfElse]="default">
+  <ng-template [ngIf]="userContent" #auth>
+    <div class="user w-100 bg-shade-{{type.type}}">
+      <img src="{{userContent.avatar}}"/>
+      <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
+      <span class="badge badge-dark">{{userContent.id}}</span>
+      <small>{{userContent.group}}</small>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="isBanned()" #ban>
+    <div class="user w-100 bg-shade-{{type.type}}">
+      <kbd>{{ content }}</kbd><br>
+      <small>{{ content | rules }} </small>
+    </div>
+  </ng-template>
+</ng-template>
 <ng-template #default>
   <span>{{content}} </span>
 </ng-template>
