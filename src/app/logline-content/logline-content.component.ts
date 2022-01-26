@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
 import { Process } from '../line-process/log-processes';
@@ -7,13 +7,15 @@ import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 @Component({
   selector: 'logline-content',
   templateUrl: './logline-content.component.html',
-  styleUrls: ['./logline-content.component.scss']
+  styleUrls: ['./logline-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoglineContentComponent implements OnInit {
 
   constructor(
     private idb: NgxIndexedDBService,
-    private user: UserService
+    private user: UserService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @Input('content') content: string;
@@ -51,8 +53,9 @@ export class LoglineContentComponent implements OnInit {
         .pipe(tap((user) => {
           if (user) {
             this.userContent = user;
+            this.cdr.detectChanges();
           }
-          return user
+          return user;
         }))
         .pipe(filter((user) => !user))
         .pipe(switchMap(() => this.user.getUser(this.content)
@@ -68,6 +71,7 @@ export class LoglineContentComponent implements OnInit {
       ))
       .subscribe((user) => {
         this.userContent = user;
+        this.cdr.detectChanges();
       });
       return;
     }
