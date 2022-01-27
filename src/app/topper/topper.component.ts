@@ -52,16 +52,15 @@ export class TopperComponent implements OnInit {
     }
   }
   window = {
-    win: this.electron.remote.getCurrentWindow(),
     close: () => {
       if (this.userService.getUserSettings().tray) {
         this.electron.ipcRenderer.send('minimize-to-tray');
         return;
       }
-      this.window.win.close();
+      this.electron.ipcRenderer.send('close');
     },
     min: () => {
-      this.window.win.minimize();
+      this.electron.ipcRenderer.send('minimize');
     }
   }
   constructor(
@@ -73,7 +72,7 @@ export class TopperComponent implements OnInit {
   ) {}
 
   reload() {
-    this.window.win.reload();
+    this.electron.ipcRenderer.send('reload');
   }
   launchSAMP(): void {
     try {

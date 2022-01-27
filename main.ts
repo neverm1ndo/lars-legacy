@@ -149,6 +149,15 @@ ipcMain.on('minimize-to-tray', (event) => {
   win.hide();
   tray = createTray();
 })
+ipcMain.on('close', () => {
+  win.close();
+})
+ipcMain.on('minimize', () => {
+  win.minimize();
+})
+ipcMain.on('reload', () => {
+  win.reload();
+})
 ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });

@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { ElectronService } from '../core/services';
+import { Component, OnInit } from '@angular/core';;
 import { FormGroup, FormControl } from '@angular/forms';
 import { GeoData } from '../interfaces';
 
@@ -10,9 +9,9 @@ import { GeoData } from '../interfaces';
 })
 export class GeneralSettingsComponent implements OnInit {
 
-  constructor(private electron: ElectronService) { }
+  constructor() { }
 
-  version: string = this.electron.remote.app.getVersion();
+  version: string = '';
 
   date: Date = new Date(Date.now());
   sampleGeo: GeoData = {
