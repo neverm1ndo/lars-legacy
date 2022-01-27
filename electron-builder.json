@@ -6,19 +6,10 @@
     "provider": "github",
     "owner": "neverm1ndo",
   },
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "release/"
   },
-  "extraResources": [
-    {
-      "from": "dist",
-      "to": "app",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
   "files": [
     "**/*",
     "!**/*.ts",

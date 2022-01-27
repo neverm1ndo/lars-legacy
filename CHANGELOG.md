@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Статистика сервера
 * Рендеринг редактора карт с помощью WebGL
 
+## [0.9.18] - 2022-01-27
+#### Migration (electron)
+Переход с платформы electron 11 на electron 16.
+
 ## [0.9.17] - 2022-01-21
 ### Added / Добавлено
 #### Launcher / Лаунчер
