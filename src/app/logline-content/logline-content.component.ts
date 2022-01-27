@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
 import { Process } from '../line-process/log-processes';
+import { ContentData } from '../interfaces';
 import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -10,7 +11,7 @@ import { take, map, switchMap, filter, tap } from 'rxjs/operators';
   styleUrls: ['./logline-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoglineContentComponent implements OnInit {
+export class LoglineContentComponent implements OnInit, AfterViewInit {
 
   constructor(
     private idb: NgxIndexedDBService,
@@ -18,10 +19,15 @@ export class LoglineContentComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  @Input('content') content: string;
+  @Input('content') content: ContentData;
   @Input('type') type: Process;
 
-  customTemplate: boolean;
+  contentTpl: TemplateRef<any>;
+
+  @ViewChild('auth') auth: TemplateRef<any>;
+  @ViewChild('default') default: TemplateRef<any>;
+  @ViewChild('ban') ban: TemplateRef<any>;
+  @ViewChild('mute') mute: TemplateRef<any>;
 
   userContent: any;
 
@@ -38,27 +44,40 @@ export class LoglineContentComponent implements OnInit {
     const banned = ['disconnectBan', 'disconnectKick']
     return banned.includes(this.type.control);
   }
+  isMuted() {
+    const banned = ['chatHandBlock'];
+    return banned.includes(this.type.control);
+  }
 
   userLink(id: number) {
     this.user.openUserProfile(id);
   }
 
-  ngOnInit(): void {
-    if (this.isBanned() || this.controltype()) {
-      this.customTemplate = true;
+  ngAfterViewInit(): void {
+    this.contentTpl = this.default;
+    if (this.isBanned()) {
+      this.contentTpl = this.ban;
     }
+    if (this.isMuted()) {
+      this.contentTpl = this.ban;
+    }
+    this.cdr.detectChanges();
+  }
+
+  ngOnInit(): void {
     if (this.controltype()) {
-      this.idb.getByIndex('user', 'name', this.content)
+      this.idb.getByIndex('user', 'name', this.content.message)
         .pipe(take(1))
         .pipe(tap((user) => {
           if (user) {
             this.userContent = user;
+            this.contentTpl = this.auth;
             this.cdr.detectChanges();
           }
           return user;
         }))
         .pipe(filter((user) => !user))
-        .pipe(switchMap(() => this.user.getUser(this.content)
+        .pipe(switchMap(() => this.user.getUser(this.content.message)
         .pipe(map((user) => {
           return {
             id: user.id,
@@ -71,6 +90,7 @@ export class LoglineContentComponent implements OnInit {
       ))
       .subscribe((user) => {
         this.userContent = user;
+        this.contentTpl = this.auth;
         this.cdr.detectChanges();
       });
       return;

@@ -1,19 +1,24 @@
-<ng-template [ngIf]="customTemplate" [ngIfElse]="default">
-  <ng-template [ngIf]="userContent" #auth>
-    <div class="user w-100 bg-shade-{{type.type}}">
-      <img src="{{userContent.avatar}}"/>
-      <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
-      <span class="badge badge-dark">{{userContent.id}}</span>
-      <small>{{userContent.group | role }}</small>
+
+<ng-template #auth>
+  <div class="user w-100 bg-shade-{{ type.type }}">
+    <img src="{{ userContent.avatar }}"/>
+    <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
+    <span class="badge badge-dark">{{ userContent.id}}</span>
+    <small>{{ userContent.group | role }}</small>
+  </div>
+</ng-template>
+<ng-template #ban>
+  <div class="bancard w-100 bg-{{type.type}}">
+    <div class="bancard-head">
+      <small>Выдан администратором <u>{{ content.op }}</u> </small><span class="badge badge-dark ml-1">{{ content.oid }}</span><br>
     </div>
-  </ng-template>
-  <ng-template [ngIf]="isBanned()" #ban>
-    <div class="user w-100 bg-shade-{{type.type}}">
-      <kbd>{{ content }}</kbd><br>
-      <small>{{ content | rules }} </small>
+    <div class="bancard-body">
+      <small>{{ content.time }}, {{ content.message }}</small><br>
+      <small>{{ content.message | rules }} </small>
     </div>
-  </ng-template>
+  </div>
 </ng-template>
 <ng-template #default>
-  <span>{{content}} </span>
+  <span>{{ content.message }} </span>
 </ng-template>
+<ng-container *ngTemplateOutlet="contentTpl"></ng-container>
