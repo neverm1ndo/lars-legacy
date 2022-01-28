@@ -119,7 +119,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
         title: 'Подтверждение исключения',
         message: `Вы точно хотите исключть ${username} из администраторского состава?`
       }
-    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) {
         this.changeAdminGroup(username, id, 2);
         setTimeout(() => {
@@ -135,7 +135,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
         title: 'Подтверждение закрытия сессии',
         message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
       }
-    this.electron.dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
       console.log(returnValue.response)
       if (returnValue.response === 0) {
         this.api.closeAdminSession(username).subscribe(() => {

@@ -101,7 +101,7 @@ export class ConfigsService {
         title: `Подтверждение удаления`,
         message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
       }
-    return this.electron.dialog.showMessageBox(dialogOpts).then(
+    return this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
       val => {
         if (val.response === 0) {
            this.api.deleteMap(path).subscribe(() => {});
