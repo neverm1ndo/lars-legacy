@@ -122,13 +122,14 @@ export class ConfigsService {
   }
 
   pathToClipboard(path: string): void {
-    this.electron.clipboard.writeText(path);
-    this.toast.show('Путь скопирован в буффер обмена',
-    {
-      classname: 'bg-success text-light',
-      delay: 3000,
-      icon: faCopy
-    });
+    this.electron.ipcRenderer.invoke('clipboard', path).then(() => {
+      this.toast.show('Путь скопирован в буффер обмена',
+      {
+        classname: 'bg-success text-light',
+        delay: 3000,
+        icon: faCopy
+      });
+    })
   }
 
 }

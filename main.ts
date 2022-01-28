@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray, protocol } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
@@ -169,6 +169,9 @@ ipcMain.handle('save-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electro
 ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions) => {
   return dialog.showOpenDialog(opts);
 })
+ipcMain.handle('clipboard', (event: Electron.IpcMainInvokeEvent, str: string) => {
+  clipboard.writeText(str);
+});
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
