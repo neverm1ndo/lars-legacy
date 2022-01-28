@@ -193,12 +193,12 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'success',
       control: 'rconLogTrue'
     },
-    '<time_out/backup/save>': {
+    '<data/time_out/save>': {
       translate: 'Сохраниение состояния',
       type: 'info',
       control: 'toBackupSave'
     },
-    '<time_out/backup/load>': {
+    '<data/time_out/load>': {
       translate: 'Загрузка бэкапа состояния',
       type: 'info',
       control: 'toBackupLoad'
