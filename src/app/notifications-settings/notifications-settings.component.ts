@@ -39,7 +39,7 @@ export class NotificationsSettingsComponent implements OnInit {
 
   testNotification(): void {
     new Notification('Это тестовое оповещение!', {
-      body: 'Это оповещение вызвано кнопокой "Тест оповещений"',
+      body: 'Это оповещение вызвано кнопкой "Тест оповещений"',
       timestamp: Date.now(),
       lang: 'ru-RU',
       silent: !this.sets.silent,
