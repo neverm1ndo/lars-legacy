@@ -161,6 +161,9 @@ ipcMain.on('reload', () => {
 ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });
+ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
+  return dialog.showMessageBox(opts);
+})
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
