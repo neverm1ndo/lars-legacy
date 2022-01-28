@@ -36,12 +36,11 @@ function splashWindow() {
     frame: false,
     show: false,
     webPreferences: {
-      // worldSafeExecuteJavaScript: true,
       contextIsolation: true,
       allowRunningInsecureContent: true
     }
   });
-  splash.setAlwaysOnTop(true);
+  // splash.setAlwaysOnTop(true);
   splash.center();
   splash.setMenu(null);
   splash.loadURL(url.format({
@@ -174,6 +173,9 @@ ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electro
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
   win.webContents.send('update_available');
+});
+autoUpdater.on('checking-for-update', () => {
+  splash.webContents.executeJavaScript(`changeStatus("Проверка наличия обновлений:", 20);`, true);
 });
 autoUpdater.on('update-downloaded', () => {
   win.webContents.send('update_downloaded');
