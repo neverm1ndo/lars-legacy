@@ -273,6 +273,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'info',
       control: 'chatAutoBlock'
     },
+    '<chat/unmute/auto>': {
+      translate: 'Автоматическая разблокировка чата',
+      type: 'info',
+      control: 'chatAutoUnblock'
+    },
     '<chat/report>': {
       translate: 'Жалоба на игрока',
       type: 'report',
