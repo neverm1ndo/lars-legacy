@@ -12,6 +12,7 @@ export let win: BrowserWindow = null;
 /** Init splash window
 * @type {BrowserWindow}
 */
+const lock = app.requestSingleInstanceLock();
 export let splash: BrowserWindow = null;
 
 /** Define launch arguments
@@ -208,36 +209,49 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => {
-    setTimeout(() => splashWindow(), 400);
-    createWindow();
-  });
 
-  // Quit when all windows are closed.
-  app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-      app.quit();
-    }
-  });
+  if (!lock) {
+    app.quit();
+  } else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      // Someone tried to run a second instance, we should focus our window.
+      if (win) {
+        if (win.isMinimized()) win.restore();
+        if (!win.isVisible()) win.show();
+        win.focus();
+      }
+    })
 
-  app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (win === null) {
+    app.on('ready', () => {
+      setTimeout(() => splashWindow(), 400);
       createWindow();
-    }
-  });
-  if (serve) {
-    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-      // On certificate error we disable default behaviour (stop loading the page)
-      // and we then say "it is all fine - true" to the callback
-      event.preventDefault();
-      callback(true);
     });
-  }
 
+    // Quit when all windows are closed.
+    app.on('window-all-closed', () => {
+      // On OS X it is common for applications and their menu bar
+      // to stay active until the user quits explicitly with Cmd + Q
+      if (process.platform !== 'darwin') {
+        app.quit();
+      }
+    });
+
+    app.on('activate', () => {
+      // On OS X it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (win === null) {
+        createWindow();
+      }
+    });
+    if (serve) {
+      app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+        // On certificate error we disable default behaviour (stop loading the page)
+        // and we then say "it is all fine - true" to the callback
+        event.preventDefault();
+        callback(true);
+      });
+    }
+  }
 } catch (e) {
   console.error(e);
   dialog.showErrorBox('Ошибка', e);
