@@ -33,6 +33,7 @@ export interface GeoData {
 export interface ContentData {
   time?: string,
   oid?: number,
+  op?: string,
   message?: string
 }
 export interface LogLine {
@@ -42,7 +43,7 @@ export interface LogLine {
   nickname?: string;
   id: number;
   geo?: GeoData;
-  content?: string | ContentData;
+  content?: ContentData;
   multiplier?: number;
 }
 
