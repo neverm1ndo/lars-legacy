@@ -164,6 +164,12 @@ ipcMain.on('notification', (event, options) => {
 ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
   return dialog.showMessageBox(opts);
 })
+ipcMain.handle('save-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.SaveDialogOptions) => {
+  return dialog.showSaveDialog(opts);
+})
+ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions) => {
+  return dialog.showOpenDialog(opts);
+})
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {

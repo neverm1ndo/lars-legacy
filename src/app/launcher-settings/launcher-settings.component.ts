@@ -61,7 +61,7 @@ export class LauncherSettingsComponent implements OnInit {
   }
 
   setPath() {
-    this.electron.dialog.showOpenDialog({
+    this.electron.ipcRenderer.invoke('open-dialog', {
       title: 'Путь до клиента SAMP',
       defaultPath: this.sets.samp,
       properties: ['openDirectory']

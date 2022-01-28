@@ -129,7 +129,7 @@ export class MapsService {
         { name: 'All Files', extensions: ['*'] }
       ]
     }
-    return from(this.electron.dialog.showSaveDialog(saveDialogOpts))
+    return from(this.electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
     .pipe(filter(res => res.filePath && !res.canceled))
     .pipe(switchMap((res) => from(new Promise((resolve, reject) => {
       this.electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {

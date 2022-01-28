@@ -58,15 +58,17 @@ export class ConfigsService {
       const spl = path.split('/');
       return spl[spl.length - 1];
     })();
-    this.electron.dialog.showSaveDialog(
-      {
-        title: 'Сохранить карту как',
-        buttonLabel: 'Сохранить',
-        defaultPath: filename,
-        filters: [
-          { name: 'All Files', extensions: ['*'] }
-        ]
-      }).then(res => {
+    const dialogOpts: Electron.SaveDialogOptions = {
+      title: 'Сохранить карту как',
+      buttonLabel: 'Сохранить',
+      defaultPath: filename,
+      filters: [
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    }
+
+    this.electron.ipcRenderer.invoke('save-dialog', dialogOpts)
+    .then(res => {
         if (res.filePath && !res.canceled) {
           this.electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token })
         }
@@ -94,7 +96,7 @@ export class ConfigsService {
     this.reloader$.next(null);
   }
 
-  deleteFile(path: string): Promise<any> {
+  async deleteFile(path: string): Promise<any> {
     const dialogOpts = {
         type: 'warning',
         buttons: ['Удалить', 'Отмена'],
