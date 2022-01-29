@@ -48,6 +48,7 @@
   },
   "win": {
     "icon": "dist/assets/icons/favicon.ico",
+    "publisherName": "gta-liberty.ru",
     "target": [
       "nsis"
     ]

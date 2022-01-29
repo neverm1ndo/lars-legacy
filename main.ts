@@ -13,6 +13,8 @@ export let win: BrowserWindow = null;
 * @type {BrowserWindow}
 */
 const lock = app.requestSingleInstanceLock();
+             app.setAppUserModelId('ru.nmnd.lars');
+             // app.setAppUserModelId(process.execPath);
 export let splash: BrowserWindow = null;
 
 /** Define launch arguments
@@ -108,7 +110,7 @@ function createWindow(): BrowserWindow {
           splash.close();
           win.show();
           state.manage(win);
-        }, 2000);
+        }, 500);
       })
   });
 
