@@ -24,8 +24,7 @@ export class NotificationsService {
         silent: !JSON.parse(localStorage.getItem('alerts')).silent,
         timestamp: Date.now(),
         lang: 'ru-RU',
-        icon: 'lars://assets/icons/favicon.ico',
-        image
+        icon: image || 'lars://assets/icons/favicon.ico',
       }
     new Notification(title, options);
   }
