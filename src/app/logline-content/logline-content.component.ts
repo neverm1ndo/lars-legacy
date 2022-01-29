@@ -28,6 +28,7 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   @ViewChild('default') default: TemplateRef<any>;
   @ViewChild('ban') ban: TemplateRef<any>;
   @ViewChild('mute') mute: TemplateRef<any>;
+  @ViewChild('death') death: TemplateRef<any>;
 
   userContent: any;
 
@@ -40,13 +41,16 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isBanned() {
+  isBanned(): boolean {
     const banned = ['disconnectBan', 'disconnectKick']
     return banned.includes(this.type.control);
   }
-  isMuted() {
+  isMuted(): boolean {
     const banned = ['chatHandBlock'];
     return banned.includes(this.type.control);
+  }
+  isDeath(): boolean {
+    return this.type.control === 'dthKilled';
   }
 
   userLink(id: number) {
@@ -60,6 +64,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
     }
     if (this.isMuted()) {
       this.contentTpl = this.ban;
+    }
+    if (this.isDeath()) {
+      this.contentTpl = this.death;
     }
     this.cdr.detectChanges();
   }

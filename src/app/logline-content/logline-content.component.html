@@ -18,7 +18,10 @@
     </div>
   </div>
 </ng-template>
+<ng-template #death>
+  <span><kbd>{{content.op}} <span class="badge badge-dark">{{ content.oid }}</span></kbd> {{ content.message }} </span>
+</ng-template>
 <ng-template #default>
-  <span>{{ content.message }} </span>
+  <span>{{ content.message }}</span>
 </ng-template>
 <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
