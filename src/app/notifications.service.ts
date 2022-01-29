@@ -35,7 +35,7 @@ export class NotificationsService {
       this.ws.getAlertGuardBlockOn()
       .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).autoBlock))
       .subscribe((line) => {
-        this.spawnNotification(`Кикбан ${line.nickname}`, `${new Date(line.unix*1000).toDateString()} ${line.nickname} заблокирован системой по причине ${line.content}`)
+        this.spawnNotification(`Кикбан ${line.nickname}`, `${line.nickname} заблокирован системой по причине ${line.content.message}`)
       }),
     )
     this.notifications.add(
@@ -49,7 +49,7 @@ export class NotificationsService {
       this.ws.getAlertReport()
       .pipe(filter(() => !!JSON.parse(localStorage.getItem('alerts')).playerReport))
       .subscribe((line) => {
-        this.spawnNotification(`Жалоба ${line.nickname}`, `${new Date(line.unix*1000).toDateString()} ${line.content}`)
+        this.spawnNotification(`Жалоба ${line.nickname}`, `${line.content.message}`)
       })
     )
     this.notifications.add(
