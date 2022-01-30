@@ -153,7 +153,6 @@ export class ApiService {
   }
 
   refresh(): void {
-    this.currentPage = 0;
     this.reloader$.next(null);
   }
 }

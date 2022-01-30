@@ -86,6 +86,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   sync(): void {
+    this.api.currentPage = 0;
     this.syncronize.emit(true);
   }
 
