@@ -20,6 +20,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent, TopperComponent, AutofocusDirective, StatusPipe],
@@ -34,7 +35,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FontAwesomeModule,
     LibertyIconsModule,
     BrowserAnimationsModule,
-    LoginModule
+    LoginModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
