@@ -193,12 +193,12 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'success',
       control: 'rconLogTrue'
     },
-    '<time_out/backup/save>': {
+    '<data/time_out/save>': {
       translate: 'Сохраниение состояния',
       type: 'info',
       control: 'toBackupSave'
     },
-    '<time_out/backup/load>': {
+    '<data/time_out/load>': {
       translate: 'Загрузка бэкапа состояния',
       type: 'info',
       control: 'toBackupLoad'
@@ -243,6 +243,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'warning',
       control: 'chatBlockNin'
     },
+    '<chat/block/no_group>': {
+      translate: 'Блокировка чата: не в группе',
+      type: 'warning',
+      control: 'chatBlockNinGr'
+    },
     '<chat/block/repeated>': {
       translate: 'Блокировка чата: повторение',
       type: 'warning',
@@ -268,6 +273,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'info',
       control: 'chatAutoBlock'
     },
+    '<chat/unmute/auto>': {
+      translate: 'Автоматическая разблокировка чата',
+      type: 'info',
+      control: 'chatAutoUnblock'
+    },
     '<chat/report>': {
       translate: 'Жалоба на игрока',
       type: 'report',
@@ -292,6 +302,21 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Проверка взрывом',
       type: 'adm',
       control: 'checkExpl'
+    },
+    '<check/explosion/vehicle>': {
+      translate: 'Проверка взрывом транспорта',
+      type: 'adm',
+      control: 'checkExplVeh'
+    },
+    '<check/health/player>': {
+      translate: 'Проверка GM',
+      type: 'adm',
+      control: 'checkHp'
+    },
+    '<check/health/vehicle>': {
+      translate: 'Проверка GM транспорта',
+      type: 'adm',
+      control: 'checkHpVeh'
     },
     '<check/scroll/false>': {
       translate: 'Проверка автоскролла: FALSE',
@@ -352,6 +377,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Cмерть от игрока',
       type: 'death',
       control: 'dthKilled'
+    },
+    '<death/suicide>': {
+      translate: 'Суицид',
+      type: 'death',
+      control: 'dthSuicide'
     },
     '<death_match/leave>': {
       translate: 'Выход из DM',
@@ -462,6 +492,56 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Ручная разблокировка CN',
       type: 'info',
       control: 'unbanCnHand'
+    },
+    '<warn/vehicle/repair>': {
+      translate: 'ACHEAT WARN:VEHICLE_REPAIR',
+      type: 'acheat',
+      control: 'warnVehRepair'
+    },
+    '<warn/player/speed>': {
+      translate: 'ACHEAT WARN: PLAYER_SPEED',
+      type: 'acheat',
+      control: 'warnPlayerSpd'
+    },
+    '<warn/player/teleport>': {
+      translate: 'ACHEAT WARN: PLAYER_TELEPORT',
+      type: 'acheat',
+      control: 'warnPlayerTp'
+    },
+    '<warn/player/health>': {
+      translate: 'ACHEAT WARN: PLAYER_HEALTH',
+      type: 'acheat',
+      control: 'warnPlayerHp'
+    },
+    '<warn/player/armour>': {
+      translate: 'ACHEAT WARN: PLAYER_ARMOUR',
+      type: 'acheat',
+      control: 'warnPlayerArm'
+    },
+    '<warn/player/weapon>': {
+      translate: 'ACHEAT WARN: PLAYER_WEAPON',
+      type: 'acheat',
+      control: 'warnPlayerWeap'
+    },
+    '<warn/player/ammo>': {
+      translate: 'ACHEAT WARN: PLAYER_AMMO',
+      type: 'acheat',
+      control: 'warnPlayerAmmo'
+    },
+    '<warn/player/airbreak>': {
+      translate: 'ACHEAT WARN: AIRBREAK',
+      type: 'acheat',
+      control: 'warnPlayerAirBk'
+    },
+    '<warn/player/speedhack>': {
+      translate: 'ACHEAT WARN: SPEEDHACK',
+      type: 'acheat',
+      control: 'warnPlayerSh'
+    },
+    '<warn/player/unsync>': {
+      translate: 'ACHEAT WARN: UNSYNC',
+      type: 'acheat',
+      control: 'warnPlayerUnSync'
     },
 }
 

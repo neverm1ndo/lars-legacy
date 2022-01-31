@@ -9,6 +9,9 @@ p, a, span, button, div {
   background: #09090918;
   border-bottom: 1px solid $secondary;
 }
+.list {
+  flex: 1 1 70%;
+}
 .history {
   background: $secondary;
   &-head {
@@ -29,10 +32,10 @@ p, a, span, button, div {
   }
 }
 .elapse {
-  // width: 33%;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 .binds {
   margin-bottom: 5px;
@@ -78,9 +81,10 @@ p, a, span, button, div {
 }
 .viewer {
   // min-height: 200px;
-  flex: 0 0 30%;
+  flex: 1 1 30%;
   &-code {
     background: $filetree;
+    overflow: hidden;
     pre {
       color: $text-secondary;
       padding: 10px;
@@ -91,6 +95,7 @@ p, a, span, button, div {
   &-hide {
     width: 45px;
     margin-right: 10px;
+    flex: 1 1 45px;
     svg {
       width: 20px;
       transform: rotate(-90deg);
@@ -99,8 +104,16 @@ p, a, span, button, div {
   &-head {
     background: $underpanel;
     padding: 5px 15px 5px 10px;
+    &-elapse {
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
     span {
       font-family: 'Consolas';
+      white-space: nowrap;
+      overflow: hidden;
     }
     i {
       width: 8px;

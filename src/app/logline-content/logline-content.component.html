@@ -1,9 +1,27 @@
-<div *ngIf="controltype() && user; else default" class="user w-100 bg-shade-{{type.type}}">
-  <img src="{{user.avatar}}"/>
-  <a (click)="userLink(user.id)">{{ user.name }}</a>
-  <span class="badge badge-dark">{{user.id}}</span>
-  <small>{{userService.getUserGroupName(user.group)}}</small>
-</div>
-<ng-template #default>
-  <span>{{content}} </span>
+
+<ng-template #auth>
+  <div class="user w-100 bg-shade-{{ type.type }}">
+    <img src="{{ userContent.avatar }}"/>
+    <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
+    <span class="badge badge-dark">{{ userContent.id}}</span>
+    <small>{{ userContent.group | role }}</small>
+  </div>
 </ng-template>
+<ng-template #ban>
+  <div class="bancard w-100 bg-{{type.type}}">
+    <div class="bancard-head">
+      <small>Выдан администратором <u>{{ content.op }}</u> </small><span class="badge badge-dark ml-1">{{ content.oid }}</span><br>
+    </div>
+    <div class="bancard-body">
+      <small>{{ content.time }} {{ content.message }}</small><br>
+      <small>{{ content.message | rules }} </small>
+    </div>
+  </div>
+</ng-template>
+<ng-template #death>
+  <span><kbd>{{content.op}} <span class="badge badge-dark">{{ content.oid }}</span></kbd> {{ content.message }} </span>
+</ng-template>
+<ng-template #default>
+  <span>{{ content.message }}</span>
+</ng-template>
+<ng-container *ngTemplateOutlet="contentTpl"></ng-container>

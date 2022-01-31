@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,8 @@ import { Subscription } from 'rxjs'
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
@@ -85,6 +86,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   sync(): void {
+    this.api.currentPage = 0;
     this.syncronize.emit(true);
   }
 

@@ -58,15 +58,17 @@ export class ConfigsService {
       const spl = path.split('/');
       return spl[spl.length - 1];
     })();
-    this.electron.dialog.showSaveDialog(
-      {
-        title: 'Сохранить карту как',
-        buttonLabel: 'Сохранить',
-        defaultPath: filename,
-        filters: [
-          { name: 'All Files', extensions: ['*'] }
-        ]
-      }).then(res => {
+    const dialogOpts: Electron.SaveDialogOptions = {
+      title: 'Сохранить карту как',
+      buttonLabel: 'Сохранить',
+      defaultPath: filename,
+      filters: [
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    }
+
+    this.electron.ipcRenderer.invoke('save-dialog', dialogOpts)
+    .then(res => {
         if (res.filePath && !res.canceled) {
           this.electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token })
         }
@@ -94,14 +96,14 @@ export class ConfigsService {
     this.reloader$.next(null);
   }
 
-  deleteFile(path: string): Promise<any> {
+  async deleteFile(path: string): Promise<any> {
     const dialogOpts = {
         type: 'warning',
         buttons: ['Удалить', 'Отмена'],
         title: `Подтверждение удаления`,
         message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
       }
-    return this.electron.dialog.showMessageBox(dialogOpts).then(
+    return this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
       val => {
         if (val.response === 0) {
            this.api.deleteMap(path).subscribe(() => {});
@@ -120,13 +122,14 @@ export class ConfigsService {
   }
 
   pathToClipboard(path: string): void {
-    this.electron.clipboard.writeText(path);
-    this.toast.show('Путь скопирован в буффер обмена',
-    {
-      classname: 'bg-success text-light',
-      delay: 3000,
-      icon: faCopy
-    });
+    this.electron.ipcRenderer.invoke('clipboard', path).then(() => {
+      this.toast.show('Путь скопирован в буффер обмена',
+      {
+        classname: 'bg-success text-light',
+        delay: 3000,
+        icon: faCopy
+      });
+    })
   }
 
 }

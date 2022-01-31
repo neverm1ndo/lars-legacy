@@ -126,8 +126,7 @@ export class UserService {
         title: 'Подтверждение выхода',
         message: 'Вы точно хотите выйти с аккаунта?'
       }
-    return this.electron.dialog.showMessageBox(dialogOpts)
-    .then((returnValue) => {
+    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) {
         this.user.next(undefined);
         localStorage.removeItem('user');

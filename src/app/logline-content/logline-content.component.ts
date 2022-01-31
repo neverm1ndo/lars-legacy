@@ -1,24 +1,36 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
 import { Process } from '../line-process/log-processes';
+import { ContentData } from '../interfaces';
+import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'logline-content',
   templateUrl: './logline-content.component.html',
-  styleUrls: ['./logline-content.component.scss']
+  styleUrls: ['./logline-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoglineContentComponent implements OnInit {
+export class LoglineContentComponent implements OnInit, AfterViewInit {
 
   constructor(
-    private idbService: NgxIndexedDBService,
-    public userService: UserService
+    private idb: NgxIndexedDBService,
+    private user: UserService,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  @Input('content') content: string;
+  @Input('content') content: ContentData;
   @Input('type') type: Process;
 
-  user: any;
+  contentTpl: TemplateRef<any>;
+
+  @ViewChild('auth') auth: TemplateRef<any>;
+  @ViewChild('default') default: TemplateRef<any>;
+  @ViewChild('ban') ban: TemplateRef<any>;
+  @ViewChild('mute') mute: TemplateRef<any>;
+  @ViewChild('death') death: TemplateRef<any>;
+
+  userContent: any;
 
   controltype():boolean {
     switch (this.type.control) {
@@ -29,25 +41,66 @@ export class LoglineContentComponent implements OnInit {
     }
   }
 
+  isBanned(): boolean {
+    const banned = ['disconnectBan', 'disconnectKick']
+    return banned.includes(this.type.control);
+  }
+  isMuted(): boolean {
+    const banned = ['chatHandBlock'];
+    return banned.includes(this.type.control);
+  }
+  isDeath(): boolean {
+    return this.type.control === 'dthKilled';
+  }
+
   userLink(id: number) {
-    this.userService.openUserProfile(id);
+    this.user.openUserProfile(id);
+  }
+
+  ngAfterViewInit(): void {
+    this.contentTpl = this.default;
+    if (this.isBanned()) {
+      this.contentTpl = this.ban;
+    }
+    if (this.isMuted()) {
+      this.contentTpl = this.ban;
+    }
+    if (this.isDeath()) {
+      this.contentTpl = this.death;
+    }
+    this.cdr.detectChanges();
   }
 
   ngOnInit(): void {
     if (this.controltype()) {
-      const idbUserSub = this.idbService.getByIndex('user', 'name', this.content).subscribe((user) => {
-        if (!user) {
-          const getusrsub = this.userService.getUser(this.content).subscribe((user) => {
-            this.user = user;
-            this.idbService.add('user', { name: user.name, avatar: user.avatar, id: user.id, group: user.gr })
-            getusrsub.unsubscribe();
-          });
-        } else {
-          this.user = user;
-        }
-        idbUserSub.unsubscribe();
+      this.idb.getByIndex('user', 'name', this.content.message)
+        .pipe(take(1))
+        .pipe(tap((user) => {
+          if (user) {
+            this.userContent = user;
+            this.contentTpl = this.auth;
+            this.cdr.detectChanges();
+          }
+          return user;
+        }))
+        .pipe(filter((user) => !user))
+        .pipe(switchMap(() => this.user.getUser(this.content.message)
+        .pipe(map((user) => {
+          return {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+            group: user.gr
+          }
+        }))
+        .pipe(switchMap((user) => this.idb.add('user', user)))
+      ))
+      .subscribe((user) => {
+        this.userContent = user;
+        this.contentTpl = this.auth;
+        this.cdr.detectChanges();
       });
+      return;
     }
   }
-
 }

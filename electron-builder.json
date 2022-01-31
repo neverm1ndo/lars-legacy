@@ -6,25 +6,30 @@
     "provider": "github",
     "owner": "neverm1ndo",
   },
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "release/"
   },
-  "extraResources": [
-    {
-      "from": "dist",
-      "to": "app",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
   "files": [
     "**/*",
     "!**/*.ts",
-    "!*.map",
+    "!*.code-workspace",
+    "!LICENSE.md",
     "!package.json",
-    "!package-lock.json"
+    "!package-lock.json",
+    "!src/",
+    "!e2e/",
+    "!hooks/",
+    "!angular.json",
+    "!_config.yml",
+    "!karma.conf.js",
+    "!tsconfig.json",
+    "!tslint.json",
+    "!*.map",
+    "!coverage",
+    "!deployer",
+    "!.vscode",
+    "!.angular"
   ],
   "nsis": {
     "installerIcon": "dist/assets/icons/favicon.ico",
@@ -43,6 +48,7 @@
   },
   "win": {
     "icon": "dist/assets/icons/favicon.ico",
+    "publisherName": "gta-liberty.ru",
     "target": [
       "nsis"
     ]

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import Processes, { Process } from './log-processes';
+import { ContentData } from '../interfaces';
 
 @Component({
   selector: 'line-process',
@@ -10,7 +11,7 @@ import Processes, { Process } from './log-processes';
 export class LineProcessComponent implements OnInit {
 
   @Input('process') process: string;
-  @Input('content') content: string;
+  @Input('content') content: ContentData;
   type: Process;
 
   constructor(

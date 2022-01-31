@@ -43,17 +43,22 @@
   lty-icon {
     width: 32px;
     height: 32px;
+    position: relative;
     margin-top: 3px;
     margin-left: 16px;
-    position: relative;
     top: 0px;
     .lty-icon {
       stroke-width: 5px;
     }
   }
+  .logo-img {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    margin-left: 24px;
+  }
   .label {
     position: relative;
-    top: 1px;
     left: 25px;
     font-size: 12px;
     opacity: 0.7;

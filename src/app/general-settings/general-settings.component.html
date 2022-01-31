@@ -57,24 +57,24 @@
               <span class="line-id">id: 42</span>
             </div>
             <div class="col-lg-6 col-8">
-              <line-process content="JohnnyTheDog"  process="<auth/correct/admin>"></line-process>
+              <line-process [content]="{ message: 'JohnnyTheDog' }"  process="<auth/correct/admin>"></line-process>
               <geo [table]="sampleGeo"></geo>
             </div>
           </div>
         </div>
         <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
           <div class="row">
-            <div class="col-3">
+            <div class="col-2">
               <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
             </div>
-            <div class="col-5">
+            <div class="col-5 col-lg-4">
               <simple-line-process process="<auth/correct/admin>"></simple-line-process>
             </div>
-            <div class="col-2">
+            <div class="col-2 col-lg-2">
               <strong>John_Doe</strong><span> (42)</span>
             </div>
-            <div class="col-2">
-              JohnnyTheDog
+            <div class="col-3 col-lg-4">
+              <logline-content [content]="{ message: 'JohnnyTheDog' }" [type]="{ type: 'success', control: 'authCorrectUsr', translate: ''}"></logline-content>
             </div>
             <div class="col-12">
               <geo [table]="sampleGeo" tab-style="inline"></geo>
@@ -115,7 +115,7 @@
               <span class="line-id">id: 42</span>
             </div>
             <div class="col-lg-6 col-8">
-              <line-process content="31 1010"  process="<dev/weapon>"></line-process>
+              <line-process [content]="{ message: '31 1010'}"  process="<dev/weapon>"></line-process>
             </div>
           </div>
         </div>

@@ -54,7 +54,7 @@ export class MapsService {
         title: `Подтверждение отмены изменений`,
         message: `Есть несохраненные изменения в файле ${path}. Отменить все изменения?`
       }
-    return this.electron.dialog.showMessageBox(dialogOpts)
+    return this.electron.ipcRenderer.invoke('message-box', dialogOpts)
     .then( val => {
       if (val.response === 0) return Promise.resolve()
       return Promise.reject();
@@ -93,7 +93,7 @@ export class MapsService {
         title: `Подтверждение удаления`,
         message: `Вы точно хотите удалить карту ${path}? После подтверждения она будет безвозвратно удалена с сервера.`
       }
-    return from(this.electron.dialog.showMessageBox(dialogOpts))
+    return from(this.electron.ipcRenderer.invoke('message-box', dialogOpts))
     .pipe(filter(val => val.response === 0))
     .pipe(switchMap(() => this.api.deleteMap(path)))
     .pipe(take(1))
@@ -107,7 +107,7 @@ export class MapsService {
         title: `Подтверждение сохранения на сервере`,
         message: `Вы точно хотите сохранить карту ${path}? После подтверждения она будет перезаписана на сервере.`
       }
-      return from(this.electron.dialog.showMessageBox(dialogOpts))
+      return from(this.electron.ipcRenderer.invoke('message-box', dialogOpts))
       .pipe(filter(val => val.response === 0))
       .pipe(map(() => {
         const form = new FormData();
@@ -129,7 +129,7 @@ export class MapsService {
         { name: 'All Files', extensions: ['*'] }
       ]
     }
-    return from(this.electron.dialog.showSaveDialog(saveDialogOpts))
+    return from(this.electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
     .pipe(filter(res => res.filePath && !res.canceled))
     .pipe(switchMap((res) => from(new Promise((resolve, reject) => {
       this.electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {

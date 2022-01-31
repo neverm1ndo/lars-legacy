@@ -14,6 +14,9 @@ app/**/*.js
 *.log
 *.exe
 
+# angular cache
+/.angular
+
 # exclude codemirror addons
 !src/addon/**/*.js
 
@@ -21,8 +24,7 @@ app/**/*.js
 electron-builder.nsis.json
 
 # frontend deployer
-frontend.deployer.ts
-frontend.deploy.env
+/deployer
 
 # dependencies
 /node_modules

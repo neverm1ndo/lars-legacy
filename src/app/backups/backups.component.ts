@@ -189,7 +189,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
         title: `Подтверждение установки бэкапа`,
         message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
       }
-    this.electron.dialog.showMessageBox(dialogOpts).then(
+    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
       val => {
         if (val.response === 0) {
           const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)

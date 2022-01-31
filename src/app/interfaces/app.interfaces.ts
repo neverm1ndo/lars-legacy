@@ -30,6 +30,12 @@ export interface GeoData {
   org?: string;
   c?: string;
 }
+export interface ContentData {
+  time?: string,
+  oid?: number,
+  op?: string,
+  message?: string
+}
 export interface LogLine {
   unix: number;
   date: string;
@@ -37,7 +43,8 @@ export interface LogLine {
   nickname?: string;
   id: number;
   geo?: GeoData;
-  content?: string;
+  content?: ContentData;
+  multiplier?: number;
 }
 
 export interface SearchQuery {
