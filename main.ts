@@ -4,17 +4,30 @@ import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
+import Samp from './samp';
+import { Subscription, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+
+/** Init samp to get server stats later
+* @type {Samp}
+*/
+const samp: Samp = new Samp(20000);
+const $serverInfo: Subscription = new Subscription();
 
 /** Init main window
 * @type {BrowserWindow}
 */
 export let win: BrowserWindow = null;
-/** Init splash window
-* @type {BrowserWindow}
+/** Prevents second instnce creating
+* @type {boolean}
 */
-const lock = app.requestSingleInstanceLock();
+const lock: boolean = app.requestSingleInstanceLock();
              app.setAppUserModelId('ru.nmnd.lars');
              // app.setAppUserModelId(process.execPath);
+ /** Init splash window
+ * @type {BrowserWindow}
+ */
 export let splash: BrowserWindow = null;
 
 /** Define launch arguments
@@ -96,6 +109,15 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     verifyUserToken().then(() => {
         splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
+        // subscribeToServerInfo(win);
+        samp.getServerInfo('185.104.113.34', 7777)
+        .pipe(catchError((err: Error) => throwError(err)))
+        .subscribe((info) => {
+          // console.log("server-info", info);
+          win.webContents.send('server-info', info);
+        }, (err: Error) => {
+          console.error("serve-info-err", err);
+        });
       })
       .catch((err)=> {
         win.webContents.send('token-verify-denied', true);
@@ -136,6 +158,7 @@ function createWindow(): BrowserWindow {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
+    $serverInfo.unsubscribe();
     app.quit();
   });
 
@@ -150,6 +173,7 @@ ipcMain.on('minimize-to-tray', (event) => {
   event.preventDefault();
   win.hide();
   tray = createTray();
+  $serverInfo.unsubscribe();
 })
 ipcMain.on('close', () => {
   win.close();
