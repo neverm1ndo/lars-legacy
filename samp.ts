@@ -1,4 +1,6 @@
 import * as dgram from 'dgram';
+import { Observable, Subscriber, timer, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 interface ServerGameMode {
   name: string;
@@ -9,12 +11,10 @@ interface ServerGameMode {
     max: number;
   },
   private: boolean;
+  rules?: ServerRule[];
 }
-interface ServerProp {
-  [property: string]: string
-}
-interface ServerPlayer {
-
+interface ServerRule {
+  [rule: string]: string
 }
 
 class Samp {
@@ -23,14 +23,14 @@ class Samp {
       this.debounce = debounce;
     }
 
-    async getServerInfo(ip: string, port: number) {
-        return await Promise.all(
-            ["i", "r", "d"].map(async (res) => await this.request(ip, port, res))
-        );
+    getServerInfo(ip: string, port: number): Observable<ServerGameMode> {
+      return timer(3000, this.debounce)
+      .pipe(mergeMap(() => of('i')))
+      .pipe(mergeMap((opcode: 'i') => this.request(ip, port, opcode)));
     }
 
-    request(ip: string, port: number, opcode: string): Promise<ServerGameMode | ServerProp[] | ServerPlayer[]> {
-        return new Promise((resolve, reject) => {
+    request(ip: string, port: number, opcode: string): Observable<ServerGameMode> {
+        return new Observable((sub: Subscriber<ServerGameMode>) => {
             const socket = dgram.createSocket("udp4");
             let packet: Buffer = Buffer.alloc(10 + opcode.length);
 
@@ -43,65 +43,73 @@ class Samp {
             packet[9] = port >> 8 & 0xFF;
             packet[10] = opcode.charCodeAt(0);
 
-            socket.send(packet, 0, packet.length, port, ip, (err: Error) => {
-              reject(err);
-            });
+            try {
+              socket.send(packet, 0, packet.length, port, ip);
+            } catch (err) {
+              console.error(err);
+              sub.error(err);
+            }
 
             let controller: NodeJS.Timeout = setTimeout(() => {
                 socket.close();
-                reject(new Error(`Server ${ip}:${port} is unavalible`));
-            }, this.debounce);
+                console.error(new Error(`Server ${ip}:${port} is unavalible`))
+                sub.error(new Error(`Server ${ip}:${port} is unavalible`));
+            }, 3000);
 
             socket.on('message', (message: Buffer) => {
                 if (controller) clearTimeout(controller);
                 if (message.length < 11) {
-                    reject(`[error] invalid socket on message - ${message}`)
+                    sub.error(new Error(`Invalid socket on message: ${message} > ${message.toString()}`));
                 }
                 else {
                     socket.close();
                     message = message.slice(11);
-                    let offset = 0;
+                    let offset: number = 0;
                     if (opcode === 'i') {
                         const gameModeInfo: ServerGameMode = {
-                          name: String(message.slice(offset += 4, offset += message.readUInt16LE(offset += 2))),
-                          mode: String(message.slice(offset += 4, offset += message.readUInt16LE(offset))),
-                          lang: String(message.slice(offset += 4, offset += message.readUInt16LE(offset))),
+                          private: !!message.readUInt8(offset),
                           players: {
                             online: message.readUInt16LE(offset += 1),
                             max:  message.readUInt16LE(offset += 2),
                           },
-                          private: !!message.readUInt8(offset)
+                          name: ((): string => {
+                            const name = message.readUInt16LE(offset += 2);
+                            return String(message.slice(offset += 4, offset += name));
+                          })(),
+                          mode: String(message.slice(offset += 4, offset += message.readUInt16LE(offset - 4))),
+                          lang: String(message.slice(offset += 4, offset += message.readUInt16LE(offset - 4))),
                         }
-
-                        resolve(gameModeInfo);
+                        sub.next(gameModeInfo);
+                        sub.complete();
                     }
-                    else if (opcode === 'r') {
-                        offset += 2;
-
-                        const object: ServerProp[] = [
-                          ...new Array(message.readUInt16LE(offset - 2)).fill({})
-                        ].map(() => {
-                            const property = String(message.slice(++offset, offset += message.readUInt8(offset)));
-                            const propertyvalue = String(message.slice(++offset, offset += message.readUInt8(offset)));
-                            return { [property]: propertyvalue }
-                        })
-                        resolve(object);
-                    }
-                    else if (opcode === 'd') {
-                        offset += 2;
-                        const object: ServerPlayer[] = [
-                            ...new Array(Math.floor(message.readUInt16LE(offset - 2)))
-                                .fill({})
-                        ].map(() => {
-                            const id = message.readUInt8(offset);
-                            const name = String(message.slice(++offset, offset += message.readUInt8(++offset)));
-                            const score = message.readUInt16LE(offset);
-                            const ping = message.readUInt16LE(offset += 4);
-                            offset += 4;
-                            return { id, name, score, ping };
-                        });
-                        resolve(object);
-                    }
+                    // else if (opcode === 'r') {
+                    //     offset += 2;
+                    //     const object: ServerRule[] = [
+                    //       ...new Array(message.readUInt16LE(offset - 2)).fill({})
+                    //     ].map(() => {
+                    //         const propmsg: number = message.readUInt8(offset);
+                    //         const rule: string = String(message.slice(++offset, offset += propmsg));
+                    //         const propValmsg: number = message.readUInt8(offset);
+                    //         const ruleValue: string = String(message.slice(++offset, offset += propValmsg));
+                    //         return { [rule]: ruleValue };
+                    //     })
+                    //     sub.next(object);
+                    // }
+                    // else if (opcode === 'd') {
+                    //     offset += 2;
+                    //     const object: ServerPlayer[] = [
+                    //         ...new Array(Math.floor(message.readUInt16LE(offset - 2)))
+                    //             .fill({})
+                    //     ].map(() => {
+                    //         const id: number = message.readUInt8(offset);
+                    //         const name: string = String(message.slice(++offset, offset += message.readUInt8(++offset - 1)));
+                    //         const score: number = message.readUInt16LE(offset);
+                    //         const ping: number = message.readUInt16LE(offset += 4);
+                    //         offset += 4;
+                    //         return { id, name, score, ping };
+                    //     });
+                    //     resolve(object);
+                    // }
                 }
             });
         })
