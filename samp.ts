@@ -24,9 +24,7 @@ class Samp {
     }
 
     getServerInfo(ip: string, port: number): Observable<ServerGameMode> {
-      return timer(3000, this.debounce)
-      .pipe(mergeMap(() => of('i')))
-      .pipe(mergeMap((opcode: 'i') => this.request(ip, port, opcode)));
+      return of('i').pipe(mergeMap((opcode: 'i') => this.request(ip, port, opcode)));
     }
 
     request(ip: string, port: number, opcode: string): Observable<ServerGameMode> {
@@ -82,34 +80,6 @@ class Samp {
                         sub.next(gameModeInfo);
                         sub.complete();
                     }
-                    // else if (opcode === 'r') {
-                    //     offset += 2;
-                    //     const object: ServerRule[] = [
-                    //       ...new Array(message.readUInt16LE(offset - 2)).fill({})
-                    //     ].map(() => {
-                    //         const propmsg: number = message.readUInt8(offset);
-                    //         const rule: string = String(message.slice(++offset, offset += propmsg));
-                    //         const propValmsg: number = message.readUInt8(offset);
-                    //         const ruleValue: string = String(message.slice(++offset, offset += propValmsg));
-                    //         return { [rule]: ruleValue };
-                    //     })
-                    //     sub.next(object);
-                    // }
-                    // else if (opcode === 'd') {
-                    //     offset += 2;
-                    //     const object: ServerPlayer[] = [
-                    //         ...new Array(Math.floor(message.readUInt16LE(offset - 2)))
-                    //             .fill({})
-                    //     ].map(() => {
-                    //         const id: number = message.readUInt8(offset);
-                    //         const name: string = String(message.slice(++offset, offset += message.readUInt8(++offset - 1)));
-                    //         const score: number = message.readUInt16LE(offset);
-                    //         const ping: number = message.readUInt16LE(offset += 4);
-                    //         offset += 4;
-                    //         return { id, name, score, ping };
-                    //     });
-                    //     resolve(object);
-                    // }
                 }
             });
         })
