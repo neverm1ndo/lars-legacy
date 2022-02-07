@@ -28,6 +28,8 @@ export class ApiService {
   readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
   readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
   readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
+  readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
+  readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -114,6 +116,12 @@ export class ApiService {
   restoreBackup(path: string, unix: string): Observable<any> {
     return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } })
   }
+  getStatsOnline(): Observable<any> {
+    return this.http.get(this.URL_STATS_ONLINE);
+  }
+  getStatsChat(): Observable<any> {
+    return this.http.get(this.URL_STATS_CHAT);
+  }
 
   lazyUpdate(page: number): void {
     if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
@@ -122,8 +130,20 @@ export class ApiService {
       this.refresh();
     }
   }
-  search(query: any, page: string, lim: string, filter?: string[]): Observable<any> {
-    return this.http.get(this.URL_SEARCH, { params: { search: query , page, lim, filter: filter?filter.join(','):''}});
+  search(query: any, page: string, lim: string, filter?: string[], date?: { from?: string, to?: string}): Observable<any> {
+    console.log(date);
+    let params: HttpParams = new HttpParams()
+    .appendAll({
+      search: query,
+      page,
+      lim,
+      filter: filter?filter.join(','):'',
+    });
+    if (date) {
+      if (date.from) params = params.append('dateFrom', date.from);
+      if (date.to) params = params.append('dateTo', date.to);
+    }
+    return this.http.get(this.URL_SEARCH, { params });
   }
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
     let last = JSON.parse(window.localStorage.getItem('last'));

@@ -1,0 +1,21 @@
+@import "colors";
+h1, h2, h3, h4, h5, h6 {
+  font-weight: lighter;
+}
+.top {
+  background: $secondary;
+}
+.panel {
+  &-body {
+    background: $underpanel;
+    border-radius: .3rem;
+    padding: 1.5rem;
+  }
+  &-list {
+    &-item {
+      font-size: 12px;
+      line-height: 30px;
+      border-bottom: 1px solid #dfdfdf30;
+    }
+  }
+}
