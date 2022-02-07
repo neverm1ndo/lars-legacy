@@ -2,7 +2,31 @@
 @import '_native';
 @import "animations";
 
+@include rolltoleft();
 :host {
+  .dropdown {
+    &-menu {
+      &-helper {
+        overflow: hidden;
+        position: absolute;
+        width: 300px;
+        height: 100%;
+        background: inherit;
+        border-right: 1px solid #0000000f;
+        float: left;
+        top: 0;
+        left: calc(-100% - 133px);
+        color: $text;
+        padding: 15px;
+        animation-name: rolltoleft;
+        animation-iteration-count: 1;
+        animation-delay: 0s;
+        z-index: -1;
+        animation-duration: .3s;
+        white-space: nowrap;
+      }
+    }
+  }
   .status {
     pointer-events: none;
     .led {

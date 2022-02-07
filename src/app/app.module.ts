@@ -20,10 +20,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { ServerStatGraphComponent } from './server-stat-graph/server-stat-graph.component';
 import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
-  declarations: [AppComponent, TopperComponent, AutofocusDirective, StatusPipe],
+  declarations: [AppComponent, TopperComponent, AutofocusDirective, StatusPipe, ServerStatGraphComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

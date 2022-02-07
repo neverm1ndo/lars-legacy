@@ -39,6 +39,9 @@
             <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
             <div class="dropdown-divider"></div>
             <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
+            <div class="dropdown-menu-helper">
+              <server-stat-graph></server-stat-graph>
+            </div>
           </div>
         </div>
       </div>

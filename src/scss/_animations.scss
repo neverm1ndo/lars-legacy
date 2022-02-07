@@ -25,6 +25,12 @@
   	}
   }
 }
+@mixin rolltoleft() {
+  @keyframes rolltoleft {
+    from { transform: translateX(300px); width: 0px;}
+    to { transform: translateX(0%); width: 300px;}
+  }
+}
 @mixin open {
   @keyframes open {
     0% {  visibility: hidden; opacity: 0; transform: translate(0px, 20%);}
