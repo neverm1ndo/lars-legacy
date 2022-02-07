@@ -101,6 +101,9 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     .subscribe((lines: LogLine[]) => {
       this.loading = false;
       this.api.lazy = false;
+      if (this.chunks.length > 5) {
+        this.chunks.shift();
+      }
       this.chunks.push(...[lines]);
       this.lines += lines.length;
     }));

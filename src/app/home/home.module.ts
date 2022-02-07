@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SocketIoModule } from 'ngx-socket-io';
+import { NgChartsModule } from 'ng2-charts';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -56,6 +57,7 @@ import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 import { MapComponent } from '../map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { RulesPipe } from '../pipes/rules.pipe';
 import { RolePipe } from '../pipes/role.pipe';
@@ -76,7 +78,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -90,7 +92,8 @@ const dbConfig: DBConfig  = {
     FontAwesomeModule,
     NgxIndexedDBModule.forRoot(dbConfig),
     SocketIoModule.forRoot(socketConfig),
-    NgSelectModule
+    NgSelectModule,
+    NgChartsModule,
   ],
   providers: [
     AuthGuard,
