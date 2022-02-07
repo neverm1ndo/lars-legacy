@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { ApiService } from '../api.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-statistics',
@@ -9,31 +11,22 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 export class StatisticsComponent implements OnInit {
 
-    today: Date = new Date();
+  today: Date = new Date();
+  stats: any = {};
+  statTypes = ['Год', 'Месяц', 'Неделя', 'День'];
+  range: any = '';
+
+  changeStatsRange() {}
 
   public lineChartData: ChartConfiguration['data'] = {
-    datasets: [
-      {
-        data: [ 15, 29, 30, 41, 56, 15, 10 ],
-        label: 'Зарегистрированные',
-        borderColor: '#28a745',
-        backgroundColor: '#28a745',
-        fill: 'origin',
-      },
-      {
-        data: [ 65, 59, 80, 81, 56, 55, 40 ],
-        label: 'Общий',
-        backgroundColor: '#fd7e14',
-        borderColor: '#fd7e14',
-        fill: 'origin',
-      },
-    ],
-  }
+    datasets: [],
+    labels: []
+  };
 
   public lineChartOptions: ChartConfiguration['options'] = {
    elements: {
      line: {
-       tension: 0.5
+       tension: 0.3
      },
      point: {
        radius: 3
@@ -41,26 +34,55 @@ export class StatisticsComponent implements OnInit {
    },
    scales: {
      x: {
-       type: 'time',
-       time: {
-         // Luxon format string
-         tooltipFormat: 'DD T'
-       },
-       // ticks: { color: '#ffffff90' },
+       ticks: {
+         color: '#ffffff90',
+       }
      },
      y: {
-         ticks: { color: '#ffffff90' },
+         ticks: {
+           color: '#ffffff90',
+           stepSize: 1,
+           callback: function (value) { if (Number.isInteger(value)) { return value; } },
+         },
          position: 'left',
        },
    },
  };
  public lineChartType: ChartType = 'line';
 
-  constructor() {
+  constructor(private api: ApiService) {
     console.log(this.lineChartData.labels);
   }
 
+  formLabel(date: Date): string {
+    function convert(str: number): string {
+      const pad = '00';
+      return pad.substring(0, pad.length - str.toString().length) + str.toString();
+    }
+    const unformatted: {[prop: string]: number } = {
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds(),
+    };
+    return `${convert(unformatted.hours)}:${convert(unformatted.minutes)}:${convert(unformatted.seconds)}`
+  }
+
   ngOnInit(): void {
+    combineLatest([this.api.getStatsOnline(), this.api.getStatsChat()])
+    .subscribe(([online, stats]) => {
+      console.log(online, stats)
+      this.lineChartData.datasets.push({
+        data: online.data,
+        label: 'Онлайн',
+        backgroundColor: '#ff0000',
+        borderColor: '#ff0000',
+        fill: 'origin'
+      });
+      this.lineChartData.labels = online.labels
+        .map((label: string) => new Date(label))
+        .map((label: Date) => this.formLabel(label));
+      this.stats['chat'] = stats;
+    })
   }
 
 }
