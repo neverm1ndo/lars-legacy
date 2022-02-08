@@ -1,8 +1,8 @@
 import * as dgram from 'dgram';
-import { Observable, Subscriber, timer, of } from 'rxjs';
+import { Observable, Subscriber, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-interface ServerGameMode {
+export interface ServerGameMode {
   name: string;
   mode: string;
   lang: string;
