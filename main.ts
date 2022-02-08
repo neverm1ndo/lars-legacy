@@ -4,9 +4,9 @@ import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
-import Samp from './samp';
+import Samp, { ServerGameMode } from './samp';
 import { Subscription, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 
 
 /** Init samp to get server stats later
@@ -109,15 +109,6 @@ function createWindow(): BrowserWindow {
     splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
     verifyUserToken().then(() => {
         splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
-        // subscribeToServerInfo(win);
-        samp.getServerInfo('185.104.113.34', 7777)
-        .pipe(catchError((err: Error) => throwError(err)))
-        .subscribe((info) => {
-          // console.log("server-info", info);
-          win.webContents.send('server-info', info);
-        }, (err: Error) => {
-          console.error("serve-info-err", err);
-        });
       })
       .catch((err)=> {
         win.webContents.send('token-verify-denied', true);
@@ -147,7 +138,7 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const url = request.url.substr(7);
-    callback({path: path.join(__dirname, 'dist', url)});
+    callback({ path: path.join(__dirname, 'dist', url) });
   })
   win.on('show', (event: any) => {
     if (tray) tray.destroy();
@@ -187,6 +178,11 @@ ipcMain.on('reload', () => {
 ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });
+ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent) => {
+    return samp.getServerInfo('185.104.113.34', 7777)
+    .pipe(catchError((err: Error) => throwError(err)))
+    .pipe(take(1)).toPromise()
+})
 ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
   return dialog.showMessageBox(opts);
 })
