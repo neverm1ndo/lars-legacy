@@ -131,7 +131,6 @@ export class ApiService {
     }
   }
   search(query: any, page: string, lim: string, filter?: string[], date?: { from?: string, to?: string}): Observable<any> {
-    console.log(date);
     let params: HttpParams = new HttpParams()
     .appendAll({
       search: query,
