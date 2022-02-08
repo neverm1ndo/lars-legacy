@@ -29,7 +29,7 @@ export class StatisticsComponent implements OnInit {
        tension: 0.3
      },
      point: {
-       radius: 3
+       radius: 0
      }
    },
    scales: {
@@ -70,12 +70,12 @@ export class StatisticsComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.api.getStatsOnline(), this.api.getStatsChat()])
     .subscribe(([online, stats]) => {
-      console.log(online, stats)
       this.lineChartData.datasets.push({
         data: online.data,
         label: 'Онлайн',
-        backgroundColor: '#ff0000',
-        borderColor: '#ff0000',
+        backgroundColor: '#fd7e14',
+        borderColor: '#fd7e14',
+        pointBackgroundColor: "#fd7e14",
         fill: 'origin'
       });
       this.lineChartData.labels = online.labels
