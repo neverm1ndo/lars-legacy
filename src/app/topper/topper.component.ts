@@ -7,6 +7,7 @@ import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDo
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
 import { BehaviorSubject } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 import { extrudeToRight } from '../app.animations';
 import { Router } from '@angular/router';
 
@@ -36,6 +37,7 @@ export class TopperComponent implements OnInit {
   isLoggedIn: boolean = false;
   authenticated: any;
   update: boolean = false;
+  players: number = 0;
   server = {
     state: 'loading',
     reboot: () => {
@@ -105,11 +107,12 @@ export class TopperComponent implements OnInit {
     this.electron.shell.openExternal(AppConfig.links.forum);
   }
   ngOnInit(): void {
-    this.userService.user.subscribe((user) =>{
+    this.userService.user.pipe(tap((user) => {
       this.authenticated = user;
-      this.state.subscribe((val: any) => {
-        this.server.state = val;
-      })
+    }))
+    .pipe(switchMap(() => this.state))
+    .subscribe((state: ServerStateType) => {
+      this.server.state = state;
     });
     if (this.userService.isAuthenticated()) {
       this.userService.user.next(this.userService.getUserInfo());
@@ -136,6 +139,9 @@ export class TopperComponent implements OnInit {
       this.ws.getUpdateMessage().subscribe(() => {
          console.log('%c[update]', 'color: cyan', 'soft update is ready');
          this.update = true;
+      });
+      this.ws.getServerOnline().subscribe((players: number) => {
+        this.players = players;
       });
       this.ws.getRoomName().subscribe((room) => {
         if (room.includes('devs')) {
