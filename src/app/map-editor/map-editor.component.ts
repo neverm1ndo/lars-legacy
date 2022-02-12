@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '
 import Keys from '../enums/keycode.enum';
 import { EditorMode } from '../enums/map.editor.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
+import { uniqBy } from 'lodash';
 
 const { LeftArrow, RightArrow } = Keys;
 
@@ -28,6 +29,9 @@ export class MapEditorComponent implements OnInit {
   private d_objects: MapObject[];
   set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
+    if (this._objects.length >= 600) {
+      this._objects = newObjects.sort((a: MapObject, b: MapObject) => b.posZ - a.posZ).slice(0, 600);
+    }
     if (this.canvas.nativeElement) {
       this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     }
@@ -53,8 +57,10 @@ export class MapEditorComponent implements OnInit {
   mode: EditorMode = EditorMode.VIEW;
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
   @HostListener('window:resize', ['$event']) onResize() {
-    this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
-    this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+    this.zone.runOutsideAngular(() => {
+      this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
+      this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+    })
   }
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
     if (this.mode == EditorMode.ROTATE) {
@@ -299,7 +305,10 @@ export class MapEditorComponent implements OnInit {
        }
      }
      const drawRotateArc = (dots: any) => {
-       const path = new Path2D();
+       const mainArcPath = new Path2D();
+       const secondaryArcPath = new Path2D();
+       const dragDotPath = new Path2D();
+       const anglePath = new Path2D();
        if (!this.arcCenter || !rotate) {
          this.arcCenter = getRectCenter();
        }
@@ -316,37 +325,36 @@ export class MapEditorComponent implements OnInit {
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
        ctx.lineWidth = 3;
-       path.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
-       path.closePath();
-       ctx.stroke();
-       // ctx.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
-       path.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
-       path.closePath();
+       mainArcPath.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
+       mainArcPath.closePath();
+       ctx.stroke(mainArcPath);
+       dragDotPath.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
+       dragDotPath.closePath();
        ctx.fillStyle = '#82AAFF';
-       ctx.fill();
+       ctx.fill(dragDotPath);
        if (rotate) {
-         path.moveTo(marker.x, marker.y);
-         path.lineTo(center.x , center.y);
-         path.closePath();
-         ctx.stroke(path);
+         anglePath.moveTo(marker.x, marker.y);
+         anglePath.lineTo(center.x , center.y);
+         anglePath.closePath();
+         ctx.stroke(anglePath);
          if (this.deg >= 0.001) {
-           path.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
+           secondaryArcPath.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
          }
          if (this.deg < -0.001) {
-           path.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
+           secondaryArcPath.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
          }
          ctx.strokeStyle = '#82AAFF50'
          if ((this.deg*180/Math.PI > 360) || (this.deg*180/Math.PI < -360)) {
            ctx.strokeStyle = '#ff000030'
          }
          ctx.lineWidth = this.radius/2 + margin;
-         ctx.stroke(path);
+         ctx.stroke(secondaryArcPath);
        }
-       path.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
-       path.closePath();
+       secondaryArcPath.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
+       secondaryArcPath.closePath();
        ctx.fillStyle = '#ffffff';
        ctx.strokeStyle = '#ffffff';
-       ctx.fill(path);
+       ctx.fill();
        ctx.fillText(`Rotate ${Math.round(this.deg*180/Math.PI)}°`, center.x - this.radius - 20, center.y - this.radius - 20);
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
