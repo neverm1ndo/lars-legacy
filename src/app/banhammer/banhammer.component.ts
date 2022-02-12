@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faGavel } from '@fortawesome/free-solid-svg-icons';
+import { faUserSlash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-banhammer',
@@ -10,8 +10,17 @@ export class BanhammerComponent implements OnInit {
 
   constructor() { }
 
+  searchTypes = [
+    { id: 0, val: 'IP' },
+    { id: 1, val: 'CN' },
+    { id: 2, val: 'AS&SS' },
+    { id: 3, val: 'Никнейм' },
+    { id: 4, val: 'Время' },
+  ];
+  currentSearchType: number = 0;
+
   fa = {
-    gavel: faGavel
+    ban: faUserSlash
   }
 
   ngOnInit(): void {
