@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex flex-fill">
+      <div *ngIf="bans; else empty" class="d-flex flex-fill">
         <div class="col-12">
           <div class="row">
             <table class="table w-100">
@@ -41,18 +41,9 @@
                 <th></th>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let ban in bans">
                   <td><kbd>CN</kbd></td>
                   <td>13267TT4NRPI3FTB4QPQVWA1DJKIUT</td>
-                  <td>Neverm1ndo</td>
-                  <td>Neverm1ndo</td>
-                  <td>20 Jan 2021 22:22:22</td>
-                  <td>20 Jan 2021 22:22:22</td>
-                  <td><button class="btn btn-light" type="button" name="button">Разбанить</button></td>
-                </tr>
-                <tr>
-                  <td><kbd>IP</kbd></td>
-                  <td>127.0.0.1</td>
                   <td>Neverm1ndo</td>
                   <td>Neverm1ndo</td>
                   <td>20 Jan 2021 22:22:22</td>
@@ -64,6 +55,11 @@
           </div>
         </div>
       </div>
+      <ng-template #empty>
+        <div class="d-flex flex-fill flex-column justify-content-center align-items-center w-100">
+          <span class="text-muted">Банлист пуст</span>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
