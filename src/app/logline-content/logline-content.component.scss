@@ -1,5 +1,8 @@
 :host {
   width: 100%;
+  span {
+    word-wrap: break-word;
+  }
   .user {
     padding-left: 15px;
     padding-right: 15px;
