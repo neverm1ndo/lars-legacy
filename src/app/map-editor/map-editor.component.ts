@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '@angular/core';
 import Keys from '../enums/keycode.enum';
 import { EditorMode } from '../enums/map.editor.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
@@ -78,7 +78,10 @@ export class MapEditorComponent implements OnInit {
   origin: Position2;
   deg: number = 0;
 
-  constructor(private hostElem: ElementRef) {}
+  constructor(
+    private hostElem: ElementRef,
+    private zone: NgZone,
+  ) {}
 
   filter(objects: any[]): any[] {
     return objects.filter((obj) => obj.name !== 'material' && obj.name !== 'text')
@@ -149,15 +152,15 @@ export class MapEditorComponent implements OnInit {
        ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
      }
      const drawDots = () => {
+       ctx.fillStyle = '#d63b50';
+       ctx.strokeStyle = '#fdfdfd';
+       ctx.lineWidth = 1;
        this._objects.forEach((obj: MapObject) => {
-         ctx.fillStyle = '#d63b50';
-         ctx.strokeStyle = '#fdfdfd';
-         ctx.lineWidth = 1;
-         ctx.beginPath();
-         ctx.arc(obj.posX * 0.33 + this.viewport.x + this.imgSize/2, obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
-         ctx.closePath();
-         ctx.fill();
-         ctx.stroke();
+         const path = new Path2D();
+         path.arc(obj.posX * 0.33 + this.viewport.x + this.imgSize/2, obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
+         path.closePath();
+         ctx.fill(path);
+         ctx.stroke(path);
        });
      }
      /* istambul ignore next */
@@ -249,6 +252,7 @@ export class MapEditorComponent implements OnInit {
      }
 
      const drawRect = (dots: any) => {
+       const path = new Path2D();
        ctx.font = '10px sans-serif'
        ctx.fillStyle = '#fdfdfd70';
        ctx.fillText(`${dots.left.posX} , ${dots.top.posY}`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 20)
@@ -259,15 +263,14 @@ export class MapEditorComponent implements OnInit {
          ctx.strokeStyle = '#4287f5';
        }
        ctx.lineWidth = 3;
-       ctx.beginPath();
-       ctx.moveTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
-       ctx.lineTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
-       ctx.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
-       ctx.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
-       ctx.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
-       ctx.closePath();
-       ctx.fill();
-       ctx.stroke();
+       path.moveTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
+       path.lineTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
+       path.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
+       path.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
+       path.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
+       path.closePath();
+       ctx.fill(path);
+       ctx.stroke(path);
        let center = getRectCenter();
        if (move) {
          ctx.strokeStyle = '#303030';
@@ -276,16 +279,16 @@ export class MapEditorComponent implements OnInit {
          if (!this.positions.old.x) {
            this.positions.old = center;
          }
-         ctx.beginPath();
-         ctx.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
-         ctx.closePath();
-         ctx.fill();
-         ctx.stroke();
+         path.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
+         path.closePath();
+         ctx.fill(path);
+         ctx.stroke(path);
          ctx.fillText(`Move`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
          drawPosDot(this.positions.old, center);
        }
      }
      const drawRotateArc = (dots: any) => {
+       const path = new Path2D();
        if (!this.arcCenter || !rotate) {
          this.arcCenter = getRectCenter();
        }
@@ -302,42 +305,37 @@ export class MapEditorComponent implements OnInit {
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
        ctx.lineWidth = 3;
-       ctx.beginPath();
-       ctx.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
-       ctx.closePath();
+       path.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
+       path.closePath();
        ctx.stroke();
-       ctx.beginPath();
        // ctx.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
-       ctx.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
-       ctx.closePath();
+       path.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
+       path.closePath();
        ctx.fillStyle = '#82AAFF';
        ctx.fill();
        if (rotate) {
-         ctx.beginPath();
-         ctx.moveTo(marker.x, marker.y);
-         ctx.lineTo(center.x , center.y);
-         ctx.closePath();
-         ctx.stroke();
-         ctx.beginPath();
+         path.moveTo(marker.x, marker.y);
+         path.lineTo(center.x , center.y);
+         path.closePath();
+         ctx.stroke(path);
          if (this.deg >= 0.001) {
-           ctx.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
+           path.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
          }
          if (this.deg < -0.001) {
-           ctx.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
+           path.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
          }
          ctx.strokeStyle = '#82AAFF50'
          if ((this.deg*180/Math.PI > 360) || (this.deg*180/Math.PI < -360)) {
            ctx.strokeStyle = '#ff000030'
          }
          ctx.lineWidth = this.radius/2 + margin;
-         ctx.stroke();
+         ctx.stroke(path);
        }
-       ctx.beginPath();
-       ctx.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
-       ctx.closePath();
+       path.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
+       path.closePath();
        ctx.fillStyle = '#ffffff';
        ctx.strokeStyle = '#ffffff';
-       ctx.fill();
+       ctx.fill(path);
        ctx.fillText(`Rotate ${Math.round(this.deg*180/Math.PI)}°`, center.x - this.radius - 20, center.y - this.radius - 20);
      }
      this.canvas.nativeElement.addEventListener('mouseenter', function () {
@@ -455,7 +453,9 @@ export class MapEditorComponent implements OnInit {
     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
     this.changed = false;
-    this.mapView();
+    this.zone.runOutsideAngular(() => {
+      this.mapView();
+    })
     // const float_multiply_array = WebAssembly.Module.cwrap(
     //   'float_multiply_array', null, ['number', 'number', 'number']
     //   );
