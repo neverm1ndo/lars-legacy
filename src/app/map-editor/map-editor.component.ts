@@ -434,8 +434,7 @@ export class MapEditorComponent implements OnInit {
         dragStart = dragEnd;
       }
     })
-    const times = [];
-    let fps: number;
+
 
     const drawConvexHullMode = () => {
       if (this.mode === EditorMode.ROTATE) {
@@ -445,6 +444,9 @@ export class MapEditorComponent implements OnInit {
         drawRect(jarvis(this._objects));
       }
     }
+
+    const times = [];
+    let fps: number;
 
     const drawFps = () => {
       const now = performance.now();
@@ -458,13 +460,25 @@ export class MapEditorComponent implements OnInit {
       ctx.fillText(`${fps} FPS`, 20, ctx.canvas.clientHeight - 20);
     }
 
+    const fpsLimit: number = 60;
+    let then: number = Date.now();
+    const interval: number = 1000 / fpsLimit;
+    let delta: number;
+
     const draw = () => {
       window.requestAnimationFrame(draw);
-      clear();
-      ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
-      drawDots();
-      drawConvexHullMode();
-      drawFps();
+
+      const now = Date.now();
+      delta = now - then;
+
+      if (delta > interval) {
+        then = now - (delta % interval);
+        clear();
+        ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
+        drawDots();
+        drawConvexHullMode();
+        drawFps();
+      }
     }
   }
 
@@ -475,9 +489,6 @@ export class MapEditorComponent implements OnInit {
     this.zone.runOutsideAngular(() => {
       this.mapView();
     })
-    // const float_multiply_array = WebAssembly.Module.cwrap(
-    //   'float_multiply_array', null, ['number', 'number', 'number']
-    //   );
   }
 
 }
