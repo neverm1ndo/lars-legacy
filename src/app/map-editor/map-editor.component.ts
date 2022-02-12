@@ -10,6 +10,13 @@ type Position2 = {
   y: number;
 }
 
+interface RectangleVertices {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
 @Component({
   selector: 'map-editor',
   templateUrl: './map-editor.component.html',
@@ -164,7 +171,11 @@ export class MapEditorComponent implements OnInit {
        });
      }
      /* istambul ignore next */
-     const jarvis = (objects: MapObject[]) => {
+     /** Jarvis algorithm https://ru.algorithmica.org/cs/convex-hulls/jarvis/
+     * @param {Array<MapObject>} objects map objects array typeof Array<MapObject>
+     * @returns {RectangleVertices} object with vertices of the rectangle
+     */
+     const jarvis = (objects: MapObject[]): RectangleVertices => {
        function getLeft(objs: MapObject[]) {
           objs.sort((a, b) => { if (a.posX && b.posX) return a.posX - b.posX })
           if (objs[0].posX) {
@@ -426,16 +437,16 @@ export class MapEditorComponent implements OnInit {
     const times = [];
     let fps: number;
 
-    const draw = () => {
-      clear();
-      ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
-      drawDots();
+    const drawConvexHullMode = () => {
       if (this.mode === EditorMode.ROTATE) {
         drawRotateArc(jarvis(this._objects));
       }
       if (this.mode === EditorMode.MOVE) {
         drawRect(jarvis(this._objects));
       }
+    }
+
+    const drawFps = () => {
       const now = performance.now();
       while (times.length > 0 && times[0] <= now - 1000) {
         times.shift();
@@ -445,7 +456,15 @@ export class MapEditorComponent implements OnInit {
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#ffffff';
       ctx.fillText(`${fps} FPS`, 20, ctx.canvas.clientHeight - 20);
+    }
+
+    const draw = () => {
       window.requestAnimationFrame(draw);
+      clear();
+      ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
+      drawDots();
+      drawConvexHullMode();
+      drawFps();
     }
   }
 
