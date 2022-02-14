@@ -80,13 +80,13 @@ export class ApiService {
     if (!filter) filter = [];
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(query: string, lim: string, filter: string[]): Observable<any> {
+  getLogFile(query: string, lim: string, filter: string[], date?: { from: string, to: string }): Observable<any> {
     if (query !== this.currentQuery) {
       this.currentPage = 0;
     }
     this.currentQuery = query;
     return this.reloader$.pipe(
-      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter))
+      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter, date))
     )
   }
   getFileInfo(path: string): Observable<any> {
@@ -136,11 +136,11 @@ export class ApiService {
       search: query,
       page,
       lim,
-      filter: filter?filter.join(','):'',
+      filter: filter?filter.join(','):''
     });
     if (date) {
-      if (date.from) params = params.append('dateFrom', date.from);
-      if (date.to) params = params.append('dateTo', date.to);
+      if (date.from) params = params.append('dateFrom', String(+new Date(date.from)));
+      if (date.to) params = params.append('dateTo', String(+new Date(date.to)));
     }
     return this.http.get(this.URL_SEARCH, { params });
   }

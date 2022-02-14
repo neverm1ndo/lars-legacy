@@ -15,13 +15,19 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="basic-addon1">От</span>
                     </div>
-                    <input formControlName="dateFrom" name="dateFrom" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon1">
+                    <input [ngClass]="{
+                      'is-invalid': searchForm.controls['dateFrom'].invalid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateFrom'].value,
+                      'is-valid': searchForm.controls['dateFrom'].valid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateFrom'].value
+                    }" formControlName="dateFrom" name="dateFrom" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon1">
                   </div>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="basic-addon1">До</span>
                     </div>
-                      <input formControlName="dateTo" name="dateTo" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon2">
+                      <input [ngClass]="{
+                        'is-invalid': searchForm.controls['dateTo'].invalid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateTo'].value ,
+                        'is-valid': searchForm.controls['dateTo'].valid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateTo'].value
+                      }" formControlName="dateTo" name="dateTo" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon2">
                   </div>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import { ToastService } from '../../toast.service';
 import { WebSocketService } from '../../web-socket.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs'
+import { dateValidator } from '../../shared/directives';
 
 @Component({
   selector: 'app-search',
@@ -17,12 +18,13 @@ import { Subscription } from 'rxjs'
 export class SearchComponent implements OnInit, OnDestroy {
 
   searchForm = new FormGroup({
-    query: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
+    query: new FormControl(''),
+    dateFrom: new FormControl('', [
+      dateValidator()
     ]),
-    dateFrom: new FormControl(''),
-    dateTo: new FormControl('')
+    dateTo: new FormControl('', [
+      dateValidator()
+    ])
   });
 
   fa = {
@@ -60,21 +62,29 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
+  dateValidator(str: string): boolean {
+    return Date.parse(str) !== NaN;
+  }
+
   sendQuery(): void {
     if (this.searchForm.valid) {
       if (this.query.from !== '' && this.query.to !== '') {
         this.searchQuery.emit(this.query);
       } else {
-        delete this.query.from;
-        delete this.query.to;
-        this.searchQuery.emit(this.query);
+        this.searchQuery.emit({ query: this.query.query });
       }
       if (this.quick) {
         this.router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
       }
       this.api.addToRecent('search', this.query.query);
     } else {
-      this.toast.show('Поисковой запрос должен состоять не менее, чем из 3-х символов', { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
+      let errmsg = '<b>Ошибка валидации поискового запроса</b><hr>';
+      Object.keys(this.searchForm.controls).forEach((key: string) => {
+        if (this.searchForm.controls[key].errors) {
+          errmsg += `<kbd>${key.toUpperCase()}</kbd> Проверьте поле ${key}<br>`
+        }
+      });
+      this.toast.show(errmsg, { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
     }
   }
 

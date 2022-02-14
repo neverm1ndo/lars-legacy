@@ -40,7 +40,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chunks = [];
     this.loading = true;
     this.lines = 0;
-    this.router.navigate(['/home/search'], { queryParams: { query: query.query }})
+    this.router.navigate(['/home/search'], { queryParams: { query: query.query, from: query.from, to: query.to }})
   }
 
   refresh(): void {
@@ -97,7 +97,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.sync();
       }
     }))
-    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter)))
+    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter, { from: params.from, to: params.to })))
     .subscribe((lines: LogLine[]) => {
       this.loading = false;
       this.api.lazy = false;
