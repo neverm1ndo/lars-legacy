@@ -179,6 +179,7 @@ ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });
 ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent) => {
+  if (!serve)
     return samp.getServerInfo('185.104.113.34', 7777)
     .pipe(catchError((err: Error) => throwError(err)))
     .pipe(take(1)).toPromise()
