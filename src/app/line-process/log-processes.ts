@@ -228,10 +228,25 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'light',
       control: 'chatAdm'
     },
+    '<chat/automute/dictionary>': {
+      translate: 'Автомут по словарю',
+      type: 'info',
+      control: 'chatAutoDict'
+    },
     '<chat/block/blocked>': {
       translate: 'Блокировка чата',
       type: 'warning',
       control: 'chatBlock'
+    },
+    '<chat/block/syntax>': {
+      translate: 'Неверный синтаксис',
+      type: 'warning',
+      control: 'chatBlockSynt'
+    },
+    '<chat/block/muted>': {
+      translate: 'Заглушен',
+      type: 'warning',
+      control: 'chatBlockMuted'
     },
     '<chat/block/flood>': {
       translate: 'Блокировка чата: флуд',
@@ -542,6 +557,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'ACHEAT WARN: UNSYNC',
       type: 'acheat',
       control: 'warnPlayerUnSync'
+    },
+    '<warn/player/kill_flood>': {
+      translate: 'Киллфлуд',
+      type: 'warn',
+      control: 'warnPlayerKilFld'
     },
 }
 
