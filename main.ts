@@ -196,6 +196,9 @@ ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electro
 ipcMain.handle('clipboard', (event: Electron.IpcMainInvokeEvent, str: string) => {
   clipboard.writeText(str);
 });
+ipcMain.handle('version', (event: Electron.IpcMainInvokeEvent, str: string) => {
+  return app.getVersion();
+});
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {

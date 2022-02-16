@@ -15,7 +15,17 @@
         <h6>Количество подгружаемых строк</h6>
         <small>Определяет размер загружаемого чанка со строками. По умолчанию: <b>100</b>. Максимум: <b>500</b><br> Чем меньше число, тем чаще подгрузки, но выше производительность листинга.</small>
       </div>
-      <input formControlName="lineChunk" type="text" id="lineChunk" placeholder="100" />
+      <div class="select">
+        <ng-select [items]="chunkSizes"
+        bindLabel="val"
+        formControlName="lineChunk"
+        [searchable]="false"
+        [clearable]="false"
+        bindValue="val"
+        (change)="setup()"
+        class="custom">
+      </ng-select>
+      </div>
     </div>
     <div class="d-flex justify-content-between align-content-center mb-2">
       <div class="">
@@ -43,64 +53,6 @@
     </div>
     <div class="d-flex listing-preview col-12">
       <div class="row w-100">
-        <div *ngIf="listStyle == 'big' || listStyle == 'small'" [class.expanded]="listStyle == 'big'" class="col-12 logline">
-          <div class="row">
-            <div class="col-3 col-md-2 col-lg-2">
-              <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
-            </div>
-            <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
-                &#60;auth/correct/admin&#62;
-            </div>
-            <div class="col-3 col-md-2 col-lg-2 text-center">
-              <strong>John_Doe</strong>
-              <br>
-              <span class="line-id">id: 42</span>
-            </div>
-            <div class="col-lg-6 col-8">
-              <line-process [content]="{ message: 'JohnnyTheDog' }"  process="<auth/correct/admin>"></line-process>
-              <geo [table]="sampleGeo"></geo>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="listStyle == 'inline'" [class.inline]="listStyle == 'inline'" class="col-12 logline">
-          <div class="row">
-            <div class="col-2">
-              <strong>{{date | date:'d MMM yy, HH:mm:ss'}}</strong>
-            </div>
-            <div class="col-5 col-lg-4">
-              <simple-line-process process="<auth/correct/admin>"></simple-line-process>
-            </div>
-            <div class="col-2 col-lg-2">
-              <strong>John_Doe</strong><span> (42)</span>
-            </div>
-            <div class="col-3 col-lg-4">
-              <logline-content [content]="{ message: 'JohnnyTheDog' }" [type]="{ type: 'success', control: 'authCorrectUsr', translate: ''}"></logline-content>
-            </div>
-            <div class="col-12">
-              <geo [table]="sampleGeo" tab-style="inline"></geo>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="listStyle == 'legacy'" class="col-12">
-          <div class="row legacy">
-            <div class="col-sm-3 col-md-4 col-lg-3">
-              <span><b>{{ date | date:'d MMM yy, HH:mm:ss' }}</b></span>
-            </div>
-            <div class="col-sm-9 col-md-8 col-lg-9">
-              <span class="legacy-process">&#60;auth/correct/admin&#62;</span>
-              <span class="legacy-nickname">
-                John_Doe
-              </span>
-              <span class="legacy-id">
-                (42)
-              </span>
-              <span> JohnnyTheDog</span><br>
-              <span class="pre">
-                {{ sampleGeo | json }}
-              </span>
-            </div>
-          </div>
-        </div>
         <div *ngIf="listStyle == 'big' || listStyle == 'small'" [class.expanded]="listStyle == 'big'" class="col-12 logline">
           <div class="row">
             <div class="col-3 col-md-2 col-lg-2">
