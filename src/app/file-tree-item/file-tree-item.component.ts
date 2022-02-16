@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons';
 import { faFolder, faMap, faFileCode, faDatabase, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { TreeNode } from '../interfaces/app.interfaces';
@@ -6,7 +6,8 @@ import { TreeNode } from '../interfaces/app.interfaces';
 @Component({
   selector: 'file-tree-item',
   templateUrl: './file-tree-item.component.html',
-  styleUrls: ['./file-tree-item.component.scss']
+  styleUrls: ['./file-tree-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileTreeItemComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../api.service';
 import { TreeNode } from '../interfaces/app.interfaces'
@@ -6,7 +6,8 @@ import { TreeNode } from '../interfaces/app.interfaces'
 @Component({
   selector: 'file-tree-items',
   templateUrl: './file-tree-items.component.html',
-  styleUrls: ['./file-tree-items.component.scss']
+  styleUrls: ['./file-tree-items.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileTreeItemsComponent implements OnInit {
 
@@ -42,7 +43,9 @@ export class FileTreeItemsComponent implements OnInit {
   }
 
 
-  constructor( public api: ApiService) {
+  constructor(
+    public api: ApiService,
+  ) {
   }
 
   ngOnInit(): void {

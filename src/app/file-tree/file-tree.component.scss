@@ -6,6 +6,9 @@
     height: 34px;
   }
   .top {
+    background: $secondary;
+    padding-top: 15px;
+    border-bottom: 1px solid #00000010;
     .btn {
       position: relative;
       top: -5px;
