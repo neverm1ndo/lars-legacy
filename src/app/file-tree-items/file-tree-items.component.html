@@ -1,15 +1,23 @@
 <div dnd [path]="nodes.path" (fileDropped)="uploadDnD($event)" [class.expandedTab]="toggler" class="item no-select">
   <div (click)="toggleExpand($event); true" class="item-title">
     <div class="under-toggler">
-      <button [class.expanded]="toggler" class="items-expander">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-opacity="1"></use></g></svg>
-      </button>
-      <fa-icon [icon]="fa.dir"></fa-icon><span class="item-name">{{ nodes.name }}</span>
+      <div class="item-name">
+        <button [class.expanded]="toggler" class="items-expander">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-opacity="1"></use></g></svg>
+        </button>
+        <fa-icon [icon]="fa.dir"></fa-icon>
+        {{ nodes.name }}
+      </div>
     </div>
   </div>
   <div *ngIf="toggler" class="items">
-    <div class="item no-select" *ngFor="let item of nodes.items">
-      <file-tree-item (click)="getConfig({path: item.path, name: item.name})" *ngIf="item.type === 'file'" [item]="item" [current]="current"></file-tree-item>
+    <div class="item no-select" *ngFor="let item of nodes.items" [class.active]="item.path === current" [attr.data-path]="item.path">
+      <file-tree-item (contextmenu)="showContext()" (click)="getConfig({path: item.path, name: item.name})" *ngIf="item.type === 'file'">
+        <div [attr.data-path]="item.path" class="item-name">
+          <fa-icon [icon]="getFileIcon(item)"></fa-icon>
+          {{ item.name }}
+        </div>
+      </file-tree-item>
       <file-tree-items [expanded]="item.expanded" (uploadFileList)="uploadDnD($event)" *ngIf="item.type === 'dir'" (chooseDirEvent)="chooseDir($event)" (chooseFileEvent)="getConfig($event)" [child-nodes]="item" [current]="current"></file-tree-items>
     </div>
   </div>

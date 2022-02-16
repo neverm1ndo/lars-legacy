@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../api.service';
 import { TreeNode } from '../interfaces/app.interfaces'
 
@@ -22,13 +22,43 @@ export class FileTreeItemsComponent implements OnInit {
 
   fa = {
     dir: faFolder,
+    file: faFileAlt,
+    map: faMap,
+    conf: faFileCode,
+    db: faDatabase,
+    trash: faTrash
   }
-  getConfig(path: {path: string, name: string}) {
+  getConfig(path: { path: string, name: string }) {
     this.chooseFileEvent.emit(path);
+  }
+
+  getFileIcon(item: TreeNode) {
+    if (item.type === 'dir') return faFolder;
+    if (this.isMapFile(item.name)) return faMap;
+    if (this.isDBFile(item.name)) return faDatabase;
+    if (this.isConfFile(item.name)) return faFileCode;
+    return faFileAlt;
   }
 
   uploadDnD(event: any) {
     this.uploadFileListEvent.emit(event);
+  }
+
+  showContext() {
+    console.log('context');
+  }
+
+  isMapFile(name: string): boolean {
+    return name.includes('.map');
+  }
+  isConfFile(name: string): boolean {
+    return name.includes('.conf');
+  }
+  isShFile(name: string): boolean {
+    return name.includes('.sh');
+  }
+  isDBFile(name: string): boolean {
+    return name.includes('.db') || name.includes('.cadb');
   }
 
   chooseDir(event: any): void {

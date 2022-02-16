@@ -1,9 +1,0 @@
-<div [attr.data-path]="item.path" class="item-name" [class.active]="item.path === current">
-  <fa-icon *ngIf="item.type === 'file' && !isMapFile(item.name) && !isDBFile(item.name) && !isConfFile(item.name) && !isShFile(item.name)" [icon]="fa.file"></fa-icon>
-  <fa-icon *ngIf="isMapFile(item.name)" [icon]="fa.map"></fa-icon>
-  <fa-icon *ngIf="isConfFile(item.name)" [icon]="fa.conf"></fa-icon>
-  <fa-icon *ngIf="isDBFile(item.name)" [icon]="fa.db"></fa-icon>
-  <lty-icon *ngIf="isShFile(item.name)" name="lty-sh"></lty-icon>
-  <fa-icon *ngIf="item.type === 'dir'" [icon]="fa.dir"></fa-icon>
-  {{ item.name }}
-</div>
