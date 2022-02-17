@@ -124,13 +124,17 @@ export class TopperComponent implements OnInit {
          console.error('%c[server]', 'color: magenta', stderr);
          this.state.next('error')
       });
-      this.ws.getServerReboot().subscribe(() => {
+      this.ws.getServerReboot().pipe(
+        switchMap(() => this.ws.getServerOnline())
+      ).subscribe((players: number) => {
          console.log('%c[server]', 'color: magenta', 'server rebooted');
-         this.state.next('live')
+         this.state.next('live');
+         this.players = players;
       });
       this.ws.getServerStop().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server stoped');
          this.state.next('stoped');
+         this.players = 0;
       });
       this.ws.getServerLaunch().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server launched');
