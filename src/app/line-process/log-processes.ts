@@ -558,6 +558,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'acheat',
       control: 'warnPlayerUnSync'
     },
+    '<warn/player/aimbot>': {
+      translate: 'ACHEAT WARN: AIMBOT',
+      type: 'acheat',
+      control: 'warnPlayerAim'
+    },
     '<warn/player/kill_flood>': {
       translate: 'Киллфлуд',
       type: 'warn',
