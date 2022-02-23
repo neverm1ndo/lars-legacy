@@ -147,7 +147,7 @@ export class ApiService {
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
     let last = JSON.parse(window.localStorage.getItem('last'));
     if (!this.noteIsAlreadyExists(last, key, val)) {
-      if (last[key].length >= (key=='search'?15:7)) {
+      if (last[key].length >= 30) {
         last[key].splice(-(last[key].length), 0, val);
         last[key].pop();
       } else {

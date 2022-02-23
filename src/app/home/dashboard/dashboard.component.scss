@@ -6,28 +6,58 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
   }
-  .clip {    
+  .clip {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  li {
-    font-size: 14px;
-    margin-left: -24px;
-    list-style-type: none;
-    .history-item {
-      cursor: pointer;
-      opacity: 0.8;
-      width: 100%;
-      &:hover {
-        color: $text-secondary;
-        text-decoration: underline;
-      }
-      .history-underitem {
-        font-size: 9px;
-        opacity: 0.5;
-        position: relative;
-        top: -7px;
+  .history-list {
+    background: $topper;
+    border-radius: 0.5rem;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    flex: 1 1 30%!important;
+    overflow-y: hidden!important;
+    ::-webkit-scrollbar {
+       width: 5px;
+    }
+    h6 {
+      padding: 10px 15px 10px 15px;
+      margin: 0px;
+      border-bottom: 1px solid $filetree;
+    }
+    &-item {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 5px 15px 5px 15px;
+    }
+    &:first-child {
+      margin-left: 0rem;
+    }
+    &:last-child {
+      margin-right: 0rem;
+    }
+  }
+  ul {
+  width: 100%;
+    li {
+      font-size: 14px;
+      margin-left: -24px;
+      list-style-type: none;
+      .history-item {
+        cursor: pointer;
+        opacity: 0.8;
+        width: 100%;
+        &:hover {
+          color: $text-secondary;
+          text-decoration: underline;
+        }
+        .history-underitem {
+          font-size: 9px;
+          opacity: 0.5;
+          position: relative;
+          top: -7px;
+        }
       }
     }
   }
