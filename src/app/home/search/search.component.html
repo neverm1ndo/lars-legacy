@@ -2,10 +2,10 @@
   <div class="row head">
     <div class="col-12 pl-0">
       <div class="row">
-        <form (keyup.enter)="sendQuery()" [class.col-9]="quick" class="col-8 pr-0" [formGroup]="searchForm" (ngSubmit)="sendQuery()" autocomplete="off">
+        <form (keyup.enter)="sendQuery()" [class.col-12]="quick" class="col-8 pr-0" [formGroup]="searchForm" (ngSubmit)="sendQuery()" autocomplete="off">
           <div class="input-group">
             <input formControlName="query" name="query" type="text" class="form-control shadow-none align-middle input-dark" placeholder="Введите ник игрока, IP или связку серийных номеров"/>
-            <div ngbDropdown class="d-inline-block">
+            <div *ngIf="!quick" ngbDropdown class="d-inline-block">
               <a ngbDropdownToggle class="date btn btn-dark" placeholder="Промежуток времени"><fa-icon [icon]="fa.calendar"></fa-icon></a>
               <div class="big-drop" ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <div class="w-100 date-dropdown">
