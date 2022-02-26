@@ -1,3 +1,4 @@
+@import "colors";
 :host {
   width: 100%;
   span {
@@ -68,4 +69,9 @@
       }
     }
   }
+}
+.cn {
+  background: $secondary;
+  color: $text;
+  padding: 5px;
 }

@@ -29,6 +29,7 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   @ViewChild('ban') ban: TemplateRef<any>;
   @ViewChild('mute') mute: TemplateRef<any>;
   @ViewChild('death') death: TemplateRef<any>;
+  @ViewChild('cn') cn: TemplateRef<any>;
 
   userContent: any;
 
@@ -52,6 +53,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   isDeath(): boolean {
     return this.type.control === 'dthKilled';
   }
+  isCNRes(): boolean {
+    return this.type.control === 'CnResSuccess';
+  }
 
   userLink(id: number) {
     this.user.openUserProfile(id);
@@ -67,6 +71,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
     }
     if (this.isDeath()) {
       this.contentTpl = this.death;
+    }
+    if (this.isCNRes()) {
+      this.contentTpl = this.cn;
     }
     this.cdr.detectChanges();
   }
