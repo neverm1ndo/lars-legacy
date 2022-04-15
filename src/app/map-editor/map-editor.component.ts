@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '
 import Keys from '../enums/keycode.enum';
 import { EditorMode } from '../enums/map.editor.enum';
 import { MapObject, Viewport } from '../interfaces/map.interfaces';
-import { uniqBy } from 'lodash';
 
 const { LeftArrow, RightArrow } = Keys;
 
@@ -290,8 +289,8 @@ export class MapEditorComponent implements OnInit {
        ctx.stroke(path);
        let center = getRectCenter();
        if (move) {
-         ctx.strokeStyle = '#303030';
-         ctx.fillStyle = '#ffffff';
+         ctx.fillStyle = '#82AAFF30';
+         ctx.strokeStyle = '#82AAFF';
          ctx.lineWidth = 2;
          if (!this.positions.old.x) {
            this.positions.old = center;
@@ -445,13 +444,9 @@ export class MapEditorComponent implements OnInit {
 
 
     const drawConvexHullMode = () => {
-      if (this.mode === EditorMode.ROTATE) {
-        drawRotateArc(jarvis(this._objects));
-      }
-      if (this.mode === EditorMode.MOVE) {
-        drawRect(jarvis(this._objects));
-      }
-    }
+      if (this.mode === EditorMode.ROTATE) drawRotateArc(jarvis(this._objects));
+      if (this.mode === EditorMode.MOVE) drawRect(jarvis(this._objects));
+    };
 
     const times = [];
     let fps: number;
@@ -460,13 +455,13 @@ export class MapEditorComponent implements OnInit {
       const now = performance.now();
       while (times.length > 0 && times[0] <= now - 1000) {
         times.shift();
-      }
+      };
       times.push(now);
       fps = times.length;
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#ffffff';
       ctx.fillText(`${fps} FPS`, 20, ctx.canvas.clientHeight - 20);
-    }
+    };
 
     const fpsLimit: number = 60;
     let then: number = Date.now();
@@ -479,15 +474,15 @@ export class MapEditorComponent implements OnInit {
       const now = Date.now();
       delta = now - then;
 
-      if (delta > interval) {
-        then = now - (delta % interval);
-        clear();
-        ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
-        drawDots();
-        drawConvexHullMode();
-        drawFps();
-      }
-    }
+      if (delta <= interval) return;
+
+      then = now - (delta % interval);
+      clear();
+      ctx.drawImage(this.map, this.viewport.x, this.viewport.y, this.viewport.dx, this.viewport.dy);
+      drawDots();
+      drawConvexHullMode();
+      drawFps();
+    };
   }
 
   ngOnInit(): void {
@@ -496,7 +491,6 @@ export class MapEditorComponent implements OnInit {
     this.changed = false;
     this.zone.runOutsideAngular(() => {
       this.mapView();
-    })
+    });
   }
-
 }
