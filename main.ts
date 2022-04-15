@@ -165,34 +165,31 @@ ipcMain.on('minimize-to-tray', (event) => {
   win.hide();
   tray = createTray();
   $serverInfo.unsubscribe();
-})
+});
 ipcMain.on('close', () => {
   win.close();
-})
+});
 ipcMain.on('minimize', () => {
   win.minimize();
-})
+});
 ipcMain.on('reload', () => {
   win.reload();
 })
 ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });
-ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent) => {
-  if (!serve)
-    return samp.getServerInfo('svr.gta-liberty.ru', 7777)
-    .pipe(catchError((err: Error) => throwError(err)))
-    .pipe(take(1)).toPromise()
-})
+ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent, ip: string, port: number) => {
+  if (!serve) return samp.getServerInfo(ip, port);
+});
 ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
   return dialog.showMessageBox(opts);
-})
+});
 ipcMain.handle('save-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.SaveDialogOptions) => {
   return dialog.showSaveDialog(opts);
-})
+});
 ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions) => {
   return dialog.showOpenDialog(opts);
-})
+});
 ipcMain.handle('clipboard', (event: Electron.IpcMainInvokeEvent, str: string) => {
   clipboard.writeText(str);
 });

@@ -31,6 +31,8 @@ export class ApiService {
   readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
   readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
 
+  readonly SERVER_MONITOR: string = 'https://apps.nmnd.ru/api/samp';
+
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   public lazy: boolean = false;
@@ -121,6 +123,10 @@ export class ApiService {
   }
   getStatsChat(): Observable<any> {
     return this.http.get(this.URL_STATS_CHAT);
+  }
+
+  getSampServerMonitor(): Observable<any> {
+    return this.http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
   }
 
   lazyUpdate(page: number): void {

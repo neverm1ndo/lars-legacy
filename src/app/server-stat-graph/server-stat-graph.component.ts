@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
-import { interval } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'server-stat-graph',
@@ -15,7 +13,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   constructor(
     private electron: ElectronService,
     private zone: NgZone,
-    private cfr: ChangeDetectorRef
+    private cfr: ChangeDetectorRef,
   ) { }
 
   @Input('players') set players(players: number) {
@@ -100,7 +98,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       this.stat = info;
       this.points.push(info.players.online);
       return Promise.resolve();
-    })
+    });
   }
 
   ngOnInit(): void {
