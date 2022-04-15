@@ -94,7 +94,8 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   }
 
   async getServerInfo() {
-    return this.electron.ipcRenderer.invoke('server-game-mode').then((info) => {
+    return this.electron.ipcRenderer.invoke('server-game-mode', new URL('https://svr.gta-liberty.ru/').host, 7777).then((info) => {
+      console.log(info);
       this.stat = info;
       this.points.push(info.players.online);
       return Promise.resolve();
