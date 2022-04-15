@@ -4,7 +4,7 @@ import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
-import Samp, { ServerGameMode } from './samp';
+import Samp from './samp';
 import { Subscription, throwError } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 
@@ -124,7 +124,7 @@ function createWindow(): BrowserWindow {
           win.show();
           state.manage(win);
         }, 500);
-      })
+      });
   });
 
   if (serve) {
@@ -139,10 +139,10 @@ function createWindow(): BrowserWindow {
   protocol.registerFileProtocol('lars', (request, callback) => {
     const url = request.url.substr(7);
     callback({ path: path.join(__dirname, 'dist', url) });
-  })
+  });
   win.on('show', (event: any) => {
     if (tray) tray.destroy();
-  })
+  });
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -180,7 +180,7 @@ ipcMain.on('notification', (event, options) => {
 });
 ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent) => {
   if (!serve)
-    return samp.getServerInfo('185.104.113.34', 7777)
+    return samp.getServerInfo('svr.gta-liberty.ru', 7777)
     .pipe(catchError((err: Error) => throwError(err)))
     .pipe(take(1)).toPromise()
 })
@@ -217,11 +217,11 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     title: 'Обновление приложения',
     message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail: 'Новая версия уже загружена. Перезапустите приложение, чтобы принять изменения.'
-  }
+  };
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) autoUpdater.quitAndInstall();
-  })
+  });
 })
 autoUpdater.on('error', message => {
   console.error('Ошибка при попытке обновить приложение');
