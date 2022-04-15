@@ -99,13 +99,26 @@ export class LoginComponent implements OnInit {
       ctx.fill();
     }
 
+    const fpsLimit: number = 60;
+    let then: number = Date.now();
+    const interval: number = 1000 / fpsLimit;
+    let delta: number;
+
     function draw() {
+
+      window.requestAnimationFrame(draw);
+
+      const now = Date.now();
+      delta = now - then;
+
+      if (delta <= interval) return;
+
+      then = now - (delta % interval);
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-      fxH++;
+      fxH+=3;
       layer2();
       layer3();
       layer1();
-      window.requestAnimationFrame(draw);
     };
     draw();
   }
