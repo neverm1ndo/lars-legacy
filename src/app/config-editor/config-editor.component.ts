@@ -115,7 +115,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                 this.progress = Math.round(100 * event.loaded / event.total);
               } else if (event instanceof HttpResponse) {
                 if (files.length > 1) {
-                  console.log(files)
                   const buildFileList = (files: any): string => {
                     let list = '';
                     for (let file of files) {

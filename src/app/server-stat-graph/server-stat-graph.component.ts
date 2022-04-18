@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { AppConfig } from '../../environments/environment';
 
 @Component({
   selector: 'server-stat-graph',
@@ -94,8 +95,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   }
 
   async getServerInfo() {
-    return this.electron.ipcRenderer.invoke('server-game-mode', new URL('https://svr.gta-liberty.ru/').host, 7777).then((info) => {
-      console.log(info);
+    return this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777).then((info) => {
       this.stat = info;
       this.points.push(info.players.online);
       return Promise.resolve();
