@@ -37,8 +37,6 @@
             <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
             <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
             <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
-            <div class="dropdown-divider"></div>
-            <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
             <div class="dropdown-menu-helper">
               <server-stat-graph [players]="players"></server-stat-graph>
             </div>
@@ -56,6 +54,7 @@
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownTopper">
             <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
+            <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
             <div class="dropdown-divider"></div>
             <button ngbDropdownItem (click)="userService.logOut()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
           </div>
