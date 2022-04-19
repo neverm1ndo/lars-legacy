@@ -12,7 +12,7 @@ export class BanhammerComponent implements OnInit {
 
   fa = {
     gavel: faGavel
-  }
+  };
 
   ngOnInit(): void {
   }

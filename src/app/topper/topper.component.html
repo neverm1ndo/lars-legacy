@@ -17,7 +17,7 @@
           </button>
       </div>
       <div *ngIf="authenticated" class="d-flex align-self-end btn-group top-btn" role="remote-group">
-        <div *ngIf="userService.getUserInfo()?.gr == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
+        <div *ngIf="userService.getUserInfo()?.main_group == 10" ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
           <button
           ngbDropdownToggle
           type="button"
@@ -52,11 +52,11 @@
           type="button"
           class="btn-profile pl-2 pr-2"
           name="profile-button">
-            <img src="{{ authenticated.avatar }}"/><span>{{ authenticated.name }}</span><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>
+            <img src="{{ authenticated.avatar }}"/><span>{{ authenticated.username }}</span><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownTopper">
             <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
-            <button *ngIf="userService.getUserInfo()?.gr !== 10" (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
+            <button *ngIf="userService.getUserInfo()?.main_group !== 10" (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
             <div class="dropdown-divider"></div>
             <button ngbDropdownItem (click)="userService.logOut()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
           </div>

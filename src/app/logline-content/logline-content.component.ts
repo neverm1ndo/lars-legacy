@@ -95,9 +95,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
         .pipe(map((user) => {
           return {
             id: user.id,
-            name: user.name,
+            name: user.username,
             avatar: user.avatar,
-            group: user.gr
+            group: user.main_group
           }
         }))
         .pipe(switchMap((user) => this.idb.add('user', user)))

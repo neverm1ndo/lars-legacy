@@ -32,12 +32,12 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     delete: 'удалил',
     change: 'изменил',
     restore: 'восстановил'
-  }
+  };
   fa = {
     sign: faFileSignature,
     trash: faTrash,
     exCircle: faExclamationCircle
-  }
+  };
   admins: any;
   loading: boolean = false;
   cmSettings = {
@@ -45,7 +45,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     theme: 'dracula',
     lineWrapping: true,
     readOnly: true
-  }
+  };
 
   willBeDeletedSoon(date: Date): boolean {
     return (Math.round(new Date(date).getTime() / 1000) - Math.round(new Date().getTime() / 1000)) < 86400*2;
@@ -78,10 +78,10 @@ export class BackupsComponent implements OnInit, AfterViewInit {
   }
 
   drawBackbone(height: number, color: string, top: number, index: number, filename: string): void {
-     this.binds.nativeElement.append(this.createBindBackbone(height, color, top, (index) * 8, filename))
+     this.binds.nativeElement.append(this.createBindBackbone(height, color, top, (index) * 8, filename));
   }
   drawRib(width: number, color: string, top: number, left: number): void {
-     this.binds.nativeElement.append(this.createBindRib(width, color, top, left * 8))
+     this.binds.nativeElement.append(this.createBindRib(width, color, top, left * 8));
   }
   colorGenerator(filenames: any[]): string[] {
     function hashCode(str: string) {
@@ -118,15 +118,11 @@ export class BackupsComponent implements OnInit, AfterViewInit {
                       }, {})
       for (let j = childs.length - 1; j >= 0; j--) {
         const filename = childs[j].getAttribute('data-filename');
-        if (bb[filename] && !bb[filename].maxTop) {
-          bb[filename].maxTop = childs[j].getBoundingClientRect().top - topMarge;
-        }
-        if (bb[filename]) {
-          bb[filename].minTop = childs[j].getBoundingClientRect().top - topMarge;
-        }
+        if (bb[filename] && !bb[filename].maxTop) bb[filename].maxTop = childs[j].getBoundingClientRect().top - topMarge;
+        if (bb[filename]) bb[filename].minTop = childs[j].getBoundingClientRect().top - topMarge;
       }
       Object.keys(bb).forEach((key: string) => {
-        if (bb[key].maxTop === bb[key].minTop) delete bb[key]
+        if (bb[key].maxTop === bb[key].minTop) delete bb[key];
       });
       Object.keys(bb).forEach((key: string, index: number) => {
         this.drawBackbone(
@@ -136,7 +132,7 @@ export class BackupsComponent implements OnInit, AfterViewInit {
           index,
           key
         );
-        prevHeight += bb[key].maxTop - bb[key].minTop
+        prevHeight += bb[key].maxTop - bb[key].minTop;
       });
     }
     let ribs = 0;
@@ -144,12 +140,11 @@ export class BackupsComponent implements OnInit, AfterViewInit {
       const bbs = Object.keys(bb);
       for (let i = 0; i < childs.length; i++) {
         const filename = childs[i].getAttribute('data-filename');
-        if (bbs.includes(filename)) {
-          ribs++;
-          this.drawRib((bbs.length - 1 - bbs.indexOf(filename)+1)*8, bb[filename].color, childs[i].getBoundingClientRect().top - topMarge - prevHeight - ribs*3, bbs.indexOf(filename))
-        }
+        if (!bbs.includes(filename)) continue;
+        ribs++;
+        this.drawRib((bbs.length - 1 - bbs.indexOf(filename)+1)*8, bb[filename].color, childs[i].getBoundingClientRect().top - topMarge - prevHeight - ribs*3, bbs.indexOf(filename));
       }
-    }
+    };
     drawBackbones();
     drawRibs();
   }
@@ -177,57 +172,58 @@ export class BackupsComponent implements OnInit, AfterViewInit {
           icon: faClipboard,
           subtext: err.message
         });
-      })
+      });
   }
+
   removeBackup() {
-    console.log('removeBackup no implemented')
+    /**
+    * Not Implemented;
+    */
   }
+
   restoreBackup() {
     const dialogOpts = {
-        type: 'warning',
-        buttons: ['Да, установить', 'Отмена'],
-        title: `Подтверждение установки бэкапа`,
-        message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
-      }
-    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
-      val => {
-        if (val.response === 0) {
-          const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)
-          .pipe (
-            catchError(error => {
-              if (error.error instanceof ErrorEvent) {
-                console.error('An error occurred:', error.error.message);
-              } else {
-                console.error(
-                  `Backend returned code ${error.status}, ` +
-                  `body was: ${error.error.message}`);
-                }
-                return throwError(error.error);
-              })
-            )
-            .subscribe(
-              (data) => {
-                console.log(data)
-                this.toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,             {
-                  classname: 'bg-success text-light',
-                  delay: 5000,
-                  icon: faClipboardCheck,
-                  subtext: this.current.file.path
-                });
-              }, err => {
-                console.error(err);
-                this.toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,             {
-                  classname: 'bg-danger text-light word-wrap',
-                  delay: 8000,
-                  icon: faClipboard,
-                  subtext: err.message
-                });
-              }, () => {
-                sub.unsubscribe();
-              });
-        }
-      }
-    );
+      type: 'warning',
+      buttons: ['Да, установить', 'Отмена'],
+      title: `Подтверждение установки бэкапа`,
+      message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
+    };
+    this.electron.ipcRenderer.invoke('message-box', dialogOpts)
+      .then(val => {
+        if (val.response !== 0) return;
+        const sub = this.api.restoreBackup(this.current.file.path, this.current.unix)
+        .pipe (catchError(error => {
+          if (error.error instanceof ErrorEvent) {
+            console.error('An error occurred:', error.error.message);
+          } else {
+            console.error(`Backend returned code ${error.status}, body was: ${error.error.message}`);
+          }
+          return throwError(error.error);
+        }))
+        .subscribe(
+          () => {
+            this.toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,
+            {
+              classname: 'bg-success text-light',
+              delay: 5000,
+              icon: faClipboardCheck,
+              subtext: this.current.file.path
+            });
+          },
+          (err) => {
+            console.error(err);
+            this.toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,
+            {
+              classname: 'bg-danger text-light word-wrap',
+              delay: 8000,
+              icon: faClipboard,
+              subtext: err.message
+            });
+          },
+          () => {
+            sub.unsubscribe();
+          });
+      });
   }
 
   getAdminList() {
@@ -236,26 +232,26 @@ export class BackupsComponent implements OnInit, AfterViewInit {
     .pipe(map((users) => {
       return users.reduce((acc: Object, curr: IDBUser) => {
         return {...acc, [curr.name]: { avatar: curr.avatar }}
-      }, {})
-    }))
+      }, {});
+    }));
   }
 
   ngOnInit(): void {
-    if (window.localStorage.getItem('settings')) {
-      this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
-    }
-    this.getAdminList();
+    const userSettings = window.localStorage.getItem('settings');
+    if (userSettings) this.cmSettings.theme = JSON.parse(userSettings).textEditorStyle;
     this.loading = true;
-    combineLatest([this.getAdminList(), this.api.getBackupsList().pipe(take(1))])
+    combineLatest([
+      this.getAdminList(),
+      this.api.getBackupsList().pipe(take(1))
+    ])
     .subscribe(([admins, backups]) => {
       this.admins = admins;
       this.backups = backups;
       this.loading = false;
-      if (backups.length > 0) {
-        setTimeout(() => { // add macrotask
-          this.drawGraph();
-        }, 1);
-      }
+      if (backups.length <= 0) return;
+      setTimeout(() => { // add task
+        this.drawGraph();
+      }, 0);
     });
   }
 

@@ -10,6 +10,7 @@ import { ElectronService } from '../core/services';
 import { WebSocketService } from '../web-socket.service';
 import { Workgroup } from '../enums/workgroup.enum';
 import { IDBUser } from '../interfaces';
+import { filter } from 'rxjs/operators';
 
 type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
 
@@ -21,7 +22,7 @@ type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | '
 })
 export class AdminsComponent implements OnInit, OnDestroy {
 
-  admins: any[] = [];
+  admins: IDBUser[] = [];
 
   fa = {
     agent: faUserSecret,
@@ -31,7 +32,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
     map: faMap,
     conf: faFileSignature,
     box: faBoxOpen
-  }
+  };
   popup: boolean = false;
 
   addAdminForm: FormGroup = new FormGroup({
@@ -49,14 +50,14 @@ export class AdminsComponent implements OnInit, OnDestroy {
     { id: Workgroup.Challenger, val: 'Претендент' },
     { id: Workgroup.Dev, val: 'Разработчик' },
     { id: Workgroup.Admin, val: 'Админ' },
-  ]
+  ];
   subRoles = [
     { id: Workgroup.Challenger, val: 'Претендент' },
     { id: Workgroup.Dev, val: 'Разработчик' },
     { id: Workgroup.Mapper, val: 'Маппер' },
     { id: Workgroup.CFR, val: 'Редактор конфигов' },
     { id: Workgroup.Backuper, val: 'Бэкапер' }
-  ]
+  ];
 
   constructor(
     private idbService: NgxIndexedDBService,
@@ -75,21 +76,21 @@ export class AdminsComponent implements OnInit, OnDestroy {
       redacting: 'В редакторе конфигов',
       inadm: 'В списке админов',
       inbacks: 'Просматривает бэкапы'
-    }
+    };
     let act = actions[action];
-    if (!act) return '???';
+    if (!act) return 'Unknown Action Type';
     return act;
   }
 
 
   getAdmins() {
-    this.idbService.getAll('user').subscribe((users: IDBUser[]) => {
-      users.forEach((user) => {
-        if ((user.group == 9) || (user.group == 10) || (user.group == 11) || (user.group == 12)) {
-          this.admins.push(user);
-        }
-      })
-    })
+    this.idbService.getAll('user')
+    .pipe(filter((user: any) => [Workgroup.Challenger, Workgroup.Admin, Workgroup.Dev, Workgroup.Mapper].includes(user.group)))
+    .subscribe((users: IDBUser[]) => {
+      users.forEach((user: IDBUser) => {
+        this.admins.push(user);
+      });
+    });
   }
 
   userLink(id: number) {
@@ -114,40 +115,37 @@ export class AdminsComponent implements OnInit, OnDestroy {
   }
   removeAdmin(username: string, id: number) {
     const dialogOpts = {
-        type: 'question',
-        buttons: ['Исключить', 'Отмена'],
-        title: 'Подтверждение исключения',
-        message: `Вы точно хотите исключть ${username} из администраторского состава?`
-      }
+      type: 'question',
+      buttons: ['Исключить', 'Отмена'],
+      title: 'Подтверждение исключения',
+      message: `Вы точно хотите исключть ${username} из администраторского состава?`
+    };
     this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) {
-        this.changeAdminGroup(username, id, 2);
-        setTimeout(() => {
-          this.getFullAdminsList();
-        }, 500);
-      }
-    })
+      if (returnValue.response !== 0) return;
+      this.changeAdminGroup(username, id, 2);
+      setTimeout(() => {
+        this.getFullAdminsList();
+      }, 500);
+    });
   }
   closeAdminSession(username: string) {
     const dialogOpts = {
-        type: 'question',
-        buttons: ['Зарыть сессию', 'Отмена'],
-        title: 'Подтверждение закрытия сессии',
-        message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
-      }
+      type: 'question',
+      buttons: ['Зарыть сессию', 'Отмена'],
+      title: 'Подтверждение закрытия сессии',
+      message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
+    };
     this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
-      console.log(returnValue.response)
-      if (returnValue.response === 0) {
-        this.api.closeAdminSession(username).subscribe(() => {
-          this.toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
-            {
-              classname: 'bg-success text-light',
-              delay: 3000,
-              icon: faUserSecret
-            });
-        });
-      }
-    })
+      if (returnValue.response !== 0) return;
+      this.api.closeAdminSession(username).subscribe(() => {
+        this.toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
+          {
+            classname: 'bg-success text-light',
+            delay: 3000,
+            icon: faUserSecret
+          });
+      });
+    }).catch(err => console.error(err));
   }
 
   changeAdminGroup(username: string, id: number, group: number) {
@@ -173,7 +171,6 @@ export class AdminsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getFullAdminsList();
-
   }
   ngOnDestroy(): void {
     // this.$activies.unsubscribe();

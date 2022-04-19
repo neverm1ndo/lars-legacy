@@ -27,7 +27,8 @@ export class FileTreeItemsComponent implements OnInit {
     conf: faFileCode,
     db: faDatabase,
     trash: faTrash
-  }
+  };
+
   getConfig(path: { path: string, name: string }) {
     this.chooseFileEvent.emit(path);
   }
@@ -75,8 +76,7 @@ export class FileTreeItemsComponent implements OnInit {
 
   constructor(
     public api: ApiService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.expanded) this.toggler = true;

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDete
 import { ElectronService } from '../core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment';
+import { ServerGameMode } from '../../../samp';
 
 @Component({
   selector: 'server-stat-graph',
@@ -26,7 +27,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   }
 
   points: number[] = [];
-  stat: any;
+  stat: ServerGameMode;
 
   // timer = interval(5000)
   // .pipe(filter((players: number) => this.points.length >= 25 && this.points[this.points.length - 1] == players))
@@ -64,9 +65,9 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
             grid.lineTo(270, 64/4*i);
             grid.closePath();
             ctx.fillStyle = '#afafaf';
-            ctx.fillText(String(top/4*(4 - i)), 0, 64/4*i + 4)
+            ctx.fillText(String(top/4*(4 - i)), 0, 64/4*i + 4);
         }
-          for (let i = 1; i < 25; i++) {
+        for (let i = 1; i < 25; i++) {
             grid.moveTo(270/10*i, 0);
             grid.lineTo(270/10*i, height);
             grid.closePath();
@@ -90,12 +91,13 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       ctx.stroke(area);
       ctx.fill(area);
       drawGrid();
-    })
+    });
     this.cfr.detectChanges();
   }
 
   async getServerInfo() {
-    return this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777).then((info) => {
+    return this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777)
+    .then((info: ServerGameMode) => {
       this.stat = info;
       this.points.push(info.players.online);
       return Promise.resolve();
@@ -103,9 +105,10 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getServerInfo().then(() => {
-      this.draw();
-    });
+    this.getServerInfo()
+        .then(() => {
+          this.draw();
+        });
   }
   ngOnDestroy(): void {
     // this.timer.unsubscribe();

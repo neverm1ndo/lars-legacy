@@ -95,10 +95,10 @@ export class UserService {
 
   setUpUser(user: UserData): Observable<IDBUser> {
     return this.idbService.add('user', {
-      name: user.name,
+      name: user.username,
       avatar: user.avatar,
       id: user.id,
-      group: user.gr
+      group: user.main_group
     })
   }
 

@@ -29,7 +29,7 @@ export class LauncherSettingsComponent implements OnInit {
       join('C:\ProgramFiles(x86)', 'GTASanAndreas'),
       [ Validators.required ]
     ),
-    nickname: new FormControl(JSON.parse(localStorage.getItem('user')).name, [
+    nickname: new FormControl(JSON.parse(localStorage.getItem('user')).username, [
       Validators.required,
       Validators.minLength(3),
     ]),

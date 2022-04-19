@@ -16,7 +16,7 @@ interface Backup {
     path: string;
     text?: string;
   }
-}
+};
 
 @Component({
   selector: 'app-backup-item',
@@ -34,9 +34,7 @@ export class BackupItemComponent implements OnInit {
     pen: faPencilAlt,
     trash: faTrash,
     exCircle: faExclamationCircle
-  }
-
-
+  };
 
   constructor() { }
 

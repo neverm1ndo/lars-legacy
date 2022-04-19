@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { UserService } from '../user.service';
 import { ToastService } from '../toast.service';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { Workgroup } from '../enums/workgroup.enum';
+
+const { Mapper, Dev } = Workgroup;
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +16,8 @@ export class IsMapperGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      let group = this.user.getUserInfo().gr;
-      if ((group == 12) || (group == 10)) {
+      let group = this.user.getUserInfo().secondary_group;
+      if ((group == Mapper) || (group == Dev)) {
         return true;
       } else {
         this.toast.show('Доступ запрещен для вашей группы пользователей',
