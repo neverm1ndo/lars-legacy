@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user.service';
 import { ApiService } from '../api.service';
@@ -9,10 +8,17 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services';
 import { WebSocketService } from '../web-socket.service';
 import { Workgroup } from '../enums/workgroup.enum';
-import { IDBUser } from '../interfaces';
-import { filter } from 'rxjs/operators';
 
 type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
+
+interface AdminUser {
+  user_id: number;
+  user_email: string;
+  user_avatar: string;
+  username: string;
+  main_group: Workgroup;
+  secondary_group: Workgroup;
+}
 
 @Component({
   selector: 'app-admins',
@@ -22,7 +28,7 @@ type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | '
 })
 export class AdminsComponent implements OnInit, OnDestroy {
 
-  admins: IDBUser[] = [];
+  admins: AdminUser[] = [];
 
   fa = {
     agent: faUserSecret,
@@ -60,7 +66,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private idbService: NgxIndexedDBService,
+    // private idbService: NgxIndexedDBService,
     private api: ApiService,
     public userService: UserService,
     private toast: ToastService,
@@ -80,17 +86,6 @@ export class AdminsComponent implements OnInit, OnDestroy {
     let act = actions[action];
     if (!act) return 'Unknown Action Type';
     return act;
-  }
-
-
-  getAdmins() {
-    this.idbService.getAll('user')
-    .pipe(filter((user: any) => [Workgroup.Challenger, Workgroup.Admin, Workgroup.Dev, Workgroup.Mapper].includes(user.group)))
-    .subscribe((users: IDBUser[]) => {
-      users.forEach((user: IDBUser) => {
-        this.admins.push(user);
-      });
-    });
   }
 
   userLink(id: number) {
