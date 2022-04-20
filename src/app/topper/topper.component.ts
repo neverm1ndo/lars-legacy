@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { ExecException } from 'child_process';
 import { join } from 'path';
@@ -6,8 +6,8 @@ import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
-import { BehaviorSubject } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { tap, switchMap, filter } from 'rxjs/operators';
 import { extrudeToRight } from '../app.animations';
 import { Router } from '@angular/router';
 
@@ -20,7 +20,7 @@ type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
   styleUrls: ['./topper.component.scss'],
   animations: [extrudeToRight]
 })
-export class TopperComponent implements OnInit {
+export class TopperComponent implements OnInit, AfterViewInit {
 
   fa = {
     signout: faSignOutAlt,
@@ -33,11 +33,14 @@ export class TopperComponent implements OnInit {
     gamepad: faGamepad
   };
 
+  devRoomSubscriptions: Subscription = new Subscription();
+  mainRoomSubscriptions: Subscription = new Subscription();
   state: BehaviorSubject<ServerStateType> = new BehaviorSubject('live');
+
   isLoggedIn: boolean = false;
-  authenticated: any;
   update: boolean = false;
   players: number = 0;
+
   server = {
     state: 'loading',
     reboot: () => {
@@ -51,8 +54,9 @@ export class TopperComponent implements OnInit {
     stop: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Killing samp03svr...');
       this.ws.send('stop-server');
-    }
-  }
+    },
+  };
+
   window = {
     close: () => {
       if (this.userService.getUserSettings().tray) {
@@ -63,8 +67,9 @@ export class TopperComponent implements OnInit {
     },
     min: () => {
       this.electron.ipcRenderer.send('minimize');
-    }
-  }
+    },
+  };
+
   constructor(
     public electron: ElectronService,
     public userService: UserService,
@@ -73,9 +78,10 @@ export class TopperComponent implements OnInit {
     private zone: NgZone
   ) {}
 
-  reload() {
+  reload(): void {
     this.electron.ipcRenderer.send('reload');
   }
+
   launchSAMP(): void {
     try {
       const launchSettings = localStorage.getItem('launcher');
@@ -92,7 +98,7 @@ export class TopperComponent implements OnInit {
           if (err) {
             this.zone.run(() => {
               this.router.navigate(['/home/settings/launcher']);
-            })
+            });
             throw err;
           }
           if (stdout) console.log('%c[launcher]', 'color: brown', stdout);
@@ -103,57 +109,77 @@ export class TopperComponent implements OnInit {
       this.router.navigate(['/home/settings/launcher'])
     }
   }
+
   openForum(): void {
     this.electron.shell.openExternal(AppConfig.links.forum);
   }
-  ngOnInit(): void {
-    this.userService.user.pipe(tap((user) => {
-      this.authenticated = user;
-    }))
-    .pipe(switchMap(() => this.state))
-    .subscribe((state: ServerStateType) => {
-      this.server.state = state;
-    });
-    if (this.userService.isAuthenticated()) {
-      this.userService.user.next(this.userService.getUserInfo());
-      this.ws.getServerState().subscribe((state) => {
+
+  subscribeToDevSubscriptions(): void {
+    this.devRoomSubscriptions
+      .add(this.ws.getServerState().subscribe((state) => {
         console.log('%c[server]', 'color: magenta', 'status:', state);
-        this.state.next(state)
-      })
-      this.ws.getServerError().subscribe((stderr: string) => {
-         console.error('%c[server]', 'color: magenta', stderr);
-         this.state.next('error')
-      });
-      this.ws.getServerReboot().pipe(
-        switchMap(() => this.ws.getServerOnline())
-      ).subscribe((players: number) => {
-         console.log('%c[server]', 'color: magenta', 'server rebooted');
-         this.state.next('live');
-         this.players = players;
-      });
-      this.ws.getServerStop().subscribe(() => {
+        this.state.next(state);
+      }))
+      .add(this.ws.getServerError().subscribe((stderr: string) => {
+        console.error('%c[server]', 'color: magenta', stderr);
+        this.state.next('error')
+      }))
+      .add(this.ws.getServerReboot()
+        .pipe(switchMap(() => this.ws.getServerOnline()))
+        .subscribe((players: number) => {
+           console.log('%c[server]', 'color: magenta', 'server rebooted');
+           this.state.next('live');
+           this.players = players;
+      }))
+      .add(this.ws.getServerStop().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server stoped');
          this.state.next('stoped');
          this.players = 0;
-      });
-      this.ws.getServerLaunch().subscribe(() => {
-         console.log('%c[server]', 'color: magenta', 'server launched');
-         this.state.next('live');
-      });
-      this.ws.getUpdateMessage().subscribe(() => {
-         console.log('%c[update]', 'color: cyan', 'soft update is ready');
-         this.update = true;
-      });
-      this.ws.getServerOnline().subscribe((players: number) => {
+      }))
+      .add(this.ws.getServerLaunch().subscribe(() => {
+        console.log('%c[server]', 'color: magenta', 'server launched');
+        this.state.next('live');
+      }))
+      .add(this.ws.getServerOnline().subscribe((players: number) => {
         this.players = players;
-      });
-      this.ws.getRoomName().subscribe((room) => {
-        if (room.includes('devs')) {
-          console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
-          this.ws.send('get-status');
-        }
-      })
-    }
+      }))
+      .add(this.state.subscribe((state: ServerStateType) => {
+        this.server.state = state;
+      }));
+  }
+
+  subscribeToCommonSubscriptions(): void {
+    this.mainRoomSubscriptions.add(this.ws.getUpdateMessage().subscribe(() => {
+      console.log('%c[update]', 'color: cyan', 'soft update is ready');
+      this.update = true;
+    }));
+  }
+
+
+  ngAfterViewInit(): void {
+  }
+
+  ngOnInit(): void {
+    /**
+    * Check user
+    * Subscribe to necessary events
+    */
+    this.userService.user
+        .pipe(tap((user) => {
+          if (user) return user;
+          this.devRoomSubscriptions.unsubscribe();
+          this.mainRoomSubscriptions.unsubscribe();
+        }))
+        .pipe(filter((user) => !!user))
+        .pipe(switchMap(() => this.ws.getRoomName()))
+        .subscribe((room: string) => {
+          if (room.includes('devs')) {
+            this.subscribeToDevSubscriptions();
+            console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
+            this.ws.send('get-status');
+          }
+          this.subscribeToCommonSubscriptions();
+        });
   }
 
 }

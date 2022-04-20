@@ -10,7 +10,7 @@ import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MapsService {
 

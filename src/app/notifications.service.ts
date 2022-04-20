@@ -6,7 +6,7 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { getProcessTranslation } from './line-process/log-processes';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class NotificationsService {
 

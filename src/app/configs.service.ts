@@ -11,7 +11,7 @@ import { catchError } from 'rxjs/operators';
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class ConfigsService {
 

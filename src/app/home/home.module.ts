@@ -62,6 +62,10 @@ import { StatisticsComponent } from '../statistics/statistics.component';
 import { RulesPipe } from '../pipes/rules.pipe';
 import { RolePipe } from '../pipes/role.pipe';
 
+import { MapsService } from '../maps.service';
+import { ConfigsService } from '../configs.service';
+import { NotificationsService } from '../notifications.service';
+
 const dbConfig: DBConfig  = {
   name: 'lty_users',
   version: 1,
@@ -73,8 +77,8 @@ const dbConfig: DBConfig  = {
       { name: 'avatar', keypath: 'avatar', options: { unique: false } },
       { name: 'id', keypath: 'id', options: { unique: true } },
       { name: 'group', keypath: 'group', options: { unique: false } },
-    ]
-  }]
+    ],
+  }],
 };
 
 @NgModule({
@@ -96,6 +100,9 @@ const dbConfig: DBConfig  = {
     NgChartsModule,
   ],
   providers: [
+    ConfigsService,
+    MapsService,
+    NotificationsService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

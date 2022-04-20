@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, Subject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserData, UserLoginData, IDBUser } from './interfaces';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class UserService {
 
   readonly URL_LOGIN: string = AppConfig.api.auth;
   readonly URL_USER: string = AppConfig.api.user;
-  user: Subject<UserData | undefined> = new Subject();
+  user: BehaviorSubject<UserData | null> = new BehaviorSubject(this.getUserInfo());
   headers: HttpHeaders = new HttpHeaders ({
     'Content-Type': 'application/json'
   });
