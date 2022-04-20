@@ -6,7 +6,7 @@ import { ElectronService } from './core/services';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Subject, Observable, throwError, combineLatest } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -46,7 +46,6 @@ export class ConfigsService {
     ])
   }
   saveFile(path: string, text: string): Observable<any>  {
-    // this.loading = true;
     this.error.next(null);
     return this.api.saveFile(path, text)
     .pipe(catchError((error) => this.handleError(error)));
@@ -69,19 +68,18 @@ export class ConfigsService {
 
     this.electron.ipcRenderer.invoke('save-dialog', dialogOpts)
     .then(res => {
-        if (res.filePath && !res.canceled) {
-          this.electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token })
-        }
-      }).catch( res => {
-        this.toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
-          {
-            classname: 'bg-warning text-dark',
-            delay: 5000,
-            icon: faInfo,
-            subtext: res.message
-           });
-        console.error(res);
-      })
+      if (res.filePath && !res.canceled) this.electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token });
+    })
+    .catch(res => {
+      this.toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
+        {
+          classname: 'bg-warning text-dark',
+          delay: 5000,
+          icon: faInfo,
+          subtext: res.message,
+        });
+    console.error(res);
+    });
   }
 
   getFileInfo(path: string) {
@@ -98,23 +96,22 @@ export class ConfigsService {
 
   async deleteFile(path: string): Promise<any> {
     const dialogOpts = {
-        type: 'warning',
-        buttons: ['Удалить', 'Отмена'],
-        title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`
-      }
+      type: 'warning',
+      buttons: ['Удалить', 'Отмена'],
+      title: `Подтверждение удаления`,
+      message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`,
+    };
     return this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
       val => {
-        if (val.response === 0) {
-           this.api.deleteMap(path).subscribe(() => {});
-          this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
-            {
-              classname: 'bg-success text-light',
-              delay: 3000,
-              icon: faTrash
-            });
-            this.toEmpty();
-        }
+        if (val.response !== 0) return;
+        this.api.deleteMap(path).subscribe(() => {});
+        this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
+          {
+            classname: 'bg-success text-light',
+            delay: 3000,
+            icon: faTrash
+          });
+        this.toEmpty();
       }
     ).finally(() => {
       this.reloadFileTree();
@@ -129,7 +126,7 @@ export class ConfigsService {
         delay: 3000,
         icon: faCopy
       });
-    })
+    });
   }
 
 }
