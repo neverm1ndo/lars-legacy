@@ -95,9 +95,9 @@ export class UserService {
 
   setUpUser(user: UserData): Observable<IDBUser> {
     return this.idbService.add('user', {
+      id: user.id,
       name: user.username,
       avatar: user.avatar,
-      id: user.id,
       group: user.main_group
     })
   }

@@ -30,6 +30,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   loading: boolean = false;
 
   uploadsSubscriptions: Subscription = new Subscription();
+  directoriesSubscription: Subscription;
 
   fa = {
     conf: faFileSignature,
@@ -47,7 +48,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     public configs: ConfigsService
   ) {
     this.directories$ = this.configs.reloader$.pipe(switchMap(() => api.getConfigsDir()));
-    this.directories$.subscribe(items => {
+    this.directoriesSubscription = this.directories$.subscribe(items => {
       const expandIfExpandedBefore = (nodes: TreeNode) => {
         for (let item of nodes.items) {
           if (item.type != 'dir') continue;
@@ -83,7 +84,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   reloadFileTree(): void {
-    this.configs.reloadFileTree()
+    this.configs.reloadFileTree();
   }
 
   clearProgress(): void {
@@ -138,12 +139,12 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                 });
             }
             this.reloadFileTree();
-            setTimeout(() => { this.clearProgress() }, 1000);
+            setTimeout(() => { this.clearProgress(); }, 1000);
             this.uploadsSubscriptions.remove(sub);
           }
         },
         err => {
-          this.clearProgress()
+          this.clearProgress();
           if (files.length > 1) {
             this.toast.show(`Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`,
               {
@@ -208,5 +209,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.uploadsSubscriptions.unsubscribe();
+    this.directoriesSubscription.unsubscribe();
   }
 }
