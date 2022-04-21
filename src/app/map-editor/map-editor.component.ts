@@ -26,20 +26,20 @@ export class MapEditorComponent implements OnInit {
 
   private _objects: MapObject[] = [];
   private d_objects: MapObject[];
+  private objectsToDraw: MapObject[] = [];
+
   set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
-    if (this._objects.length >= 600) {
-      this._objects = newObjects.sort((a: MapObject, b: MapObject) => b.posZ - a.posZ).slice(0, 600);
-    }
-    if (this.canvas.nativeElement) {
-      this.viewportTo(this._objects[1].posX, this._objects[1].posY);
-    }
+    this.objectsToDraw = this._objects.map(obj => Object.assign({...obj}));
+    if (this.objectsToDraw.length > 400) this.objectsToDraw = this.removeDoubles(this.objectsToDraw, 10);
+    console.log(`drawed ${this.objectsToDraw.length} dots`)
+    if (this.canvas.nativeElement) this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     this.viewport = {
       x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-0.33),
       y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*0.33),
       dx: this.imgSize,
       dy: this.imgSize
-    }
+    };
     this.positions = {
       old: { x: 0, y: 0 },
       new: { x: 0, y: 0 },
@@ -50,10 +50,13 @@ export class MapEditorComponent implements OnInit {
     this.origin = null;
     this.deg = 0;
   }
+
   get objects() {
     return this._objects;
   }
+
   mode: EditorMode = EditorMode.VIEW;
+
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
   @HostListener('window:resize', ['$event']) onResize() {
     this.zone.runOutsideAngular(() => {
@@ -94,6 +97,23 @@ export class MapEditorComponent implements OnInit {
     private hostElem: ElementRef,
     private zone: NgZone,
   ) {}
+
+  removeDoubles(objects: MapObject[], maxDistance: number): MapObject[] {
+    for(let i = 0; i < objects.length; i++) {
+      const object: MapObject = objects[i];
+      if (!object) break;
+      if (object.name == 'meta' || object.name == 'texture') continue;
+      for (let j = i; j < objects.length - i; j++) {
+        const next: MapObject = objects[j];
+        if (this.getDistanceBetweenObjects(object, next) < maxDistance) objects.splice(j, 1);
+      }
+    }
+    return objects;
+  }
+
+  getDistanceBetweenObjects(a: MapObject, b: MapObject): number {
+    return Math.sqrt(Math.pow(b.posX - a.posX, 2) + Math.pow(b.posY - a.posY, 2) + Math.pow(b.posZ - a.posZ, 2));
+  }
 
   filter(objects: any[]): any[] {
     return objects.filter((obj) => obj.name !== 'material' && obj.name !== 'text')
@@ -165,14 +185,14 @@ export class MapEditorComponent implements OnInit {
      }
      const drawDots = () => {
        ctx.fillStyle = '#d63b50';
-       ctx.strokeStyle = '#fdfdfd';
+       // ctx.strokeStyle = '#fdfdfd';
        ctx.lineWidth = 1;
-       this._objects.forEach((obj: MapObject) => {
+       this.objectsToDraw.forEach((obj: MapObject) => {
          const path = new Path2D();
          path.arc(obj.posX * 0.33 + this.viewport.x + this.imgSize/2, obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
          path.closePath();
          ctx.fill(path);
-         ctx.stroke(path);
+         // ctx.stroke(path);
        });
      }
      /* istambul ignore next */
