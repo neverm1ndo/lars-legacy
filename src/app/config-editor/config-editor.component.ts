@@ -91,8 +91,10 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     this.progress = 0;
   }
 
-  mkdir(): void {
-    // this.api.mkdir()
+  mkdir(path: string, name: string): void {
+    this.api.createDirectory(path, name).subscribe(() => {
+      this.reloadFileTree();
+    });
   }
 
   addNewFile(event: any): void {

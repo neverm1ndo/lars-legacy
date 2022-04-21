@@ -62,9 +62,9 @@ export class FileTreeComponent implements OnInit {
     this.addNew.emit(event);
   }
 
-  // mkdir(event: any): void {
-  //   this.makeDir.emit(event);
-  // }
+  mkdir(): void {
+    this.makeDir.emit();
+  }
 
   ngOnInit(): void {
   }
