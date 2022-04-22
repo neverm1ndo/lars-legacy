@@ -27,6 +27,7 @@ export class MapEditorComponent implements OnInit {
   private _objects: MapObject[] = [];
   private d_objects: MapObject[];
   private objectsToDraw: MapObject[] = [];
+  private ZOOM: number = 0.2;
 
   set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
@@ -35,8 +36,8 @@ export class MapEditorComponent implements OnInit {
     console.log(`drawed ${this.objectsToDraw.length} dots`)
     if (this.canvas.nativeElement) this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     this.viewport = {
-      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-0.33),
-      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*0.33),
+      x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-this.ZOOM),
+      y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*this.ZOOM),
       dx: this.imgSize,
       dy: this.imgSize
     };
@@ -74,7 +75,7 @@ export class MapEditorComponent implements OnInit {
     }
   }
   map: any;
-  imgSize: number = 2000;
+  imgSize: number = 6000 * (this.ZOOM);
   viewport: Viewport = {
     x: 0,
     y: 0,
@@ -150,6 +151,9 @@ export class MapEditorComponent implements OnInit {
     return Number((res/count).toFixed(4));
   }
 
+  /**
+  * Ease-In animation
+  */
   easeIn(currentProgress: number, start: number, distance: number, steps: number, power: number): number {
     currentProgress /= steps/2;
     if (currentProgress < 1) return (distance/2)*(Math.pow(currentProgress, power)) + start;
@@ -158,8 +162,8 @@ export class MapEditorComponent implements OnInit {
   }
 
   viewportTo(x: number, y: number): void {
-    this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-0.33);
-    this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*0.33);
+    this.viewport.x = (-this.imgSize/2+this.canvas.nativeElement.width/2)+(+x*-this.ZOOM);
+    this.viewport.y = (-this.imgSize/2+this.canvas.nativeElement.height/2)+(+y*this.ZOOM);
   }
 /* istambul ignore mapView: PROTOTYPE ONLY */
   mapView(): void {
@@ -169,26 +173,52 @@ export class MapEditorComponent implements OnInit {
     let rotate: boolean = false;
     let dragStart: any;
     let dragEnd: any;
+
+    const getImageSize = () => {
+      return this.imgSize;
+    };
+
     /* istambul ignore else */
     if (!this.map) {
-      this.map = new Image(this.imgSize, this.imgSize);
+      this.map = new Image(getImageSize(), getImageSize());
       this.map.src = 'lars://assets/images/sa_map4k.webp';
       this.map.onload = () => {
         draw();
       };
     } else {
-      ctx.drawImage(this.map, 0, 0, this.imgSize, this.imgSize);
+      ctx.drawImage(this.map, 0, 0, getImageSize(), getImageSize());
     }
 
     const clear = () => {
       ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     };
 
+    const zoomInOut = (event: WheelEvent) => {
+      const delta: number = -event.deltaY/100;
+      const UP = 1;
+      const DOWN = -1;
+      if (((delta == UP) && this.ZOOM >= 0.8 ) || ((delta == DOWN) && this.ZOOM <= 0.1)) return;
+      this.ZOOM = Number((this.ZOOM + (delta*0.1)).toFixed(1));
+      this.imgSize = 6000 * (this.ZOOM);
+      this.viewport = {
+        x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-this.ZOOM),
+        y: (-this.imgSize/2+this.canvas.nativeElement.height/2)+(this._objects[1].posY*this.ZOOM),
+        dx: this.imgSize,
+        dy: this.imgSize
+      };
+    };
+
+    const drawPositionSigns = () => {
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#ffffff';
+      ctx.fillText(`ZOOM: x${this.ZOOM*10}`, 20, ctx.canvas.clientHeight - 40);
+    }
+
     const drawDots = () => {
       ctx.fillStyle = '#d63b50';
       this.objectsToDraw.forEach((obj: MapObject) => {
          const path = new Path2D();
-         path.arc(obj.posX * 0.33 + this.viewport.x + this.imgSize/2, obj.posY * -0.33 + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
+         path.arc(obj.posX * this.ZOOM + this.viewport.x + this.imgSize/2, obj.posY * -this.ZOOM + this.viewport.y + this.imgSize/2, 7, 0, 2 * Math.PI, false);
          path.closePath();
          ctx.fill(path);
        });
@@ -240,8 +270,8 @@ export class MapEditorComponent implements OnInit {
 
      const getRectCenter = () => {
        return {
-         x: (Number((this.dots.left.posX + this.dots.right.posX).toFixed(4))/2) * 0.33 + this.viewport.x + this.imgSize/2,
-         y: (Number((this.dots.top.posY + this.dots.bottom.posY).toFixed(4))/2) * -0.33 + this.viewport.y + this.imgSize/2
+         x: (Number((this.dots.left.posX + this.dots.right.posX).toFixed(4))/2) * this.ZOOM + this.viewport.x + this.imgSize/2,
+         y: (Number((this.dots.top.posY + this.dots.bottom.posY).toFixed(4))/2) * -this.ZOOM + this.viewport.y + this.imgSize/2
        }
      }
 
@@ -292,7 +322,7 @@ export class MapEditorComponent implements OnInit {
        const path = new Path2D();
        ctx.font = '10px sans-serif'
        ctx.fillStyle = '#fdfdfd70';
-       ctx.fillText(`${dots.left.posX} , ${dots.top.posY}`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 20)
+       ctx.fillText(`${dots.left.posX} , ${dots.top.posY}`, dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 20)
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
        if (move) {
@@ -300,11 +330,11 @@ export class MapEditorComponent implements OnInit {
          ctx.strokeStyle = '#4287f5';
        }
        ctx.lineWidth = 3;
-       path.moveTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
-       path.lineTo(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
-       path.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.bottom.posY * -0.33 + this.viewport.y + this.imgSize/2 + 13);
-       path.lineTo(dots.right.posX * 0.33 + this.viewport.x + this.imgSize/2 + 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13);
-       path.arc(dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
+       path.moveTo(dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 13);
+       path.lineTo(dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 13, dots.bottom.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 + 13);
+       path.lineTo(dots.right.posX * this.ZOOM + this.viewport.x + this.imgSize/2 + 13, dots.bottom.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 + 13);
+       path.lineTo(dots.right.posX * this.ZOOM + this.viewport.x + this.imgSize/2 + 13, dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 13);
+       path.arc(dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 13, 3, 0, 2 * Math.PI, false);
        path.closePath();
        ctx.fill(path);
        ctx.stroke(path);
@@ -320,7 +350,7 @@ export class MapEditorComponent implements OnInit {
          path.closePath();
          ctx.fill(path);
          ctx.stroke(path);
-         ctx.fillText(`Move`, dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 30)
+         ctx.fillText(`Move`, dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 13, dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 30)
          drawPosDot(this.positions.old, center);
        }
      }
@@ -334,8 +364,8 @@ export class MapEditorComponent implements OnInit {
        if (!this.radius) {
          this.radius = Math.round(
            Math.sqrt(
-             Math.pow((dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2) - center.x, 2) +
-             Math.pow((dots.left.posY * -0.33 + this.viewport.y + this.imgSize/2) - center.y, 2)
+             Math.pow((dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2) - center.x, 2) +
+             Math.pow((dots.left.posY * -this.ZOOM + this.viewport.y + this.imgSize/2) - center.y, 2)
            ));
        }
        let margin: number = 14;
@@ -409,7 +439,7 @@ export class MapEditorComponent implements OnInit {
            break;
          }
          case EditorMode.MOVE: {
-           if (!isOnRect(event.offsetX, event.offsetY, { x: this.dots.left.posX * 0.33 + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -0.33 + this.viewport.y + this.imgSize/2 - 23, radius: 10 })) break;
+           if (!isOnRect(event.offsetX, event.offsetY, { x: this.dots.left.posX * this.ZOOM + this.viewport.x + this.imgSize/2 - 23, y: this.dots.top.posY * -this.ZOOM + this.viewport.y + this.imgSize/2 - 23, radius: 10 })) break;
            rotate = false;
            drag = false;
            move = true;
@@ -435,7 +465,10 @@ export class MapEditorComponent implements OnInit {
        default: break;
      };
    });
-    this.canvas.nativeElement.addEventListener('mousemove', (event) => {
+
+   this.canvas.nativeElement.addEventListener('wheel', (event: WheelEvent) => zoomInOut(event));
+
+   this.canvas.nativeElement.addEventListener('mousemove', (event) => {
       dragEnd = {
         x: event.pageX - this.canvas.nativeElement.offsetLeft,
         y: event.pageY - this.canvas.nativeElement.offsetTop
@@ -450,7 +483,7 @@ export class MapEditorComponent implements OnInit {
         dragStart = dragEnd;
       }
       if (move) {
-        moveObjects(-(dragStart.x - dragEnd.x)/0.33, (dragStart.y - dragEnd.y)/0.33);
+        moveObjects(-(dragStart.x - dragEnd.x)/this.ZOOM, (dragStart.y - dragEnd.y)/this.ZOOM);
         dragStart = dragEnd;
         this.origin = getRectCenter();
       }
@@ -507,6 +540,7 @@ export class MapEditorComponent implements OnInit {
       drawDots();
       drawConvexHullMode();
       drawFps();
+      drawPositionSigns();
     };
   }
 
