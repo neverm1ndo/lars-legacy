@@ -96,7 +96,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   dayStatDateSelect(day: NgbDate) {
-    console.log(day)
     this.api.getStatsOnline(new Date(day.year, day.month - 1, day.day))
     .pipe(take(1))
     .subscribe((online) => {
