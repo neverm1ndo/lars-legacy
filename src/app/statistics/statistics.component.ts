@@ -70,6 +70,9 @@ export class StatisticsComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.api.getStatsOnline(), this.api.getStatsChat()])
     .subscribe(([online, stats]) => {
+      console.log(online);
+      this.stats['chat'] = stats;
+      if (!online) return;
       this.lineChartData.datasets.push({
         data: online.data,
         label: 'Онлайн',
@@ -81,8 +84,7 @@ export class StatisticsComponent implements OnInit {
       this.lineChartData.labels = online.labels
         .map((label: string) => new Date(label))
         .map((label: Date) => this.formLabel(label));
-      this.stats['chat'] = stats;
-    })
+    });
   }
 
 }

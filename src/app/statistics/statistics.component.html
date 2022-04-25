@@ -68,6 +68,9 @@
             <div *ngFor="let weap of stats.chat.kills" class="panel-list-item d-flex flex-row justify-content-between">
               <span>{{ weap._id}}</span><span>{{ weap.total }}</span>
             </div>
+            <div class="d-flex flex-row justify-content-center">
+              <small *ngIf="stats.chat.kills.length == 0" class="text-muted">Статистика пуста</small>
+            </div>
           </div>
         </div>
       </div>
