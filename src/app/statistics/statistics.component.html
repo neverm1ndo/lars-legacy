@@ -13,7 +13,6 @@
           bindValue="id"
           class="custom"
           (change)="changeStatsRange()"
-          disabled
           [(ngModel)]="range">
         </ng-select>
       </div>
@@ -23,8 +22,18 @@
         <div class="col-6 panel pl-0">
           <div class="panel-body">
             <div class="panel-head">
-              <h5>Статистика онлайна</h5>
-              <span class="text-muted">{{ today |  date:'d MMM yyyy' }}</span>
+              <div class="d-flex flex-row justify-content-between">
+                <h5>Статистика онлайна</h5>
+                <div class="d-flex">
+                  <div class="d-flex flex-fill">
+                    <div class="input-group w-100">
+                      <input class="form-control col-12 h-100" placeholder="{{ today | date:'yyyy-MM-dd' }}"
+                      name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (dateSelect)="dayStatDateSelect($event)">
+                      <button class="btn btn-dark calendar" (click)="d.toggle()" type="button"><fa-icon [icon]="fa.calendar"></fa-icon></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div *ngIf="lineChartData.datasets.length > 0; else loader">
               <canvas baseChart

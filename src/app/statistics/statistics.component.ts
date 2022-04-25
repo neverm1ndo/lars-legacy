@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartConfiguration, ChartEvent, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartType } from 'chart.js';
+// import { BaseChartDirective } from 'ng2-charts';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+// import { AppConfig } from '../../environments/environment';
 import { ApiService } from '../api.service';
 import { combineLatest } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-statistics',
@@ -15,6 +20,12 @@ export class StatisticsComponent implements OnInit {
   stats: any = {};
   statTypes = ['Год', 'Месяц', 'Неделя', 'День'];
   range: any = '';
+
+  model: NgbDateStruct;
+
+  fa = {
+    calendar: faCalendar
+  };
 
   changeStatsRange() {}
 
@@ -50,9 +61,7 @@ export class StatisticsComponent implements OnInit {
  };
  public lineChartType: ChartType = 'line';
 
-  constructor(private api: ApiService) {
-    console.log(this.lineChartData.labels);
-  }
+  constructor(private api: ApiService) {};
 
   formLabel(date: Date): string {
     function convert(str: number): string {
@@ -67,23 +76,37 @@ export class StatisticsComponent implements OnInit {
     return `${convert(unformatted.hours)}:${convert(unformatted.minutes)}:${convert(unformatted.seconds)}`
   }
 
+  drawOnlineGraph(online: any) {
+    console.log(online)
+    this.lineChartData.datasets.push({
+      data: online.data,
+      label: 'Онлайн',
+      backgroundColor: '#fd7e14',
+      borderColor: '#fd7e14',
+      pointBackgroundColor: "#fd7e14",
+      fill: 'origin'
+    });
+    this.lineChartData.labels = online.labels
+      .map((label: string) => new Date(label))
+      .map((label: Date) => this.formLabel(label));
+  }
+
+  dayStatDateSelect(day: NgbDate) {
+    console.log(day)
+    this.api.getStatsOnline(new Date(day.year, day.month - 1, day.day))
+    .pipe(take(1))
+    .subscribe((online) => {
+      this.drawOnlineGraph(online);
+    });
+  }
+
   ngOnInit(): void {
-    combineLatest([this.api.getStatsOnline(), this.api.getStatsChat()])
+    combineLatest([this.api.getStatsOnline(new Date()), this.api.getStatsChat()])
+    .pipe(take(1))
     .subscribe(([online, stats]) => {
-      console.log(online);
       this.stats['chat'] = stats;
       if (!online) return;
-      this.lineChartData.datasets.push({
-        data: online.data,
-        label: 'Онлайн',
-        backgroundColor: '#fd7e14',
-        borderColor: '#fd7e14',
-        pointBackgroundColor: "#fd7e14",
-        fill: 'origin'
-      });
-      this.lineChartData.labels = online.labels
-        .map((label: string) => new Date(label))
-        .map((label: Date) => this.formLabel(label));
+      this.drawOnlineGraph(online);
     });
   }
 

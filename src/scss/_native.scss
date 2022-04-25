@@ -28,6 +28,9 @@
     display: none;
   }
 }
+.form-control {
+  border: none;
+}
 .dropdown-menu {
   width: 100%;
   left: 0px;
@@ -199,5 +202,38 @@ input[type="radio"]:checked + label::after {
   	25%{transform: scale(1.3);}
   	75%{transform: scale(1.4);}
   	100%{transform: scale(1);}
+  }
+}
+ngb-datepicker {
+  border: none;
+  z-index: 1!important;
+  .btn-light {
+    color: #c6c6c9;
+  }
+  ngb-datepicker-navigation-select {
+    & > .custom-select {
+      border: $tab;
+      background: $texteditor;
+      color: $text;
+      margin-left: 2px;
+      margin-right: 2px;
+      margin-bottom: 2px;
+    }
+  }
+  .ngb-dp {
+    // select {
+    // }
+    &-header {
+      background: $dropdown;
+      .btn-link {
+        color: $text;
+      }
+    }
+    &-weekdays {
+      background: $texteditor;
+    }
+    &-weekday {
+      color: $text;
+    }
   }
 }

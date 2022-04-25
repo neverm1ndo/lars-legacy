@@ -119,8 +119,9 @@ export class ApiService {
   restoreBackup(path: string, unix: string): Observable<any> {
     return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } })
   }
-  getStatsOnline(): Observable<any> {
-    return this.http.get(this.URL_STATS_ONLINE);
+  getStatsOnline(date: Date): Observable<any> {
+    console.log(date.toISOString());
+    return this.http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});
   }
   getStatsChat(): Observable<any> {
     return this.http.get(this.URL_STATS_CHAT);
