@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
-// import { BaseChartDirective } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 // import { AppConfig } from '../../environments/environment';
 import { ApiService } from '../api.service';
@@ -15,6 +15,9 @@ import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent implements OnInit {
+
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
   today: Date = new Date();
   stats: any = {};
@@ -77,7 +80,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   drawOnlineGraph(online: any) {
-    console.log(online)
+    this.lineChartData.datasets = [];
     this.lineChartData.datasets.push({
       data: online.data,
       label: 'Онлайн',
@@ -89,6 +92,7 @@ export class StatisticsComponent implements OnInit {
     this.lineChartData.labels = online.labels
       .map((label: string) => new Date(label))
       .map((label: Date) => this.formLabel(label));
+    this.chart.update();
   }
 
   dayStatDateSelect(day: NgbDate) {
