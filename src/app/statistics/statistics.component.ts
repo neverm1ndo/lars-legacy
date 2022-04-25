@@ -92,7 +92,7 @@ export class StatisticsComponent implements OnInit {
     this.lineChartData.labels = online.labels
       .map((label: string) => new Date(label))
       .map((label: Date) => this.formLabel(label));
-    this.chart.update();
+    if (this.chart) this.chart.update();
   }
 
   dayStatDateSelect(day: NgbDate) {
