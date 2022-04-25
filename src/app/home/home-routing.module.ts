@@ -51,7 +51,7 @@ const routes: Routes = [
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] },
     { path: 'backups', component: BackupsComponent, canActivate: [IsDevGuard] },
-    { path: 'stats', component: StatisticsComponent, canActivate: [IsDevGuard] },
+    { path: 'stats', component: StatisticsComponent, canActivate: [IsCommonGuard] },
   ]},
 ];
 
