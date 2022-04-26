@@ -6,7 +6,7 @@ import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
-import { BehaviorSubject, Subscription, from } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { extrudeToRight } from '../app.animations';
 import { Router } from '@angular/router';
@@ -116,9 +116,9 @@ export class TopperComponent implements OnInit, AfterViewInit {
 
   subscribeToDevSubscriptions(): void {
     this.devRoomSubscriptions
-      .add(from(this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777)).subscribe((stat) => {
-        this.state.next(stat?'live':'error');
-      }))
+      // .add(from(this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777)).subscribe((stat) => {
+      //   this.state.next(stat?'live':'error');
+      // }))
       .add(this.ws.getServerState().subscribe((state) => {
         console.log('%c[server]', 'color: magenta', 'status:', state);
         this.state.next(state);
