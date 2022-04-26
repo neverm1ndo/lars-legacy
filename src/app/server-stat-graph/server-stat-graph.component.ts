@@ -3,6 +3,8 @@ import { ElectronService } from '../core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { AppConfig } from '../../environments/environment';
 import { ServerGameMode } from '../../../samp';
+import { interval } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'server-stat-graph',
@@ -29,9 +31,9 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   points: number[] = [];
   stat: ServerGameMode;
 
-  // timer = interval(5000)
-  // .pipe(filter((players: number) => this.points.length >= 25 && this.points[this.points.length - 1] == players))
-  // .subscribe(() => { if (this.stat) { this.points.push(this.stat.players.online); this.draw(); }});
+  timer = interval(5000)
+  .pipe(filter((players: number) => this.points.length >= 25 && this.points[this.points.length - 1] == players))
+  .subscribe(() => { if (this.stat) { this.points.push(this.stat.players.online); this.draw(); }});
 
   fa = {
     users: faUsers,
@@ -111,7 +113,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
         });
   }
   ngOnDestroy(): void {
-    // this.timer.unsubscribe();
+    this.timer.unsubscribe();
   }
 
 }
