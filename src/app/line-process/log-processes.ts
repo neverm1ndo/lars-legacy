@@ -344,9 +344,14 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       control: 'checkScrollT'
     },
     '<check/game_speed/player>': {
-      translate: 'Проверка скорости игры',
+      translate: 'Проверка скорости игры PLR',
       type: 'adm',
       control: 'checkGmSpdPlr'
+    },
+    '<check/game_speed/vehicle>': {
+      translate: 'Проверка скорости игры VEH',
+      type: 'adm',
+      control: 'checkGmSpdVeh'
     },
     '<check/error/flood>': {
       translate: 'Слишком частая проверка',
