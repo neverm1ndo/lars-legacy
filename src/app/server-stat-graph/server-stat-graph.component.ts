@@ -31,8 +31,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   points: number[] = [];
   stat: ServerGameMode;
 
-  timer = interval(5000)
-  .pipe(filter((players: number) => this.points.length >= 25 && this.points[this.points.length - 1] == players))
+  timer = interval(60000)
   .subscribe(() => { if (this.stat) { this.points.push(this.stat.players.online); this.draw(); }});
 
   fa = {
