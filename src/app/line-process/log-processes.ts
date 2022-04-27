@@ -349,7 +349,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       control: 'checkGmSpdPlr'
     },
     '<check/error/flood>': {
-      translate: 'Сличшком частая проверка',
+      translate: 'Слишком частая проверка',
       type: 'danger',
       control: 'checkErrFlood'
     },
