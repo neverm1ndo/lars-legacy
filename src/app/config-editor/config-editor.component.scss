@@ -5,7 +5,9 @@
   }
   .progress {
     height: 2px;
-    // margin-bottom: -2px;
+    margin-bottom: -2px;
+    position: relative;
+    top: 0px;
     border-radius: none;
     background: none!important;
     .progressbar {
