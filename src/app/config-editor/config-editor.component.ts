@@ -6,9 +6,10 @@ import { switchMap, take, filter } from 'rxjs/operators';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ToastService } from '../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faSave, faInfo, faFileSignature, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../core/services';
 import { ConfigsService } from '../configs.service';
+import { join } from 'path';
 
 @Component({
   selector: 'app-config-editor',
@@ -91,9 +92,49 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     this.progress = 0;
   }
 
-  mkdir(path: string, name: string): void {
-    this.api.createDirectory(path, name).subscribe(() => {
+  mkdir(path: string) {
+    this.configs.mkdir(join(this.files.path, path)).subscribe(() => {
       this.reloadFileTree();
+      this.toast.show(`Директория ${path} создана`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path
+        });
+    },
+    (err) => {
+      console.error(err);
+      this.toast.show(`Директория ${path} не создана`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
+    });
+  }
+
+  rmdir(path: string) {
+    this.configs.rmdir(path).subscribe(() => {
+      this.reloadFileTree();
+      this.toast.show(`Директория ${path} удалена`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path
+        });
+    },
+    (err) => {
+      console.error(err);
+      this.toast.show(`Директория ${path} не удалена`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
     });
   }
 

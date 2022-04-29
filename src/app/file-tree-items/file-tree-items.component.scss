@@ -4,6 +4,21 @@ $height: 15px;
   .expanded {
     transform: none!important;
   }
+  .dropdown-menu {
+    padding: 0rem;
+    z-index: 4!important;
+    // width: 80px;
+    // left: 16px!important;
+    -webkit-box-shadow: 0px 6px 8px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 6px 8px 0px rgba(0, 0, 0, 0.2);
+    .no-icon {
+      margin-left: 2rem;
+    }
+    .dropdown-item {
+      padding-left: 10px;
+      padding-right: 5px;
+    }
+  }
   .under-toggler {
     padding-left: 1rem;
   }
@@ -62,6 +77,8 @@ $height: 15px;
     .active {
       color: #82AAFF;
       background: $dropdown;
+      position: relative;
+      z-index: 5;
     }
     & > .item {
       padding-left: 1rem;
@@ -75,6 +92,9 @@ $height: 15px;
         &:active, &:focus, &:hover {
           text-decoration: underline;
         }
+        // &:active, &:focus {
+        //   background: $dropdown;
+        // }
       }
     }
     line-height: 26px;

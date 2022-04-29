@@ -65,6 +65,7 @@ import { RolePipe } from '../pipes/role.pipe';
 import { MapsService } from '../maps.service';
 import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
+import { DdService } from '../core/services/dd.service';
 
 const dbConfig: DBConfig  = {
   name: 'lty_users',
@@ -101,6 +102,7 @@ const dbConfig: DBConfig  = {
   ],
   providers: [
     ConfigsService,
+    DdService,
     MapsService,
     NotificationsService,
     AuthGuard,

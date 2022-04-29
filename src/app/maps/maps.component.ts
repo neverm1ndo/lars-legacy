@@ -2,13 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services';
 import { ToastService } from '../toast.service';
+import { MapsService } from '../maps.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { join } from 'path';
 
-import { faInfo, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -39,7 +41,8 @@ export class MapsComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     private router: Router,
     public electron: ElectronService,
-    public toast: ToastService
+    public toast: ToastService,
+    private maps: MapsService
    ) {
      this.directories$ = this.reloader$.pipe(switchMap(() => api.getMapsDir()));
      this.directoriesSubscription = this.directories$.subscribe(items => {
@@ -68,6 +71,56 @@ export class MapsComponent implements OnInit, OnDestroy {
   toMap(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
     this.router.navigate(['/home/maps/map'], { queryParams: { path: path.path , name: path.name }});
+  }
+
+
+
+  mkdir(path: string) {
+    this.maps.mkdir(join(this.files.path, path))
+    .subscribe(() => {
+      this.reloadFileTree();
+      this.toast.show(`Директория ${path} создана`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path
+        });
+    },
+    (err) => {
+      console.error(err);
+      this.toast.show(`Директория ${path} не создана`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
+    });
+  }
+
+  rmdir(path: string) {
+    this.maps.rmdir(path)
+    .subscribe(() => {
+      this.reloadFileTree();
+      this.toast.show(`Директория ${path} удалена`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path
+        });
+    },
+    (err) => {
+      console.error(err);
+      this.toast.show(`Директория ${path} не удалена`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
+    });
   }
 
 

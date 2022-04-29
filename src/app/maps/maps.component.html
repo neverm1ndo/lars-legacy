@@ -9,6 +9,8 @@
           <file-tree
             (chooseDirEvent)="chooseDir($event)"
             (chooseFileEvent)="toMap($event)"
+            (rmDirEvent)="rmdir($event)"
+            (makeDir)="mkdir($event)"
             [items]="files"
             [current]="currentFilePath"
             (addNew)="addNewMap($event)"

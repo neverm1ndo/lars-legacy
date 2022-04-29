@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, Observable, throwError, combineLatest } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCopy, faInfo, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({
   providedIn: 'any'
@@ -92,6 +92,15 @@ export class ConfigsService {
 
   reloadFileTree() {
     this.reloader$.next(null);
+  }
+
+  mkdir(path: string): Observable<any> {
+    return this.api.createDirectory(path)
+    .pipe(catchError((error) => this.handleError(error)))
+  }
+  rmdir(path: string): Observable<any> {
+    return this.api.removeDirectory(path)
+    .pipe(catchError((error) => this.handleError(error)))
   }
 
   async deleteFile(path: string): Promise<any> {

@@ -31,6 +31,7 @@ export class ApiService {
   readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
   readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
   readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
+  readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
 
   readonly SERVER_MONITOR: string = 'https://apps.nmnd.ru/api/samp';
 
@@ -126,8 +127,11 @@ export class ApiService {
     return this.http.get(this.URL_STATS_CHAT);
   }
 
-  createDirectory(path: string, name: string): Observable<any> {
-    return this.http.post(this.URL_MKDIR, { path, name });
+  createDirectory(path: string): Observable<any> {
+    return this.http.post(this.URL_MKDIR, { path });
+  }
+  removeDirectory(path: string): Observable<any> {
+    return this.http.delete(this.URL_RMDIR, { params: { path }});
   }
 
   getSampServerMonitor(): Observable<any> {

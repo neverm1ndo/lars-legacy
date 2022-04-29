@@ -4,18 +4,21 @@
       <lty-icon name="lty-fs-tree"></lty-icon>
       <span class="mr-3">Файлы</span>
       <div class="d-flex flex-row">
-        <button class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
-        <!-- <button class="btn btn-dark sync" (click)="mkdir()" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button> -->
-        <!-- <span type="button" class="btn btn-dark btn-file" name="button">
-          <fa-icon [icon]="fa.plus"></fa-icon>
-          <input #add type="file" name="fileLoader" (input)="upload($event)" multiple="true" accept=".map, .off, .conf">
-        </span> -->
+        <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
+        <button title="Создать новую папку" class="btn btn-dark sync" (click)="popup = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
       </div>
     </div>
   </div>
   <div class="col-12 pr-0 pl-0 no-padding flex-fill overflow-auto">
     <div *ngIf="node; else loaderItems" class="text-left">
-      <file-tree-items (chooseFileEvent)="getConfig($event)" (chooseDirEvent)="chooseDir($event)" [child-nodes]="node" [expanded]="true" [current]="current" (uploadFileList)="upload($event)">
+      <file-tree-items
+      (chooseFileEvent)="getConfig($event)"
+      (chooseDirEvent)="chooseDir($event)"
+      (rmDirEvent)="rmDir($event)"
+      [child-nodes]="node"
+      [expanded]="true"
+      [current]="current"
+      (uploadFileList)="upload($event)">
       </file-tree-items>
     </div>
     <ng-template #loaderItems>
@@ -39,3 +42,40 @@
       </div>
     </div>
   </div>
+</div>
+<form [formGroup]="addNewDir" (ngSubmit)="mkdir()" *ngIf="popup" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+  <div class="popup-window d-flex flex-column">
+    <div class="popup-window-head">
+      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
+    </div>
+    <div class="popup-window-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="newDirInput"><small>Путь директории от корня дерева</small></label>
+            <input type="text"
+                   placeholder="Путь директории от корня дерева"
+                   class="form-control"
+                   name="newDirInput"
+                   id="newDirInput"
+                   aria-describedby="nickname"
+                   formControlName="path"
+                   required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-window-footer text-center">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6 pl-0">
+            <button type="submit" class="btn btn-light w-100" name="button">Добавить</button>
+          </div>
+          <div class="col-6 pr-0">
+            <button type="button" (click)="popup = false" class="btn btn-danger w-100" name="button">Отмена</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

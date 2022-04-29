@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ApiService } from '../api.service';
-import { TreeNode } from '../interfaces/app.interfaces'
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild} from '@angular/core';
+import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { TreeNode } from '../interfaces/app.interfaces';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { DdService } from '../core/services/dd.service';
 
 @Component({
   selector: 'file-tree-items',
@@ -16,7 +17,9 @@ export class FileTreeItemsComponent implements OnInit {
   @Input('current') current: string;
   @Output() chooseFileEvent = new EventEmitter<{ path: string, name: string }>();
   @Output() chooseDirEvent = new EventEmitter<string>();
+  @Output() rmDirEvent = new EventEmitter<string>();
   @Output('uploadFileList') uploadFileListEvent = new EventEmitter<{ filelist: FileList, path: string }>();
+  @ViewChild('contextDrop', { static: true }) contextDrop: NgbDropdown;
 
   toggler: boolean = false;
 
@@ -26,8 +29,13 @@ export class FileTreeItemsComponent implements OnInit {
     map: faMap,
     conf: faFileCode,
     db: faDatabase,
-    trash: faTrash
+    trash: faTrash,
+    pencil: faPencilAlt,
   };
+
+  constructor(
+    private dd: DdService
+  ) {}
 
   getConfig(path: { path: string, name: string }) {
     this.chooseFileEvent.emit(path);
@@ -45,8 +53,9 @@ export class FileTreeItemsComponent implements OnInit {
     this.uploadFileListEvent.emit(event);
   }
 
-  showContext() {
-    console.log('context');
+  showContext(event: PointerEvent) {
+    event.stopPropagation();
+    this.dd.changeOpened(this.contextDrop);
   }
 
   isMapFile(name: string): boolean {
@@ -62,21 +71,25 @@ export class FileTreeItemsComponent implements OnInit {
     return name.includes('.db') || name.includes('.cadb');
   }
 
+
   chooseDir(event: any): void {
     this.chooseDirEvent.emit(event);
+  }
+
+  rmDir(path: string): void {
+    this.rmDirEvent.emit(path);
   }
 
   toggleExpand(event: Event):void {
     event.stopPropagation();
     event.preventDefault();
+    if (this.contextDrop.isOpen()) {
+      this.dd.currentOpened = null;
+      this.contextDrop.close();
+    }
     this.toggler = !this.toggler;
     this.chooseDir(this.nodes.path);
   }
-
-
-  constructor(
-    public api: ApiService,
-  ) {}
 
   ngOnInit(): void {
     if (this.expanded) this.toggler = true;
