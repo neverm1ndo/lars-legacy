@@ -15,6 +15,7 @@ export class FileTreeItemsComponent implements OnInit {
   @Input('child-nodes') nodes: TreeNode;
   @Input('expanded') expanded: boolean;
   @Input('current') current: string;
+  @Input('isRoot') isRoot: boolean;
   @Output() chooseFileEvent = new EventEmitter<{ path: string, name: string }>();
   @Output() chooseDirEvent = new EventEmitter<string>();
   @Output() rmDirEvent = new EventEmitter<string>();
@@ -53,7 +54,8 @@ export class FileTreeItemsComponent implements OnInit {
     this.uploadFileListEvent.emit(event);
   }
 
-  showContext(event: PointerEvent) {
+  showContext(event: MouseEvent) {
+    if (this.isRoot) return;
     event.stopPropagation();
     this.dd.changeOpened(this.contextDrop);
   }

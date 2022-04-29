@@ -15,6 +15,7 @@
       (chooseFileEvent)="getConfig($event)"
       (chooseDirEvent)="chooseDir($event)"
       (rmDirEvent)="rmDir($event)"
+      [isRoot]="true"
       [child-nodes]="node"
       [expanded]="true"
       [current]="current"

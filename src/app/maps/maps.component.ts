@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { join } from 'path';
+import { posix } from 'path';
 
 import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -76,7 +76,7 @@ export class MapsComponent implements OnInit, OnDestroy {
 
 
   mkdir(path: string) {
-    this.maps.mkdir(join(this.files.path, path))
+    this.maps.mkdir(posix.join(this.files.path, path))
     .subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path} создана`,

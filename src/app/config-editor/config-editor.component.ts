@@ -9,7 +9,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../core/services';
 import { ConfigsService } from '../configs.service';
-import { join } from 'path';
+import { posix } from 'path';
 
 @Component({
   selector: 'app-config-editor',
@@ -93,7 +93,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mkdir(path: string) {
-    this.configs.mkdir(join(this.files.path, path)).subscribe(() => {
+    this.configs.mkdir(posix.join(this.files.path, path)).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path} создана`,
         {
