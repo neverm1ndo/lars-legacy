@@ -12,6 +12,7 @@
             (chooseFileEvent)="toConfig($event)"
             (chooseDirEvent)="chooseDir($event)"
             (rmDirEvent)="rmdir($event)"
+            (mvDirEvent)="mvdir($event)"
             [items]="files" [current]="currentFilePath"
             (addNew)="addNewFile($event)">
           </file-tree>

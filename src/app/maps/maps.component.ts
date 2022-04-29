@@ -123,6 +123,29 @@ export class MapsComponent implements OnInit, OnDestroy {
     });
   }
 
+  mvdir(path: {path: string; dest: string}) {
+    this.maps.mvdir(posix.normalize(path.path), posix.normalize(path.dest)).subscribe(() => {
+      this.reloadFileTree();
+      this.toast.show(`Директория ${path.path} переименована`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path.dest
+        });
+    },
+    (err) => {
+      console.error(err);
+      this.toast.show(`Директория ${path} не переименована`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
+    });
+  }
+
 
   addNewMap(event: any): void {
     let files: any[];

@@ -25,6 +25,7 @@ export class FileTreeComponent implements OnInit {
   @Output() chooseFileEvent = new EventEmitter<FilePathName>();
   @Output() chooseDirEvent = new EventEmitter<string>();
   @Output() rmDirEvent = new EventEmitter<string>();
+  @Output() mvDirEvent = new EventEmitter<{ path: string; dest: string}>();
   @Output() addNew = new EventEmitter<Event>();
   @Output() makeDir = new EventEmitter<string>();
   @Output() resync = new EventEmitter<any>();
@@ -48,6 +49,15 @@ export class FileTreeComponent implements OnInit {
     ]),
   });
 
+  mvDirGroup: FormGroup = new FormGroup({
+    path: new FormControl('/', [
+      Validators.required,
+    ]),
+    dest: new FormControl('/', [
+      Validators.required,
+    ]),
+  });
+
   fa = {
     plus: faPlus,
     sync: faSyncAlt,
@@ -56,6 +66,7 @@ export class FileTreeComponent implements OnInit {
   };
 
   popup: boolean = false;
+  popupMv: boolean = false;
 
   constructor() { }
 
@@ -69,6 +80,17 @@ export class FileTreeComponent implements OnInit {
 
   rmDir(path: string) {
     this.rmDirEvent.emit(path);
+  }
+
+  mvDirEventHandler(path: string) {
+    this.mvDirGroup.setValue({ path, dest: path });
+    this.popupMv = true;
+  }
+
+  mvdir() {
+    const { path, dest } = this.mvDirGroup.value;
+    this.mvDirEvent.emit({ path, dest });
+    this.popupMv = false;
   }
 
   sync(): void {

@@ -11,6 +11,7 @@
             (chooseFileEvent)="toMap($event)"
             (rmDirEvent)="rmdir($event)"
             (makeDir)="mkdir($event)"
+            (mvDirEvent)="mvdir($event)"
             [items]="files"
             [current]="currentFilePath"
             (addNew)="addNewMap($event)"

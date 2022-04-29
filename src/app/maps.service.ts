@@ -39,6 +39,10 @@ export class MapsService {
     return this.api.removeDirectory(path)
     .pipe(catchError((error) => this.handleError(error)))
   }
+  mvdir(path: string, dest: string): Observable<any> {
+    return this.api.moveDirectory(path, dest)
+    .pipe(catchError((error) => this.handleError(error)))
+  }
 
   objectToMap(object: any[]): string {
     let res: string = '';

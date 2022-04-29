@@ -15,6 +15,7 @@
       (chooseFileEvent)="getConfig($event)"
       (chooseDirEvent)="chooseDir($event)"
       (rmDirEvent)="rmDir($event)"
+      (mvDirEvent)="mvDirEventHandler($event)"
       [isRoot]="true"
       [child-nodes]="node"
       [expanded]="true"
@@ -74,6 +75,42 @@
           </div>
           <div class="col-6 pr-0">
             <button type="button" (click)="popup = false" class="btn btn-danger w-100" name="button">Отмена</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form [formGroup]="mvDirGroup" (ngSubmit)="mvdir()" *ngIf="popupMv" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+  <div class="popup-window d-flex flex-column">
+    <div class="popup-window-head">
+      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать директорию</h5>
+    </div>
+    <div class="popup-window-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="mvDirInput"><small>Путь директории от корня дерева</small></label>
+            <input type="text"
+                   placeholder="Новый путь директории от корня дерева"
+                   class="form-control"
+                   name="mvDirInput"
+                   id="mvDirInput"
+                   aria-describedby="nickname"
+                   formControlName="dest"
+                   required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-window-footer text-center">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6 pl-0">
+            <button type="submit" class="btn btn-light w-100" name="button">Переименовать</button>
+          </div>
+          <div class="col-6 pr-0">
+            <button type="button" (click)="popupMv = false" class="btn btn-danger w-100" name="button">Отмена</button>
           </div>
         </div>
       </div>

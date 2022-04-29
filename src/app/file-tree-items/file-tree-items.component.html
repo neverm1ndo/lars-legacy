@@ -10,7 +10,7 @@
       </div>
     </div>
     <div ngbDropdownMenu aria-labelledby="dropdownManual">
-      <button disabled (click)="rmDir(nodes.path)" class="text-light bg-black" ngbDropdownItem><span class="no-icon">Переименовать</span></button>
+      <button (click)="$event.stopPropagation(); mvDir(nodes.path)" class="text-light bg-black" ngbDropdownItem><span class="no-icon">Переименовать</span></button>
       <button (click)="$event.stopPropagation(); rmDir(nodes.path)" class="text-danger bg-black" ngbDropdownItem><fa-icon class="mr-3" [icon]="fa.trash"></fa-icon>Удалить</button>
     </div>
   </div>
@@ -22,7 +22,7 @@
           {{ item.name }}
         </div>
       </file-tree-item>
-      <file-tree-items [expanded]="item.expanded" (uploadFileList)="uploadDnD($event)" *ngIf="item.type === 'dir'" (rmDirEvent)="rmDir($event)" (chooseDirEvent)="chooseDir($event)" (chooseFileEvent)="getConfig($event)" [child-nodes]="item" [current]="current"></file-tree-items>
+      <file-tree-items [expanded]="item.expanded" (uploadFileList)="uploadDnD($event)" *ngIf="item.type === 'dir'" (mvDirEvent)="mvDir($event)" (rmDirEvent)="rmDir($event)" (chooseDirEvent)="chooseDir($event)" (chooseFileEvent)="getConfig($event)" [child-nodes]="item" [current]="current"></file-tree-items>
     </div>
   </div>
 </div>

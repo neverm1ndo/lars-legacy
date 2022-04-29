@@ -18,6 +18,7 @@ export class FileTreeItemsComponent implements OnInit {
   @Input('isRoot') isRoot: boolean;
   @Output() chooseFileEvent = new EventEmitter<{ path: string, name: string }>();
   @Output() chooseDirEvent = new EventEmitter<string>();
+  @Output() mvDirEvent = new EventEmitter<string>();
   @Output() rmDirEvent = new EventEmitter<string>();
   @Output('uploadFileList') uploadFileListEvent = new EventEmitter<{ filelist: FileList, path: string }>();
   @ViewChild('contextDrop', { static: true }) contextDrop: NgbDropdown;
@@ -80,6 +81,10 @@ export class FileTreeItemsComponent implements OnInit {
 
   rmDir(path: string): void {
     this.rmDirEvent.emit(path);
+  }
+
+  mvDir(path: string): void {
+    this.mvDirEvent.emit(path);
   }
 
   toggleExpand(event: Event):void {
