@@ -74,9 +74,11 @@ $height: 15px;
     }
   }
   .items {
-    .active {
+    .active, .active-dir {
       color: #82AAFF;
       background: $dropdown;
+    }
+    .active-dir {      
       position: relative;
       z-index: 5;
     }
