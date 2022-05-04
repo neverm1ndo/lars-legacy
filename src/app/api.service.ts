@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
+import { handleError } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -129,13 +130,16 @@ export class ApiService {
   }
 
   createDirectory(path: string): Observable<any> {
-    return this.http.post(this.URL_MKDIR, { path });
+    return this.http.post(this.URL_MKDIR, { path })
+               .pipe(catchError((error) => handleError(error)));
   }
   removeDirectory(path: string): Observable<any> {
-    return this.http.delete(this.URL_RMDIR, { params: { path }});
+    return this.http.delete(this.URL_RMDIR, { params: { path }})
+               .pipe(catchError((error) => handleError(error)));
   }
   moveDirectory(path: string, dest: string): Observable<any> {
-    return this.http.patch(this.URL_MVDIR, { path, dest });
+    return this.http.patch(this.URL_MVDIR, { path, dest })
+               .pipe(catchError((error) => handleError(error)));
   }
 
   getSampServerMonitor(): Observable<any> {
@@ -149,6 +153,7 @@ export class ApiService {
       this.refresh();
     }
   }
+
   search(query: any, page: string, lim: string, filter?: string[], date?: { from?: string, to?: string}): Observable<any> {
     let params: HttpParams = new HttpParams()
     .appendAll({
@@ -163,6 +168,7 @@ export class ApiService {
     }
     return this.http.get(this.URL_SEARCH, { params });
   }
+
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
     let last = JSON.parse(window.localStorage.getItem('last'));
     if (!this.noteIsAlreadyExists(last, key, val)) {
@@ -175,6 +181,7 @@ export class ApiService {
       window.localStorage.setItem('last', JSON.stringify(last));
     }
   }
+
   noteIsAlreadyExists(last: any, key: string, val: any): boolean {
     for (let i = 0; i < last[key].length; i++) {
       if (typeof last[key][i] == 'string') {

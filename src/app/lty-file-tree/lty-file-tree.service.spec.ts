@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DdService } from './dd.service';
+import { LtyFileTreeService } from './lty-file-tree.service';
 
-describe('DdService', () => {
-  let service: DdService;
+describe('LtyFileTreeServiceService', () => {
+  let service: LtyFileTreeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DdService);
+    service = TestBed.inject(LtyFileTreeService);
   });
 
   it('should be created', () => {

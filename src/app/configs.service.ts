@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
 import { ElectronService } from './core/services';
 import { Router } from '@angular/router';
 
-import { BehaviorSubject, Subject, Observable, throwError, combineLatest } from 'rxjs';
+import { BehaviorSubject, Subject, Observable, combineLatest } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { handleError } from './utils';
 
-import { faTrash, faCopy, faInfo, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({
   providedIn: 'any'
@@ -26,19 +26,6 @@ export class ConfigsService {
   public reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
   public dprogress: BehaviorSubject<number> = new BehaviorSubject(0);
 
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-      this.error.next(error.error);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-        this.error.next(error);
-    }
-    return throwError(error);
-  }
-
   getConfig(path: string): Observable<any> {
     return combineLatest([
       this.api.getConfigText(path),
@@ -48,11 +35,10 @@ export class ConfigsService {
   saveFile(path: string, text: string): Observable<any>  {
     this.error.next(null);
     return this.api.saveFile(path, text)
-    .pipe(catchError((error) => this.handleError(error)));
+    .pipe(catchError((error) => handleError(error)));
   }
 
   downloadFile(path: string): void {
-    console.log(path);
     let filename: string = ((): string => {
       const spl = path.split('/');
       return spl[spl.length - 1];
@@ -94,19 +80,6 @@ export class ConfigsService {
     this.reloader$.next(null);
   }
 
-  mkdir(path: string): Observable<any> {
-    return this.api.createDirectory(path)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-  rmdir(path: string): Observable<any> {
-    return this.api.removeDirectory(path)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-  mvdir(path: string, dest: string): Observable<any> {
-    return this.api.moveDirectory(path, dest)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-
   async deleteFile(path: string): Promise<any> {
     const dialogOpts = {
       type: 'warning',
@@ -141,5 +114,4 @@ export class ConfigsService {
       });
     });
   }
-
 }

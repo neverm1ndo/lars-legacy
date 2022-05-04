@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { TreeNode } from '../../interfaces/app.interfaces';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { DdService } from '../../core/services/dd.service';
+import { LtyFileTreeService } from '../lty-file-tree.service';
+import { extname } from 'path';
 
 @Component({
   selector: 'file-tree-items',
@@ -12,18 +13,15 @@ import { DdService } from '../../core/services/dd.service';
 })
 export class FileTreeItemsComponent implements OnInit {
 
-  @Input('child-nodes') nodes: TreeNode;
+  @Input('child-nodes') childNodes: TreeNode;
   @Input('expanded') expanded: boolean;
-  @Input('current') current: string;
-  @Input('isRoot') isRoot: boolean;
-  @Output() chooseFileEvent = new EventEmitter<{ path: string, name: string }>();
-  @Output() chooseDirEvent = new EventEmitter<string>();
-  @Output() mvDirEvent = new EventEmitter<string>();
-  @Output() rmDirEvent = new EventEmitter<string>();
+  @Input('isRoot') private _isRoot: boolean;
+  @Output() mvdir = new EventEmitter<string>();
+  @Output() rmdir = new EventEmitter<string>();
   @Output('uploadFileList') uploadFileListEvent = new EventEmitter<{ filelist: FileList, path: string }>();
   @ViewChild('contextDrop', { static: true }) contextDrop: NgbDropdown;
 
-  toggler: boolean = false;
+  private _opened: boolean = false;
 
   fa = {
     dir: faFolder,
@@ -36,19 +34,30 @@ export class FileTreeItemsComponent implements OnInit {
   };
 
   constructor(
-    private dd: DdService
+    private _lfts: LtyFileTreeService,
   ) {}
 
-  getConfig(path: { path: string, name: string }) {
-    this.chooseFileEvent.emit(path);
+  selectFile(file: { path: string, name: string }) {
+    this._lfts.activeItemPath.next(file.path);
   }
 
   getFileIcon(item: TreeNode) {
     if (item.type === 'dir') return faFolder;
-    if (this.isMapFile(item.name)) return faMap;
-    if (this.isDBFile(item.name)) return faDatabase;
-    if (this.isConfFile(item.name)) return faFileCode;
-    return faFileAlt;
+    switch (extname(item.name)) {
+      case 'map': return faMap;
+      case 'db': return faDatabase;
+      case 'cadb': return faDatabase;
+      case 'conf': return faFileCode;
+      default: return faFileAlt;
+    }
+  }
+
+  isDir(type: string) {
+    return type === 'dir';
+  }
+
+  isFile(type: string) {
+    return type === 'file';
   }
 
   uploadDnD(event: any) {
@@ -56,50 +65,38 @@ export class FileTreeItemsComponent implements OnInit {
   }
 
   showContext(event: MouseEvent) {
-    if (this.isRoot) return;
+    if (this._isRoot) return;
     event.stopPropagation();
-    this.dd.changeOpened(this.contextDrop);
-  }
-
-  isMapFile(name: string): boolean {
-    return name.includes('.map');
-  }
-  isConfFile(name: string): boolean {
-    return name.includes('.conf');
-  }
-  isShFile(name: string): boolean {
-    return name.includes('.sh');
-  }
-  isDBFile(name: string): boolean {
-    return name.includes('.db') || name.includes('.cadb');
-  }
-
-
-  chooseDir(event: any): void {
-    this.chooseDirEvent.emit(event);
+    this._lfts.changeOpened(this.contextDrop);
   }
 
   rmDir(path: string): void {
-    this.rmDirEvent.emit(path);
+    this.rmdir.emit(path);
   }
 
   mvDir(path: string): void {
-    this.mvDirEvent.emit(path);
+    this.mvdir.emit(path);
   }
 
-  toggleExpand(event: Event):void {
+  isOpen() {
+    return this._opened;
+  }
+
+  isCurrent(path: string): boolean {
+    return path === this._lfts.activeItemPath.value;
+  }
+
+  toggleExpand(event: Event, path?: string):void {
     event.stopPropagation();
     event.preventDefault();
-    if (this.contextDrop.isOpen()) {
-      this.dd.currentOpened = null;
-      this.contextDrop.close();
-    }
-    this.toggler = !this.toggler;
-    this.chooseDir(this.nodes.path);
+    this._opened = !this._opened;
+    this._lfts.chooseDir(path);
+    if (!this.contextDrop.isOpen()) return;
+    this._lfts.currentOpenedContext = null;
+    this.contextDrop.close();
   }
 
   ngOnInit(): void {
-    if (this.expanded) this.toggler = true;
+    if (this.expanded) this._opened = true;
   }
-
 }

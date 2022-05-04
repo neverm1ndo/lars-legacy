@@ -8,11 +8,11 @@
           </div>
           <file-tree
             (resync)="reloadFileTree()"
-            (makeDir)="mkdir($event)"
-            (chooseFileEvent)="toConfig($event)"
-            (chooseDirEvent)="chooseDir($event)"
-            (rmDirEvent)="rmdir($event)"
-            (mvDirEvent)="mvdir($event)"
+            (fileSelect)="toConfig($event)"
+            (dirSelect)="chooseDir($event)"
+            (mkdir)="mkdir($event)"
+            (rmdir)="rmdir($event)"
+            (mvdir)="mvdir($event)"
             [items]="files" [current]="currentFilePath"
             (addNew)="addNewFile($event)">
           </file-tree>

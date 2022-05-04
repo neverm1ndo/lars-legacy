@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { LtyFileTreeService } from '../lty-file-tree.service';
+import { Subscription } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import { TreeNode } from '../../interfaces/app.interfaces';
-import { faPlus, faSyncAlt, faFile, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
-import Keys from '../../enums/keycode.enum';
+import { faSyncAlt, faFile, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { settings } from '../../app.animations';
-
-const { A } = Keys;
+import { basename, posix } from 'path';
 
 interface FilePathName {
   path: string,
@@ -19,29 +20,23 @@ interface FilePathName {
   animations: [settings],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeComponent implements OnInit {
+export class FileTreeComponent implements OnInit, OnDestroy {
 
-  @Input('items') node: TreeNode;
-  @Output() chooseFileEvent = new EventEmitter<FilePathName>();
-  @Output() chooseDirEvent = new EventEmitter<string>();
-  @Output() rmDirEvent = new EventEmitter<string>();
-  @Output() mvDirEvent = new EventEmitter<{ path: string; dest: string}>();
+
+  node: TreeNode;
+  @Input('items') set nodes(nodes: TreeNode) {
+    this.node = this._lfts.expandIfExpandedBefore(nodes);
+  };
+  @Output() fileSelect = new EventEmitter<FilePathName>();
+  @Output() dirSelect = new EventEmitter<string>();
+  @Output() rmdir = new EventEmitter<string>();
+  @Output() mvdir = new EventEmitter<{ path: string; dest: string}>();
+  @Output() mkdir = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
-  @Output() makeDir = new EventEmitter<string>();
   @Output() resync = new EventEmitter<any>();
   @Input('current') current: string;
-  @ViewChild('add') add: ElementRef;
-  @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
-      if (event.altKey) {
-        switch (event.keyCode) {
-          case A : {
-            this.add.nativeElement.click();
-            break;
-          }
-          default : break;
-        }
-      }
-  }
+
+  fileTreeEvents: Subscription = new Subscription();
 
   addNewDir: FormGroup = new FormGroup({
     path: new FormControl('/', [
@@ -59,37 +54,29 @@ export class FileTreeComponent implements OnInit {
   });
 
   fa = {
-    plus: faPlus,
     sync: faSyncAlt,
     file: faFile,
     folderPlus: faFolderPlus
   };
 
   popup: boolean = false;
-  popupMv: boolean = false;
+  popupMv: boolean = true;
 
-  constructor() { }
+  constructor(private _lfts: LtyFileTreeService) { }
 
-  getConfig(path: FilePathName) {
-    this.chooseFileEvent.emit(path);
-  }
 
-  chooseDir(path: string) {
-    this.chooseDirEvent.emit(path);
-  }
-
-  rmDir(path: string) {
-    this.rmDirEvent.emit(path);
-  }
-
-  mvDirEventHandler(path: string) {
+  mvDirEventHandle(path: string) {
     this.mvDirGroup.setValue({ path, dest: path });
     this.popupMv = true;
   }
 
-  mvdir() {
+  rmDir(path: string) {
+    this.rmdir.emit(posix.normalize(path));
+  }
+
+  mvDir() {
     const { path, dest } = this.mvDirGroup.value;
-    this.mvDirEvent.emit({ path, dest });
+    this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
     this.popupMv = false;
   }
 
@@ -101,12 +88,24 @@ export class FileTreeComponent implements OnInit {
     this.addNew.emit(event);
   }
 
-  mkdir(): void {
-    if (this.addNewDir.value.path) this.makeDir.emit(this.addNewDir.value.path);
+  makeDirectory(): void {
+    if (this.addNewDir.value.path) this.mkdir.emit(posix.normalize(this.addNewDir.value.path));
     this.popup = false;
   }
 
   ngOnInit(): void {
+    this.fileTreeEvents.add(
+      this._lfts.activeItemPath
+      .pipe(filter((path) => !!path))
+      .pipe(map((path: string) => {
+        return { path, name: basename(path) };
+      })).subscribe((file: FilePathName) => {
+        this.fileSelect.emit(file);
+      }),
+    );
+    this._lfts.activeItemPath.next(this.current);
   }
-
+  ngOnDestroy(): void {
+    this.fileTreeEvents.unsubscribe();
+  }
 }

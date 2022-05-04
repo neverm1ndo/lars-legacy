@@ -1,28 +1,28 @@
-<div dnd [path]="nodes.path" (fileDropped)="uploadDnD($event)" [class.expandedTab]="toggler" class="item no-select">
-  <div ngbDropdown [autoClose]="true" #contextDrop="ngbDropdown" (click)="toggleExpand($event); true" class="item-title">
+<div dnd [path]="childNodes.path" (fileDropped)="uploadDnD($event)" [class.expandedTab]="isOpen()" class="item no-select">
+  <div ngbDropdown [autoClose]="true" #contextDrop="ngbDropdown" (click)="toggleExpand($event, childNodes.path); true" class="item-title">
     <div class="under-toggler" [class.active-dir]="contextDrop.isOpen()" ngbDropdownAnchor (contextmenu)="showContext($event)">
       <div class="item-name">
-        <button [class.expanded]="toggler" class="items-expander">
+        <button [class.expanded]="isOpen()" class="items-expander">
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-opacity="1"></use></g></svg>
         </button>
         <fa-icon [icon]="fa.dir"></fa-icon>
-        {{ nodes.name }}
+        {{ childNodes.name }}
       </div>
     </div>
-    <div ngbDropdownMenu aria-labelledby="dropdownManual">
-      <button (click)="$event.stopPropagation(); mvDir(nodes.path)" class="text-light bg-black" ngbDropdownItem><span class="no-icon">Переименовать</span></button>
-      <button (click)="$event.stopPropagation(); rmDir(nodes.path)" class="text-danger bg-black" ngbDropdownItem><fa-icon class="mr-3" [icon]="fa.trash"></fa-icon>Удалить</button>
+    <div ngbDropdownMenu aria-labelledby="file-tree-conxtext">
+      <button (click)="$event.stopPropagation(); mvDir(childNodes.path)" class="text-light bg-black" ngbDropdownItem><span class="no-icon">Переименовать</span></button>
+      <button (click)="$event.stopPropagation(); rmDir(childNodes.path)" class="text-danger bg-black" ngbDropdownItem><fa-icon class="mr-3" [icon]="fa.trash"></fa-icon>Удалить</button>
     </div>
   </div>
-  <div *ngIf="toggler" class="items">
-    <div class="item no-select" *ngFor="let item of nodes.items" [class.active]="item.path === current" [attr.data-path]="item.path">
-      <file-tree-item (click)="getConfig({path: item.path, name: item.name})" *ngIf="item.type === 'file'">
-        <div [attr.data-path]="item.path" class="item-name">
-          <fa-icon [icon]="getFileIcon(item)"></fa-icon>
-          {{ item.name }}
+  <div *ngIf="isOpen()" class="items">
+    <div class="item no-select" *ngFor="let child of childNodes.items" [class.active]="isCurrent(child.path)" [attr.data-path]="child.path">
+      <file-tree-item (click)="selectFile({path: child.path, name: child.name})" *ngIf="isFile(child.type)">
+        <div [attr.data-path]="child.path" class="item-name">
+          <fa-icon [icon]="getFileIcon(child)"></fa-icon>
+          {{ child.name }}
         </div>
       </file-tree-item>
-      <file-tree-items [expanded]="item.expanded" (uploadFileList)="uploadDnD($event)" *ngIf="item.type === 'dir'" (mvDirEvent)="mvDir($event)" (rmDirEvent)="rmDir($event)" (chooseDirEvent)="chooseDir($event)" (chooseFileEvent)="getConfig($event)" [child-nodes]="item" [current]="current"></file-tree-items>
+      <file-tree-items [expanded]="child.expanded" (rmdir)="rmDir($event)" (mvdir)="mvDir($event)" (uploadFileList)="uploadDnD($event)" *ngIf="isDir(child.type)" [child-nodes]="child"></file-tree-items>
     </div>
   </div>
 </div>

@@ -12,14 +12,12 @@
   <div class="col-12 pr-0 pl-0 no-padding flex-fill overflow-auto">
     <div *ngIf="node; else loaderItems" class="text-left">
       <file-tree-items
-      (chooseFileEvent)="getConfig($event)"
-      (chooseDirEvent)="chooseDir($event)"
-      (rmDirEvent)="rmDir($event)"
-      (mvDirEvent)="mvDirEventHandler($event)"
+      (rmdir)="rmDir($event)"
+      (mvdir)="mvDirEventHandle($event)"
+      (mkdir)="mkDir($event)"
       [isRoot]="true"
       [child-nodes]="node"
       [expanded]="true"
-      [current]="current"
       (uploadFileList)="upload($event)">
       </file-tree-items>
     </div>

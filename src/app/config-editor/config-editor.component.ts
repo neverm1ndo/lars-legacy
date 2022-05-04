@@ -9,7 +9,6 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../core/services';
 import { ConfigsService } from '../configs.service';
-import { posix } from 'path';
 
 @Component({
   selector: 'app-config-editor',
@@ -19,7 +18,6 @@ import { posix } from 'path';
 export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   files: TreeNode;
-  expanded: string[] = [];
   showBinary: boolean = false;
 
   directories$: Observable<any>;
@@ -46,19 +44,10 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     public toast: ToastService,
     private electron: ElectronService,
     private ngZone: NgZone,
-    public configs: ConfigsService
+    public configs: ConfigsService,
   ) {
     this.directories$ = this.configs.reloader$.pipe(switchMap(() => api.getConfigsDir()));
     this.directoriesSubscription = this.directories$.subscribe(items => {
-      const expandIfExpandedBefore = (nodes: TreeNode) => {
-        for (let item of nodes.items) {
-          if (item.type != 'dir') continue;
-          if (this.expanded.includes(item.path)) item.expanded = true;
-          expandIfExpandedBefore(item);
-        }
-        items = nodes;
-      };
-      expandIfExpandedBefore(items);
       this.files = items;
     });
   }
@@ -67,14 +56,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     const binaries: string[] = ['amx', 'so', 'db', 'cadb'];
     const splited = name.split('.');
     return binaries.every((bin: string) => splited[splited.length - 1] !== bin);
-  }
-
-  chooseDir(dir: string) {
-    if (this.expanded.includes(dir)) {
-      this.expanded.splice(this.expanded.indexOf(dir), 1);
-    } else {
-      this.expanded.push(dir);
-    }
   }
 
   toConfig(path: { path: string, name?: string }) {
@@ -93,7 +74,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mkdir(path: string) {
-    this.configs.mkdir(posix.join(this.files.path, path)).subscribe(() => {
+    this.api.createDirectory(path).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path} создана`,
         {
@@ -104,7 +85,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
         });
     },
     (err) => {
-      console.error(err);
       this.toast.show(`Директория ${path} не создана`,
         {
           classname: 'bg-danger text-light',
@@ -115,8 +95,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  mvdir(path: {path: string; dest: string}) {
-    this.configs.mvdir(posix.normalize(path.path), posix.normalize(path.dest)).subscribe(() => {
+  mvdir(path: { path: string; dest: string }) {
+    this.api.moveDirectory(path.path, path.dest).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path.path} переименована`,
         {
@@ -139,7 +119,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmdir(path: string) {
-    this.configs.rmdir(path).subscribe(() => {
+    this.api.removeDirectory(path).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path} удалена`,
         {
@@ -148,9 +128,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
           icon: faFolderPlus,
           subtext: path
         });
-    },
-    (err) => {
-      console.error(err);
+    }, (err) => {
       this.toast.show(`Директория ${path} не удалена`,
         {
           classname: 'bg-danger text-light',

@@ -39,7 +39,6 @@ import { MapInspectorComponent } from '../map-inspector/map-inspector.component'
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
-import { DndDirective } from '../directives/dnd.directive';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
 import { FileSizePipe } from '../pipes/file-size.pipe';
@@ -63,7 +62,6 @@ import { RolePipe } from '../pipes/role.pipe';
 import { MapsService } from '../maps.service';
 import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
-import { DdService } from '../core/services/dd.service';
 
 const dbConfig: DBConfig  = {
   name: 'lty_users',
@@ -81,7 +79,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -101,7 +99,6 @@ const dbConfig: DBConfig  = {
   ],
   providers: [
     ConfigsService,
-    DdService,
     MapsService,
     NotificationsService,
     AuthGuard,
