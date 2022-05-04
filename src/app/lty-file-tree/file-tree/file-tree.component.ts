@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LtyFileTreeService } from '../lty-file-tree.service';
 import { Subscription } from 'rxjs';
@@ -35,6 +35,13 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   @Output() addNew = new EventEmitter<Event>();
   @Output() resync = new EventEmitter<any>();
   @Input('current') current: string;
+
+  @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
+    if (event.key == 'Escape') {
+      this.popup = false;
+      this.popupMv = false;
+    }
+  }
 
   fileTreeEvents: Subscription = new Subscription();
 

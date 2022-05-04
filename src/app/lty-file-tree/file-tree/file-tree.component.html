@@ -65,18 +65,6 @@
         </div>
       </div>
     </div>
-    <div class="popup-window-footer text-center">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-6 pl-0">
-            <button type="submit" class="btn btn-light w-100" name="button">Добавить</button>
-          </div>
-          <div class="col-6 pr-0">
-            <button type="button" (click)="popup = false" class="btn btn-danger w-100" name="button">Отмена</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </form>
 <form [formGroup]="mvDirGroup" (ngSubmit)="mvdir()" *ngIf="popupMv" @settings class="popup d-flex flex-row justify-content-center align-items-center">
@@ -97,18 +85,6 @@
                    aria-describedby="nickname"
                    formControlName="dest"
                    required>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="popup-window-footer text-center">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-6 pl-0">
-            <button type="submit" class="btn btn-light w-100" name="button">Переименовать</button>
-          </div>
-          <div class="col-6 pr-0">
-            <button type="button" (click)="popupMv = false" class="btn btn-danger w-100" name="button">Отмена</button>
           </div>
         </div>
       </div>
