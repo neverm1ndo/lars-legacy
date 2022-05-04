@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild} from '@angular/core';
 import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { TreeNode } from '../interfaces/app.interfaces';
+import { TreeNode } from '../../interfaces/app.interfaces';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { DdService } from '../core/services/dd.service';
+import { DdService } from '../../core/services/dd.service';
 
 @Component({
   selector: 'file-tree-items',

@@ -7,6 +7,7 @@ import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SocketIoModule } from 'ngx-socket-io';
 import { NgChartsModule } from 'ng2-charts';
+import { LtyFileTreeModule } from '../lty-file-tree/lty-file-tree.module';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -29,10 +30,7 @@ import { FilterComponent } from '../filter/filter.component';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptor } from '../interceptors/jwt.interceptor';
-import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
-import { FileTreeItemComponent } from '../file-tree-item/file-tree-item.component';
-import { FileTreeItemsComponent } from '../file-tree-items/file-tree-items.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsComponent } from '../settings/settings.component';
@@ -83,7 +81,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
   imports: [
     CommonModule,
     SharedModule,
@@ -99,6 +97,7 @@ const dbConfig: DBConfig  = {
     SocketIoModule.forRoot(socketConfig),
     NgSelectModule,
     NgChartsModule,
+    LtyFileTreeModule
   ],
   providers: [
     ConfigsService,

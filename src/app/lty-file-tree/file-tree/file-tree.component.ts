@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TreeNode } from '../interfaces/app.interfaces';
+import { TreeNode } from '../../interfaces/app.interfaces';
 import { faPlus, faSyncAlt, faFile, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
-import Keys from '../enums/keycode.enum';
-import { settings } from '../app.animations';
+import Keys from '../../enums/keycode.enum';
+import { settings } from '../../app.animations';
 
 const { A } = Keys;
 
