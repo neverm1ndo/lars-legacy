@@ -5,7 +5,7 @@
       <span class="mr-3">Файлы</span>
       <div class="d-flex flex-row">
         <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
-        <button title="Создать новую папку" class="btn btn-dark sync" (click)="popup = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
+        <button title="Создать новую папку" class="btn btn-dark sync" (click)="modals.mkDir = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
     </div>
   </div>
 </div>
-<form [formGroup]="addNewDir" (ngSubmit)="mkdir()" *ngIf="popup" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewDir" (ngSubmit)="mkdir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
@@ -54,6 +54,7 @@
           <div class="form-group">
             <label for="newDirInput"><small>Путь директории от корня дерева</small></label>
             <input type="text"
+                   toFocus
                    placeholder="Путь директории от корня дерева"
                    class="form-control"
                    name="newDirInput"
@@ -67,7 +68,7 @@
     </div>
   </div>
 </form>
-<form [formGroup]="mvDirGroup" (ngSubmit)="mvdir()" *ngIf="popupMv" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="mvDirGroup" (ngSubmit)="mvdir()" *ngIf="modals.mvDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать директорию</h5>
@@ -78,6 +79,7 @@
           <div class="form-group">
             <label for="mvDirInput"><small>Путь директории от корня дерева</small></label>
             <input type="text"
+                   toFocus
                    placeholder="Новый путь директории от корня дерева"
                    class="form-control"
                    name="mvDirInput"

@@ -24,8 +24,19 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
 
   node: TreeNode;
+
+  modals = {
+    mkDir: false,
+    mvDir: false,
+    closeAll: function(){
+      this.mkDir = false;
+      this.mvDir = false;
+    }
+  }
+  @Input('current') current: string;
   @Input('items') set nodes(nodes: TreeNode) {
-    this.node = this._lfts.expandIfExpandedBefore(nodes);
+    if (!nodes) return;
+    this.node = this._lfts.expandFollowingDirs(nodes, this.current);
   };
   @Output() fileSelect = new EventEmitter<FilePathName>();
   @Output() dirSelect = new EventEmitter<string>();
@@ -34,13 +45,9 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   @Output() mkdir = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
   @Output() resync = new EventEmitter<any>();
-  @Input('current') current: string;
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Escape') {
-      this.popup = false;
-      this.popupMv = false;
-    }
+    if (event.key == 'Escape') this.modals.closeAll();
   }
 
   fileTreeEvents: Subscription = new Subscription();
@@ -66,15 +73,12 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     folderPlus: faFolderPlus
   };
 
-  popup: boolean = false;
-  popupMv: boolean = true;
-
   constructor(private _lfts: LtyFileTreeService) { }
 
 
   mvDirEventHandle(path: string) {
     this.mvDirGroup.setValue({ path, dest: path });
-    this.popupMv = true;
+    this.modals.mvDir = true;
   }
 
   rmDir(path: string) {
@@ -84,7 +88,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   mvDir() {
     const { path, dest } = this.mvDirGroup.value;
     this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
-    this.popupMv = false;
+    this.modals.mvDir = false;
   }
 
   sync(): void {
@@ -97,10 +101,17 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   makeDirectory(): void {
     if (this.addNewDir.value.path) this.mkdir.emit(posix.normalize(this.addNewDir.value.path));
-    this.popup = false;
+    this.modals.mkDir = false;
   }
 
+  closeModals(event: MouseEvent) {
+    event.stopPropagation();
+    this.modals.closeAll();
+  }
+
+
   ngOnInit(): void {
+    this.modals.closeAll();
     this.fileTreeEvents.add(
       this._lfts.activeItemPath
       .pipe(filter((path) => !!path))
@@ -114,5 +125,6 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.fileTreeEvents.unsubscribe();
+    this._lfts.activeItemPath.next(null);
   }
 }

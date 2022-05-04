@@ -82,8 +82,8 @@ export class FileTreeItemsComponent implements OnInit {
     return this._opened;
   }
 
-  isCurrent(path: string): boolean {
-    return path === this._lfts.activeItemPath.value;
+  getCurrent() {
+    return this._lfts.activeItemPath;
   }
 
   toggleExpand(event: Event, path?: string):void {

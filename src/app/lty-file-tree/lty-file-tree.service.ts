@@ -3,6 +3,7 @@ import { LtyFileTreeModule } from './lty-file-tree.module';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { TreeNode } from '../interfaces/app.interfaces';
+import { sep } from 'path';
 
 @Injectable({
   providedIn: LtyFileTreeModule
@@ -23,6 +24,29 @@ export class LtyFileTreeService {
 
   constructor() {}
 
+  expandFollowingDirs(nodes: TreeNode, path?: string): TreeNode {
+    if (!path) return nodes;
+    const separatedPath: string[] = path.split(sep);
+    for (let item of nodes.items) {
+      if (item.type != 'dir') continue;
+      if (this.expandedDirs.includes(item.path)) item.expanded = true;
+      if (!separatedPath.includes(item.name)) continue;
+      item.expanded = true;
+      this.expandFollowingDirs(item, path);
+    }
+    return nodes;
+  };
+
+  // public expandToNestedFile(path: string): TreeNode {
+  //   if (!path) return this;
+  //   for (let item of this.items) {
+  //     if (!separatedPath.includes(item.name)) continue;
+  //     item.expanded = true;
+  //     item.expandToNestedFile(path);
+  //   }
+  //   return this;
+  // }
+
   chooseDir(dir: string) {
     if (this.expandedDirs.includes(dir)) {
       this.expandedDirs.splice(this.expandedDirs.indexOf(dir), 1);
@@ -30,15 +54,6 @@ export class LtyFileTreeService {
       this.expandedDirs.push(dir);
     }
   }
-
-  expandIfExpandedBefore(nodes: TreeNode): TreeNode {
-    for (let item of nodes.items) {
-      if (item.type != 'dir') continue;
-      if (this.expandedDirs.includes(item.path)) item.expanded = true;
-      this.expandIfExpandedBefore(item);
-    }
-    return nodes;
-  };
 
   changeOpened(newTarget: NgbDropdown) {
     if (this._currentOpened == newTarget && !this._currentOpened.isOpen()) {

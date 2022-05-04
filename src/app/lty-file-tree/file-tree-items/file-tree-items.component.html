@@ -15,7 +15,7 @@
     </div>
   </div>
   <div *ngIf="isOpen()" class="items">
-    <div class="item no-select" *ngFor="let child of childNodes.items" [class.active]="isCurrent(child.path)" [attr.data-path]="child.path">
+    <div class="item no-select" *ngFor="let child of childNodes.items" [class.active]="(getCurrent() | async) == child.path" [attr.data-path]="child.path">
       <file-tree-item (click)="selectFile({path: child.path, name: child.name})" *ngIf="isFile(child.type)">
         <div [attr.data-path]="child.path" class="item-name">
           <fa-icon [icon]="getFileIcon(child)"></fa-icon>

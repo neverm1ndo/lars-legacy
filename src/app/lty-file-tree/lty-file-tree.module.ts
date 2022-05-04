@@ -9,7 +9,7 @@ import { FileTreeItemComponent } from './file-tree-item/file-tree-item.component
 import { FileTreeItemsComponent } from './file-tree-items/file-tree-items.component';
 import { LtyFileTreeService } from './lty-file-tree.service';
 import { DndDirective } from '../directives/dnd.directive';
-
+import { AutofocusDirective } from '../directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -17,6 +17,7 @@ import { DndDirective } from '../directives/dnd.directive';
     FileTreeItemComponent,
     FileTreeItemsComponent,
     DndDirective,
+    AutofocusDirective,
   ],
   imports: [
     CommonModule,
