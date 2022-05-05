@@ -100,7 +100,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   }
 
   makeDirectory(): void {
-    if (this.addNewDir.value.path) this.mkdir.emit(posix.normalize(this.addNewDir.value.path));
+    if (this.addNewDir.value.path) this.mkdir.emit(posix.join(this.node.path, this.addNewDir.value.path));
     this.modals.mkDir = false;
   }
 

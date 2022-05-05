@@ -43,7 +43,7 @@
     </div>
   </div>
 </div>
-<form [formGroup]="addNewDir" (ngSubmit)="mkdir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewDir" (ngSubmit)="makeDirectory()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
@@ -68,7 +68,7 @@
     </div>
   </div>
 </form>
-<form [formGroup]="mvDirGroup" (ngSubmit)="mvdir()" *ngIf="modals.mvDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="mvDirGroup" (ngSubmit)="mvDir()" *ngIf="modals.mvDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать директорию</h5>
