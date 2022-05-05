@@ -23,12 +23,12 @@ interface FilePathName {
 export class FileTreeComponent implements OnInit, OnDestroy {
 
 
-  node: TreeNode;
+  public node: TreeNode;
 
-  modals = {
+  public modals = {
     mkDir: false,
     mvDir: false,
-    closeAll: function(){
+    closeAll: function() {
       this.mkDir = false;
       this.mvDir = false;
     }
@@ -50,7 +50,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     if (event.key == 'Escape') this.modals.closeAll();
   }
 
-  fileTreeEvents: Subscription = new Subscription();
+  private _fileTreeEvents: Subscription = new Subscription();
 
   addNewDir: FormGroup = new FormGroup({
     path: new FormControl('/', [
@@ -67,14 +67,13 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     ]),
   });
 
-  fa = {
+  public fa = {
     sync: faSyncAlt,
     file: faFile,
     folderPlus: faFolderPlus
   };
 
   constructor(private _lfts: LtyFileTreeService) { }
-
 
   mvDirEventHandle(path: string) {
     this.mvDirGroup.setValue({ path, dest: path });
@@ -112,7 +111,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modals.closeAll();
-    this.fileTreeEvents.add(
+    this._fileTreeEvents.add(
       this._lfts.activeItemPath
       .pipe(filter((path) => !!path))
       .pipe(map((path: string) => {
@@ -124,7 +123,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     this._lfts.activeItemPath.next(this.current);
   }
   ngOnDestroy(): void {
-    this.fileTreeEvents.unsubscribe();
+    this._fileTreeEvents.unsubscribe();
     this._lfts.activeItemPath.next(null);
   }
 }
