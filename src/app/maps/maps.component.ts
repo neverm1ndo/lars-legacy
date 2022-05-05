@@ -2,13 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ElectronService } from '../core/services';
 import { ToastService } from '../toast.service';
-import { MapsService } from '../maps.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { posix } from 'path';
 
 import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -42,7 +40,6 @@ export class MapsComponent implements OnInit, OnDestroy {
     private router: Router,
     public electron: ElectronService,
     public toast: ToastService,
-    private maps: MapsService
    ) {
      this.directories$ = this.reloader$.pipe(switchMap(() => api.getMapsDir()));
      this.directoriesSubscription = this.directories$.subscribe(items => {
@@ -73,11 +70,8 @@ export class MapsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home/maps/map'], { queryParams: { path: path.path , name: path.name }});
   }
 
-
-
   mkdir(path: string) {
-    this.maps.mkdir(posix.join(this.files.path, path))
-    .subscribe(() => {
+    this.api.createDirectory(path).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path} создана`,
         {
@@ -88,7 +82,6 @@ export class MapsComponent implements OnInit, OnDestroy {
         });
     },
     (err) => {
-      console.error(err);
       this.toast.show(`Директория ${path} не создана`,
         {
           classname: 'bg-danger text-light',
@@ -99,32 +92,8 @@ export class MapsComponent implements OnInit, OnDestroy {
     });
   }
 
-  rmdir(path: string) {
-    this.maps.rmdir(path)
-    .subscribe(() => {
-      this.reloadFileTree();
-      this.toast.show(`Директория ${path} удалена`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path
-        });
-    },
-    (err) => {
-      console.error(err);
-      this.toast.show(`Директория ${path} не удалена`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
-  }
-
-  mvdir(path: {path: string; dest: string}) {
-    this.maps.mvdir(posix.normalize(path.path), posix.normalize(path.dest)).subscribe(() => {
+  mvdir(path: { path: string; dest: string }) {
+    this.api.moveDirectory(path.path, path.dest).subscribe(() => {
       this.reloadFileTree();
       this.toast.show(`Директория ${path.path} переименована`,
         {
@@ -146,6 +115,26 @@ export class MapsComponent implements OnInit, OnDestroy {
     });
   }
 
+  rmdir(path: string) {
+    this.api.removeDirectory(path).subscribe(() => {
+      this.reloadFileTree();
+      this.toast.show(`Директория ${path} удалена`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faFolderPlus,
+          subtext: path
+        });
+    }, (err) => {
+      this.toast.show(`Директория ${path} не удалена`,
+        {
+          classname: 'bg-danger text-light',
+          delay: 5000,
+          icon: faInfo,
+          subtext: `${err.error.code} ${err.error.path}`
+        });
+    });
+  }
 
   addNewMap(event: any): void {
     let files: any[];

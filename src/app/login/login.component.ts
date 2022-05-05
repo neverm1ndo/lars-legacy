@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { WebSocketService } from '../web-socket.service';
@@ -30,9 +30,10 @@ export class LoginComponent implements OnInit {
 
 
   constructor(
-    private userService: UserService,
-    private router: Router,
-    private ws: WebSocketService
+    private _userService: UserService,
+    private _router: Router,
+    private _ws: WebSocketService,
+    private _zone: NgZone
   ) {
   }
 
@@ -42,13 +43,13 @@ export class LoginComponent implements OnInit {
   logIn() {
     this.loading = true;
     localStorage.setItem('lastUser', this.email.value);
-    this.userService.loginUser(this.loginForm.value).subscribe(
+    this._userService.loginUser(this.loginForm.value).subscribe(
       response => {
           this.loading = false;
           this.error = undefined;
-          this.userService.user.next(response);
-          this.router.navigate(['/home']);
-          this.ws.connect();
+          this._userService.user.next(response);
+          this._router.navigate(['/home']);
+          this._ws.connect();
         },
       error => {
         this.loading = false;
@@ -124,11 +125,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ws.disconnect();
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
-    this.animate();
-    this.userService.error.subscribe((error) => {
+    this._ws.disconnect();
+    this._zone.runOutsideAngular(() => {
+      this.canvas.nativeElement.width = window.innerWidth;
+      this.canvas.nativeElement.height = window.innerHeight;
+      this.animate();
+    });
+    this._userService.error.subscribe((error) => {
       this.error = error.status + ' ' + error.message;
     });
     if (localStorage.getItem('lastUser')) {
@@ -137,6 +140,6 @@ export class LoginComponent implements OnInit {
         password: ''
       });
     }
-    this.userService.getUserSettings();
+    this._userService.getUserSettings();
   }
 }
