@@ -4,7 +4,7 @@ import { LtyFileTreeService } from '../lty-file-tree.service';
 import { Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { TreeNode } from '../../interfaces/app.interfaces';
-import { faSyncAlt, faFile, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSyncAlt, faFile, faFolderPlus, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import { settings } from '../../app.animations';
 import { basename, posix } from 'path';
 
@@ -22,17 +22,19 @@ interface FilePathName {
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
 
-
   public node: TreeNode;
 
   public modals = {
     mkDir: false,
     mvDir: false,
+    touch: false,
     closeAll: function() {
-      this.mkDir = false;
-      this.mvDir = false;
+      Object.keys(this).forEach((key) => {
+        if (typeof this[key] == 'boolean') this[key] = false;
+      });
     }
   }
+
   @Input('current') current: string;
   @Input('items') set nodes(nodes: TreeNode) {
     if (!nodes) return;
@@ -44,16 +46,26 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   @Output() mvdir = new EventEmitter<{ path: string; dest: string}>();
   @Output() mkdir = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
+  @Output() touch = new EventEmitter<string>();
   @Output() resync = new EventEmitter<any>();
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
-    if (event.key == 'Escape') this.modals.closeAll();
+    switch (event.key) {
+      case 'Escape': this.modals.closeAll(); break;
+      default: break;
+    }
   }
 
   private _fileTreeEvents: Subscription = new Subscription();
 
   addNewDir: FormGroup = new FormGroup({
     path: new FormControl('/', [
+      Validators.required,
+    ]),
+  });
+
+  addNewFile: FormGroup = new FormGroup({
+    path: new FormControl('', [
       Validators.required,
     ]),
   });
@@ -70,12 +82,13 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   public fa = {
     sync: faSyncAlt,
     file: faFile,
-    folderPlus: faFolderPlus
+    folderPlus: faFolderPlus,
+    filePlus: faFileSignature
   };
 
   constructor(private _lfts: LtyFileTreeService) { }
 
-  mvDirEventHandle(path: string) {
+  mvDirEventHandle(path: string): void {
     this.mvDirGroup.setValue({ path, dest: path });
     this.modals.mvDir = true;
   }
@@ -84,10 +97,14 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     this.rmdir.emit(posix.normalize(path));
   }
 
-  mvDir() {
+  mvDir(): void {
     const { path, dest } = this.mvDirGroup.value;
     this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
     this.modals.mvDir = false;
+  }
+
+  touchFile(): void {
+    this.touch.emit(this.addNewFile.value.path);
   }
 
   sync(): void {
@@ -103,7 +120,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     this.modals.mkDir = false;
   }
 
-  closeModals(event: MouseEvent) {
+  closeModals(event: MouseEvent): void {
     event.stopPropagation();
     this.modals.closeAll();
   }

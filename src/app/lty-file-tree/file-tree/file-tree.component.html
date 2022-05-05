@@ -6,6 +6,7 @@
       <div class="d-flex flex-row">
         <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
         <button title="Создать новую папку" class="btn btn-dark sync" (click)="modals.mkDir = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
+        <button title="Создать новый файл" class="btn btn-dark sync" (click)="modals.touch = true" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
       </div>
     </div>
   </div>
@@ -86,6 +87,31 @@
                    id="mvDirInput"
                    aria-describedby="nickname"
                    formControlName="dest"
+                   required>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form [formGroup]="addNewFile" (ngSubmit)="mvDir()" *ngIf="modals.touch" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+  <div class="popup-window d-flex flex-column">
+    <div class="popup-window-head">
+      <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>
+    </div>
+    <div class="popup-window-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="touchInput"><small>Путь файла от корня дерева</small></label>
+            <input type="text"
+                   toFocus
+                   placeholder="/configs/config.conf"
+                   class="form-control"
+                   name="touchInput"
+                   id="touchInput"
+                   aria-describedby="nickname"
+                   formControlName="path"
                    required>
           </div>
         </div>
