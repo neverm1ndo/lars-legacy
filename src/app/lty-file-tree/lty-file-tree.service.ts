@@ -37,16 +37,6 @@ export class LtyFileTreeService {
     return nodes;
   };
 
-  // public expandToNestedFile(path: string): TreeNode {
-  //   if (!path) return this;
-  //   for (let item of this.items) {
-  //     if (!separatedPath.includes(item.name)) continue;
-  //     item.expanded = true;
-  //     item.expandToNestedFile(path);
-  //   }
-  //   return this;
-  // }
-
   chooseDir(dir: string) {
     if (this.expandedDirs.includes(dir)) {
       this.expandedDirs.splice(this.expandedDirs.indexOf(dir), 1);

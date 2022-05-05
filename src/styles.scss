@@ -223,13 +223,13 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
     animation: rotate 2s linear infinite;
     transform-origin: center center;
     margin: auto;
-  }
-  .spinner .path {
-    stroke-dasharray: 1, 200;
-    stroke-dashoffset: 0;
-    animation: dashDefault 1.5s ease-in-out infinite;
-    stroke-linecap: round;
-    stroke: #7f848a;
+    .path {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      animation: dashDefault 1.5s ease-in-out infinite;
+      stroke-linecap: round;
+      stroke: #7f848a;
+    }
   }
   @keyframes rotateDef {
     100% {
@@ -254,26 +254,22 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
 
   }
   .spinner-logo {
-    height: 30px;
-    width: 30px;
     transform-origin: center center;
     position: relative;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
-  }
-  .spinner-logo {
-     path, use {
-       stroke-width: 5;
-       stroke: #ffffff;
-       fill: transparent;
-       fill-opacity: 10;
-       stroke-dasharray: 100, 200;
-       stroke-dashoffset: 0;
-       animation: dash-one 2.5s ease-in-out infinite;
-       stroke-linecap: round;
-      }
+    path, use {
+      stroke-width: 5;
+      stroke: #ffffff;
+      fill: transparent;
+      fill-opacity: 10;
+      stroke-dasharray: 100, 200;
+      stroke-dashoffset: 0;
+      animation: dash-one 2.5s ease-in-out infinite;
+      stroke-linecap: round;
+    }
   }
   .blur {
     filter: blur(10px);
