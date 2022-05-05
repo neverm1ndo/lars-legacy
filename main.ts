@@ -4,9 +4,8 @@ import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
 import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
-import Samp from './samp';
-import { Subscription, throwError } from 'rxjs';
-import { catchError, take } from 'rxjs/operators';
+import Samp, { ServerGameMode } from './samp';
+import { Subscription } from 'rxjs';
 
 
 /** Init samp to get server stats later
@@ -178,8 +177,18 @@ ipcMain.on('reload', () => {
 ipcMain.on('notification', (event, options) => {
   showNotification(options)
 });
-ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent, ip: string, port: number) => {
+ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
   if (!serve) return samp.getServerInfo(ip, port);
+  return Promise.resolve({
+    name: 'Local ServerMode',
+    players: {
+      online: 0,
+      max: 1,
+    },
+    lang: 'EN',
+    mode: 'freeroam',
+    private: true,
+  });
 });
 ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
   return dialog.showMessageBox(opts);
