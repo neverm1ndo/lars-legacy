@@ -16,6 +16,7 @@
       (rmdir)="rmDir($event)"
       (mvdir)="mvDirEventHandle($event)"
       (mkdir)="mkDir($event)"
+      (rm)="rmFile($event)"
       [isRoot]="true"
       [child-nodes]="node"
       [expanded]="true"
@@ -72,16 +73,16 @@
 <form [formGroup]="mvDirGroup" (ngSubmit)="mvDir()" *ngIf="modals.mvDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
-      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать директорию</h5>
+      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать</h5>
     </div>
     <div class="popup-window-body">
       <div class="row">
         <div class="col-12">
           <div class="form-group">
-            <label for="mvDirInput"><small>Путь директории от корня дерева</small></label>
+            <label for="mvDirInput"><small>Путь от корня дерева</small></label>
             <input type="text"
                    toFocus
-                   placeholder="Новый путь директории от корня дерева"
+                   placeholder="Новый путь от корня дерева"
                    class="form-control"
                    name="mvDirInput"
                    id="mvDirInput"

@@ -123,6 +123,11 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  rmFile(path: string) {
+    console.log(path)
+    this.configs.deleteFile(path);
+  }
+
   rmdir(path: string) {
     this._api.removeDirectory(path).subscribe(() => {
       this.reloadFileTree();
@@ -221,16 +226,16 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._route.queryParams
     .pipe(take(1))
-    .pipe(filter(params => params._path))
+    .pipe(filter(params => params.path))
     .subscribe((params) => {
       this.toConfig({ path: params.path, name: params.name });
     });
-    this._electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
+    this._electron.ipcRenderer.on('download-progress', (_event: any, progress: {total: number, loaded: number}) => {
       this._ngZone.run(() => {
         this.configs.dprogress.next(Math.round(100 * progress.loaded / progress.total));
       });
     });
-    this._electron.ipcRenderer.on('download-error', (event: any, err) => {
+    this._electron.ipcRenderer.on('download-error', (_event: any, err) => {
       this._ngZone.run(() => {
         this.configs.dprogress.next(0);
         this._toast.show(`Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`,

@@ -18,8 +18,10 @@ export class FileTreeItemsComponent implements OnInit {
   @Input('isRoot') private _isRoot: boolean;
   @Output() mvdir = new EventEmitter<string>();
   @Output() rmdir = new EventEmitter<string>();
+  @Output() rm = new EventEmitter<string>();
   @Output('uploadFileList') uploadFileListEvent = new EventEmitter<{ filelist: FileList, path: string }>();
   @ViewChild('contextDrop', { static: true }) contextDrop: NgbDropdown;
+  @ViewChild('contextDropItem', { static: true }) contextDropItem: NgbDropdown;
 
   private _opened: boolean = false;
 
@@ -64,14 +66,18 @@ export class FileTreeItemsComponent implements OnInit {
     this.uploadFileListEvent.emit(event);
   }
 
-  showContext(event: MouseEvent) {
-    if (this._isRoot) return;
+  showContext(event: MouseEvent, drop: NgbDropdown, type: 'dir' | 'file') {
+    if (this._isRoot && this.isDir(type)) return;
     event.stopPropagation();
-    this._lfts.changeOpened(this.contextDrop);
+    this._lfts.changeOpened(drop);
   }
 
   rmDir(path: string): void {
     this.rmdir.emit(path);
+  }
+
+  rmFile(path: string): void {
+    this.rm.emit(path);
   }
 
   mvDir(path: string): void {

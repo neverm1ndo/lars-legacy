@@ -44,6 +44,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   @Output() fileSelect = new EventEmitter<FilePathName>();
   @Output() dirSelect = new EventEmitter<string>();
   @Output() rmdir = new EventEmitter<string>();
+  @Output() rm = new EventEmitter<string>();
   @Output() mvdir = new EventEmitter<{ path: string; dest: string }>();
   @Output() mkdir = new EventEmitter<string>();
   @Output() addNew = new EventEmitter<Event>();
@@ -96,6 +97,10 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   rmDir(path: string) {
     this.rmdir.emit(posix.normalize(path));
+  }
+
+  rmFile(path: string) {
+    this.rm.emit(posix.normalize(path));
   }
 
   mvDir(): void {
