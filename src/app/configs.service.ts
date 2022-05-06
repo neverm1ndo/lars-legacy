@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
 import { ElectronService } from './core/services';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Subject, Observable, combineLatest } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap, filter, takeLast } from 'rxjs/operators';
 import { handleError } from './utils';
 
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
+
+import { basename, dirname } from 'path';
 
 @Injectable({
   providedIn: 'any'
@@ -16,10 +19,10 @@ import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 export class ConfigsService {
 
   constructor(
-    private electron: ElectronService,
-    private api: ApiService,
-    private toast: ToastService,
-    private router: Router
+    private _electron: ElectronService,
+    private _api: ApiService,
+    private _toast: ToastService,
+    private _router: Router
   ) { }
 
   error: Subject<any> = new Subject();
@@ -28,14 +31,26 @@ export class ConfigsService {
 
   getConfig(path: string): Observable<any> {
     return combineLatest([
-      this.api.getConfigText(path),
-      this.api.getFileInfo(path)
+      this._api.getConfigText(path),
+      this._api.getFileInfo(path)
     ])
   }
-  saveFile(path: string, text: string): Observable<any>  {
-    this.error.next(null);
-    return this.api.saveFile(path, text)
-    .pipe(catchError((error) => handleError(error)));
+  // saveFile(path: string, text: string): Observable<any> {
+  //   this.error.next(null);
+  //   return this._api.saveFile(path, text)
+  //   .pipe(catchError((error) => handleError(error)));
+  // }
+
+  saveFileAsBlob(path: string, blob: Blob): Observable<any> {
+    const form: FormData = new FormData();
+          form.append('path', dirname(path));
+          form.append('file', blob, basename(path));
+    return this._api.saveFile(form)
+               .pipe(tap((event) => {
+                 if (event.type === HttpEventType.UploadProgress) this.dprogress.next(Math.round(100 * event.loaded / event.total));
+               }))
+               .pipe(filter((event) => event instanceof HttpResponse))
+               // .pipe(takeLast(1))
   }
 
   downloadFile(path: string): void {
@@ -52,12 +67,12 @@ export class ConfigsService {
       ]
     }
 
-    this.electron.ipcRenderer.invoke('save-dialog', dialogOpts)
+    this._electron.ipcRenderer.invoke('save-dialog', dialogOpts)
     .then(res => {
-      if (res.filePath && !res.canceled) this.electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token });
+      if (res.filePath && !res.canceled) this._electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(localStorage.getItem('user')).token });
     })
     .catch(res => {
-      this.toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
+      this._toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
         {
           classname: 'bg-warning text-dark',
           delay: 5000,
@@ -69,11 +84,11 @@ export class ConfigsService {
   }
 
   getFileInfo(path: string) {
-    return this.api.getFileInfo(path);
+    return this._api.getFileInfo(path);
   }
 
   toEmpty() {
-    this.router.navigate(['/home/config-editor/empty']);
+    this._router.navigate(['/home/config-editor/empty']);
   }
 
   reloadFileTree() {
@@ -87,11 +102,11 @@ export class ConfigsService {
       title: `Подтверждение удаления`,
       message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`,
     };
-    return this.electron.ipcRenderer.invoke('message-box', dialogOpts).then(
+    return this._electron.ipcRenderer.invoke('message-box', dialogOpts).then(
       val => {
         if (val.response !== 0) return;
-        this.api.deleteMap(path).subscribe(() => {});
-        this.toast.show(`Файл <b>${ path }</b> удален с сервера`,
+        this._api.deleteMap(path).subscribe(() => {});
+        this._toast.show(`Файл <b>${ path }</b> удален с сервера`,
           {
             classname: 'bg-success text-light',
             delay: 3000,
@@ -105,8 +120,8 @@ export class ConfigsService {
   }
 
   pathToClipboard(path: string): void {
-    this.electron.ipcRenderer.invoke('clipboard', path).then(() => {
-      this.toast.show('Путь скопирован в буффер обмена',
+    this._electron.ipcRenderer.invoke('clipboard', path).then(() => {
+      this._toast.show('Путь скопирован в буффер обмена',
       {
         classname: 'bg-success text-light',
         delay: 3000,

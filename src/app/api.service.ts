@@ -16,7 +16,7 @@ export class ApiService {
   readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
   readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
   readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
-  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-cfg';
+  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-file';
   readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
   readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
@@ -98,14 +98,11 @@ export class ApiService {
   getFileInfo(path: string): Observable<any> {
     return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
   }
-  saveFile(path: string, data: string): Observable<any> {
-    return this.http.post(this.URL_SAVE_CONFIG, {
-      file: {
-        path: path,
-        data: data
-      }
-    }, { responseType: 'json' });
+
+  saveFile(form: FormData): Observable<any> {
+    return this.http.post(this.URL_SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
+
   uploadFileMap(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }

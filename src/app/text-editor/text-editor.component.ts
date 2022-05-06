@@ -5,7 +5,7 @@ import { isEqual } from 'lodash';
 import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, iif, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 
 import { ToastService } from '../toast.service';
@@ -33,12 +33,11 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
+
       if (event.ctrlKey) {
         switch (event.key) {
           case 's' : {
-            if (this.changed.getValue()) {
-              this.saveFile();
-            }
+            if (this.changed.getValue()) this.saveFile();
             break;
           }
           case 'f' : {
@@ -108,19 +107,19 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchIn() {
     this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find)
-    })
+      this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find);
+    });
   }
   replaceIn() {
     this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace)
-    })
+      this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace);
+    });
     this.checkChanges();
   }
   replaceInAll() {
     this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace)
-    })
+      this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace);
+    });
     this.checkChanges();
   }
 
@@ -131,12 +130,15 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   pathToClipboard() {
     this.configs.pathToClipboard(this.path);
   }
+
   saveFile() {
+    const blob = new Blob([this.textplain], { type: this.stats.mime });
     this.loading = true;
-    this.configs.saveFile(this.path, this.textplain)
+    this.configs.saveFileAsBlob(this.path, blob)
     .subscribe(() => {
       this.loading = false;
       this._origin = Buffer.from(this.textplain, 'utf8');
+      this.stats.size = Buffer.byteLength(this._origin);
       this.changed.next(false);
       this._toast.show( `Конфигурационный файл успешно сохранен`, {
         classname: 'bg-success text-light',
@@ -152,7 +154,16 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: faExclamationTriangle,
         subtext: err.message
       });
+    }, () => {
+      setTimeout(() => {
+        this.configs.dprogress.next(0);
+      }, 2000);
     });
+  }
+
+  private _refreshCodeMirror(): void {
+    this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
+    this.editor.codeMirror.clearHistory();
   }
 
   checkChanges(): void {
@@ -163,15 +174,16 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-
-
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
       this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
     }
     this._route.queryParams
     .pipe(tap(params => { this.loading = true; this.path = params.path; this.stats = null; }))
-    .pipe(switchMap(params => this.configs.getConfig(params.path)))
+    .pipe(switchMap((params) =>
+      iif(() => !params.touch,
+                this.configs.getConfig(params.path),
+                of(['', { mime: 'text/plain', path: params.path, size: 0 }]))))
     .subscribe(([file, info]) => {
       this.stats = info;
       switch (this.stats.mime) {
@@ -179,12 +191,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'application/x-sh': this.cmSettings.mode = 'shell'; break;
         default: this.cmSettings.mode = 'coffeescript'; break;
       }
-      this.editor.codeMirror.setOption('mode', this.cmSettings.mode);
-      this.editor.codeMirror.clearHistory();
       this.textplain = file;
       this._origin = Buffer.from(file, 'utf-8');
       this.loading = false;
-      this.editor.codeMirror.clearHistory();
     }, (err) => {
       this._toast.show(`Конфигурационный файл не был загружен по причине:`, {
         classname: 'bg-danger text-light',
@@ -195,6 +204,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngAfterViewInit() {
+    this._refreshCodeMirror();
     if (!window.localStorage.getItem('CE_fontSize')) {
       window.localStorage.setItem('CE_fontSize', '13px');
       this.editorStyle.nativeElement.style.fontSize = '13px';
@@ -204,7 +214,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.autocomplete = (cm: any) => {
         const editor = this.editor.codeMirror as EditorFromTextAreaExpanded;
-        editor.showHint({hint: this.editor.codeMirrorGlobal.hint.anyword});
+        editor.showHint({ hint: this.editor.codeMirrorGlobal.hint.anyword });
       }
     });
   }

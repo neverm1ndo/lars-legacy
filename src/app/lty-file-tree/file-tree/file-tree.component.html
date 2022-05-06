@@ -94,7 +94,7 @@
     </div>
   </div>
 </form>
-<form [formGroup]="addNewFile" (ngSubmit)="mvDir()" *ngIf="modals.touch" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewFile" (ngSubmit)="touchFile()" *ngIf="modals.touch" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>

@@ -38,15 +38,15 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    public api: ApiService,
-    private router: Router,
-    private route: ActivatedRoute,
-    public toast: ToastService,
-    private electron: ElectronService,
-    private ngZone: NgZone,
+    private _api: ApiService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _toast: ToastService,
+    private _electron: ElectronService,
+    private _ngZone: NgZone,
     public configs: ConfigsService,
   ) {
-    this.directories$ = this.configs.reloader$.pipe(switchMap(() => api.getConfigsDir()));
+    this.directories$ = this.configs.reloader$.pipe(switchMap(() => _api.getConfigsDir()));
     this.directoriesSubscription = this.directories$.subscribe(items => {
       this.files = items;
     });
@@ -60,9 +60,14 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   toConfig(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
-    if (path.name) this.api.addToRecent('files', path);
-    if (this.notBinary(path.name)) this.router.navigate(['/home/config-editor/doc'], { queryParams: { path: path.path , name: path.name }});
-    else this.router.navigate(['/home/config-editor/binary'], { queryParams: { path: path.path , name: path.name }});
+    if (path.name) this._api.addToRecent('files', path);
+    if (this.notBinary(path.name)) this._router.navigate(['/home/config-editor/doc'], { queryParams: { path: path.path , name: path.name }});
+    else this._router.navigate(['/home/config-editor/binary'], { queryParams: { path: path.path , name: path.name }});
+  }
+
+  touchFile(path: string) {
+    this.currentFilePath = path;
+    this._router.navigate(['/home/config-editor/doc'], { queryParams: { path, touch: true }});
   }
 
   reloadFileTree(): void {
@@ -74,9 +79,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mkdir(path: string) {
-    this.api.createDirectory(path).subscribe(() => {
+    this._api.createDirectory(path).subscribe(() => {
       this.reloadFileTree();
-      this.toast.show(`Директория ${path} создана`,
+      this._toast.show(`Директория ${path} создана`,
         {
           classname: 'bg-success text-light',
           delay: 5000,
@@ -85,7 +90,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
         });
     },
     (err) => {
-      this.toast.show(`Директория ${path} не создана`,
+      this._toast.show(`Директория ${path} не создана`,
         {
           classname: 'bg-danger text-light',
           delay: 5000,
@@ -96,9 +101,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mvdir(path: { path: string; dest: string }) {
-    this.api.moveDirectory(path.path, path.dest).subscribe(() => {
+    this._api.moveDirectory(path.path, path.dest).subscribe(() => {
       this.reloadFileTree();
-      this.toast.show(`Директория ${path.path} переименована`,
+      this._toast.show(`Директория ${path.path} переименована`,
         {
           classname: 'bg-success text-light',
           delay: 5000,
@@ -108,7 +113,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     },
     (err) => {
       console.error(err);
-      this.toast.show(`Директория ${path} не переименована`,
+      this._toast.show(`Директория ${path} не переименована`,
         {
           classname: 'bg-danger text-light',
           delay: 5000,
@@ -119,9 +124,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmdir(path: string) {
-    this.api.removeDirectory(path).subscribe(() => {
+    this._api.removeDirectory(path).subscribe(() => {
       this.reloadFileTree();
-      this.toast.show(`Директория ${path} удалена`,
+      this._toast.show(`Директория ${path} удалена`,
         {
           classname: 'bg-success text-light',
           delay: 5000,
@@ -129,7 +134,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
           subtext: path
         });
     }, (err) => {
-      this.toast.show(`Директория ${path} не удалена`,
+      this._toast.show(`Директория ${path} не удалена`,
         {
           classname: 'bg-danger text-light',
           delay: 5000,
@@ -153,7 +158,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
      for (let file of files) {
         formData.append('file', file);
      }
-    const sub = this.api.uploadFileCfg(formData)
+    const sub = this._api.uploadFileCfg(formData)
      .subscribe(event => {
           if (event.type === HttpEventType.UploadProgress) {
             this.progress = Math.round(100 * event.loaded / event.total);
@@ -163,11 +168,11 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                 let list = '';
                 for (let file of files) {
                   list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
-                  this.api.addToRecent('upload', { path, name: file.name, type: 'config'})
+                  this._api.addToRecent('upload', { path, name: file.name, type: 'config'})
                 };
                 return list;
               }
-              this.toast.show(`Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`,
+              this._toast.show(`Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`,
                 {
                   classname: 'bg-success text-light',
                   delay: 5000,
@@ -175,7 +180,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                   subtext: path
                 });
             } else {
-              this.toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
+              this._toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
                 {
                   classname: 'bg-success text-light',
                   delay: 3000,
@@ -190,7 +195,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
         err => {
           this.clearProgress();
           if (files.length > 1) {
-            this.toast.show(`Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`,
+            this._toast.show(`Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`,
               {
                 classname: 'bg-warning text-dark',
                 delay: 5000,
@@ -198,7 +203,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                 subtext: err.message
               });
           } else {
-            this.toast.show(`Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
+            this._toast.show(`Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
               {
                 classname: 'bg-warning text-dark',
                 delay: 5000,
@@ -214,21 +219,21 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.queryParams
+    this._route.queryParams
     .pipe(take(1))
-    .pipe(filter(params => params.path))
+    .pipe(filter(params => params._path))
     .subscribe((params) => {
       this.toConfig({ path: params.path, name: params.name });
     });
-    this.electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
-      this.ngZone.run(() => {
+    this._electron.ipcRenderer.on('download-progress', (event: any, progress: {total: number, loaded: number}) => {
+      this._ngZone.run(() => {
         this.configs.dprogress.next(Math.round(100 * progress.loaded / progress.total));
       });
     });
-    this.electron.ipcRenderer.on('download-error', (event: any, err) => {
-      this.ngZone.run(() => {
+    this._electron.ipcRenderer.on('download-error', (event: any, err) => {
+      this._ngZone.run(() => {
         this.configs.dprogress.next(0);
-        this.toast.show(`Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`,
+        this._toast.show(`Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`,
           {
             classname: 'bg-danger text-dark',
             delay: 5000,
@@ -237,9 +242,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
           });
       });
     });
-    this.electron.ipcRenderer.on('download-end', () => {
-      this.ngZone.run(() => {
-      this.toast.show(`Файл <b>${ this.currentFilePath }</b> успешно загружен`,
+    this._electron.ipcRenderer.on('download-end', () => {
+      this._ngZone.run(() => {
+      this._toast.show(`Файл <b>${ this.currentFilePath }</b> успешно загружен`,
         {
           classname: 'bg-success text-light',
           delay: 5000,

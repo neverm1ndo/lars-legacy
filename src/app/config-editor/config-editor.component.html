@@ -12,6 +12,7 @@
             (mkdir)="mkdir($event)"
             (rmdir)="rmdir($event)"
             (mvdir)="mvdir($event)"
+            (touch)="touchFile($event)"
             [items]="files"
             [current]="currentFilePath"
             (resync)="reloadFileTree()">
