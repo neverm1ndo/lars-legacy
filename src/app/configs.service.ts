@@ -6,8 +6,7 @@ import { ElectronService } from './core/services';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Subject, Observable, combineLatest } from 'rxjs';
-import { catchError, tap, filter, takeLast } from 'rxjs/operators';
-import { handleError } from './utils';
+import { tap, filter, takeLast } from 'rxjs/operators';
 
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -35,11 +34,6 @@ export class ConfigsService {
       this._api.getFileInfo(path)
     ])
   }
-  // saveFile(path: string, text: string): Observable<any> {
-  //   this.error.next(null);
-  //   return this._api.saveFile(path, text)
-  //   .pipe(catchError((error) => handleError(error)));
-  // }
 
   saveFileAsBlob(path: string, blob: Blob): Observable<any> {
     const form: FormData = new FormData();
@@ -50,7 +44,7 @@ export class ConfigsService {
                  if (event.type === HttpEventType.UploadProgress) this.dprogress.next(Math.round(100 * event.loaded / event.total));
                }))
                .pipe(filter((event) => event instanceof HttpResponse))
-               // .pipe(takeLast(1))
+               .pipe(takeLast(1))
   }
 
   downloadFile(path: string): void {

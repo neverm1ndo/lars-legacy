@@ -44,10 +44,10 @@ export class FileTreeItemsComponent implements OnInit {
   getFileIcon(item: TreeNode) {
     if (item.type === 'dir') return faFolder;
     switch (extname(item.name)) {
-      case 'map': return faMap;
-      case 'db': return faDatabase;
-      case 'cadb': return faDatabase;
-      case 'conf': return faFileCode;
+      case '.map': return faMap;
+      case '.db': return faDatabase;
+      case '.cadb': return faDatabase;
+      case '.conf': return faFileCode;
       default: return faFileAlt;
     }
   }
