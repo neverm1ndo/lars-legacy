@@ -545,10 +545,10 @@ export class MapEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
-    this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
     this.changed = false;
     this.zone.runOutsideAngular(() => {
+      this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
+      this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
       this.mapView();
     });
   }
