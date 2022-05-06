@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { LtyFileTreeModule } from './lty-file-tree.module';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { sep } from 'path';
 
 @Injectable({
-  providedIn: LtyFileTreeModule
+  providedIn: 'any'
 })
 export class LtyFileTreeService {
 

@@ -15,6 +15,7 @@
             (touch)="touchFile($event)"
             [items]="files"
             [current]="currentFilePath"
+            (addNew)="addNewFile($event)"
             [canCreate]="true"
             (resync)="reloadFileTree()">
           </file-tree>
