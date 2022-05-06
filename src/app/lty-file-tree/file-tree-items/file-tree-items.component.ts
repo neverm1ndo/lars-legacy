@@ -66,7 +66,7 @@ export class FileTreeItemsComponent implements OnInit {
     this.uploadFileListEvent.emit(event);
   }
 
-  showContext(event: MouseEvent, drop: NgbDropdown, type: 'dir' | 'file') {
+  showContext(event: MouseEvent, drop: NgbDropdown, type: string) {
     if (this._isRoot && this.isDir(type)) return;
     event.stopPropagation();
     this._lfts.changeOpened(drop);

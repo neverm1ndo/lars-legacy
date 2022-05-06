@@ -36,7 +36,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   }
 
   @Input('current') current: string;
-  @Input('canCreate') canCreate: string;
+  @Input('canCreate') canCreate: boolean;
   @Input('items') set nodes(nodes: TreeNode) {
     if (!nodes) return;
     this.node = this._lfts.expandFollowingDirs(nodes, this.current);
@@ -122,7 +122,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     this.addNew.emit(event);
   }
 
-  makeDirectory(): void {
+  mkDir(): void {
     if (this.addNewDir.value.path) this.mkdir.emit(posix.join(this.node.path, this.addNewDir.value.path));
     this.modals.mkDir = false;
   }

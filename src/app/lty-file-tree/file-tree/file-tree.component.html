@@ -15,7 +15,6 @@
       <file-tree-items
       (rmdir)="rmDir($event)"
       (mvdir)="mvDirEventHandle($event)"
-      (mkdir)="mkDir($event)"
       (rm)="rmFile($event)"
       [isRoot]="true"
       [child-nodes]="node"
@@ -45,7 +44,7 @@
     </div>
   </div>
 </div>
-<form [formGroup]="addNewDir" (ngSubmit)="makeDirectory()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
