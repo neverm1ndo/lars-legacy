@@ -36,6 +36,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   }
 
   @Input('current') current: string;
+  @Input('canCreate') canCreate: string;
   @Input('items') set nodes(nodes: TreeNode) {
     if (!nodes) return;
     this.node = this._lfts.expandFollowingDirs(nodes, this.current);

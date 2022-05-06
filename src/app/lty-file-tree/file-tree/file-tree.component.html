@@ -6,7 +6,7 @@
       <div class="d-flex flex-row">
         <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
         <button title="Создать новую папку" class="btn btn-dark sync" (click)="modals.mkDir = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
-        <button title="Создать новый файл" class="btn btn-dark sync" (click)="modals.touch = true" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
+        <button *ngIf="canCreate" title="Создать новый файл" class="btn btn-dark sync" (click)="modals.touch = true" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
       </div>
     </div>
   </div>
@@ -94,7 +94,7 @@
     </div>
   </div>
 </form>
-<form [formGroup]="addNewFile" (ngSubmit)="touchFile()" *ngIf="modals.touch" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewFile" (ngSubmit)="touchFile()" *ngIf="modals.touch && canCreate" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>
