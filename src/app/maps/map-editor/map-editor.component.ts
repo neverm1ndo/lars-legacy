@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '@angular/core';
-import Keys from '../enums/keycode.enum';
-import { EditorMode } from '../enums/map.editor.enum';
-import { MapObject, Viewport } from '../interfaces/map.interfaces';
+import Keys from '../../enums/keycode.enum';
+import { EditorMode } from '../../enums/map.editor.enum';
+import { MapObject, Viewport } from '../../interfaces/map.interfaces';
 
 const { LeftArrow, RightArrow } = Keys;
 

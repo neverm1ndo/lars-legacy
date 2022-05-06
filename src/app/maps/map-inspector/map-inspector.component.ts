@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MapObject } from '../interfaces/map.interfaces';
+import { MapObject } from '../../interfaces/map.interfaces';
 
 @Component({
   selector: 'map-inspector',

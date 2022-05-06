@@ -21,7 +21,7 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../maps/map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 

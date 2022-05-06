@@ -35,15 +35,15 @@ import { ToastsContainer } from '../toasts-container/toasts-container.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsComponent } from '../settings/settings.component';
 import { MapsComponent } from '../maps/maps.component';
-import { MapInspectorComponent } from '../map-inspector/map-inspector.component';
-import { MapEditorComponent } from '../map-editor/map-editor.component';
+import { MapInspectorComponent } from '../maps/map-inspector/map-inspector.component';
+import { MapEditorComponent } from '../maps/map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
 import { FileSizePipe } from '../pipes/file-size.pipe';
 import { AdminsComponent } from '../admins/admins.component';
-import { MapCorrectorComponent } from '../map-corrector/map-corrector.component';
+import { MapCorrectorComponent } from '../maps/map-corrector/map-corrector.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
 import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
@@ -52,7 +52,7 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { socketConfig } from '../web-socket.service';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../maps/map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 
