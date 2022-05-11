@@ -28,12 +28,26 @@ enum Opcode {
   I = 'i',
 }
 
+
 class Samp {
 
   private _debounce: number = 1000;
 
   constructor(debounce: number) {
     this._debounce = debounce;
+  }
+
+  get testSampServerStats (): Promise<ServerGameMode> {
+    return Promise.resolve({
+      name: 'Local ServerMode',
+      players: {
+        online: 0,
+        max: 1,
+      },
+      lang: 'EN',
+      mode: 'freeroam',
+      private: true,
+    });
   }
 
   public async getServerInfo(ip: string, port: number): Promise<ServerGameMode> {
