@@ -1,7 +1,6 @@
   <div *ngIf="electron.isElectron" class="col-12 top-bg">
     <div class="row d-flex">
       <div class="native-dragzone flex-fill">
-        <!-- <lty-icon name="lty-logo"></lty-icon> -->
         <div class="d-flex justify-content-start align-items-center h-100">
           <img class="native-dragzone logo-img no-select" src="lars://assets/icons/favicon.ico"/>
           <small class="native-dragzone no-select label">LARS</small>
@@ -28,15 +27,15 @@
         <div ngbDropdownMenu aria-labelledby="dropdownTopper">
             <div data-content="Статус сервера" class="status" ngbDropdownItem>
               <i [ngClass]="{
-                 'led-loading': ( server.state == 'loading' ||  server.state == 'rebooting'),
-                 'led-error': ( server.state == 'error' ||  server.state == 'stoped')
+                 'led-loading': ( server.state == 4 ||  server.state == 2),
+                 'led-error': ( server.state == 0 ||  server.state == 1)
               }"
               class="led">
               </i>{{(state | async) | status}}</div>
             <div class="dropdown-divider"></div>
-            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
-            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'live'" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
-            <button [disabled]="(state | async) == 'loading' || (state | async) == 'rebooting' || (state | async) == 'stoped'" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
+            <button [disabled]="(state | async) == 4 || (state | async) == 2 || (state | async) == 1" (click)="server.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
+            <button [disabled]="(state | async) == 4 || (state | async) == 2 || (state | async) == 3" (click)="server.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
+            <button [disabled]="(state | async) == 4 || (state | async) == 2 || (state | async) == 1" (click)="server.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
             <div class="dropdown-divider"></div>
             <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
             <div class="dropdown-menu-helper">

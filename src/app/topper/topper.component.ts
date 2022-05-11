@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, AfterViewInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { ExecException } from 'child_process';
 import { join } from 'path';
@@ -11,8 +11,25 @@ import { tap, switchMap, filter } from 'rxjs/operators';
 import { extrudeToRight } from '../app.animations';
 import { Router } from '@angular/router';
 
-type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
+enum ServerState {
+  ERROR,
+  STOPED,
+  REBOOTING,
+  LIVE,
+  LOADING
+}
 
+interface Server {
+  state: ServerState,
+  reboot: () => void,
+  launch: () => void,
+  stop: () => void,
+}
+
+interface LarsWindow {
+  close: () => void,
+  min: () => void
+}
 
 @Component({
   selector: 'app-topper',
@@ -20,7 +37,7 @@ type ServerStateType = 'stoped' | 'rebooting' | 'live' | 'error' | 'loading';
   styleUrls: ['./topper.component.scss'],
   animations: [extrudeToRight]
 })
-export class TopperComponent implements OnInit, AfterViewInit {
+export class TopperComponent implements OnInit {
 
   fa = {
     signout: faSignOutAlt,
@@ -35,14 +52,14 @@ export class TopperComponent implements OnInit, AfterViewInit {
 
   devRoomSubscriptions: Subscription = new Subscription();
   mainRoomSubscriptions: Subscription = new Subscription();
-  state: BehaviorSubject<ServerStateType> = new BehaviorSubject('live');
+  state: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
 
   isLoggedIn: boolean = false;
   update: boolean = false;
   players: number = 0;
 
-  server = {
-    state: 'loading',
+  server: Server = {
+    state: ServerState.LOADING,
     reboot: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Rebooting samp03svr...');
       this.ws.send('reboot-server');
@@ -57,37 +74,37 @@ export class TopperComponent implements OnInit, AfterViewInit {
     },
   };
 
-  window = {
+  window: LarsWindow = {
     close: () => {
       if (this.userService.getUserSettings().tray) {
-        this.electron.ipcRenderer.send('minimize-to-tray');
+        this._electron.ipcRenderer.send('minimize-to-tray');
         return;
       }
-      this.electron.ipcRenderer.send('close');
+      this._electron.ipcRenderer.send('close');
     },
     min: () => {
-      this.electron.ipcRenderer.send('minimize');
+      this._electron.ipcRenderer.send('minimize');
     },
   };
 
   constructor(
-    public electron: ElectronService,
+    private _electron: ElectronService,
     public userService: UserService,
     public ws: WebSocketService,
-    private router: Router,
-    private zone: NgZone
+    private _router: Router,
+    private _zone: NgZone
   ) {}
 
   reload(): void {
-    this.electron.ipcRenderer.send('reload');
+    this._electron.ipcRenderer.send('reload');
   }
 
   launchSAMP(): void {
     try {
       const launchSettings = localStorage.getItem('launcher');
-      if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings')
+      if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings');
       const settings = JSON.parse(launchSettings);
-      this.electron.childProcess.execFile(
+      this._electron.childProcess.execFile(
         join(settings.samp, 'samp.exe'),
         [
           `-n ${settings.nickname}`,
@@ -96,22 +113,22 @@ export class TopperComponent implements OnInit, AfterViewInit {
         ],
         (err: ExecException, stdout: string) => {
           if (err) {
-            this.zone.run(() => {
-              this.router.navigate(['/home/settings/launcher']);
+            this._zone.run(() => {
+              this._router.navigate(['/home/settings/launcher']);
             });
             throw err;
           }
           if (stdout) console.log('%c[launcher]', 'color: brown', stdout);
-          console.log('%c[launcher]', 'color: brown', 'Launched SAMP client')
+          console.log('%c[launcher]', 'color: brown', 'Launched SAMP client');
         });
     } catch (err) {
       console.error(err);
-      this.router.navigate(['/home/settings/launcher'])
+      this._router.navigate(['/home/settings/launcher']);
     }
   }
 
   openForum(): void {
-    this.electron.shell.openExternal(AppConfig.links.forum);
+    this._electron.shell.openExternal(AppConfig.links.forum);
   }
 
   subscribeToDevSubscriptions(): void {
@@ -125,28 +142,28 @@ export class TopperComponent implements OnInit, AfterViewInit {
       }))
       .add(this.ws.getServerError().subscribe((stderr: string) => {
         console.error('%c[server]', 'color: magenta', stderr);
-        this.state.next('error')
+        this.state.next(ServerState.ERROR);
       }))
       .add(this.ws.getServerReboot()
         .pipe(switchMap(() => this.ws.getServerOnline()))
         .subscribe((players: number) => {
            console.log('%c[server]', 'color: magenta', 'server rebooted');
-           this.state.next('live');
+           this.state.next(ServerState.LIVE);
            this.players = players;
       }))
       .add(this.ws.getServerStop().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server stoped');
-         this.state.next('stoped');
+         this.state.next(ServerState.STOPED);
          this.players = 0;
       }))
       .add(this.ws.getServerLaunch().subscribe(() => {
         console.log('%c[server]', 'color: magenta', 'server launched');
-        this.state.next('live');
+        this.state.next(ServerState.LIVE);
       }))
       .add(this.ws.getServerOnline().subscribe((players: number) => {
         this.players = players;
       }))
-      .add(this.state.subscribe((state: ServerStateType) => {
+      .add(this.state.subscribe((state: ServerState) => {
         this.server.state = state;
       }));
   }
@@ -156,10 +173,6 @@ export class TopperComponent implements OnInit, AfterViewInit {
       console.log('%c[update]', 'color: cyan', 'soft update is ready');
       this.update = true;
     }));
-  }
-
-
-  ngAfterViewInit(): void {
   }
 
   ngOnInit(): void {
