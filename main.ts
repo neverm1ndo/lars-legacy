@@ -3,7 +3,7 @@ import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
+import { verifyUserToken, downloadFile, createTray, showNotification, serve } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
 
@@ -23,17 +23,10 @@ export let win: BrowserWindow = null;
 */
 const lock: boolean = app.requestSingleInstanceLock();
              app.setAppUserModelId('ru.nmnd.lars');
-             // app.setAppUserModelId(process.execPath);
  /** Init splash window
  * @type {BrowserWindow}
  */
 export let splash: BrowserWindow = null;
-
-/** Define launch arguments
-* @type {Array.<string>}
-*/
-const args: string[] = process.argv.slice(1),
-      serve = args.some(val => val === '--serve');
 
 /** Init system tray
 * @type {Tray>}

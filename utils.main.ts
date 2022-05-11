@@ -12,7 +12,13 @@ const agent: Agent = new Agent({
   rejectUnauthorized: false
 });
 
-const API: string = process.env.PROD_API!;
+/** Define launch arguments
+* @type {Array.<string>}
+*/
+const args: string[] = process.argv.slice(1),
+      serve = args.some(val => val === '--serve');
+
+const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
 
 /** Downloads file
 * @returns {Promise.<any>}
@@ -101,4 +107,4 @@ const showNotification = (options: NotificationConstructorOptions) => {
   new Notification(options).show()
 }
 
-export { downloadFile, verifyUserToken, createTray, showNotification };
+export { downloadFile, verifyUserToken, createTray, showNotification, args, serve };
