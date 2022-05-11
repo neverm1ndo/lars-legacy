@@ -1,4 +1,4 @@
-  <div *ngIf="electron.isElectron" class="col-12 top-bg">
+  <div *ngIf="isElectron()" class="col-12 top-bg">
     <div class="row d-flex">
       <div class="native-dragzone flex-fill">
         <div class="d-flex justify-content-start align-items-center h-100">
@@ -61,8 +61,8 @@
             <button ngbDropdownItem (click)="userService.logOut()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
           </div>
         </div>
-        <button *ngIf="electron.isElectron" type="button" (click)="window.min()" class="btn btn-topnative native-min"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="" id="c2UyV86x7F"></path><path d="M25.05 20.46L4.95 20.46" id="a5uQaXHvxt"></path></defs><g><g><g><g><use xlink:href="#c2UyV86x7F" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#a5uQaXHvxt" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
-        <button *ngIf="electron.isElectron" type="button" (click)="window.close()" class="btn btn-topnative native-close">
+        <button type="button" (click)="window.min()" class="btn btn-topnative native-min"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="" id="c2UyV86x7F"></path><path d="M25.05 20.46L4.95 20.46" id="a5uQaXHvxt"></path></defs><g><g><g><g><use xlink:href="#c2UyV86x7F" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#a5uQaXHvxt" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+        <button type="button" (click)="window.close()" class="btn btn-topnative native-close">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="" id="g6pDbVCYY8"></path><path d="M5.11 5.53L25.11 25.53" id="e3IggXtpF"></path><path d="M5.11 25.53L25.11 5.53" id="cORYOauw"></path></defs><g><g><g><g><use xlink:href="#g6pDbVCYY8" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#e3IggXtpF" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#cORYOauw" opacity="1" fill-opacity="0" stroke-width="2" stroke-opacity="1"></use></g></g></g></g></svg></button>
       </div>
     </div>

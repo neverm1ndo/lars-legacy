@@ -50,8 +50,8 @@ export class TopperComponent implements OnInit {
     gamepad: faGamepad
   };
 
-  devRoomSubscriptions: Subscription = new Subscription();
-  mainRoomSubscriptions: Subscription = new Subscription();
+  private _devRoomSubscriptions: Subscription = new Subscription();
+  private _mainRoomSubscriptions: Subscription = new Subscription();
   state: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
 
   isLoggedIn: boolean = false;
@@ -99,6 +99,10 @@ export class TopperComponent implements OnInit {
     this._electron.ipcRenderer.send('reload');
   }
 
+  isElectron(): boolean {
+    return this._electron.isElectron;
+  }
+
   launchSAMP(): void {
     try {
       const launchSettings = localStorage.getItem('launcher');
@@ -132,7 +136,7 @@ export class TopperComponent implements OnInit {
   }
 
   subscribeToDevSubscriptions(): void {
-    this.devRoomSubscriptions
+    this._devRoomSubscriptions
       // .add(from(this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777)).subscribe((stat) => {
       //   this.state.next(stat?'live':'error');
       // }))
@@ -169,7 +173,7 @@ export class TopperComponent implements OnInit {
   }
 
   subscribeToCommonSubscriptions(): void {
-    this.mainRoomSubscriptions.add(this.ws.getUpdateMessage().subscribe(() => {
+    this._mainRoomSubscriptions.add(this.ws.getUpdateMessage().subscribe(() => {
       console.log('%c[update]', 'color: cyan', 'soft update is ready');
       this.update = true;
     }));
@@ -183,8 +187,8 @@ export class TopperComponent implements OnInit {
     this.userService.user
         .pipe(tap((user) => {
           if (user) return user;
-          this.devRoomSubscriptions.unsubscribe();
-          this.mainRoomSubscriptions.unsubscribe();
+          this._devRoomSubscriptions.unsubscribe();
+          this._mainRoomSubscriptions.unsubscribe();
         }))
         .pipe(filter((user) => !!user))
         .pipe(switchMap(() => this.ws.getRoomName()))
