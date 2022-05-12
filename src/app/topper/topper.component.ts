@@ -148,11 +148,9 @@ export class TopperComponent implements OnInit {
         this.state.next(ServerState.ERROR);
       }))
       .add(this.ws.getServerReboot()
-        .pipe(switchMap(() => this.ws.getServerOnline()))
-        .subscribe((players: number) => {
-           console.log('%c[server]', 'color: magenta', 'server rebooted');
-           this.state.next(ServerState.LIVE);
-           this.players = players;
+      .subscribe(() => {
+         console.log('%c[server]', 'color: magenta', 'server rebooted');
+         this.state.next(ServerState.LIVE);
       }))
       .add(this.ws.getServerStop().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server stoped');
@@ -179,6 +177,11 @@ export class TopperComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ws.onDisconnect().subscribe(() => {
+      this._devRoomSubscriptions.unsubscribe();
+      this._mainRoomSubscriptions.unsubscribe();
+    });
+
     /**
     * Check user
     * Subscribe to necessary events
