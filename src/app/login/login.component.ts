@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { UserService } from '../user.service';
+import { UserService} from '../user.service';
+import { UserData } from '../interfaces';
 import { WebSocketService } from '../web-socket.service';
 import { Router } from '@angular/router';
 
@@ -41,14 +42,17 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     localStorage.setItem('lastUser', this.email.value);
     this._userService.loginUser(this.loginForm.value).subscribe(
-      response => {
+      (response: UserData) => {
         this.loading = false;
         this.error = undefined;
-        this._userService.user.next(response);
+        this._zone.runOutsideAngular(() => {
+          this._userService.user.next(response);
+          localStorage.setItem('user', JSON.stringify(response));
+        });
         this._router.navigate(['/home']);
         this._ws.connect();
       },
-      error => {
+      (error) => {
         this.loading = false;
         this.error = error;
         console.error(error);

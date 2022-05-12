@@ -4,7 +4,6 @@ import { ExecException } from 'child_process';
 import { join } from 'path';
 import { UserService } from '../user.service';
 import { faSignOutAlt, faTerminal, faComments, faRedo, faStop, faPlay, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
-import { AppConfig } from '../../environments/environment.dev';
 import { WebSocketService } from '../web-socket.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
@@ -132,7 +131,7 @@ export class TopperComponent implements OnInit {
   }
 
   openForum(): void {
-    this._electron.shell.openExternal(AppConfig.links.forum);
+    this.userService.openForum();
   }
 
   subscribeToDevSubscriptions(): void {

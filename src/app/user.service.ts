@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { handleError } from './utils';
 import { UserData, UserLoginData, IDBUser } from './interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
@@ -16,6 +17,12 @@ interface UserSettings {
   textEditorStyle: string;
 }
 
+type UserGroupTranslation = 'Претендент' | 'Разработчик' | 'Админ' | 'Маппер' | 'Редктор конфигурационных файлов' | 'Бэкапер' | 'Игрок';
+
+interface UserGroupTranslationMap {
+  [group: number]: UserGroupTranslation;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,34 +31,34 @@ export class UserService {
   readonly URL_LOGIN: string = AppConfig.api.auth;
   readonly URL_USER: string = AppConfig.api.user;
   user: BehaviorSubject<UserData | null> = new BehaviorSubject(this.getUserInfo());
-  headers: HttpHeaders = new HttpHeaders ({
-    'Content-Type': 'application/json'
-  });
   error: Subject<any> = new Subject();
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
-    public electron: ElectronService,
-    private idbService: NgxIndexedDBService
+    private _http: HttpClient,
+    private _router: Router,
+    private _electron: ElectronService,
+    private _idbService: NgxIndexedDBService
   ) {}
 
   getUser(name: string): Observable<UserData> {
-    return this.http.get(this.URL_USER, { params: { name: name }});
+    return this._http.get(this.URL_USER, { params: { name: name }});
   }
-  getUserGroupName(userGroup: number): string {
-    switch (userGroup) {
-      case Workgroup.Challenger: return 'Претендент';
-      case Workgroup.Dev: return 'Разработчик';
-      case Workgroup.Admin: return 'Админ';
-      case Workgroup.Mapper: return 'Маппер';
-      case Workgroup.CFR: return 'Редактор конфигурационных файлов';
-      case Workgroup.Backuper: return 'Бэкапер';
-      default: return 'Игрок';
-    }
+
+  getUserGroupName(userGroup: number | Workgroup): UserGroupTranslation {
+    const groupMap: UserGroupTranslationMap = {
+      [Workgroup.Challenger]: 'Претендент',
+      [Workgroup.Dev]: 'Разработчик',
+      [Workgroup.Admin]: 'Админ',
+      [Workgroup.Mapper]: 'Маппер',
+      [Workgroup.CFR]: 'Редктор конфигурационных файлов',
+      [Workgroup.Backuper]: 'Бэкапер',
+    };
+    if (!groupMap[userGroup]) return 'Игрок';
+    return groupMap[userGroup];
   }
+
   getUserSettings(): UserSettings {
-    let userSettings = JSON.parse(window.localStorage.getItem('settings'));
+    let userSettings: UserSettings = JSON.parse(window.localStorage.getItem('settings'));
     const defaultSettings: UserSettings = {
       tray: false,
       lineChunk: 100,
@@ -75,76 +82,58 @@ export class UserService {
   }
 
   openUserProfile(id: number): void {
-    this.electron.shell.openExternal('https://www.gta-liberty.ru/memberlist.php?mode=viewprofile&u='+ id.toString())
+    const url = new URL('/memberlist.php', AppConfig.links.resource);
+          url.searchParams.append('mode', 'viewprofile');
+          url.searchParams.append('u', id.toString());
+    this._electron.shell.openExternal(url.toString());
+  }
+
+  openForum(): void {
+    const url = new URL('/index.php', AppConfig.links.resource);
+    this._electron.shell.openExternal(url.toString());
   }
 
   getUserInfo(): UserData | null {
-    if (localStorage.getItem('user') !== null) {
-      return JSON.parse(localStorage.getItem('user'));
-    } else {
-      return null;
-    }
+    if (localStorage.getItem('user') == null) return null;
+    return JSON.parse(localStorage.getItem('user'));
   }
+
   isAuthenticated(): boolean {
     const userInfo = this.getUserInfo();
-    if (userInfo?.token) {
-      return true;
-    }
-    return false;
+    if (!userInfo?.token) return false;
+    return true;
   }
 
   setUpUser(user: UserData): Observable<IDBUser> {
-    return this.idbService.add('user', {
+    return this._idbService.add('user', {
       id: user.id,
       name: user.username,
       avatar: user.avatar,
       group: user.main_group
-    })
+    });
   }
 
-  loginUser(value: UserLoginData): Observable<UserData> {
-    return this.http.post<UserLoginData>(this.URL_LOGIN, value, { headers: this.headers })
+  loginUser(value: UserLoginData): Observable<any> {
+    return this._http.post<UserLoginData>(this.URL_LOGIN, value, { headers: new HttpHeaders ({
+      'Content-Type': 'application/json'
+    })})
     .pipe(
-      catchError((error) => this.handleError(error))
-    ).pipe(
-      tap((user: UserData) => {
-        if (user && user.token) {
-          window.localStorage.setItem('user', JSON.stringify(user));
-          const addUserSub = this.setUpUser(user).subscribe(() => {
-            const johnny = this.idbService.add('user', { name: 'JohnnyTheDog', id: 42, group: 12, avatar: 'lars://assets/images/doge.png'}).subscribe(() => johnny.unsubscribe());
-            addUserSub.unsubscribe();
-          });
-        }
-        this.user.next(user);
-        return user;
-    }))
+      catchError((error) => handleError(error))
+    );
   }
+
   async logOut(): Promise<any> {
-    const dialogOpts = {
-        type: 'question',
-        buttons: ['Да, выйти', 'Отмена'],
-        title: 'Подтверждение выхода',
-        message: 'Вы точно хотите выйти с аккаунта?'
-      }
-    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
-      if (returnValue.response === 0) {
-        this.user.next(undefined);
-        localStorage.removeItem('user');
-        return this.router.navigate(['/login']);
-      }
-      throw 'REJECTED BY USER'
-    })
-  }
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-      this.error.next(error.error);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-        this.error.next(error);
-    }
-    return throwError(error);
+    const messageBox: Electron.MessageBoxOptions = {
+      type: 'question',
+      buttons: ['Да, выйти', 'Отмена'],
+      title: 'Подтверждение выхода',
+      message: 'Вы точно хотите выйти с аккаунта?'
+    };
+    this._electron.ipcRenderer.invoke('message-box', messageBox).then((returnValue: Electron.MessageBoxReturnValue) => {
+      if (returnValue.response !== 0) throw 'REJECTED BY USER';
+      this.user.next(undefined);
+      localStorage.removeItem('user');
+      return this._router.navigate(['/login']);
+    });
   }
 }
