@@ -181,6 +181,9 @@ export class TopperComponent implements OnInit {
       this._devRoomSubscriptions.unsubscribe();
       this._mainRoomSubscriptions.unsubscribe();
     });
+    this.ws.onСonnect().subscribe(() => {
+      this.userService.user.next(this.userService.getUserInfo());
+    });
 
     /**
     * Check user

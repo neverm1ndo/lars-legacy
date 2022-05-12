@@ -77,6 +77,10 @@ export class WebSocketService {
     return this.socket.fromEvent('disconnect');
   }
 
+  onСonnect(): Observable<any> {
+    return this.socket.fromEvent('disconnect');
+  }
+
   getServerState(): Observable<any> {
     return this.socket.fromEvent('server-status');
   }
