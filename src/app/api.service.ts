@@ -35,7 +35,7 @@ export class ApiService {
   readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
   readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
 
-  readonly SERVER_MONITOR: string = 'https://apps.nmnd.ru/api/samp';
+  readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 

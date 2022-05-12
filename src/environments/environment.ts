@@ -2,7 +2,8 @@ export const AppConfig = {
   production: false,
   environment: 'DEV',
   links: {
-    resource: 'https://gta-liberty.ru/'
+    resource: 'https://gta-liberty.ru/',
+    server_monitor: 'https://apps.nmnd.ru/api/samp'
   },
   api: {
     socket: 'wss://localhost:8443/',
