@@ -2,7 +2,7 @@ export const AppConfig = {
   production: true,
   environment: 'PROD',
   links: {
-    resource: 'https://gta-liberty.ru/',
+    resource: 'https://www.gta-liberty.ru/',
     server_monitor: 'https://apps.nmnd.ru/api/samp'
   },
   api: { // Dev server
