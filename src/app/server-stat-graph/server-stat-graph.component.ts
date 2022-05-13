@@ -15,22 +15,22 @@ import { Subscription, interval } from 'rxjs';
 export class ServerStatGraphComponent implements OnInit, OnDestroy {
 
   constructor(
-    private electron: ElectronService,
-    private zone: NgZone,
-    private cfr: ChangeDetectorRef,
+    private _electron: ElectronService,
+    private _zone: NgZone,
+    private _cfr: ChangeDetectorRef,
   ) { }
 
   @Input('players') set players(players: number) {
     if (!this.stat) return;
     this.stat.players.online = players;
-    this.points.push(players);
+    this._points.push(players);
     this.drawGraphics();
   }
 
-  points: number[] = [];
-  stat: ServerGameMode;
+  private _points: number[] = [];
+  public stat: ServerGameMode;
 
-  timer: Subscription = interval(60000).subscribe(() => {
+  timer: Subscription = interval(30000).subscribe(() => {
     this.players = this.stat.players.online;
   });
 
@@ -44,11 +44,11 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   @ViewChild('graphics') graphics: ElementRef<HTMLCanvasElement>;
 
   getMaxExistingPoint(): number {
-    return Math.max.apply(null, this.points);
+    return Math.max.apply(null, this._points);
   }
 
   drawGraphics(): void {
-    this.zone.runOutsideAngular(() => {
+    this._zone.runOutsideAngular(() => {
       const WHITE: string = '#afafaf';
       const PRIMARY: string = '#fd7e14';
       const MAX_PLAYERS: number = 64;
@@ -84,16 +84,16 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
         ctx.stroke(grid);
       };
 
-      if (offset >= 250) this.points.shift();
+      if (this._points.length >= 26) this._points.shift();
       ctx.clearRect(0, 0, 275, height);
       ctx.beginPath();
 
       const area: Path2D = new Path2D();
 
-      area.moveTo(20, height - this.points[0]*(height/top));
-      for (let i = 0; i < this.points.length; i++) {
+      area.moveTo(20, height - this._points[0]*(height/top));
+      for (let i = 0; i < this._points.length; i++) {
         offset = 10*i;
-        area.lineTo(20 + offset, height - this.points[i]*(height/top));
+        area.lineTo(20 + offset, height - this._points[i]*(height/top));
       }
       area.lineTo(20 + offset, height);
       area.lineTo(20, height)
@@ -104,15 +104,15 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       ctx.fill(area);
       drawGrid();
     });
-    this.cfr.detectChanges();
+    this._cfr.detectChanges();
   }
 
   async getServerInfo(): Promise<void> {
     const PORT: number = 7777;
-    return this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, PORT)
+    return this._electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, PORT)
                .then((info: ServerGameMode) => {
                  this.stat = info;
-                 this.points.push(info.players.online);
+                 this._points.push(info.players.online);
                  return Promise.resolve();
                });
   }
