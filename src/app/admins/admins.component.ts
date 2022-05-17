@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../user.service';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
@@ -7,9 +7,7 @@ import { settings } from '../app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '../core/services';
 import { WebSocketService } from '../web-socket.service';
-import { Workgroup } from '../enums/workgroup.enum';
-
-type UserActivityType = 'redacting' | 'idle' | 'inlogs' | 'inmaps' | 'inadm' | 'inbacks';
+import { Workgroup, UserActivity } from '../enums';
 
 interface AdminUser {
   user_id: number;
@@ -66,39 +64,41 @@ export class AdminsComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    // private idbService: NgxIndexedDBService,
-    private api: ApiService,
-    public userService: UserService,
-    private toast: ToastService,
-    private electron: ElectronService,
-    public ws: WebSocketService
+    private _api: ApiService,
+    private _userService: UserService,
+    private _toast: ToastService,
+    private _electron: ElectronService,
+    private _ws: WebSocketService
   ) { }
 
-  userActionTranslation(action: UserActivityType): string {
-    const actions = {
-      idle: 'Спит',
-      inlogs: 'Просматривает логи',
-      inmaps: 'В редакторе карт',
-      redacting: 'В редакторе конфигов',
-      inadm: 'В списке админов',
-      inbacks: 'Просматривает бэкапы'
+  get userActivities() {
+    return this._ws.usersStates;
+  }
+
+  get userInfo () {
+    return this._userService.getUserInfo();
+  }
+
+  adminActivityIcon(state: number) {
+    const icons = {
+      [UserActivity.IDLE]: faWind,
+      [UserActivity.IN_LOGS]: faSearch,
+      [UserActivity.IN_MAPS]: faMap,
+      [UserActivity.REDACT]: faFileSignature,
+      [UserActivity.IN_BANS]: faUserSlash,
+      [UserActivity.IN_ADM]: faUserSecret,
+      [UserActivity.IN_BACKS]: faBoxOpen,
+      [UserActivity.IN_STATS]: faChartPie
     };
-    let act = actions[action];
-    if (!act) return 'Unknown Action Type';
-    return act;
+    return icons[state];
   }
 
   userLink(id: number) {
-    this.userService.openUserProfile(id);
+    this._userService.openUserProfile(id);
   }
 
   getFullAdminsList() {
-    this.api.getAdminsList().subscribe((admins: any) => {
-      this.admins = admins;
-    });
-  }
-  getFullAdminsAll() {
-    this.api.getAdminsList().subscribe((admins: any) => {
+    this._api.getAdminsList().subscribe((admins: any) => {
       this.admins = admins;
     });
   }
@@ -108,6 +108,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
       this.popup = false;
       this.getFullAdminsList();
   }
+
   removeAdmin(username: string, id: number) {
     const dialogOpts = {
       type: 'question',
@@ -115,7 +116,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
       title: 'Подтверждение исключения',
       message: `Вы точно хотите исключть ${username} из администраторского состава?`
     };
-    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
+    this._electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
       if (returnValue.response !== 0) return;
       this.changeAdminGroup(username, id, 2);
       setTimeout(() => {
@@ -123,6 +124,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
       }, 500);
     });
   }
+
+  /**
+  * @deprecated
+  */
   closeAdminSession(username: string) {
     const dialogOpts = {
       type: 'question',
@@ -130,10 +135,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
       title: 'Подтверждение закрытия сессии',
       message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
     };
-    this.electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
+    this._electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
       if (returnValue.response !== 0) return;
-      this.api.closeAdminSession(username).subscribe(() => {
-        this.toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
+      this._api.closeAdminSession(username).subscribe(() => {
+        this._toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
           {
             classname: 'bg-success text-light',
             delay: 3000,
@@ -144,8 +149,8 @@ export class AdminsComponent implements OnInit, OnDestroy {
   }
 
   changeAdminGroup(username: string, id: number, group: number) {
-    this.api.setAdminGroup(id, group).subscribe(() => {
-      this.toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this.userService.getUserGroupName(group)}</b>`,
+    this._api.setAdminGroup(id, group).subscribe(() => {
+      this._toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`,
         {
           classname: 'bg-success text-light',
           delay: 3000,
@@ -153,9 +158,10 @@ export class AdminsComponent implements OnInit, OnDestroy {
         });
     });
   }
+
   changeSecondaryAdminGroup(username: string, id: number, group: number) {
-    this.api.setAdminSecondaryGroup(id, group).subscribe(() => {
-      this.toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this.userService.getUserGroupName(group)}</b>`,
+    this._api.setAdminSecondaryGroup(id, group).subscribe(() => {
+      this._toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`,
         {
           classname: 'bg-success text-light',
           delay: 3000,
@@ -167,6 +173,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getFullAdminsList();
   }
+
   ngOnDestroy(): void {
     // this.$activies.unsubscribe();
   }

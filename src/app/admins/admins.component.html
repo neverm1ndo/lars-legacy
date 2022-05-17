@@ -8,7 +8,7 @@
               <h6><fa-icon [icon]="fa.agent"></fa-icon>Администраторский состав</h6>
             </div>
             <div class="col-6 text-right">
-              <button [disabled]="userService.getUserInfo().main_group !== 10" (click)="popup = true" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> Добавить админа</button>
+              <button [disabled]="userInfo.main_group !== 10" (click)="popup = true" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> Добавить админа</button>
             </div>
           </div>
         </div>
@@ -34,14 +34,9 @@
                   <td class="td-username">
                     <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
                     <small>{{ admin.user_email }}</small><br>
-                    <small *ngIf="ws.usersStates[admin.username]">
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'idle'" [icon]="fa.wind"></fa-icon>
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inmaps'" [icon]="fa.map"></fa-icon>
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inlogs'" [icon]="fa.search"></fa-icon>
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'redacting'" [icon]="fa.conf"></fa-icon>
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inadm'" [icon]="fa.agent"></fa-icon>
-                      <fa-icon *ngIf="ws.usersStates[admin.username] == 'inbacks'" [icon]="fa.box"></fa-icon>
-                      {{ userActionTranslation(ws.usersStates[admin.username]) }}
+                    <small *ngIf="userActivities[admin.username]">
+                      <fa-icon [icon]="adminActivityIcon(userActivities[admin.username])"></fa-icon>
+                      {{ userActivities[admin.username] | userAction }}
                     </small>
                   </td>
                   <td>
@@ -51,7 +46,7 @@
                     [clearable]="false"
                     bindValue="id"
                     class="custom"
-                    [disabled]="userService.getUserInfo().main_group !== 10"
+                    [disabled]="userInfo.main_group !== 10"
                     (change)="changeAdminGroup(admin.username, admin.user_id, admin.main_group)"
                     [(ngModel)]="admin.main_group">
                   </ng-select>
@@ -63,13 +58,12 @@
                   [clearable]="false"
                   bindValue="id"
                   class="custom"
-                  [disabled]="userService.getUserInfo().main_group !== 10 || (admin.main_group == 10 || admin.main_group == 9)"
+                  [disabled]="userInfo.main_group !== 10 || (admin.main_group == 10 || admin.main_group == 9)"
                   (change)="changeSecondaryAdminGroup(admin.username, admin.user_id, admin.secondary_group)"
                   [(ngModel)]="admin.secondary_group">
                 </ng-select>
               </td>
-              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userService.getUserInfo().main_group !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
-              <td class="td-rm"><button (click)="closeAdminSession(admin.username)" [disabled]="userService.getUserInfo().main_group !== 10" ngbTooltip="Сбросить токен доступа" class="btn btn-dark btn-36" type="button" name="button"><fa-icon [icon]="fa.poo"></fa-icon></button></td>
+              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
             </tr>
               </tbody>
             </table>

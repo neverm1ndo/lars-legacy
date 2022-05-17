@@ -105,33 +105,33 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private _zone: NgZone,
   ) {}
 
-  searchIn() {
+  searchIn(): void {
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find);
     });
   }
-  replaceIn() {
+  replaceIn(): void {
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace);
     });
     this.checkChanges();
   }
-  replaceInAll() {
+  replaceInAll(): void {
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace);
     });
     this.checkChanges();
   }
 
-  deleteFile() {
+  deleteFile(): void {
     this.configs.deleteFile(this.path);
   }
 
-  pathToClipboard() {
+  pathToClipboard(): void {
     this.configs.pathToClipboard(this.path);
   }
 
-  saveFile() {
+  saveFile(): void {
     const blob = new Blob([this.textplain], { type: this.stats.mime });
     this.loading = true;
     this.configs.saveFileAsBlob(this.path, blob)
@@ -203,7 +203,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
   }
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this._refreshCodeMirror();
     if (!window.localStorage.getItem('CE_fontSize')) {
       window.localStorage.setItem('CE_fontSize', '13px');
@@ -212,13 +212,13 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editorStyle.nativeElement.style.fontSize = window.localStorage.getItem('CE_fontSize');
     }
     this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.autocomplete = (cm: any) => {
+      this.editor.codeMirrorGlobal.autocomplete = (_cm: any) => {
         const editor = this.editor.codeMirror as EditorFromTextAreaExpanded;
         editor.showHint({ hint: this.editor.codeMirrorGlobal.hint.anyword });
       }
     });
   }
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.changed.complete();
   }
 }

@@ -49,7 +49,7 @@ const routes: Routes = [
       { path: 'map', component: MapComponent },
     ]},
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
-    { path: 'admins', component: AdminsComponent, canActivate: [IsDevGuard] },
+    { path: 'admins', component: AdminsComponent, canActivate: [IsCommonGuard] },
     { path: 'backups', component: BackupsComponent, canActivate: [IsDevGuard] },
     { path: 'stats', component: StatisticsComponent, canActivate: [IsCommonGuard] },
   ]},

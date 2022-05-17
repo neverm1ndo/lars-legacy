@@ -62,6 +62,7 @@ import { RolePipe } from '../pipes/role.pipe';
 import { MapsService } from '../maps.service';
 import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
+import { UserActionPipe } from '../pipes/user-action.pipe';
 
 const dbConfig: DBConfig  = {
   name: 'lty_users',
@@ -79,7 +80,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
   imports: [
     CommonModule,
     SharedModule,
