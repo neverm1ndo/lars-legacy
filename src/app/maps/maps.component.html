@@ -14,6 +14,7 @@
             (mvdir)="mvdir($event)"
             [items]="files"
             [current]="currentFilePath"
+            (addNew)="addNewMap($event)"
             (resync)="reloadFileTree()">
           </file-tree>
         </div>
