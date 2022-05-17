@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '../../api.service';
@@ -35,10 +35,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     hist: faHistory,
     calendar: faCalendarAlt
   }
-  datepickers: boolean = false;
-  filter: boolean = false;
-  $newLinesSub: Subscription;
-  newLineCounter: number = 0;
+
+  public datepickers: boolean = false;
+  private $newLinesSub: Subscription;
+  public newLineCounter: number = 0;
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
@@ -47,11 +47,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   @Input('lineCounter') lineCounter: number = 0;
 
   constructor(
-    public api: ApiService,
-    public toast: ToastService,
-    public router: Router,
-    public route: ActivatedRoute,
-    public ws: WebSocketService
+    private _api: ApiService,
+    private _toast: ToastService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _ws: WebSocketService
   ) { }
 
   get query() {
@@ -60,6 +60,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       from: this.searchForm.get('dateFrom').value,
       to: this.searchForm.get('dateTo').value
     }
+  }
+
+  get lazy() {
+    return this._api.lazy;
   }
 
   dateValidator(str: string): boolean {
@@ -74,9 +78,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.searchQuery.emit({ query: this.query.query });
       }
       if (this.quick) {
-        this.router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
+        this._router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
       }
-      this.api.addToRecent('search', this.query.query);
+      this._api.addToRecent('search', this.query.query);
     } else {
       let errmsg = '<b>Ошибка валидации поискового запроса</b><hr>';
       Object.keys(this.searchForm.controls).forEach((key: string) => {
@@ -84,38 +88,33 @@ export class SearchComponent implements OnInit, OnDestroy {
           errmsg += `<kbd>${key.toUpperCase()}</kbd> Проверьте поле ${key}<br>`
         }
       });
-      this.toast.show(errmsg, { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
+      this._toast.show(errmsg, { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
     }
   }
 
   openDatePickers(): void {
     this.datepickers = this.datepickers?true:false;
   }
-  openFilter(): void {
-    this.filter = this.filter?true:false;
-  }
 
   sync(): void {
-    this.api.currentPage = 0;
+    this._api.currentPage = 0;
     this.syncronize.emit(true);
   }
 
   ngOnInit(): void {
     if (!this.quick) {
-      this.$newLinesSub = this.ws.getNewLogLines().subscribe(() => {
+      this.$newLinesSub = this._ws.getNewLogLines().subscribe(() => {
         this.newLineCounter++;
-      })
+      });
     }
-    this.route.queryParams.pipe(
+    this._route.queryParams.pipe(
       filter(params => (params.query))
     ).subscribe(params => {
       this.searchForm.setValue({ query: params.query, dateFrom: '', dateTo: '' });
     });
   }
-  ngOnDestroy() {
-    if (this.$newLinesSub) {
-      this.$newLinesSub.unsubscribe();
-    }
-  }
 
+  ngOnDestroy() {
+    if (this.$newLinesSub) this.$newLinesSub.unsubscribe();
+  }
 }
