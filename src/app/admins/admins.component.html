@@ -23,7 +23,6 @@
                 <th>Основная группа</th>
                 <th class="text-muted">Побочная группа</th>
                 <th></th>
-                <th></th>
               </thead>
               <tbody>
                 <tr *ngFor="let admin of admins">
@@ -63,7 +62,7 @@
                   [(ngModel)]="admin.secondary_group">
                 </ng-select>
               </td>
-              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="bottom" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
+              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="left" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
             </tr>
               </tbody>
             </table>
