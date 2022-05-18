@@ -29,6 +29,7 @@ export class ApiService {
   readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
   readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
   readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
+  readonly URL_BACKUPS_SIZE: string = AppConfig.api.main + 'backups/size';
   readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
   readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
   readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
@@ -117,7 +118,10 @@ export class ApiService {
     return this.http.get(this.URL_BACKUP_FILE, { params: { name, unix: String(unix) }, responseType: 'text'})
   }
   restoreBackup(path: string, unix: string): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } })
+    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } });
+  }
+  getBackupsSize(): Observable<any> {
+    return this.http.get(this.URL_BACKUPS_SIZE);
   }
   getStatsOnline(date: Date): Observable<any> {
     return this.http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});

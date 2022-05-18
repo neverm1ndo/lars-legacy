@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/co
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services';
-import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map } from 'rxjs/operators'
 import { throwError, combineLatest } from 'rxjs';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
@@ -27,6 +27,7 @@ export class BackupsComponent implements OnInit {
   ) { }
 
   backups = [];
+  size: number = 0;
   current: any;
 
   actions = {
@@ -38,7 +39,9 @@ export class BackupsComponent implements OnInit {
   fa = {
     sign: faFileSignature,
     trash: faTrash,
-    exCircle: faExclamationCircle
+    exCircle: faExclamationCircle,
+    box: faBoxOpen,
+    hdd: faHdd
   };
 
   admins: any;
@@ -106,7 +109,7 @@ export class BackupsComponent implements OnInit {
 
   private _drawGraph(): void {
     const childs: HTMLCollection = this.backupsItems.nativeElement.children;
-    let topMarge: number = this.binds.nativeElement.getBoundingClientRect().top - 35;
+    let topMarge: number = this.binds.nativeElement.getBoundingClientRect().top - 29;
     let bb: any;
     let prevHeight: number = 0;
     const drawBackbones = () => {
@@ -246,9 +249,11 @@ export class BackupsComponent implements OnInit {
     this.loading = true;
     combineLatest([
       this._getAdminList(),
-      this._api.getBackupsList().pipe(take(1))
+      this._api.getBackupsList().pipe(take(1)),
+      // this._api.getBackupsSize().pipe(take(1)),
     ])
     .subscribe(([admins, backups]) => {
+      // console.log(stats);
       this.admins = admins;
       this.backups = backups;
       this.loading = false;

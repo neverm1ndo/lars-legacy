@@ -13,6 +13,20 @@ p, a, span, button, div {
 .list {
   flex: 1 1 70%;
 }
+.underpanel {
+  max-height: 28px!important;
+  background-color: $underpanel;
+  &-panel {
+    .progress {
+      width: 100px;
+      border-radius: 0px;
+      height: 3px;
+      &-bar {
+        background-color: green;
+      }
+    }
+  }
+}
 .history {
   background: $secondary;
   &-head {
