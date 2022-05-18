@@ -8,6 +8,7 @@ import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
+import { join } from 'path';
 
 @Injectable({
   providedIn: 'any'
@@ -153,6 +154,7 @@ export class MapsService {
     .pipe(take(1))
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
+    if (path.name) path.path = join(path.path, path.name);
     return this.api.getMap(path.path)
       .pipe(map((xml: string) => this.mapToObject(xml)))
       .pipe(catchError((err) => throwError(err)))
