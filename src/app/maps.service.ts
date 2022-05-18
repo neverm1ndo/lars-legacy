@@ -154,7 +154,7 @@ export class MapsService {
     .pipe(take(1))
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
-    if (path.name) path.path = join(path.path, path.name);
+    // if (path.name) path.path = join(path.path, path.name);
     return this.api.getMap(path.path)
       .pipe(map((xml: string) => this.mapToObject(xml)))
       .pipe(catchError((err) => throwError(err)))
