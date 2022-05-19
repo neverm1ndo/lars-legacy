@@ -67,7 +67,7 @@ export class MapsComponent implements OnInit, OnDestroy {
 
   toMap(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
-    this.router.navigate(['/home/maps/map'], { queryParams: { path: path.path , name: path.name }});
+    this.router.navigate(['/home/maps/map'], { queryParams: path });
   }
 
   mkdir(path: string) {
