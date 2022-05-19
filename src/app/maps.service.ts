@@ -8,17 +8,16 @@ import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { join } from 'path';
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'root'
 })
 export class MapsService {
 
   constructor(
-    private electron: ElectronService,
-    private api: ApiService,
-    private toast: ToastService
+    private _electron: ElectronService,
+    private _api: ApiService,
+    private _toast: ToastService
   ) { }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
@@ -32,30 +31,13 @@ export class MapsService {
     return throwError(error);
   }
 
-  mkdir(path: string): Observable<any> {
-    return this.api.createDirectory(path)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-  rmdir(path: string): Observable<any> {
-    return this.api.removeDirectory(path)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-  mvdir(path: string, dest: string): Observable<any> {
-    return this.api.moveDirectory(path, dest)
-    .pipe(catchError((error) => this.handleError(error)))
-  }
-
   objectToMap(object: any[]): string {
     let res: string = '';
     for (let i = 0; i < object.length; i++) {
       Object.keys(object[i]).forEach((e: string, j: number) => {
-        if (j === 0) {
-          res += `<${object[i][e]} `
-        }
-        else { res += `${e}="${object[i][e]}" `};
-        if (j === Object.keys(object[i]).length - 1) {
-          res += `/>\n`;
-        }
+        if (j === 0) res += `<${object[i][e]} `
+        else res += `${e}="${object[i][e]}" `;
+        if (j === Object.keys(object[i]).length - 1) res += `/>\n`;
       });
     }
     return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru \n-->\n` + '</map>';
@@ -63,14 +45,14 @@ export class MapsService {
 
   async cancelChanges(path: string): Promise<any> {
     const dialogOpts = {
-        type: 'warning',
-        buttons: ['Да', 'Нет'],
-        title: `Подтверждение отмены изменений`,
-        message: `Есть несохраненные изменения в файле ${path}. Отменить все изменения?`
-      }
-    return this.electron.ipcRenderer.invoke('message-box', dialogOpts)
-    .then( val => {
-      if (val.response === 0) return Promise.resolve()
+      type: 'warning',
+      buttons: ['Да', 'Нет'],
+      title: `Подтверждение отмены изменений`,
+      message: `Есть несохраненные изменения в файле ${path}. Отменить все изменения?`
+    };
+    return this._electron.ipcRenderer.invoke('message-box', dialogOpts)
+    .then(val => {
+      if (val.response === 0) return Promise.resolve();
       return Promise.reject();
     });
   }
@@ -107,9 +89,9 @@ export class MapsService {
         title: `Подтверждение удаления`,
         message: `Вы точно хотите удалить карту ${path}? После подтверждения она будет безвозвратно удалена с сервера.`
       }
-    return from(this.electron.ipcRenderer.invoke('message-box', dialogOpts))
+    return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
     .pipe(filter(val => val.response === 0))
-    .pipe(switchMap(() => this.api.deleteMap(path)))
+    .pipe(switchMap(() => this._api.deleteMap(path)))
     .pipe(take(1))
     .pipe(catchError((err) => this.handleError(err)))
   }
@@ -121,7 +103,7 @@ export class MapsService {
         title: `Подтверждение сохранения на сервере`,
         message: `Вы точно хотите сохранить карту ${path}? После подтверждения она будет перезаписана на сервере.`
       }
-      return from(this.electron.ipcRenderer.invoke('message-box', dialogOpts))
+      return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
       .pipe(filter(val => val.response === 0))
       .pipe(map(() => {
         const form = new FormData();
@@ -129,7 +111,7 @@ export class MapsService {
         form.append('file', blob, path);
         return form;
       }))
-      .pipe(switchMap((form) => this.api.uploadFileMap(form)))
+      .pipe(switchMap((form) => this._api.uploadFileMap(form)))
       .pipe(filter((event) => event instanceof HttpResponse))
       .pipe(take(1))
   }
@@ -143,10 +125,10 @@ export class MapsService {
         { name: 'All Files', extensions: ['*'] }
       ]
     }
-    return from(this.electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
+    return from(this._electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
     .pipe(filter(res => res.filePath && !res.canceled))
     .pipe(switchMap((res) => from(new Promise((resolve, reject) => {
-      this.electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
+      this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
         err?reject(err):resolve(res.filePath);
       });
     }))))
@@ -154,14 +136,13 @@ export class MapsService {
     .pipe(take(1))
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
-    // if (path.name) path.path = join(path.path, path.name);
-    return this.api.getMap(path.path)
+    return this._api.getMap(path.path)
       .pipe(map((xml: string) => this.mapToObject(xml)))
       .pipe(catchError((err) => throwError(err)))
   }
 
   posZChangeSuccess() {
-    this.toast.show(`Успешное изменение posZ`,
+    this._toast.show(`Успешное изменение posZ`,
     {
       classname: 'bg-success text-light',
       delay: 5000,
@@ -170,7 +151,7 @@ export class MapsService {
   }
 
   mapToast(message: string, path: string, icon: IconDefinition, classname: string) {
-    this.toast.show(message, {
+    this._toast.show(message, {
       classname,
       delay: 6000,
       icon,
@@ -178,7 +159,7 @@ export class MapsService {
     });
   }
   mapNotLoaded(err: Error) {
-    this.toast.show(`Карта не был загружена по причине:`, {
+    this._toast.show(`Карта не был загружена по причине:`, {
       classname: 'bg-danger text-light',
       delay: 6000,
       icon: faExclamationTriangle,
