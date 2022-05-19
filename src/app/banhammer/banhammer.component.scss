@@ -1,19 +1,146 @@
+@import "colors";
 :host {
-  font-size: 14px;
-  input, button {
-    font-size: 13px;
+  font-size: 11px;
+  .playerlog {
+    background: $texteditor;
   }
-  lty-icon {
-    margin-right: 10px;
-    font-size: 13px;
-    width: 24px;
-    height: 24px;
-    opacity: 0.4;
-    position: relative;
-    top: -2px;
+  .btn-36 {
+    height: 36px;
+    width: 36px;
   }
-  h4, span {
-    color: #fdfdfd40;
+  .form-control {
+    font-size: 12px;
+  }
+  .head {
+    height: 50px;
+    width: 100%;
+    background: $secondary;
+    h6 {
       font-weight: 300;
+      line-height: 50px;
+      fa-icon {
+        margin-right: 15px;
+      }
     }
+  }
+  table {
+    color: #fdfdfd;
+    margin-bottom: 0px;
+    height: 100%;
+    th {
+      border: none;
+      background-color: $underpanel-hover;
+      text-align: center;
+      font-weight: lighter;
+    }
+    tr {
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+    }
+    td {
+      vertical-align: middle;
+      border-top: none;
+      border-bottom: none;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      text-align: center;
+      height: 30px;
+      &:last-child {
+        border: none;
+      }
+    }
+    // thead {
+    //   position: relative;
+    //   th {
+    //     border: none;
+    //     &:nth-child(even) {
+    //       background: #31333e90;
+    //     }
+    //   }
+    // }
+  }
+  a {
+    margin-left: 5px;
+    margin-right: 5px;
+    transition: .1s ease;
+    color: $text;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    &:hover {
+      text-decoration: none;
+      border-bottom: 1px solid #fdfdfd;
+    }
+  }
+  .td-avatar {
+    width: 60px;
+    kbd {
+      position: relative;
+      top: -12px;
+    }
+  }
+  .td-rm {
+    width: 40px;
+  }
+  .popup {
+    position: fixed;
+    width: 100%;
+    height: 98%;
+    background: rgba(0,0,0,0.3);
+    top: 35px;
+    &-window {
+      border-radius: 3px;
+      margin-left: -80px;
+      margin-top: -35px;
+      min-width: 400px;
+      max-width: 80vw;
+      background: #343540;
+      border: 1px solid $topper;
+      max-height: 90vh;
+      &-head {
+        padding: 30px;
+      }
+      &-body {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+      &-footer {
+        padding: 30px;
+      }
+    }
+  }
+  .rm-adm {
+    &:after {
+      content: "";
+      width: 10px;
+      height: 2px;
+      background: red;
+      position: absolute;
+      transform: rotate(45deg);
+      margin-left: -6px;
+      margin-top: 3px;
+    }
+    &:before{
+      content: "";
+      width: 10px;
+      height: 2px;
+      background: red;
+      position: absolute;
+      transform: rotate(-45deg);
+      margin-left: 5px;
+      margin-top: 3px;
+    }
+  }
+  .add-adm {
+    margin-top: 9px;
+  }
+  .td-username {
+    width: 150px;
+  }
+  .avatar {
+    margin-top: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+  }
 }
