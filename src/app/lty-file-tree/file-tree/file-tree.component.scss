@@ -1,11 +1,27 @@
 @import 'colors';
+@import 'popup';
+
 :host {
   height: 100%;
   lty-icon {
     width: 34px;
     height: 34px;
   }
+  .popup {
+    &-window-head {
+      padding: 10px 15px 0 15px;
+    }
+    &-window-body {
+      padding: 0 15px 0 15px;
+    }
+    input {
+      font-size: inherit;
+    }
+  }
   .top {
+    background: $secondary;
+    padding-top: 15px;
+    border-bottom: 1px solid #00000010;
     .btn {
       position: relative;
       top: -5px;

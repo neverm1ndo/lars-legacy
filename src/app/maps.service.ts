@@ -8,9 +8,10 @@ import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
+import { join } from 'path';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MapsService {
 
@@ -29,6 +30,19 @@ export class MapsService {
         `body was: ${JSON.stringify(error.error)}`);
     }
     return throwError(error);
+  }
+
+  mkdir(path: string): Observable<any> {
+    return this.api.createDirectory(path)
+    .pipe(catchError((error) => this.handleError(error)))
+  }
+  rmdir(path: string): Observable<any> {
+    return this.api.removeDirectory(path)
+    .pipe(catchError((error) => this.handleError(error)))
+  }
+  mvdir(path: string, dest: string): Observable<any> {
+    return this.api.moveDirectory(path, dest)
+    .pipe(catchError((error) => this.handleError(error)))
   }
 
   objectToMap(object: any[]): string {
@@ -140,6 +154,7 @@ export class MapsService {
     .pipe(take(1))
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
+    // if (path.name) path.path = join(path.path, path.name);
     return this.api.getMap(path.path)
       .pipe(map((xml: string) => this.mapToObject(xml)))
       .pipe(catchError((err) => throwError(err)))

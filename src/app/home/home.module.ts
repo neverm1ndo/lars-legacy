@@ -7,6 +7,7 @@ import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SocketIoModule } from 'ngx-socket-io';
 import { NgChartsModule } from 'ng2-charts';
+import { LtyFileTreeModule } from '../lty-file-tree/lty-file-tree.module';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -29,24 +30,20 @@ import { FilterComponent } from '../filter/filter.component';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptor } from '../interceptors/jwt.interceptor';
-import { FileTreeComponent } from '../file-tree/file-tree.component';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
-import { FileTreeItemComponent } from '../file-tree-item/file-tree-item.component';
-import { FileTreeItemsComponent } from '../file-tree-items/file-tree-items.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsComponent } from '../settings/settings.component';
 import { MapsComponent } from '../maps/maps.component';
-import { MapInspectorComponent } from '../map-inspector/map-inspector.component';
-import { MapEditorComponent } from '../map-editor/map-editor.component';
+import { MapInspectorComponent } from '../maps/map-inspector/map-inspector.component';
+import { MapEditorComponent } from '../maps/map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
-import { DndDirective } from '../directives/dnd.directive';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
 import { FileSizePipe } from '../pipes/file-size.pipe';
 import { AdminsComponent } from '../admins/admins.component';
-import { MapCorrectorComponent } from '../map-corrector/map-corrector.component';
+import { MapCorrectorComponent } from '../maps/map-corrector/map-corrector.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
 import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
@@ -55,12 +52,17 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { socketConfig } from '../web-socket.service';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from '../maps/map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { RulesPipe } from '../pipes/rules.pipe';
 import { RolePipe } from '../pipes/role.pipe';
+
+import { MapsService } from '../maps.service';
+import { ConfigsService } from '../configs.service';
+import { NotificationsService } from '../notifications.service';
+import { UserActionPipe } from '../pipes/user-action.pipe';
 
 const dbConfig: DBConfig  = {
   name: 'lty_users',
@@ -73,12 +75,12 @@ const dbConfig: DBConfig  = {
       { name: 'avatar', keypath: 'avatar', options: { unique: false } },
       { name: 'id', keypath: 'id', options: { unique: true } },
       { name: 'group', keypath: 'group', options: { unique: false } },
-    ]
-  }]
+    ],
+  }],
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, FileTreeComponent, TextEditorComponent, FileTreeItemComponent, FileTreeItemsComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, DndDirective, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
   imports: [
     CommonModule,
     SharedModule,
@@ -94,8 +96,12 @@ const dbConfig: DBConfig  = {
     SocketIoModule.forRoot(socketConfig),
     NgSelectModule,
     NgChartsModule,
+    LtyFileTreeModule
   ],
   providers: [
+    ConfigsService,
+    MapsService,
+    NotificationsService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

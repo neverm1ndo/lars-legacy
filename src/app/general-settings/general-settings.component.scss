@@ -10,7 +10,6 @@
     font-weight: 300;
   }
   .credits {
-    margin-bottom: 1.5rem;
     small {
       line-height: 10px!important;
     }
@@ -30,6 +29,9 @@
   }
   .playerlog {
     background: #3d3e4a;
+  }
+  .select {
+    width: 100px;
   }
   .active {
     background: #1d212450!important;

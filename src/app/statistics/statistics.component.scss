@@ -19,3 +19,23 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
 }
+.dropdown-menu {
+  margin-top: 18px;
+  border-radius: 3px;
+  max-width: none;
+  width: auto!important;
+  z-index: 1!important;
+  &::before {
+    position: absolute;
+    z-index: 1000;
+    top: -20px;
+    left: 10px;
+    width: 0px;
+    height: 0px;
+    content: '';
+    border-bottom: 10px solid $dropdown;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+  }
+}

@@ -3,10 +3,9 @@ import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { verifyUserToken, downloadFile, createTray, showNotification } from './utils.main';
+import { verifyUserToken, downloadFile, createTray, showNotification, serve } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
-import { Subscription, throwError } from 'rxjs';
-import { catchError, take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 
 /** Init samp to get server stats later
@@ -24,17 +23,10 @@ export let win: BrowserWindow = null;
 */
 const lock: boolean = app.requestSingleInstanceLock();
              app.setAppUserModelId('ru.nmnd.lars');
-             // app.setAppUserModelId(process.execPath);
  /** Init splash window
  * @type {BrowserWindow}
  */
 export let splash: BrowserWindow = null;
-
-/** Define launch arguments
-* @type {Array.<string>}
-*/
-const args: string[] = process.argv.slice(1),
-      serve = args.some(val => val === '--serve');
 
 /** Init system tray
 * @type {Tray>}
@@ -124,7 +116,7 @@ function createWindow(): BrowserWindow {
           win.show();
           state.manage(win);
         }, 500);
-      })
+      });
   });
 
   if (serve) {
@@ -137,12 +129,12 @@ function createWindow(): BrowserWindow {
     win.loadURL('https://libertyapp.nmnd.ru');
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
-    const url = request.url.substr(7);
-    callback({ path: path.join(__dirname, 'dist', url) });
-  })
-  win.on('show', (event: any) => {
+    const url: URL = new URL(request.url);
+    callback({ path: path.join(__dirname, 'dist', 'assets' , url.pathname) });
+  });
+  win.on('show', (_event: any) => {
     if (tray) tray.destroy();
-  })
+  });
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -157,43 +149,45 @@ function createWindow(): BrowserWindow {
 }
 
 /** IPC */
-ipcMain.on('download-file', (event, conf) => {
+ipcMain.on('download-file', (_event: Electron.IpcMainEvent, conf) => {
   downloadFile(conf);
 });
-ipcMain.on('minimize-to-tray', (event) => {
+ipcMain.on('minimize-to-tray', (event: Electron.IpcMainEvent) => {
   event.preventDefault();
   win.hide();
   tray = createTray();
   $serverInfo.unsubscribe();
-})
+});
 ipcMain.on('close', () => {
   win.close();
-})
+});
 ipcMain.on('minimize', () => {
   win.minimize();
-})
+});
 ipcMain.on('reload', () => {
   win.reload();
 })
-ipcMain.on('notification', (event, options) => {
+ipcMain.on('notification', (_event: Electron.IpcMainEvent, options) => {
   showNotification(options)
 });
-ipcMain.handle('server-game-mode', (event: Electron.IpcMainInvokeEvent) => {
-    return samp.getServerInfo('185.104.113.34', 7777)
-    .pipe(catchError((err: Error) => throwError(err)))
-    .pipe(take(1)).toPromise()
-})
-ipcMain.handle('message-box', (event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions) => {
+ipcMain.handle('server-game-mode', (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
+  if (!serve) return samp.getServerInfo(ip, port);
+  return samp.testSampServerStats;
+});
+ipcMain.handle('message-box', (_event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions): Promise<Electron.MessageBoxReturnValue> => {
   return dialog.showMessageBox(opts);
-})
-ipcMain.handle('save-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.SaveDialogOptions) => {
+});
+ipcMain.handle('save-dialog', (_event: Electron.IpcMainInvokeEvent, opts: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue> => {
   return dialog.showSaveDialog(opts);
-})
-ipcMain.handle('open-dialog', (event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions) => {
+});
+ipcMain.handle('open-dialog', (_event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions): Promise<Electron.OpenDialogReturnValue> => {
   return dialog.showOpenDialog(opts);
-})
-ipcMain.handle('clipboard', (event: Electron.IpcMainInvokeEvent, str: string) => {
+});
+ipcMain.handle('clipboard', (_event: Electron.IpcMainInvokeEvent, str: string): void => {
   clipboard.writeText(str);
+});
+ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => {
+  return app.getVersion();
 });
 
 /** AutoUpdater handlers */
@@ -206,24 +200,24 @@ autoUpdater.on('checking-for-update', () => {
 autoUpdater.on('update-downloaded', () => {
   win.webContents.send('update_downloaded');
 });
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+autoUpdater.on('update-downloaded', (_event, releaseNotes, releaseName) => {
   const dialogOpts = {
     type: 'info',
     buttons: ['Перезапустить', 'Отложить'],
     title: 'Обновление приложения',
     message: process.platform === 'win32' ? releaseNotes : releaseName,
     detail: 'Новая версия уже загружена. Перезапустите приложение, чтобы принять изменения.'
-  }
+  };
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) autoUpdater.quitAndInstall();
-  })
-})
+  });
+});
 autoUpdater.on('error', message => {
   console.error('Ошибка при попытке обновить приложение');
   console.error(message);
   dialog.showErrorBox('Ошибка при попытке обновить приложение', message.message);
-})
+});
 /********************************************/
 
 try {
@@ -231,18 +225,16 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-
   if (!lock) {
     app.quit();
   } else {
-    app.on('second-instance', (event, commandLine, workingDirectory) => {
+    app.on('second-instance', (_event: Electron.Event, _commandLine: string[], _workingDirectory: string) => {
       // Someone tried to run a second instance, we should focus our window.
-      if (win) {
-        if (win.isMinimized()) win.restore();
-        if (!win.isVisible()) win.show();
-        win.focus();
-      }
-    })
+      if (!win) return;
+      if (win.isMinimized()) win.restore();
+      if (!win.isVisible()) win.show();
+      win.focus();
+    });
 
     app.on('ready', () => {
       setTimeout(() => splashWindow(), 400);
@@ -253,20 +245,16 @@ try {
     app.on('window-all-closed', () => {
       // On OS X it is common for applications and their menu bar
       // to stay active until the user quits explicitly with Cmd + Q
-      if (process.platform !== 'darwin') {
-        app.quit();
-      }
+      if (process.platform !== 'darwin') app.quit();
     });
 
     app.on('activate', () => {
       // On OS X it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (win === null) {
-        createWindow();
-      }
+      if (win === null) createWindow();
     });
     if (serve) {
-      app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+      app.on('certificate-error', (event: Electron.Event, _webContents: Electron.WebContents, _url: string, _error: string, _certificate: Electron.Certificate, callback: (isTrusted: boolean) => void) => {
         // On certificate error we disable default behaviour (stop loading the page)
         // and we then say "it is all fine - true" to the callback
         event.preventDefault();
@@ -274,7 +262,7 @@ try {
       });
     }
   }
-} catch (e) {
-  console.error(e);
-  dialog.showErrorBox('Ошибка', e);
+} catch (err) {
+  console.error(err);
+  dialog.showErrorBox('Ошибка', err);
 }

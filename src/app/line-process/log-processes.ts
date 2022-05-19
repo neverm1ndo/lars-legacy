@@ -228,10 +228,25 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'light',
       control: 'chatAdm'
     },
+    '<chat/automute/dictionary>': {
+      translate: 'Автомут по словарю',
+      type: 'info',
+      control: 'chatAutoDict'
+    },
     '<chat/block/blocked>': {
       translate: 'Блокировка чата',
       type: 'warning',
       control: 'chatBlock'
+    },
+    '<chat/block/syntax>': {
+      translate: 'Неверный синтаксис',
+      type: 'warning',
+      control: 'chatBlockSynt'
+    },
+    '<chat/block/muted>': {
+      translate: 'Заглушен',
+      type: 'warning',
+      control: 'chatBlockMuted'
     },
     '<chat/block/flood>': {
       translate: 'Блокировка чата: флуд',
@@ -327,6 +342,26 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Проверка автоскролла: TRUE',
       type: 'adm',
       control: 'checkScrollT'
+    },
+    '<check/game_speed/player>': {
+      translate: 'Проверка скорости игры PLR',
+      type: 'adm',
+      control: 'checkGmSpdPlr'
+    },
+    '<check/error/flood>': {
+      translate: 'Слишком частая проверка',
+      type: 'danger',
+      control: 'checkErrFlood'
+    },
+    '<check/error/vehicle>': {
+      translate: 'Проверка скорости игры в транспорте',
+      type: 'danger',
+      control: 'checkErrVeh'
+    },
+    '<check/error/paused>': {
+      translate: 'Проверка скорости игры в паузе',
+      type: 'danger',
+      control: 'checkErrPaused'
     },
     '<spectate/change>': {
       translate: 'Смена цели наблюдения',
@@ -542,6 +577,16 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'ACHEAT WARN: UNSYNC',
       type: 'acheat',
       control: 'warnPlayerUnSync'
+    },
+    '<warn/player/aimbot>': {
+      translate: 'ACHEAT WARN: AIMBOT',
+      type: 'acheat',
+      control: 'warnPlayerAim'
+    },
+    '<warn/player/kill_flood>': {
+      translate: 'Киллфлуд',
+      type: 'warn',
+      control: 'warnPlayerKilFld'
     },
 }
 

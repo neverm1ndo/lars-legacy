@@ -33,9 +33,8 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('settings')) {
-      this.style = JSON.parse(localStorage.getItem('settings')).listStyle;
-    }
+    this.chunks = [[]];
+    if (localStorage.getItem('settings')) this.style = JSON.parse(localStorage.getItem('settings')).listStyle;
   }
 
 }

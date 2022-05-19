@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { mapCorrectorValueValidator } from '../shared/directives/map-corrector-validator.directive';
+import { mapCorrectorValueValidator } from '../../shared/directives/map-corrector-validator.directive';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

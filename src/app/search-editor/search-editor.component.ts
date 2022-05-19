@@ -19,7 +19,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('wrapper') wrapper: ElementRef<any>;
 
   lines: number = 0;
-  chunks: LogLine[][] = [];
+  chunks: LogLine[][] = [[]];
   scroll: any;
   glfSubber: Subscription = new Subscription();
   filter: any;
@@ -37,10 +37,10 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   search(query: any): void {
-    this.chunks = [];
+    this.chunks = [[]];
     this.loading = true;
     this.lines = 0;
-    this.router.navigate(['/home/search'], { queryParams: { query: query.query }})
+    this.router.navigate(['/home/search'], { queryParams: { query: query.query, from: query.from, to: query.to }})
   }
 
   refresh(): void {
@@ -51,7 +51,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   sync(): void {
     this.loading = true;
     this.lines = 0;
-    this.chunks = [];
+    this.chunks = [[]];
     this.api.refresh();
   }
 
@@ -62,9 +62,7 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
   isTop(): boolean {
-    if (this.wrapper.nativeElement.scrollTop === 0) {
-      return true;
-    }
+    if (this.wrapper.nativeElement.scrollTop === 0) return true;
     return false;
   }
 
@@ -75,11 +73,8 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(
       debounceTime(1200)
     ).subscribe(() => {
-      if (this.isBottom()) {
-        if (this.lines % +this.user.getUserSettings().lineChunk == 0) {
-          this.api.lazyUpdate(1);
-        }
-      }
+      if (!this.isBottom()) return;
+      if (this.lines % +this.user.getUserSettings().lineChunk == 0) this.api.lazyUpdate(1);
     });
   }
 
@@ -91,26 +86,21 @@ export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.api.currentPage === 0) {
         this.loading = true;
         this.lines = 0;
-        this.chunks = [];
+        this.chunks = [[]];
       }
-      if (params.query !== this.api.currentQuery) {
-        this.sync();
-      }
+      if (params.query !== this.api.currentQuery) this.sync();
     }))
-    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter)))
+    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter, { from: params.from, to: params.to })))
     .subscribe((lines: LogLine[]) => {
       this.loading = false;
       this.api.lazy = false;
-      if (this.chunks.length > 5) {
-        this.chunks.shift();
-      }
+      if (this.chunks.length > 5) this.chunks.shift();
+      if (this.chunks[0].length == 0) this.chunks = [];
       this.chunks.push(...[lines]);
       this.lines += lines.length;
     }));
   }
   ngOnDestroy(): void {
-    if (this.glfSubber) {
-      this.glfSubber.unsubscribe();
-    }
+    if (this.glfSubber) this.glfSubber.unsubscribe();
   }
 }

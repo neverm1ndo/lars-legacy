@@ -142,7 +142,7 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
     color: white;
   }
   ::selection {
-    background-color: $clr-formcontrol!important;
+    background-color: $clr-clack!important;
     color: white;
   }
 }
@@ -172,10 +172,10 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   border-color: $filetree;
   color: $text;
 }
-.ng-select-disabled > .ng-select-container {
-  opacity: 0.2;
-  border-color: $filetree;
-  background: $topper;
+.ng-select.ng-select-disabled>.ng-select-container {
+    opacity: 0.2;
+    border-color: $filetree!important;
+    background: $topper;
 }
 .custom {
     border: 0px;
@@ -219,41 +219,58 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
 }
 
 .spinner {
-    height: 30px;
-    width: 30px;
+    height: 22px;
+    width: auto;
     animation: rotate 2s linear infinite;
     transform-origin: center center;
-    position: relative;
-    // top: -10px;
-    bottom: 0;
-    left: 0;
-    right: 0;
     margin: auto;
+    .path {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+      animation: dashDefault 1.5s ease-in-out infinite;
+      stroke-linecap: round;
+      stroke: #7f848a;
+    }
+  }
+  @keyframes rotateDef {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes dashDefault {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -35px;
+    }
+    100% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -124px;
+    }
   }
   .spinner .path, .spinner-logo path {
 
   }
   .spinner-logo {
-    height: 30px;
-    width: 30px;
     transform-origin: center center;
     position: relative;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
-  }
-  .spinner-logo {
-     path, use {
-       stroke-width: 5;
-       stroke: #ffffff;
-       fill: transparent;
-       fill-opacity: 10;
-       stroke-dasharray: 100, 200;
-       stroke-dashoffset: 0;
-       animation: dash-one 2.5s ease-in-out infinite;
-       stroke-linecap: round;
-      }
+    path, use {
+      stroke-width: 5;
+      stroke: #ffffff;
+      fill: transparent;
+      fill-opacity: 10;
+      stroke-dasharray: 100, 200;
+      stroke-dashoffset: 0;
+      animation: dash-one 2.5s ease-in-out infinite;
+      stroke-linecap: round;
+    }
   }
   .blur {
     filter: blur(10px);

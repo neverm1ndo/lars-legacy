@@ -41,7 +41,6 @@ export class BinaryDocComponent implements OnInit {
     .pipe(tap(params => { this.path = params.path; return params}))
     .pipe(switchMap(params => this.config.getFileInfo(params.path)))
     .subscribe((stats) => {
-      console.log(stats)
       this.binStats = stats;
     });
   }

@@ -6,14 +6,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class StatusPipe implements PipeTransform {
 
   states = {
-    'rebooting' : 'Перезагружается',
-    'live' : 'Запущен',
-    'stoped' : 'Остановлен',
-    'loading' : 'Загружается',
-    'error' : 'Ошибка сервера'
+    0 : 'Ошибка сервера',
+    1 : 'Остановлен',
+    2 : 'Перезагружается',
+    3 : 'Запущен',
+    4 : 'Загружается',
   }
 
-  transform(value: string): unknown {
+  transform(value: number): unknown {
       return this.states[value];
   }
 

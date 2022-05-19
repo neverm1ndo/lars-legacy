@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';;
 import { FormGroup, FormControl } from '@angular/forms';
 import { GeoData } from '../interfaces';
+import { ElectronService } from '../core/services';
 
 @Component({
   selector: 'app-general-settings',
@@ -9,7 +10,9 @@ import { GeoData } from '../interfaces';
 })
 export class GeneralSettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private electron: ElectronService,
+  ) { }
 
   version: string = '';
 
@@ -23,8 +26,6 @@ export class GeneralSettingsComponent implements OnInit {
     org: 'Rostelecom OJSC',
     c: '0.3.7'
   }
-
-  pane: 'general' | 'filter' | 'alerts' = 'general';
 
   settings = new FormGroup({
     tray: new FormControl(false),
@@ -41,6 +42,14 @@ export class GeneralSettingsComponent implements OnInit {
 
   # Current version.
   _.VERSION = '1.1.0'`;
+
+  chunkSizes = [
+    { id: 0, val: 100 },
+    { id: 1, val: 200 },
+    { id: 2, val: 300 },
+    { id: 3, val: 400 },
+    { id: 4, val: 500 },
+  ];
 
   get listStyle(): string {
     return this.settings.value.listStyle;
@@ -63,10 +72,16 @@ export class GeneralSettingsComponent implements OnInit {
     this.cmSettings.theme = newSets.textEditorStyle;
   }
 
+  getVersion() {
+    this.electron.ipcRenderer.invoke('version').then((version: string) => {
+      this.version = version;
+    });
+  }
+
   ngOnInit(): void {
+    this.getVersion();
     if (localStorage.getItem('settings')) {
       this.settings.setValue(JSON.parse(localStorage.getItem('settings')))
-
     } else {
       localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
     }

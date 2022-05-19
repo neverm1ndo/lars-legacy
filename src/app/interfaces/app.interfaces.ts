@@ -1,4 +1,5 @@
 import Processes from '../line-process/log-processes';
+import { Workgroup } from '../enums/workgroup.enum';
 
 export interface WsMessage {
   event: 'reboot-server' | 'launch-server' | 'stop-server' | 'get-status' | 'user-action';
@@ -14,12 +15,12 @@ export interface Token {
   token: string
 }
 export interface UserData {
-  token?: string,
   id?: number,
-  role?: string,
-  gr?: number,
-  name?: string,
+  username?: string,
   avatar?: string
+  main_group?: Workgroup,
+  secondary_group?: Workgroup,
+  token?: string,
 }
 export interface GeoData {
   country?: string;
