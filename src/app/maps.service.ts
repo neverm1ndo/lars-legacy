@@ -75,9 +75,7 @@ export class MapsService {
         const float = parseFloat(attrs[i].value);
         obj[attrs[i].name] = !isNaN(float) ? float : attrs[i].value;
       }
-      if (obj.name !== 'parsererror') {
-        objects.push(obj);
-      }
+      if (obj.name !== 'parsererror') objects.push(obj);
     }
     return objects;
   }
