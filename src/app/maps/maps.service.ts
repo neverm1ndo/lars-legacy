@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
-import { ToastService } from './toast.service';
-import { ElectronService } from './core/services';
-import { MapObject } from './interfaces/map.interfaces';
+import { ApiService } from './../api.service';
+import { ToastService } from './../toast.service';
+import { ElectronService } from './../core/services';
+import { MapObject } from './../interfaces/map.interfaces';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class MapsService {
 

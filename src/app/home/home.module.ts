@@ -34,16 +34,12 @@ import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsComponent } from '../settings/settings.component';
-import { MapsComponent } from '../maps/maps.component';
-import { MapInspectorComponent } from '../maps/map-inspector/map-inspector.component';
-import { MapEditorComponent } from '../maps/map-editor/map-editor.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
 import { FileSizePipe } from '../pipes/file-size.pipe';
 import { AdminsComponent } from '../admins/admins.component';
-import { MapCorrectorComponent } from '../maps/map-corrector/map-corrector.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
 import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
@@ -52,14 +48,13 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { socketConfig } from '../web-socket.service';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
-import { MapComponent } from '../maps/map/map.component';
+
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { RulesPipe } from '../pipes/rules.pipe';
 import { RolePipe } from '../pipes/role.pipe';
 
-import { MapsService } from '../maps.service';
 import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
 import { UserActionPipe } from '../pipes/user-action.pipe';
@@ -80,7 +75,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, MapsComponent, MapInspectorComponent, MapEditorComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, MapCorrectorComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, MapComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
   imports: [
     CommonModule,
     SharedModule,
@@ -100,7 +95,6 @@ const dbConfig: DBConfig  = {
   ],
   providers: [
     ConfigsService,
-    MapsService,
     NotificationsService,
     AuthGuard,
     {

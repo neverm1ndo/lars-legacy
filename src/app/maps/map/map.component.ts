@@ -7,7 +7,7 @@ import Keys from '../../enums/keycode.enum';
 import { EditorMode } from '../../enums/map.editor.enum';
 import { MapObject } from '../../interfaces/map.interfaces';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
-import { MapsService } from '../../maps.service';
+import { MapsService } from '../maps.service';
 import { ActivatedRoute } from '@angular/router';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { mapload, panelSwitch, extrudeToRight } from '../../app.animations';

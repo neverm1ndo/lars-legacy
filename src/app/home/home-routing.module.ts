@@ -11,7 +11,7 @@ import { IsMapperGuard } from '../guards/is-mapper.guard';
 import { SearchEditorComponent } from '../search-editor/search-editor.component';
 import { ConfigEditorComponent } from '../config-editor/config-editor.component';
 import { SettingsComponent } from '../settings/settings.component';
-import { MapsComponent } from '../maps/maps.component';
+// import { MapsComponent } from '../maps/maps.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { AdminsComponent } from '../admins/admins.component';
 import { BackupsComponent } from '../backups/backups.component';
@@ -21,7 +21,7 @@ import { GeneralSettingsComponent } from '../general-settings/general-settings.c
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
-import { MapComponent } from '../maps/map/map.component';
+// import { MapComponent } from '../maps/map/map.component';
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
 
@@ -43,11 +43,12 @@ const routes: Routes = [
       { path: 'alerts', component: NotificationsSettingsComponent, data: { animation: 'alerts' } },
       { path: 'launcher', component: LauncherSettingsComponent, data: { animation: 'launcher' } },
     ]},
-    { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard], children: [
-      { path: '', pathMatch: 'full', redirectTo: 'empty' },
-      { path: 'empty', component: EmptyDocComponent },
-      { path: 'map', component: MapComponent },
-    ]},
+    // { path: 'maps', component: MapsComponent, canActivate: [IsMapperGuard], children: [
+    //   { path: '', pathMatch: 'full', redirectTo: 'empty' },
+    //   { path: 'empty', component: EmptyDocComponent },
+    //   { path: 'map', component: MapComponent },
+    // ]},
+    { path: 'maps', loadChildren: () => import('../maps/maps.module').then(m => m.MapsModule), canActivate: [IsMapperGuard]},
     { path: 'banhammer', component: BanhammerComponent, canActivate: [IsCommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [IsCommonGuard] },
     { path: 'backups', component: BackupsComponent, canActivate: [IsDevGuard] },
