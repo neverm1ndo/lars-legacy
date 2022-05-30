@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard, session } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
@@ -6,7 +6,6 @@ import * as url from 'url';
 import { verifyUserToken, downloadFile, createTray, showNotification, serve } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
-
 
 /** Init samp to get server stats later
 * @type {Samp}
@@ -238,6 +237,12 @@ try {
 
     app.on('ready', () => {
       setTimeout(() => splashWindow(), 400);
+      /**
+      * Load Anguar DevTools on serve
+      */
+      if (serve) session.defaultSession.loadExtension(path.normalize('C:/Users/nmnd/AppData/Local/Google/Chrome/User Data/Default/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')).then(({ id }: { id : string}) => {
+        console.log('[ADT] DevTools loaded', id);
+      });
       createWindow();
     });
 
