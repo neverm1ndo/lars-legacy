@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import Stats from 'three/examples/jsm/libs/stats.module';
+import { of , from, combineLatest, concat, merge, Observable } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators';
 
 enum COLOR {
   RED = 0xFF0000,
@@ -27,8 +29,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit {
 
   private _FOV: number = 80;
   private _nearClippingPlane: number = 1;
-  private _farClippingPlane: number = 800;
-  private _cameraZ: number = 400;
+  private _farClippingPlane: number = 700;
 
   private _camera!: THREE.PerspectiveCamera;
   private get canvas(): HTMLElement {
@@ -49,13 +50,32 @@ export class MapEditorV2Component implements OnInit, AfterViewInit {
 
   private addWaterToScene(): void {
     const geometry = new THREE.PlaneGeometry(20000, 20000, 100, 100);
-    const material = new THREE.MeshBasicMaterial({ color: COLOR.WATER });
+    const material = new THREE.MeshStandardMaterial({ color: COLOR.WATER });
     const mesh = new THREE.Mesh(geometry, material);
           mesh.position.set(0, -1, 0);
-          mesh.rotation.set(-1.5708, 0, 0);
+          mesh.rotation.set(-Math.PI/2, 0, 0);
           mesh.receiveShadow = false;
           mesh.castShadow = false;
     this._scene.add(mesh);
+  }
+
+  private loadMapChunk(name: string): Observable<THREE.Group> {
+    return from(this._mtlLoader.setPath('/assets/sa_map/')
+                               .setResourcePath('/assets/sa_map/textures')
+                               .loadAsync(`${name}.mtl`))
+          .pipe(map((materials: MTLLoader.MaterialCreator) => {
+            materials.preload();
+            materials.getAsArray().forEach((material) => {
+              material.transparent = true;
+              material.alphaTest = 0.5;
+              // material.side = THREE.DoubleSide;
+            });
+            return materials;
+          }))
+          .pipe(switchMap((materials: MTLLoader.MaterialCreator) =>
+                          from(this._objectLoader.setPath('/assets/sa_map/')
+                                                 .setMaterials(materials)
+                                                 .loadAsync(`${name}.obj`))));
   }
 
   private createScene(): void {
@@ -64,30 +84,23 @@ export class MapEditorV2Component implements OnInit, AfterViewInit {
     this._scene.background = new THREE.Color(COLOR.SKY);
     this._scene.add(light);
 
-    this._scene.fog = new THREE.Fog(COLOR.SKY, 600, 800);
+    this._scene.fog = new THREE.Fog(COLOR.SKY, 600, 700);
 
     this.addWaterToScene();
-    this._mtlLoader.setPath('/assets/sa_map/')
-                   .setResourcePath('/assets/sa_map/textures')
-                   .load('countryE.mtl', (materials: MTLLoader.MaterialCreator) => {
-                     materials.preload();
-                     this._objectLoader.setPath('/assets/sa_map/')
-                                       .setMaterials(materials)
-                                       .load('countryE.obj', (object) => {
-                                          object.traverse((child: THREE.Object3D<THREE.Event>) => {
-                                             if (Array.isArray((child as THREE.Mesh).material)) {
-                                               ((child as THREE.Mesh).material as any[]).forEach(material => {
-                                                 material.transparent = true;
-                                                 material.alphaTest = 0.5;
-                                               });
-                                             };
-                                          });
-                                          this._scene.add(object);
-                                       });
-                   });
+
+    concat(...[
+      'LAhills',
+      'countryE',
+      'LAw2',
+      'LAwn',
+      'LAw',
+    ].map((name: string) => this.loadMapChunk(name)))
+    .subscribe((chunk: THREE.Group) => {
+      this._scene.add(chunk);
+    });
+
     const ASPECT_RATIO: number = this.getAspectRatio();
     this._camera = new THREE.PerspectiveCamera(this._FOV, ASPECT_RATIO, this._nearClippingPlane, this._farClippingPlane);
-    // this._camera.position.z = this._cameraZ;
     this._camera.position.y = 500;
 
     const axesHelper = new THREE.AxesHelper(50);
@@ -101,7 +114,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit {
   private renderingLoop(): void {
     this._renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
     this._renderer.setPixelRatio(devicePixelRatio);
-    // this._renderer.physicallyCorrectLights = true;
     this._renderer.outputEncoding =  THREE.sRGBEncoding;
     this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this._renderer.shadowMap.enabled = true;
@@ -109,8 +121,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit {
 
     this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._controls.enableDamping = true;
-    this._controls.maxPolarAngle = 0.5*Math.PI;
-    this._controls.maxDistance = 1000;
 
     this._host.nativeElement.appendChild(this._stats.dom);
     const render = (): void => {
