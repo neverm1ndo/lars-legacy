@@ -23,6 +23,9 @@ app/**/*.js
 # prod builder conf
 electron-builder.nsis.json
 
+# map editor resources (objects and textures)
+/src/assets/sa_map/**/*
+
 # frontend deployer
 /deployer
 

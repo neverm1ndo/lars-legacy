@@ -184,13 +184,13 @@ export class MapsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.queryParams
-    .pipe(take(1))
-    .pipe(filter(params => (params.name || params.path)))
-    .subscribe(params => {
-      this.currentFilePath = params.path;
-      this.toMap({ path: params.path , name: params.name });
-    });
+    // this.route.queryParams
+    // .pipe(take(1))
+    // .pipe(filter(params => (params.name || params.path)))
+    // .subscribe(params => {
+    //   this.currentFilePath = params.path;
+    //   this.toMap({ path: params.path , name: params.name });
+    // });
   }
 
   ngOnDestroy(): void {

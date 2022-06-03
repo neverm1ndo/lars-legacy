@@ -60,10 +60,8 @@
     }
   }
   .inspector {
-    border-left: 2px solid $topper;
+    // border-left: 2px solid $topper;
     background: $filetree;
-    max-width: 40%;
-    min-width: 28%;
   }
   .progress {
     height: 2px;

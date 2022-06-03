@@ -126,6 +126,8 @@
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@ng-bootstrap/ng-bootstrap": "11.0.0",
     "@ng-select/ng-select": "6.1.0",
+    "@types/three": "0.140.0",
+    "angular-split": "13.2.0",
     "axios": "0.25.0",
     "bootstrap": "4.5.2",
     "chart.js": "3.7.0",
@@ -137,6 +139,7 @@
     "ngx-indexed-db": "9.4.2",
     "ngx-socket-io": "4.1.0",
     "postcss": "8.4.5",
-    "rxjs": "6.6.3"
+    "rxjs": "6.6.3",
+    "three": "0.141.0"
   }
 }

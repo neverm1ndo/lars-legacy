@@ -3,7 +3,7 @@ import { autoUpdater } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { verifyUserToken, downloadFile, createTray, showNotification, serve } from './utils.main';
+import { verifyUserToken, downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
 
@@ -187,6 +187,9 @@ ipcMain.handle('clipboard', (_event: Electron.IpcMainInvokeEvent, str: string): 
 });
 ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => {
   return app.getVersion();
+});
+ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> => {
+  return loadFromAsar(assetPath);
 });
 
 /** AutoUpdater handlers */

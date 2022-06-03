@@ -1,4 +1,4 @@
-import { createWriteStream } from 'fs';
+import { createWriteStream, readFile } from 'fs';
 import * as path from 'path';
 import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage } from 'electron';
 import axios, { AxiosResponse} from 'axios';
@@ -61,6 +61,15 @@ const downloadFile = async (configuration: any): Promise<Promise<unknown>> => {
   });
 }
 
+const loadFromAsar = (assetPath: string): Promise<Buffer> => {
+  return new Promise((resolve, reject) => {
+    readFile(path.join(app.getPath('appData'), assetPath), (err: NodeJS.ErrnoException, data: Buffer) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+};
+
 const verifyUserToken = async (): Promise<any> => {
   return win.webContents.executeJavaScript('localStorage.getItem("user");', true)
   .then(result => {
@@ -107,4 +116,4 @@ const showNotification = (options: NotificationConstructorOptions) => {
   new Notification(options).show()
 }
 
-export { downloadFile, verifyUserToken, createTray, showNotification, args, serve };
+export { downloadFile, verifyUserToken, createTray, showNotification, args, serve, loadFromAsar };

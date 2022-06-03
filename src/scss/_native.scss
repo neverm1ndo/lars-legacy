@@ -237,3 +237,9 @@ ngb-datepicker {
     }
   }
 }
+.as-split-gutter {
+  background-color: $topper!important;
+  &-icon {
+    background-image: none!important;
+  }
+}
