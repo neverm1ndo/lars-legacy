@@ -3,8 +3,9 @@ import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take, map } from 'rxjs/operators'
-import { throwError, combineLatest } from 'rxjs';
+import { catchError, take, map, switchMap } from 'rxjs/operators'
+import { throwError, combineLatest, from, iif } from 'rxjs';
+import { handleError } from '../utils';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { IDBUser } from '../interfaces';
 
@@ -128,10 +129,12 @@ export class BackupsComponent implements OnInit {
         if (bb[filename] && !bb[filename].maxTop) bb[filename].maxTop = childs[j].getBoundingClientRect().top - topMarge;
         if (bb[filename]) bb[filename].minTop = childs[j].getBoundingClientRect().top - topMarge;
       }
-      Object.keys(bb).forEach((key: string) => {
-        if (bb[key].maxTop === bb[key].minTop) delete bb[key];
-      });
-      Object.keys(bb).forEach((key: string, index: number) => {
+      let index: number = 0;
+      for (let key in bb) {
+        if (bb[key].maxTop === bb[key].minTop) {
+          delete bb[key];
+          continue;
+        }
         this._drawBackbone(
           bb[key].maxTop - bb[key].minTop,
           bb[key].color,
@@ -140,7 +143,8 @@ export class BackupsComponent implements OnInit {
           key
         );
         prevHeight += bb[key].maxTop - bb[key].minTop;
-      });
+        index++;
+      }
     }
     let ribs: number = 0;
     const drawRibs = () => {
@@ -195,41 +199,29 @@ export class BackupsComponent implements OnInit {
       title: `Подтверждение установки бэкапа`,
       message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
     };
-    this._electron.ipcRenderer.invoke('message-box', dialogOpts)
-      .then(val => {
-        if (val.response !== 0) return;
-        const sub = this._api.restoreBackup(this.current.file.path, this.current.unix)
-        .pipe (catchError(error => {
-          if (error.error instanceof ErrorEvent) {
-            console.error('An error occurred:', error.error.message);
-          } else {
-            console.error(`Backend returned code ${error.status}, body was: ${error.error.message}`);
-          }
-          return throwError(error.error);
-        }))
-        .subscribe(
-          () => {
-            this._toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,
-            {
-              classname: 'bg-success text-light',
-              delay: 5000,
-              icon: faClipboardCheck,
-              subtext: this.current.file.path
-            });
-          },
-          (err) => {
-            console.error(err);
-            this._toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,
-            {
-              classname: 'bg-danger text-light word-wrap',
-              delay: 8000,
-              icon: faClipboard,
-              subtext: err.message
-            });
-          },
-          () => {
-            sub.unsubscribe();
-          });
+    from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
+    .pipe(switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix))))
+    .pipe(catchError(error => handleError(error)))
+    .pipe(take(1))
+    .subscribe(
+      () => {
+        this._toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,
+        {
+          classname: 'bg-success text-light',
+          delay: 5000,
+          icon: faClipboardCheck,
+          subtext: this.current.file.path
+        });
+      },
+      (err) => {
+        console.error(err);
+        this._toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,
+        {
+          classname: 'bg-danger text-light word-wrap',
+          delay: 8000,
+          icon: faClipboard,
+          subtext: err.message
+        });
       });
   }
 
@@ -253,7 +245,6 @@ export class BackupsComponent implements OnInit {
       // this._api.getBackupsSize().pipe(take(1)),
     ])
     .subscribe(([admins, backups]) => {
-      // console.log(stats);
       this.admins = admins;
       this.backups = backups;
       this.loading = false;
