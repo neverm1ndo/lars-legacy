@@ -59,12 +59,12 @@ export class MapEditorComponent implements OnInit {
   mode: EditorMode = EditorMode.VIEW;
 
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
-  @HostListener('window:resize', ['$event']) onResize() {
-    this.zone.runOutsideAngular(() => {
-      this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
-      this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
-    });
-  }
+  // @HostListener('window:resize', ['$event']) onResize() {
+  //   this.zone.runOutsideAngular(() => {
+  //     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
+  //     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+  //   });
+  // }
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
     if (this.mode == EditorMode.ROTATE) {
       switch (event.keyCode) {
@@ -546,9 +546,13 @@ export class MapEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.changed = false;
-    this.zone.runOutsideAngular(() => {
+    this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
+    this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+    this.canvas.nativeElement.addEventListener('resize', () => {
       this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
       this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+    });
+    this.zone.runOutsideAngular(() => {
       this.mapView();
     });
   }

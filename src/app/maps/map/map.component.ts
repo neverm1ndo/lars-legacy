@@ -155,25 +155,25 @@ export class MapComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // this.route.queryParams
-    // .pipe(filter((params) => params.path && params.name))
-    // .pipe(tap(params => {
-    //   this.loading = true;
-    //   this.current = {
-    //     path: params.path,
-    //     name: params.name,
-    //     objects: []
-    //   };
-    //   return params
-    // }))
-    // .pipe(switchMap(params => this.maps.getMap({path: params.path, name: params.name })))
-    // .subscribe((file: MapObject[]) => {
-    //   this.mapEditor.objects = file;
-    //   this.current.objects = file;
-    //   this.loading = false;
-    // }, (err) => {
-    //   console.error(err)
-    //   this.maps.mapNotLoaded(err);
-    // });
+    this.route.queryParams
+    .pipe(filter((params) => params.path && params.name))
+    .pipe(tap(params => {
+      this.loading = true;
+      this.current = {
+        path: params.path,
+        name: params.name,
+        objects: []
+      };
+      return params
+    }))
+    .pipe(switchMap(params => this.maps.getMap({path: params.path, name: params.name })))
+    .subscribe((file: MapObject[]) => {
+      this.mapEditor.objects = file;
+      this.current.objects = file;
+      this.loading = false;
+    }, (err) => {
+      console.error(err)
+      this.maps.mapNotLoaded(err);
+    });
   }
 }
