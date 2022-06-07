@@ -10,7 +10,7 @@ export class EmptyDocComponent implements OnInit {
 
   constructor() { }
 
-  fa = faFileSignature ;
+  fa = faFileSignature;
 
   ngOnInit(): void {
   }

@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { faMap, faPlus, faCubes, faDraftingCompass,
   faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash,
-  faCheckCircle, faInfo, faSave, faMapSigns, faArchway,
+  faCheckCircle, faInfo, faSave, faArchway,
   faTimes, faRulerVertical, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import Keys from '../../enums/keycode.enum';
 import { EditorMode } from '../../enums/map.editor.enum';
 import { MapObject } from '../../interfaces/map.interfaces';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
@@ -11,8 +10,6 @@ import { MapsService } from '../maps.service';
 import { ActivatedRoute } from '@angular/router';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { mapload, panelSwitch, extrudeToRight } from '../../app.animations';
-
-const { S, X } = Keys;
 
 interface CurrentMap {
   name: string,
@@ -37,7 +34,6 @@ export class MapComponent implements OnInit {
     check: faCheckCircle,
     info: faInfo,
     save: faSave,
-    sign: faMapSigns,
     cubes: faCubes,
     replace: faRoute,
     rotate: faDraftingCompass,
@@ -47,9 +43,13 @@ export class MapComponent implements OnInit {
       vert: faRulerVertical,
     }
   }
+
+  public paneStates: number[] = [];
+
   mode: EditorMode = EditorMode.VIEW;
   loading: boolean = false;
   levelingZ: boolean = false;
+
   current: CurrentMap = {
     path: '',
     name: '',
@@ -60,8 +60,8 @@ export class MapComponent implements OnInit {
   @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
     if (this.current) {
       if (event.ctrlKey) {
-        switch (event.keyCode) {
-          case S : { // Ctrl + S
+        switch (event.key) {
+          case 's' : { // Ctrl + S
             this.maps.saveMapLocal(this.current.name, this.mapEditor.objects);
             break;
           }
@@ -69,8 +69,8 @@ export class MapComponent implements OnInit {
         }
       }
       if (event.altKey) {
-        switch (event.keyCode) {
-          case X : { // Alt + X
+        switch (event.key) {
+          case 'x' : { // Alt + X
             this.maps.deleteMapCloud(this.current.path);
             break;
           }
@@ -148,7 +148,7 @@ export class MapComponent implements OnInit {
       this.maps.mapToast(`Карта ${this.current.name} была удалена с сервера`, this.current.path, faTrash, 'bg-success text-light')
     },
     (err) => {
-      console.log(err)
+      console.log(err);
       this.maps.mapToast(`Карта ${this.current.name} не была удалена`, err.message, faExclamationTriangle, 'bg-danger text-light')
     })
   }

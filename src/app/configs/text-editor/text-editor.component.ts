@@ -65,7 +65,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
     if (event.ctrlKey) {
-      const size = +this.editorStyle.nativeElement.style.fontSize.substr(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
+      const size = +this.editorStyle.nativeElement.style.fontSize.substring(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
         this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
         window.localStorage.setItem('CE_fontSize', this.editorStyle.nativeElement.style.fontSize);
     }

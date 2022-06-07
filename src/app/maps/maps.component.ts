@@ -5,7 +5,7 @@ import { ToastService } from '../toast.service';
 import { TreeNode } from '../interfaces/app.interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +34,8 @@ export class MapsComponent implements OnInit, OnDestroy {
   progress: number = 0;
   mapObjects: any;
 
+  paneStates: number[] = this.setPanesState();
+
   constructor(
     public api: ApiService,
     public route: ActivatedRoute,
@@ -55,6 +57,21 @@ export class MapsComponent implements OnInit, OnDestroy {
        this.files = items;
        this.current = null;
      });
+   }
+
+   savePanesState(event: { gutterNum: number, sizes: Array<number> }): void {
+     window.localStorage.setItem('lars/ui/panes/maps', JSON.stringify(event.sizes));
+   }
+
+   private setPanesState(): number[] {
+     try {
+       const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/maps'));
+       if (!states) throw 'undefined states';
+       return states;
+     } catch(err) {
+       console.error(err);
+       return [20, 80];
+     }
    }
 
   chooseDir(dir: string) {

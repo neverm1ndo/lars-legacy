@@ -2,8 +2,8 @@
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="col-12 h-100">
       <div class="row h-100">
-        <as-split direction="horizontal" gutterSize="5">
-          <as-split-area [size]="15" minSize="15">
+        <as-split direction="horizontal" gutterSize="5" (dragEnd)="savePanesState($event)">
+          <as-split-area [size]="paneStates[0]">
             <div class="d-flex flex-column flex-fill h-100 filetree">
               <div class="progress">
                 <div class="progress-bar" [style.width.%]="progress" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -21,8 +21,14 @@
               </file-tree>
             </div>
           </as-split-area>
-          <as-split-area [size]="85">
+          <as-split-area [size]="paneStates[1]">
             <router-outlet></router-outlet>
+          </as-split-area>
+          <as-split-area [size]="paneStates[2]">
+            <div class="d-flex flex-fill flex-column h-100 align-items-center justify-content-center">
+              <a class="btn btn-light btn-sm" routerLink="/home/maps/medv2">3Dbm</a>
+            </div>
+            <!-- <map-inspector></map-inspector> -->
           </as-split-area>
         </as-split>
       </div>

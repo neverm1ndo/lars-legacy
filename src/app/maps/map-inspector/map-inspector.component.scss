@@ -1,6 +1,18 @@
 @import 'colors';
 :host {
   width: 100%;
+  .map-inspector-top {
+    height: 48px;
+    width: 100%;
+    .text {
+      font-size: 13px;
+      line-height: 53px;
+    }
+  }
+  .inspector {
+    border-left: 2px solid $topper;
+    background: $filetree;
+  }
   .tab {
     padding-top: 3px;
     padding-bottom: 3px;

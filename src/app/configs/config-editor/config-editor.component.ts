@@ -17,21 +17,18 @@ import { ConfigsService } from '../configs.service';
 })
 export class ConfigEditorComponent implements OnInit, OnDestroy {
 
-  files: TreeNode;
-  showBinary: boolean = false;
+  public files: TreeNode;
 
-  directories$: Observable<any>;
+  private _directories$: Observable<any>;
 
-  textplain: string | undefined = undefined;
+  public currentFilePath: string;
+  public progress: number = 0;
+  public loading: boolean = false;
 
-  currentFilePath: string;
-  progress: number = 0;
-  loading: boolean = false;
+  private _uploadsSubscriptions: Subscription = new Subscription();
+  private _directoriesSubscription: Subscription;
 
-  uploadsSubscriptions: Subscription = new Subscription();
-  directoriesSubscription: Subscription;
-
-  paneStates: number[] = [];
+  public paneStates: number[] = [];
 
   fa = {
     conf: faFileSignature,
@@ -48,8 +45,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _ngZone: NgZone,
     public configs: ConfigsService,
   ) {
-    this.directories$ = this.configs.reloader$.pipe(switchMap(() => _api.getConfigsDir()));
-    this.directoriesSubscription = this.directories$.subscribe(items => {
+    this._directories$ = this.configs.reloader$.pipe(switchMap(() => _api.getConfigsDir()));
+    this._directoriesSubscription = this._directories$.subscribe(items => {
       this.files = items;
     });
   }
@@ -209,7 +206,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
             }
             this.reloadFileTree();
             setTimeout(() => { this.clearProgress(); }, 1000);
-            this.uploadsSubscriptions.remove(sub);
+            this._uploadsSubscriptions.remove(sub);
           }
         },
         err => {
@@ -233,9 +230,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
           }
           console.error(err);
           this.reloadFileTree();
-          this.uploadsSubscriptions.remove(sub)
+          this._uploadsSubscriptions.remove(sub)
         });
-        this.uploadsSubscriptions.add(sub);
+        this._uploadsSubscriptions.add(sub);
   }
 
   ngOnInit(): void {
@@ -278,7 +275,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.uploadsSubscriptions.unsubscribe();
-    this.directoriesSubscription.unsubscribe();
+    this._uploadsSubscriptions.unsubscribe();
+    this._directoriesSubscription.unsubscribe();
   }
 }

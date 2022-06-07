@@ -1,14 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MapObject } from '../../interfaces/map.interfaces';
+import { faMapSigns } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'map-inspector',
   templateUrl: './map-inspector.component.html',
-  styleUrls: ['./map-inspector.component.scss']
+  styleUrls: ['./map-inspector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapInspectorComponent implements OnInit {
 
-  _objects: MapObject[] = [];
+  private _objects: MapObject[] = [];
   @Input('mapObjects') set obj (value: MapObject[] ) {
     this._objects = value;
     if (this._objects.length > 20) {
@@ -18,10 +20,14 @@ export class MapInspectorComponent implements OnInit {
     }
   };
   get objects() {
-     return this._objects;
+    return this._objects;
   }
   toShow: any[] = [];
   page: number = 1;
+
+  fa = {
+    sign: faMapSigns,
+  };
 
   constructor() { }
 

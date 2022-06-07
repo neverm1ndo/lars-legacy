@@ -1,9 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '@angular/core';
-import Keys from '../../enums/keycode.enum';
 import { EditorMode } from '../../enums/map.editor.enum';
 import { MapObject, Viewport } from '../../interfaces/map.interfaces';
-
-const { LeftArrow, RightArrow } = Keys;
 
 type Position2 = {
   x: number;
@@ -29,11 +26,15 @@ export class MapEditorComponent implements OnInit {
   private objectsToDraw: MapObject[] = [];
   private ZOOM: number = 0.2;
 
+  private _resizeObserver: ResizeObserver = new ResizeObserver((_entries: ResizeObserverEntry[]) => {
+    this.fitCanvas();
+  });
+
   set objects (newObjects: MapObject[]) {
     this._objects = newObjects;
     this.objectsToDraw = this._objects.map(obj => Object.assign({...obj}));
     if (this.objectsToDraw.length > 400) this.objectsToDraw = this.removeDoubles(this.objectsToDraw, 10);
-    console.log(`drawed ${this.objectsToDraw.length} dots`)
+    console.log(`drawed ${this.objectsToDraw.length} dots`);
     if (this.canvas.nativeElement) this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     this.viewport = {
       x: (-this.imgSize/2+this.canvas.nativeElement.width/2)+(this._objects[1].posX*-this.ZOOM),
@@ -56,43 +57,37 @@ export class MapEditorComponent implements OnInit {
     return this._objects;
   }
 
-  mode: EditorMode = EditorMode.VIEW;
+  public mode: EditorMode = EditorMode.VIEW;
 
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
-  // @HostListener('window:resize', ['$event']) onResize() {
-  //   this.zone.runOutsideAngular(() => {
-  //     this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
-  //     this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
-  //   });
-  // }
   @HostListener('document:keydown', ['$event']) onKeyDown(event: KeyboardEvent) {
     if (this.mode == EditorMode.ROTATE) {
-      switch (event.keyCode) {
-        case LeftArrow: this.deg+=Math.PI/180; break;
-        case RightArrow: this.deg-=Math.PI/180; break;
+      switch (event.key) {
+        case 'ArrowLeft': this.deg+=Math.PI/180; break;
+        case 'ArrowRight': this.deg-=Math.PI/180; break;
         default: break;
       }
     }
   }
   map: any;
   imgSize: number = 6000 * (this.ZOOM);
-  viewport: Viewport = {
+  private viewport: Viewport = {
     x: 0,
     y: 0,
     dx: 0,
     dy: 0
   };
   dots: any;
-  positions = {
+  private positions = {
     old: { x: 0, y: 0 },
     new: { x: 0, y: 0 },
   };
   changed: boolean = false;
   ctr: any;
   radius: number;
-  arcCenter: Position2;
-  origin: Position2;
-  deg: number = 0;
+  private arcCenter: Position2;
+  private origin: Position2;
+  private deg: number = 0;
 
   constructor(
     private hostElem: ElementRef,
@@ -360,6 +355,7 @@ export class MapEditorComponent implements OnInit {
        const dragDotPath      = new Path2D();
        const anglePath        = new Path2D();
        let center             = this.arcCenter;
+
        if (!this.arcCenter || !rotate) this.arcCenter = getRectCenter();
        if (!this.radius) {
          this.radius = Math.round(
@@ -370,30 +366,42 @@ export class MapEditorComponent implements OnInit {
        }
        let margin: number = 14;
        let marker: Position2 = rotatePoint(center.x, center.y - this.radius - margin, center);
+
        ctx.fillStyle = '#82AAFF30';
        ctx.strokeStyle = '#82AAFF';
        ctx.lineWidth = 3;
+
        mainArcPath.arc(center.x , center.y , this.radius + margin, 0, 2 * Math.PI, false);
        mainArcPath.closePath();
+
        ctx.stroke(mainArcPath);
+
        dragDotPath.arc(marker.x, marker.y, 4, 0, 2 * Math.PI, false);
        dragDotPath.closePath();
+
        ctx.fillStyle = '#82AAFF';
        ctx.fill(dragDotPath);
+
        if (rotate) {
          anglePath.moveTo(marker.x, marker.y);
          anglePath.lineTo(center.x , center.y);
          anglePath.closePath();
+
          ctx.stroke(anglePath);
+
          if (this.deg >= 0.001) secondaryArcPath.arc(center.x, center.y, this.radius/2, -0.5*Math.PI, -this.deg + 1.5*Math.PI , true);
          if (this.deg < -0.001) secondaryArcPath.arc(center.x, center.y, this.radius/2, -this.deg - 0.5*Math.PI , -0.5*Math.PI , true);
+
          ctx.strokeStyle = '#82AAFF50';
+
          if ((this.deg*180/Math.PI > 360) || (this.deg*180/Math.PI < -360)) ctx.strokeStyle = '#ff000030';
+
          ctx.lineWidth = this.radius/2 + margin;
          ctx.stroke(secondaryArcPath);
        }
        secondaryArcPath.arc(center.x , center.y , 3, 0, 2 * Math.PI, false);
        secondaryArcPath.closePath();
+
        ctx.fillStyle = '#ffffff';
        ctx.strokeStyle = '#ffffff';
        ctx.fill();
@@ -544,14 +552,18 @@ export class MapEditorComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.changed = false;
-    this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
-    this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
-    this.canvas.nativeElement.addEventListener('resize', () => {
+  fitCanvas() {
+    this.zone.runOutsideAngular(() => {
       this.canvas.nativeElement.width = this.hostElem.nativeElement.offsetWidth;
       this.canvas.nativeElement.height = this.hostElem.nativeElement.offsetHeight;
+      if (this._objects[1]) this.viewportTo(this._objects[1].posX, this._objects[1].posY);
     });
+  }
+
+  ngOnInit(): void {
+    this.changed = false;
+    this._resizeObserver.observe(this.hostElem.nativeElement);
+
     this.zone.runOutsideAngular(() => {
       this.mapView();
     });
