@@ -8,7 +8,7 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, iif, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 
-import { ToastService } from '../toast.service';
+import { ToastService } from '../../toast.service';
 import { ConfigsService } from '../configs.service';
 
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'

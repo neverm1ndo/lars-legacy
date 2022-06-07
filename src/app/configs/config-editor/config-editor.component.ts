@@ -1,13 +1,13 @@
-import { Component, OnInit, NgZone, OnDestroy} from '@angular/core';
-import { ApiService } from '../api.service';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { ApiService } from '../../api.service';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { switchMap, take, filter } from 'rxjs/operators';
-import { TreeNode } from '../interfaces/app.interfaces';
-import { ToastService } from '../toast.service';
+import { TreeNode } from '../../interfaces/app.interfaces';
+import { ToastService } from '../../toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
-import { ElectronService } from '../core/services';
+import { ElectronService } from '../../core/services';
 import { ConfigsService } from '../configs.service';
 
 @Component({
@@ -31,6 +31,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   uploadsSubscriptions: Subscription = new Subscription();
   directoriesSubscription: Subscription;
 
+  paneStates: number[] = [];
+
   fa = {
     conf: faFileSignature,
     save: faSave,
@@ -52,22 +54,36 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  notBinary(name:string): boolean {
-    const binaries: string[] = ['amx', 'so', 'db', 'cadb'];
-    const splited = name.split('.');
-    return binaries.every((bin: string) => splited[splited.length - 1] !== bin);
+  savePanesState(event: { gutterNum: number, sizes: Array<number> }): void {
+    window.localStorage.setItem('lars/ui/panes/configs', JSON.stringify(event.sizes));
   }
 
-  toConfig(path: { path: string, name?: string }) {
+  setPanesState(): number[] {
+    try {
+      const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/configs'));
+      if (!states) throw 'undefined states';
+      return states;
+    } catch(err) {
+      console.error(err);
+      return [20, 80];
+    }
+  }
+
+  notBinary(name: string): boolean {
+    const splited = name.split('.');
+    return ['amx', 'so', 'db', 'cadb'].every((bin: string) => splited[splited.length - 1] !== bin);
+  }
+
+  private toConfig(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
     if (path.name) this._api.addToRecent('files', path);
-    if (this.notBinary(path.name)) this._router.navigate(['/home/config-editor/doc'], { queryParams: { path: path.path , name: path.name }});
-    else this._router.navigate(['/home/config-editor/binary'], { queryParams: { path: path.path , name: path.name }});
+    if (this.notBinary(path.name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path: path.path , name: path.name }});
+    else this._router.navigate(['/home/configs/binary'], { queryParams: { path: path.path , name: path.name }});
   }
 
   touchFile(path: string) {
     this.currentFilePath = path;
-    this._router.navigate(['/home/config-editor/doc'], { queryParams: { path, touch: true }});
+    this._router.navigate(['/home/configs/doc'], { queryParams: { path, touch: true }});
   }
 
   reloadFileTree(): void {
@@ -124,7 +140,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmFile(path: string) {
-    console.log(path)
     this.configs.deleteFile(path);
   }
 
@@ -224,6 +239,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.paneStates = this.setPanesState();
     this._route.queryParams
     .pipe(take(1))
     .pipe(filter(params => params.path))

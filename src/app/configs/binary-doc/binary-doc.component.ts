@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigsService } from '../configs.service';
-import { UserService } from '../user.service';
+import { UserService } from '../../user.service';
 import { tap, switchMap } from 'rxjs/operators';
-import { faInfo, faFileSignature, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-binary-doc',

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { ApiService } from './api.service';
-import { ToastService } from './toast.service';
-import { ElectronService } from './core/services';
+import { ApiService } from '../api.service';
+import { ToastService } from '../toast.service';
+import { ElectronService } from '../core/services';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, Subject, Observable, combineLatest } from 'rxjs';

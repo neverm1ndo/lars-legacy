@@ -21,10 +21,9 @@ import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
 import { ServerStatGraphComponent } from './server-stat-graph/server-stat-graph.component';
 import { NgChartsModule } from 'ng2-charts';
-import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
-  declarations: [AutofocusDirective, AppComponent, TopperComponent, StatusPipe, ServerStatGraphComponent],
+  declarations: [AppComponent, TopperComponent, StatusPipe, ServerStatGraphComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

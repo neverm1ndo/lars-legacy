@@ -20,17 +20,16 @@ import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SearchResultsComponent } from '../search-results/search-results.component';
 import { SearchEditorComponent } from '../search-editor/search-editor.component';
-import { ConfigEditorComponent } from '../config-editor/config-editor.component';
+// import { ConfigEditorComponent } from '../config-editor/config-editor.component';
 import { LineProcessComponent } from '../line-process/line-process.component';
 import { GeoComponent } from '../geo/geo.component';
 import { FilterComponent } from '../filter/filter.component';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptor } from '../interceptors/jwt.interceptor';
-import { TextEditorComponent } from '../text-editor/text-editor.component';
+// import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsComponent } from '../settings/settings.component';
@@ -38,7 +37,6 @@ import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
 import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
-import { FileSizePipe } from '../pipes/file-size.pipe';
 import { AdminsComponent } from '../admins/admins.component';
 import { BackupsComponent } from '../backups/backups.component';
 import { BackupItemComponent } from '../backup-item/backup-item.component';
@@ -46,8 +44,8 @@ import { NotificationsSettingsComponent } from '../notifications-settings/notifi
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 
 import { socketConfig } from '../web-socket.service';
-import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
-import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
+// import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
+// import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 
 import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
@@ -55,7 +53,7 @@ import { StatisticsComponent } from '../statistics/statistics.component';
 import { RulesPipe } from '../pipes/rules.pipe';
 import { RolePipe } from '../pipes/role.pipe';
 
-import { ConfigsService } from '../configs.service';
+// import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
 import { UserActionPipe } from '../pipes/user-action.pipe';
 
@@ -75,7 +73,7 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, ConfigEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, TextEditorComponent, ToastsContainer, SettingsComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, FileSizePipe, AdminsComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, EmptyDocComponent, BinaryDocComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, ToastsContainer, SettingsComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, AdminsComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
   imports: [
     CommonModule,
     SharedModule,
@@ -84,7 +82,6 @@ const dbConfig: DBConfig  = {
     NgbModule,
     BrowserAnimationsModule,
     LibertyIconsModule,
-    CodemirrorModule,
     ReactiveFormsModule,
     FontAwesomeModule,
     NgxIndexedDBModule.forRoot(dbConfig),
@@ -94,7 +91,7 @@ const dbConfig: DBConfig  = {
     LtyFileTreeModule
   ],
   providers: [
-    ConfigsService,
+    // ConfigsService,
     NotificationsService,
     AuthGuard,
     {
