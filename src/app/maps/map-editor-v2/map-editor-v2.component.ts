@@ -61,6 +61,9 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private readonly _mapChunksNames: string[] = [
     'countryE',
     'countryW',
+    'countrys',
+    'countryN',
+    'countN2',
     'LAhills',
     'SFs',
     'SFse',
@@ -75,7 +78,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     'LAs',
     'LAs2',
     'LAn',
-    'LAn2'
+    'LAn2',
+    'vegasN',
+    'vegasE',
+    'vegasS',
+    'vegasW',
   ];
 
   constructor(
