@@ -28,13 +28,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('view', { static: true }) private _canvas: ElementRef<HTMLCanvasElement>;
 
-  // @HostListener('window:resize', ['$event']) onResize() {
-  //   this._zone.runOutsideAngular(() => {
-  //     this._canvas.nativeElement.width = this._host.nativeElement.offsetWidth;
-  //     this._canvas.nativeElement.height = this._host.nativeElement.offsetHeight;
-  //   });
-  // }
-
   private _FOV: number = 80;
   private _nearClippingPlane: number = 1;
   private _farClippingPlane: number = 500;
@@ -89,15 +82,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     private _host: ElementRef,
     private _zone: NgZone,
   ) {}
-
-  // private addWaterToScene(): void {
-  //   const geometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
-  //   const material = new THREE.MeshStandardMaterial({ color: COLOR.WATER });
-  //   const mesh = new THREE.Mesh(geometry, material);
-  //         mesh.position.set(0, -1, 0);
-  //         mesh.rotation.set(-Math.PI/2, 0, 0);
-  //   this._scene.add(mesh);
-  // }
 
   private showDebugGUI(): void {
     const chunksLoaded = this._gui.addFolder('Chunks');
@@ -160,7 +144,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               box.set(newMin, newMax);
 
         this._boundingBoxes.set(name, box);
-        // this._scene.add(new THREE.Box3Helper(box, new THREE.Color(COLOR.RED)));
       },
       (error) => console.error(error));
 
@@ -238,9 +221,15 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._gui.destroy();
+    this._objectLoader = null;
+    this._mtlLoader = null;
+    this._loadingManager = null;
+    this._boundingBoxes.clear();
+    this._loadedChunks.clear();
+    this._scene.remove(...this._scene.children);
     this._renderer.dispose();
     this._renderer.forceContextLoss();
+    this._gui.destroy();
     this._stats.end();
   }
 }
