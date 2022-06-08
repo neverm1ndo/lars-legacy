@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import Processes, { Process } from '../line-process/log-processes';
+import Processes, { Process } from '../../shared/components/line-process/log-processes';
 
 interface ProcessWithName extends Process {
   name?: keyof typeof Processes | string
@@ -33,13 +33,13 @@ export class FilterComponent implements OnInit {
 
   setFilter(): void {
     let changedOpt = this.filterForm.getRawValue();
-    localStorage.setItem('filter', JSON.stringify(changedOpt));
+    window.localStorage.setItem('filter', JSON.stringify(changedOpt));
   }
 
   getFilterFromStorage(): void {
     try {
-      if (!localStorage.getItem('filter')) throw new Error('EMPTY_FILTER');
-      this.filterForm.setValue(JSON.parse(localStorage.getItem('filter')))
+      if (!window.localStorage.getItem('filter')) throw new Error('EMPTY_FILTER');
+      this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
     } catch(err) {
       this.setFilter();
       console.warn(err.message, 'Filter reset  to default');

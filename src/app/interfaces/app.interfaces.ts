@@ -1,4 +1,4 @@
-import Processes from '../line-process/log-processes';
+import Processes from '../shared/components/line-process/log-processes';
 import { Workgroup } from '../enums/workgroup.enum';
 
 export interface WsMessage {

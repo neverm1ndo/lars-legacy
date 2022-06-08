@@ -40,14 +40,14 @@ export class LoginComponent implements OnInit {
 
   logIn() {
     this.loading = true;
-    localStorage.setItem('lastUser', this.email.value);
+    window.localStorage.setItem('lastUser', this.email.value);
     this._userService.loginUser(this.loginForm.value).subscribe(
       (response: UserData) => {
         this.loading = false;
         this.error = undefined;
         this._zone.runOutsideAngular(() => {
           this._userService.user.next(response);
-          localStorage.setItem('user', JSON.stringify(response));
+          window.localStorage.setItem('user', JSON.stringify(response));
         });
         this._router.navigate(['/home']);
         this._ws.connect();
@@ -132,9 +132,9 @@ export class LoginComponent implements OnInit {
     this._userService.error.subscribe((error) => {
       this.error = error.status + ' ' + error.message;
     });
-    if (localStorage.getItem('lastUser')) {
+    if (window.localStorage.getItem('lastUser')) {
       this.loginForm.setValue({
-        email: localStorage.getItem('lastUser'),
+        email: window.localStorage.getItem('lastUser'),
         password: ''
       });
     }

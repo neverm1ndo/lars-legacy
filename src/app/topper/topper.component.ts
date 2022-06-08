@@ -104,7 +104,7 @@ export class TopperComponent implements OnInit {
 
   launchSAMP(): void {
     try {
-      const launchSettings = localStorage.getItem('launcher');
+      const launchSettings = window.localStorage.getItem('launcher');
       if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings');
       const settings = JSON.parse(launchSettings);
       this._electron.childProcess.execFile(

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { IOutputAreaSizes } from 'angular-split';
 
 import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -59,7 +60,7 @@ export class MapsComponent implements OnInit, OnDestroy {
      });
    }
 
-   savePanesState(event: { gutterNum: number, sizes: Array<number> }): void {
+   savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
      window.localStorage.setItem('lars/ui/panes/maps', JSON.stringify(event.sizes));
    }
 

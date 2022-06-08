@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';;
 import { FormGroup, FormControl } from '@angular/forms';
-import { GeoData } from '../interfaces';
-import { ElectronService } from '../core/services';
+import { GeoData } from '../../interfaces';
+import { ElectronService } from '../../core/services';
 
 @Component({
   selector: 'app-general-settings',
@@ -68,7 +68,7 @@ export class GeneralSettingsComponent implements OnInit {
 
   setup() {
     let newSets = this.settings.getRawValue();
-    localStorage.setItem('settings', JSON.stringify(newSets));
+    window.localStorage.setItem('settings', JSON.stringify(newSets));
     this.cmSettings.theme = newSets.textEditorStyle;
   }
 
@@ -80,10 +80,10 @@ export class GeneralSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getVersion();
-    if (localStorage.getItem('settings')) {
-      this.settings.setValue(JSON.parse(localStorage.getItem('settings')))
+    if (window.localStorage.getItem('settings')) {
+      this.settings.setValue(JSON.parse(window.localStorage.getItem('settings')))
     } else {
-      localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
+      window.localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
     }
   }
 

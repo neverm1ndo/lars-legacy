@@ -25,13 +25,13 @@ export class NotificationsSettingsComponent implements OnInit {
   }
 
   setup() {
-    localStorage.setItem('alerts', JSON.stringify(this.sets));
+    window.localStorage.setItem('alerts', JSON.stringify(this.sets));
   }
 
   getNotificationsSettingsFromStorage(): void {
     try {
-      if (!localStorage.getItem('alerts')) throw new Error('EMPTY_NOTIFICATIONS_SETTINGS');
-      this.settings.setValue(JSON.parse(localStorage.getItem('alerts')));
+      if (!window.localStorage.getItem('alerts')) throw new Error('EMPTY_NOTIFICATIONS_SETTINGS');
+      this.settings.setValue(JSON.parse(window.localStorage.getItem('alerts')));
     } catch(err) {
       this.setup();
       console.warn(err.message, 'Notifications settings reset to default');

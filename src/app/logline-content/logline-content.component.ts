@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
-import { Process } from '../line-process/log-processes';
+import { Process } from '../shared/components/line-process/log-processes';
 import { ContentData } from '../interfaces';
 import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 

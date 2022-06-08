@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { faTrash, faPencilAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface Backup {
@@ -21,7 +21,8 @@ interface Backup {
 @Component({
   selector: 'app-backup-item',
   templateUrl: './backup-item.component.html',
-  styleUrls: ['./backup-item.component.scss']
+  styleUrls: ['./backup-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackupItemComponent implements OnInit {
 

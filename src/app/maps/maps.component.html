@@ -2,7 +2,7 @@
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="col-12 h-100">
       <div class="row h-100">
-        <as-split direction="horizontal" gutterSize="5" (dragEnd)="savePanesState($event)">
+        <as-split direction="horizontal" [gutterSize]="5" (dragEnd)="savePanesState($event)">
           <as-split-area [size]="paneStates[0]">
             <div class="d-flex flex-column flex-fill h-100 filetree">
               <div class="progress">

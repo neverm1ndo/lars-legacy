@@ -1,23 +1,6 @@
 <div *ngFor="let chunk of chunks">
   <div *ngFor="let line of chunk" class="col-12 logline" [class.banned]="isBanned(line.process)" [ngClass]="{legacy: style == 'legacy', expanded: style == 'big'}">
-    <div *ngIf="style == 'big' || style == 'small'" class="row">
-      <div class="col-3 col-md-2 col-lg-2">
-        <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
-      </div>
-      <div class="d-none d-lg-block d-lg-1 col-3 col-md-2 line-process">
-        {{ line.process }}
-      </div>
-      <div class="col-3 col-md-2 col-lg-2 text-center">
-        <a class="nickname" [routerLink]="['/home/search']" [queryParams]="{query: 'nn:' + line.nickname}"><strong>{{ line.nickname }}</strong></a>
-        <br>
-        <span class="line-id">id: {{ line.id }}</span>
-      </div>
-      <div *ngIf="line.geo || line.content || line.process" class="col-lg-6 col-8">
-        <line-process [content]="line.content"  process="{{line.process}}"></line-process>
-        <geo *ngIf="line.geo" [table]="line.geo"></geo>
-      </div>
-    </div>
-    <div *ngIf="style == 'inline'" [class.inline]="style == 'inline'" class="row">
+    <div class="row">
       <div class="col-2">
         <div class="h-100 d-flex align-items-center">
           <strong>{{line.date | date:'d MMM yy, HH:mm:ss'}}</strong>
@@ -25,7 +8,9 @@
       </div>
       <div class="col-4">
         <div class="h-100 d-flex align-items-center">
-          <simple-line-process [process]="line.process"></simple-line-process>
+          <simple-line-process [process]="line.process">
+
+          </simple-line-process>
         </div>
       </div>
       <div class="col-2">
@@ -41,28 +26,6 @@
       </div>
       <div class=" col-12 col-md-12 offset-lg-2 col-lg-10">
         <geo [table]="line.geo" tab-style="inline"></geo>
-      </div>
-    </div>
-    <div *ngIf="style =='legacy'" class="row">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-sm-3 col-md-2 col-lg-2">
-            <span><b>{{ line.date | date:'d MMM yy, HH:mm:ss' }}</b></span>
-          </div>
-          <div class="col-sm-9 col-md-10 col-lg-10">
-            <span class="legacy-process"> {{ line.process }}</span>
-            <span class="legacy-nickname">
-              {{ line.nickname }}
-            </span>
-            <span class="legacy-id">
-              ({{ line.id }})
-            </span>
-            <span *ngIf="line.content"> {{ line.content }}</span><br>
-            <span class="pre" *ngIf="line.geo">
-              {{ line.geo | json }}
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   </div>

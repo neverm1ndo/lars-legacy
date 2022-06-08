@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import Processes, { Process } from './log-processes';
-import { ContentData } from '../interfaces';
+import { ContentData } from '../../../interfaces';
 
 @Component({
   selector: 'line-process',

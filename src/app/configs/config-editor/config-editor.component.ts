@@ -9,6 +9,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '../../core/services';
 import { ConfigsService } from '../configs.service';
+import { IOutputAreaSizes } from 'angular-split';
 
 @Component({
   selector: 'app-config-editor',
@@ -51,7 +52,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  savePanesState(event: { gutterNum: number, sizes: Array<number> }): void {
+  savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
     window.localStorage.setItem('lars/ui/panes/configs', JSON.stringify(event.sizes));
   }
 
@@ -71,7 +72,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     return ['amx', 'so', 'db', 'cadb'].every((bin: string) => splited[splited.length - 1] !== bin);
   }
 
-  private toConfig(path: { path: string, name?: string }) {
+  public toConfig(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
     if (path.name) this._api.addToRecent('files', path);
     if (this.notBinary(path.name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path: path.path , name: path.name }});

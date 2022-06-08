@@ -71,7 +71,7 @@ const loadFromAsar = (assetPath: string): Promise<Buffer> => {
 };
 
 const verifyUserToken = async (): Promise<any> => {
-  return win.webContents.executeJavaScript('localStorage.getItem("user");', true)
+  return win.webContents.executeJavaScript('window.localStorage.getItem("user");', true)
   .then(result => {
      return axios.get(API + 'login/check-token', {
       httpsAgent: agent,

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { join } from 'path';
 import { faFolderOpen, faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { ElectronService } from '../core/services';
+import { ElectronService } from '../../core/services';
 import { OpenDialogReturnValue } from 'electron';
 
 @Component({
@@ -29,7 +29,7 @@ export class LauncherSettingsComponent implements OnInit {
       join('C:\ProgramFiles(x86)', 'GTASanAndreas'),
       [ Validators.required ]
     ),
-    nickname: new FormControl(JSON.parse(localStorage.getItem('user')).username, [
+    nickname: new FormControl(JSON.parse(window.localStorage.getItem('user')).username, [
       Validators.required,
       Validators.minLength(3),
     ]),
@@ -79,13 +79,13 @@ export class LauncherSettingsComponent implements OnInit {
   }
 
   setup() {
-    localStorage.setItem('launcher', JSON.stringify(this.sets));
+    window.localStorage.setItem('launcher', JSON.stringify(this.sets));
   }
 
   getLauncherSettingsFromStorage(): void {
     try {
-      if (!localStorage.getItem('launcher')) throw new Error('EMPTY_LAUNCHER_SETTINGS');
-      this.settings.setValue(JSON.parse(localStorage.getItem('launcher')))
+      if (!window.localStorage.getItem('launcher')) throw new Error('EMPTY_LAUNCHER_SETTINGS');
+      this.settings.setValue(JSON.parse(window.localStorage.getItem('launcher')))
     } catch(err) {
       this.setup();
       console.warn(err.message, 'Launcher settings reset to default');

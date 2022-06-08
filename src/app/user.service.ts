@@ -62,7 +62,7 @@ export class UserService {
     const defaultSettings: UserSettings = {
       tray: false,
       lineChunk: 100,
-      listStyle: 'small',
+      listStyle: 'inline',
       textEditorStyle: 'material',
     }
     const defaultAlerts = {
@@ -94,8 +94,8 @@ export class UserService {
   }
 
   getUserInfo(): UserData | null {
-    if (localStorage.getItem('user') == null) return null;
-    return JSON.parse(localStorage.getItem('user'));
+    if (window.localStorage.getItem('user') == null) return null;
+    return JSON.parse(window.localStorage.getItem('user'));
   }
 
   isAuthenticated(): boolean {
@@ -132,7 +132,7 @@ export class UserService {
     this._electron.ipcRenderer.invoke('message-box', messageBox).then((returnValue: Electron.MessageBoxReturnValue) => {
       if (returnValue.response !== 0) throw 'REJECTED BY USER';
       this.user.next(undefined);
-      localStorage.removeItem('user');
+      window.localStorage.removeItem('user');
       return this._router.navigate(['/login']);
     });
   }

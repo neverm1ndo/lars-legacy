@@ -21,22 +21,32 @@ import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
 import { ServerStatGraphComponent } from './server-stat-graph/server-stat-graph.component';
 import { NgChartsModule } from 'ng2-charts';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { AppConfig } from '../environments/environment';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AppComponent, TopperComponent, StatusPipe, ServerStatGraphComponent],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    AppRoutingModule,
     HttpClientModule,
     CoreModule,
-    SharedModule,
     HomeModule,
-    AppRoutingModule,
+    SharedModule,
     NgbModule,
     FontAwesomeModule,
     LibertyIconsModule,
     BrowserAnimationsModule,
     LoginModule,
-    NgChartsModule
+    NgChartsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: AppConfig.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

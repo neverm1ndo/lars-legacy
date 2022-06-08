@@ -60,35 +60,35 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly _mapChunksNames: string[] = [
     'countryE',
-    'countryW',
-    'countrys',
-    'countryN',
-    'countN2',
-    'LAhills',
-    'SFs',
-    'SFse',
-    'SFe',
-    'SFw',
-    'SFn',
-    'LAw2',
-    'LAwn',
-    'LAw',
-    'LAe',
-    'LAe2',
-    'LAs',
-    'LAs2',
-    'LAn',
-    'LAn2',
-    'vegasN',
-    'vegasE',
-    'vegasS',
-    'vegasW',
+    // 'countryW',
+    // 'countrys',
+    // 'countryN',
+    // 'countN2',
+    // 'LAhills',
+    // 'SFs',
+    // 'SFse',
+    // 'SFe',
+    // 'SFw',
+    // 'SFn',
+    // 'LAw2',
+    // 'LAwn',
+    // 'LAw',
+    // 'LAe',
+    // 'LAe2',
+    // 'LAs',
+    // 'LAs2',
+    // 'LAn',
+    // 'LAn2',
+    // 'vegasN',
+    // 'vegasE',
+    // 'vegasS',
+    // 'vegasW',
   ];
 
   constructor(
     private _host: ElementRef,
     private _zone: NgZone,
-  ) { }
+  ) {}
 
   // private addWaterToScene(): void {
   //   const geometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
@@ -140,12 +140,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
           .pipe(map((group: THREE.Group) => [group, name]));
   }
 
-  private addLine() {
-    const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(1000, 200, 750)]);
-    const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: COLOR.WHITE }));
-    this._scene.add(line);
-  }
-
   private createScene(): void {
     const light = new THREE.AmbientLight(COLOR.WHITE, 1);
     this._scene = new THREE.Scene();
@@ -166,7 +160,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               box.set(newMin, newMax);
 
         this._boundingBoxes.set(name, box);
-        this._scene.add(new THREE.Box3Helper(box, new THREE.Color(COLOR.RED)));
+        // this._scene.add(new THREE.Box3Helper(box, new THREE.Color(COLOR.RED)));
       },
       (error) => console.error(error));
 
@@ -178,8 +172,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     this._cameraBoundingBox3.translate(this._camera.position);
     this._scene.add(new THREE.Box3Helper(this._cameraBoundingBox3, new THREE.Color(COLOR.GREEN)));
-
-    this.addLine();
 
     const axesHelper = new THREE.AxesHelper(50);
     this._scene.add(axesHelper);

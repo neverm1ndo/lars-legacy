@@ -23,35 +23,27 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchResultsComponent } from '../search-results/search-results.component';
 import { SearchEditorComponent } from '../search-editor/search-editor.component';
 // import { ConfigEditorComponent } from '../config-editor/config-editor.component';
-import { LineProcessComponent } from '../line-process/line-process.component';
 import { GeoComponent } from '../geo/geo.component';
-import { FilterComponent } from '../filter/filter.component';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JWTInterceptor } from '../interceptors/jwt.interceptor';
 // import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SettingsComponent } from '../settings/settings.component';
+// import { SettingsComponent } from '../settings/settings.component';
 import { BanhammerComponent } from '../banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
-import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
+// import { SimpleLineProcessComponent } from '../simple-line-process/simple-line-process.component';
 
 import { AdminsComponent } from '../admins/admins.component';
-import { BackupsComponent } from '../backups/backups.component';
-import { BackupItemComponent } from '../backup-item/backup-item.component';
-import { NotificationsSettingsComponent } from '../notifications-settings/notifications-settings.component';
-import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
-
+// import { BackupsComponent } from '../backups/backups.component';
+// import { BackupItemComponent } from '../backup-item/backup-item.component';
 import { socketConfig } from '../web-socket.service';
 // import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
 // import { BinaryDocComponent } from '../binary-doc/binary-doc.component';
 
-import { LauncherSettingsComponent } from '../launcher-settings/launcher-settings.component';
 import { StatisticsComponent } from '../statistics/statistics.component';
-
-import { RulesPipe } from '../pipes/rules.pipe';
-import { RolePipe } from '../pipes/role.pipe';
+// import { RolePipe } from '../pipes/role.pipe';
 
 // import { ConfigsService } from '../configs.service';
 import { NotificationsService } from '../notifications.service';
@@ -73,11 +65,11 @@ const dbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, LineProcessComponent, GeoComponent, FilterComponent, ToastsContainer, SettingsComponent, BanhammerComponent, LoglineContentComponent, SimpleLineProcessComponent, AdminsComponent, BackupsComponent, BackupItemComponent, NotificationsSettingsComponent, GeneralSettingsComponent, LauncherSettingsComponent, RulesPipe, RolePipe, StatisticsComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, GeoComponent, ToastsContainer, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
   imports: [
     CommonModule,
-    SharedModule,
     HomeRoutingModule,
+    SharedModule,
     FormsModule,
     NgbModule,
     BrowserAnimationsModule,
@@ -88,7 +80,7 @@ const dbConfig: DBConfig  = {
     SocketIoModule.forRoot(socketConfig),
     NgSelectModule,
     NgChartsModule,
-    LtyFileTreeModule
+    LtyFileTreeModule,
   ],
   providers: [
     // ConfigsService,

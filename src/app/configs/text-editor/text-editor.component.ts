@@ -176,7 +176,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
-      this.cmSettings.theme = JSON.parse(localStorage.getItem('settings')).textEditorStyle;
+      this.cmSettings.theme = JSON.parse(window.localStorage.getItem('settings')).textEditorStyle;
     }
     this._route.queryParams
     .pipe(tap(params => { this.loading = true; this.path = params.path; this.stats = null; }))

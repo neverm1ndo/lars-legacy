@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSplitModule } from 'angular-split';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MapsComponent } from './maps.component';
 import { MapInspectorComponent } from './map-inspector/map-inspector.component';
@@ -26,6 +27,8 @@ import { MapEditorV2Component } from './map-editor-v2/map-editor-v2.component';
     LibertyIconsModule,
     NgbModule,
     AngularSplitModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [MapsService]
 })

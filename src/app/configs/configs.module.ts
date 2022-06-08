@@ -9,6 +9,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSplitModule } from 'angular-split';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 import { ConfigEditorComponent } from './config-editor/config-editor.component';
 import { EmptyDocComponent } from '../empty-doc/empty-doc.component';
@@ -17,16 +18,13 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
 
 import { ConfigsService } from './configs.service';
 
-import { FileSizePipe } from '../pipes/file-size.pipe';
-
 import { AutofocusDirective} from '../directives/autofocus.directive';
 
 @NgModule({
-  declarations: [ConfigEditorComponent, EmptyDocComponent, BinaryDocComponent, TextEditorComponent, FileSizePipe, AutofocusDirective],
+  declarations: [ConfigEditorComponent, EmptyDocComponent, BinaryDocComponent, TextEditorComponent, AutofocusDirective],
   imports: [
     CommonModule,
     ConfigsRoutingModule,
-    CommonModule,
     CodemirrorModule,
     LtyFileTreeModule,
     FontAwesomeModule,
@@ -35,6 +33,7 @@ import { AutofocusDirective} from '../directives/autofocus.directive';
     AngularSplitModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
   ],
   providers: [ConfigsService]
 })

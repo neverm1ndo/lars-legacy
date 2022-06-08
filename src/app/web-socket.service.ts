@@ -138,7 +138,7 @@ export class WebSocketService {
   clearUserData() {
     const user = this._injector.get(UserService).user;
     user.next(undefined);
-    localStorage.removeItem('user');
+    window.localStorage.removeItem('user');
   }
   disconnect() {
     if (this._socket) this._socket.disconnect();
