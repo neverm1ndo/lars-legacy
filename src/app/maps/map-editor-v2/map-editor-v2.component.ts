@@ -9,13 +9,13 @@ import { map, switchMap, take } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
 
 enum COLOR {
-  RED = 0xFF0000,
+  RED   = 0xFF0000,
   GREEN = 0x00FF00,
-  BLUE = 0x0000FF,
+  BLUE  = 0x0000FF,
   BLACK = 0x000000,
   WHITE = 0xFFFFFF,
   WATER = 0x4785A9,
-  SKY = 0xBBF2FF
+  SKY   = 0xBBF2FF,
 }
 
 @Component({
@@ -31,25 +31,29 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _FOV: number = 80;
   private _nearClippingPlane: number = 1;
   private _farClippingPlane: number = 500;
-
   private _camera!: THREE.PerspectiveCamera;
+  private _controls: OrbitControls;
+
   private get canvas(): HTMLElement {
     return this._canvas.nativeElement;
   }
+
   private _renderer!: THREE.WebGLRenderer;
   private _scene!: THREE.Scene;
+
   private _loadingManager: THREE.LoadingManager = new THREE.LoadingManager();
   private _objectLoader: OBJLoader = new OBJLoader(this._loadingManager);
   private _mtlLoader: MTLLoader = new MTLLoader(this._loadingManager);
+
   private _stats: Stats = Stats();
-  private _controls: OrbitControls;
   private _gui: GUI = new GUI();
+
+
   private _clock: THREE.Clock = new THREE.Clock();
   private _limiter: boolean = true;
 
   private _loadedChunks: Map<string, THREE.Group> = new Map();
   private _boundingBoxes: Map<string, THREE.Box3> = new Map();
-  private _cameraBoundingBox3: THREE.Box3 = new THREE.Box3(new THREE.Vector3(0, 0, 0), new THREE.Vector3(500, 500, 500));
 
   private readonly _mapChunksNames: string[] = [
     'countryE',
@@ -153,9 +157,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._camera.far = this._farClippingPlane;
     this._camera.near = this._nearClippingPlane;
 
-    this._cameraBoundingBox3.translate(this._camera.position);
-    this._scene.add(new THREE.Box3Helper(this._cameraBoundingBox3, new THREE.Color(COLOR.GREEN)));
-
     const axesHelper = new THREE.AxesHelper(50);
     this._scene.add(axesHelper);
   }
@@ -164,7 +165,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     return this.canvas.clientWidth / this.canvas.clientHeight;
   }
 
-  private checkBoundingBoxes(): void {
+  private chunkBoundingContainsCamera(): void {
     const boxes = Array.from(this._boundingBoxes.entries());
     for (let i = 0; i < boxes.length; i++) {
       const bounding = boxes[i][1];
@@ -177,7 +178,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private renderingLoop(): void {
     this._renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, powerPreference: 'high-performance', });
     console.log('WebGL2 capability:', this._renderer.capabilities.isWebGL2);
-    this._renderer.setPixelRatio(0.9);
+    this._renderer.setPixelRatio(devicePixelRatio);
     this._renderer.outputEncoding = THREE.sRGBEncoding;
     this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
@@ -195,12 +196,15 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     const FPS_LIMIT: number = 60;
     let DELTA: number = 0;
     let INTERVAL: number = 1/FPS_LIMIT;
+
     const render = (): void => {
       requestAnimationFrame(render);
+
       DELTA += this._clock.getDelta();
+
       if (DELTA > INTERVAL) {
         this._controls.update();
-        if (this._boundingBoxes.size == this._mapChunksNames.length) this.checkBoundingBoxes();
+        if (this._boundingBoxes.size == this._mapChunksNames.length) this.chunkBoundingContainsCamera();
         this._renderer.render(this._scene, this._camera);
         this._stats.update();
         if (this._limiter) DELTA = DELTA % INTERVAL;
@@ -217,18 +221,24 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
-    this._objectLoader = null;
-    this._mtlLoader = null;
+    /** Unload objects and textures */
+    this._objectLoader   = null;
+    this._mtlLoader      = null;
     this._loadingManager = null;
+
+    /** Clear chunk maps */
     this._boundingBoxes.clear();
     this._loadedChunks.clear();
+
+    /** Dispose renderer */
     this._scene.remove(...this._scene.children);
     this._renderer.dispose();
     this._renderer.forceContextLoss();
+
+    /** Destroy GUI */
     this._gui.destroy();
     this._stats.end();
   }
