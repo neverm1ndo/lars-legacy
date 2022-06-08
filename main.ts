@@ -47,16 +47,15 @@ function splashWindow() {
       allowRunningInsecureContent: true
     }
   });
-  // splash.setAlwaysOnTop(true);
   splash.center();
   splash.setMenu(null);
   splash.loadURL(url.format({
-    pathname: path.join(__dirname, 'dist/assets/splash.html'),
+    pathname: path.join(__dirname, 'dist/splash.html'),
     protocol: 'file:'
   }));
   splash.once('ready-to-show', () => {
     splash.show();
-    splash.webContents.executeJavaScript('changeStatus("Загрузка основного модуля", 60);', true)
+    splash.webContents.send('loading-state', 'Загрузка основного модуля', 30);
   })
   splash.on('closed', () => {
     splash = null;
@@ -84,7 +83,7 @@ function createWindow(): BrowserWindow {
     title: 'LARS',
     show: false,
     frame: false,
-    icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, 'dist/angular-electron/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
@@ -96,20 +95,21 @@ function createWindow(): BrowserWindow {
 
   /** Main window Ready-To-Show event handler */
   win.once('ready-to-show', () => {
-    if (!serve) autoUpdater.checkForUpdatesAndNotify();
-    splash.webContents.executeJavaScript('changeStatus("Проверка токена авторизации", 85);', true)
-    verifyUserToken().then(() => {
-        splash.webContents.executeJavaScript('changeStatus("Токен успешно верифицирован", 100);', true);
-      })
-      .catch((err)=> {
-        win.webContents.send('token-verify-denied', true);
-        console.error(err);
-        splash.webContents.executeJavaScript(`changeStatus("Токен не прошел верификацию: ${err.code}", 100);`, true);
+    if (!serve) {
+      splash.webContents.send('loading-state', 'Проверка наличия обновлений', 40);
+      autoUpdater.checkForUpdatesAndNotify();
+    }
+    splash.webContents.send('loading-state', 'Проверка токена авторизации', 85);
+    verifyUserToken()
+      .then(() => {
+        splash.webContents.send('loading-state', 'Токен успешно верифицирован', 100);
       })
       .catch((err) => {
+        console.error(err);
         win.webContents.send('token-verify-denied', true);
-        splash.webContents.executeJavaScript(`changeStatus("Токен отсутствует: ${err.message}", 100);`, true);
-      }).finally(() => {
+        splash.webContents.send('loading-state', `Токен не прошел верификацию: ${err.code}`, 100);
+      })
+      .finally(() => {
         setTimeout(() => {
           splash.close();
           win.show();
@@ -129,7 +129,7 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const url: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'assets' , url.pathname) });
+    callback({ path: path.join(__dirname, 'dist', 'angular-electron', 'browser', 'assets' , url.pathname) });
   });
   win.on('show', (_event: any) => {
     if (tray) tray.destroy();

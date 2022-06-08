@@ -26,6 +26,7 @@
     "!tsconfig.json",
     "!tslint.json",
     "!*.map",
+    "!dist/angular-electron/assets/sa_map/*",
     "!coverage",
     "!deployer",
     "!.vscode",
