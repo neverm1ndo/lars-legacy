@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MapObject } from '../../interfaces/map.interfaces';
+import { MapObject } from '../map.interfaces';
 import { faMapSigns } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

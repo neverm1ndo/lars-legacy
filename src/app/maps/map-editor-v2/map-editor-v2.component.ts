@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy, Input } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -7,6 +7,9 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { from, concat, Observable } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
+import { getObjectNameById } from '../sa.objects';
+
+import { MapObject } from '../map.interfaces';
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -27,6 +30,7 @@ enum COLOR {
 export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('view', { static: true }) private _canvas: ElementRef<HTMLCanvasElement>;
+  @Input('map') private _mapObjects: MapObject[] = [];
 
   private _FOV: number = 80;
   private _nearClippingPlane: number = 1;
@@ -48,12 +52,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _stats: Stats = Stats();
   private _gui: GUI = new GUI();
 
-
   private _clock: THREE.Clock = new THREE.Clock();
   private _limiter: boolean = true;
 
-  private _loadedChunks: Map<string, THREE.Group> = new Map();
-  private _boundingBoxes: Map<string, THREE.Box3> = new Map();
+  private _loadedTerrainChunks: Map<string, THREE.Group> = new Map();
+  private _terrainBoundingBoxes: Map<string, THREE.Box3> = new Map();
 
   private readonly _mapChunksNames: string[] = [
     'countryE',
@@ -89,7 +92,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private showDebugGUI(): void {
     const chunksLoaded = this._gui.addFolder('Chunks');
-          chunksLoaded.add(this._loadedChunks, 'size', 0, this._mapChunksNames.length).listen();
+          chunksLoaded.add(this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length).listen();
           chunksLoaded.add(this._scene.children, 'length', 0, this._mapChunksNames.length + 2).name('childrens').listen();
           chunksLoaded.open();
     const cameraPosition = this._gui.addFolder('Camera');
@@ -109,6 +112,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
           renderer.open();
   }
 
+  /**
+  * @param {string} name object/terrain chunk name
+  * @returns {Observable<[THREE.Group, string]>}
+  * Load map chunk by name
+  */
   private loadMapChunk(name: string): Observable<[THREE.Group, string]> {
     return from(this._mtlLoader.setPath('/assets/sa_map/')
                                .setResourcePath('/assets/sa_map/textures')
@@ -128,6 +136,35 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
           .pipe(map((group: THREE.Group) => [group, name]));
   }
 
+  /**
+  * Removes all map objects from scene
+  */
+  private unloadMapObjects(): void {
+    this._scene.remove(...this._mapObjects.map((object: MapObject) => this._scene.getObjectByName(object.name)));
+    this._mapObjects = [];
+  }
+
+  /**
+  * @param {string} id map object id
+  * @returns {Observable<[THREE.Group, string]>}
+  * Load map objects one by one from *.map file
+  */
+  private loadMapObjects(): Observable<[THREE.Group, string]> {
+    return concat(...this._mapObjects.map((object: MapObject) => this.loadMapChunk(this.getMapObjectNameById(object.id))))
+          .pipe(take(this._mapObjects.length))
+  }
+
+  /**
+  * @param {(string|number)} id map object id
+  * @returns {string} object name, same as in gta3.img
+  */
+  private getMapObjectNameById(id: string | number): string {
+    return getObjectNameById(id.toString());
+  }
+
+  /**
+  * Adds light, fog, terrain chunks and camera
+  */
   private createScene(): void {
     const light = new THREE.AmbientLight(COLOR.WHITE, 1);
     this._scene = new THREE.Scene();
@@ -140,14 +177,14 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     .pipe(take(this._mapChunksNames.length))
     .subscribe(([chunk, name]) => {
         chunk.name = name;
-        this._loadedChunks.set(name, chunk);
+        this._loadedTerrainChunks.set(name, chunk);
 
         const box = new THREE.Box3().setFromObject(chunk);
         const newMin = new THREE.Vector3(box.min.x-500, box.min.y-100, box.min.z-500);
         const newMax = new THREE.Vector3(box.max.x+500, box.max.y+300, box.max.z+500);
               box.set(newMin, newMax);
 
-        this._boundingBoxes.set(name, box);
+        this._terrainBoundingBoxes.set(name, box);
       },
       (error) => console.error(error));
 
@@ -161,20 +198,32 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._scene.add(axesHelper);
   }
 
+  /**
+  * @returns {number} canvas aspect ratio
+  */
   private getAspectRatio(): number {
     return this.canvas.clientWidth / this.canvas.clientHeight;
   }
 
+  /**
+  * Checks if the camera position belongs to the terrain bounding box
+  */
   private chunkBoundingContainsCamera(): void {
-    const boxes = Array.from(this._boundingBoxes.entries());
+    const boxes = Array.from(this._terrainBoundingBoxes.entries());
     for (let i = 0; i < boxes.length; i++) {
       const bounding = boxes[i][1];
       const name = boxes[i][0];
-      if (bounding.containsPoint(this._camera.position)) this._scene.add(this._loadedChunks.get(name));
-      else this._scene.remove(this._loadedChunks.get(name));
+      if (bounding.containsPoint(this._camera.position)) this._scene.add(this._loadedTerrainChunks.get(name));
+      else this._scene.remove(this._loadedTerrainChunks.get(name));
     }
   }
 
+  /**
+  * - Defines WebGL2 renderer,
+  * - Attaches controls to camera,
+  * - Initiates GUI box,
+  * - Initiates update functions,
+  */
   private renderingLoop(): void {
     this._renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, powerPreference: 'high-performance', });
     console.log('WebGL2 capability:', this._renderer.capabilities.isWebGL2);
@@ -204,7 +253,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
       if (DELTA > INTERVAL) {
         this._controls.update();
-        if (this._boundingBoxes.size == this._mapChunksNames.length) this.chunkBoundingContainsCamera();
+        if (this._terrainBoundingBoxes.size == this._mapChunksNames.length) this.chunkBoundingContainsCamera();
         this._renderer.render(this._scene, this._camera);
         this._stats.update();
         if (this._limiter) DELTA = DELTA % INTERVAL;
@@ -221,7 +270,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngOnDestroy(): void {
     /** Unload objects and textures */
@@ -230,8 +280,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._loadingManager = null;
 
     /** Clear chunk maps */
-    this._boundingBoxes.clear();
-    this._loadedChunks.clear();
+    this._terrainBoundingBoxes.clear();
+    this._loadedTerrainChunks.clear();
 
     /** Dispose renderer */
     this._scene.remove(...this._scene.children);

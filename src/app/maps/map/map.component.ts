@@ -4,7 +4,7 @@ import { faMap, faPlus, faCubes, faDraftingCompass,
   faCheckCircle, faInfo, faSave, faArchway,
   faTimes, faRulerVertical, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { EditorMode } from '../../enums/map.editor.enum';
-import { MapObject } from '../../interfaces/map.interfaces';
+import { MapObject } from '../map.interfaces';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { MapsService } from '../maps.service';
 import { ActivatedRoute } from '@angular/router';
