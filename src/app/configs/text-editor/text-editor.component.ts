@@ -33,28 +33,27 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
-
       if (event.ctrlKey) {
-        switch (event.key) {
-          case 's' : {
+        switch (event.code) {
+          case 'KeyS' : {
             if (this.changed.getValue()) this.saveFile();
             break;
           }
-          case 'f' : {
+          case 'KeyF' : {
             this.search = true;
             break;
           }
-          case ' ' : {
+          case 'Space' : {
             this._zone.runOutsideAngular(() => {
               this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
-            })
+            });
             break;
           }
-          default : break;
+          default: break;
         }
       }
       if (event.shiftKey) {
-        switch (event.key) {
+        switch (event.code) {
           case 'Delete' : {
             this.deleteFile();
             break;
