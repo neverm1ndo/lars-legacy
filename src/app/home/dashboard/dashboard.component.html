@@ -2,36 +2,35 @@
 <app-sider></app-sider> -->
 <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
-    <div class="d-flex flex-wrap flex-column pt-4 pr-4 pb-4 pl-4">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-12 mb-3">
-            <h1>Начало работы с LARS</h1>
-          </div>
-          <div class="col-12 mb-2">
+    <div class="d-flex flex-wrap flex-column h-100 w-100">
+      <div class="d-flex flex-column h-100 w-100 pl-3 pr-3 pb-3">
+        <div class="d-flex flex-row flex-wrap">
+          <div class="mb-2 mt-2 flex-fill">
             <small><fa-icon [icon]="fa.search"></fa-icon>Быстрый поиск</small><small class="hint">Например: <span class="dashed">srl:12345*BJBKLJBLJBLHVGVYVHBHJKBHBKJHBKHB</span></small>
             <app-search [quick]="true"></app-search>
           </div>
-          <div class="col-4">
+        </div>
+        <div class="d-flex flex-row flex-fill overflow-auto w-100">
+          <div class="d-flex flex-column h-100 history-list">
             <h6><fa-icon [icon]="fa.searchp"></fa-icon>Поисковые запросы</h6>
-            <div class="col-12">
+            <div class="d-flex history-list-item flex-fill w-100">
               <ul *ngIf="last.search.length > 0; else emptylist">
                 <li class="clip" *ngFor="let item of last.search"><span class="history-item" [routerLink]="['/home/search']" [queryParams]="{query: item}">{{ item }}</span></li>
               </ul>
             </div>
           </div>
-          <div class="col-4">
+          <div class="d-flex flex-column h-100 history-list">
             <h6><fa-icon [icon]="fa.dir"></fa-icon>Последние файлы</h6>
-            <div class="col-12">
+            <div class="d-flex history-list-item flex-fill w-100">
               <ul *ngIf="last.files.length > 0; else emptylist">
                 <li *ngFor="let item of last.files">
                   <span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
               </ul>
             </div>
           </div>
-          <div class="col-4">
+          <div class="d-flex flex-column h-100 history-list">
             <h6><fa-icon [icon]="fa.up"></fa-icon>Последние загрузки</h6>
-            <div class="col-12">
+            <div class="d-flex history-list-item flex-fill w-100">
               <ul *ngIf="last.upload.length > 0; else emptylist">
                 <li *ngFor="let item of last.upload">
                   <span *ngIf="item.type === 'config'" class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}

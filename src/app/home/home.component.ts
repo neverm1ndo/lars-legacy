@@ -8,13 +8,13 @@ import { NotificationsService } from '../notifications.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  constructor(private notifications: NotificationsService) { }
+  constructor(private _notifications: NotificationsService) { }
 
   ngOnInit(): void {
-    this.notifications.subToNotifications();
+    this._notifications.subToNotifications();
   }
   ngOnDestroy(): void {
-    this.notifications.unsubFromNotifications();
+    this._notifications.unsubFromNotifications();
   }
 
 }

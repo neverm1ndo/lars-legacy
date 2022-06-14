@@ -26,11 +26,11 @@ export class DashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    if (!localStorage.getItem('last')) {
+    if (!window.localStorage.getItem('last')) {
       this.last = { search: [], upload: [], files: []};
-      localStorage.setItem('last', JSON.stringify(this.last));
+      window.localStorage.setItem('last', JSON.stringify(this.last));
     }
-    this.last = JSON.parse(localStorage.getItem('last'));
+    this.last = JSON.parse(window.localStorage.getItem('last'));
   }
 
 }

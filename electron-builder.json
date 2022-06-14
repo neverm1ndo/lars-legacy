@@ -26,6 +26,7 @@
     "!tsconfig.json",
     "!tslint.json",
     "!*.map",
+    "!dist/angular-electron/assets/sa_map/*",
     "!coverage",
     "!deployer",
     "!.vscode",
@@ -48,7 +49,6 @@
   },
   "win": {
     "icon": "dist/assets/icons/favicon.ico",
-    "publisherName": "gta-liberty.ru",
     "target": [
       "nsis"
     ]

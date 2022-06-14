@@ -1,0 +1,60 @@
+@import 'colors';
+:host {
+  .playerlog, .jumbotron {
+    background: #3d3e4a;
+  }
+  .progress {
+    height: 2px;
+    margin-bottom: -2px;
+    position: relative;
+    top: 0px;
+    border-radius: none;
+    background: none!important;
+    .progressbar {
+      background: $primary!important;
+    }
+  }
+  .badge {
+    font-size: 16px;
+    font-weight: 300;
+    padding: 0px 10px 0px 10px;
+    line-height: 30px;
+    fa-icon {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    .pre-badge {
+      font-weight: 500;
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+      padding: 4px 10px 5px 10px;
+      background-color: #ffffff30;
+      line-height: 27px;
+    }
+  }
+  .filetree {
+    font-size: 13px;
+    background: $filetree;
+  }
+  .texteditor {
+    // overflow: auto;
+    // background: $secondary;
+  }
+  .text-edit-block {
+    color: $text;
+    text-align: center;
+    height: 100%;
+    h4 {
+      width: 100%;
+      opacity: 0.2;
+      font-weight: 300;
+    }
+    h3 {
+      width: 100%;
+      font-weight: 300;
+    }
+    table {
+      opacity: 0.5;
+    }
+  }
+}

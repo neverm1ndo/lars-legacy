@@ -1,6 +1,6 @@
 {
   "name": "lars",
-  "version": "0.9.20",
+  "version": "0.9.21",
   "description": "GTA-Liberty Admin Remote Service",
   "homepage": "https://github.com/neverm1ndo/lars",
   "author": {
@@ -33,6 +33,8 @@
     "start": "npm-run-all -p electron:serve ng:serve",
     "build": "npm run electron:serve-tsc && ng build --base-href /",
     "deploy": "electron-builder build --publish always --x64 --ia32 -c ./electron-builder.json",
+    "shell:dev": "ng run angular-electron:app-shell:dev",
+    "shell:prod": "ng run angular-electron:app-shell:production",
     "front-deployer": "ng build --base-href=/ -c production && node deployer/bin/index.js",
     "front-deployer:only": "node deployer/bin/index.js",
     "build:dev": "npm run build -- -c dev",
@@ -69,9 +71,12 @@
     "@angular/language-service": "13.1.3",
     "@angular/platform-browser": "13.1.3",
     "@angular/platform-browser-dynamic": "13.1.3",
+    "@angular/platform-server": "13.1.3",
     "@angular/router": "13.1.3",
+    "@angular/service-worker": "13.1.3",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",
+    "@types/dat.gui": "0.7.7",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "2.0.8",
     "@types/mocha": "8.0.3",
@@ -83,6 +88,7 @@
     "conventional-changelog-cli": "2.1.0",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
+    "dat.gui": "0.7.9",
     "deployer": "file:deployer",
     "electron": "16.0.7",
     "electron-builder": "22.14.5",
@@ -126,6 +132,9 @@
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@ng-bootstrap/ng-bootstrap": "11.0.0",
     "@ng-select/ng-select": "6.1.0",
+    "@schematics/angular": "13.1.4",
+    "@types/three": "0.140.0",
+    "angular-split": "13.2.0",
     "axios": "0.25.0",
     "bootstrap": "4.5.2",
     "chart.js": "3.7.0",
@@ -137,6 +146,7 @@
     "ngx-indexed-db": "9.4.2",
     "ngx-socket-io": "4.1.0",
     "postcss": "8.4.5",
-    "rxjs": "6.6.3"
+    "rxjs": "6.6.3",
+    "three": "0.141.0"
   }
 }

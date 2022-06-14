@@ -1,6 +1,7 @@
 @import 'colors';
-h3 {
+h4 {
   font-weight: lighter;
+  margin: 5px 0px 5px 0px;
 }
 p, a, span, button, div {
   font-size: 13px;
@@ -12,14 +13,25 @@ p, a, span, button, div {
 .list {
   flex: 1 1 70%;
 }
+.underpanel {
+  max-height: 28px!important;
+  background-color: $underpanel;
+  &-panel {
+    .progress {
+      width: 100px;
+      border-radius: 0px;
+      height: 3px;
+      &-bar {
+        background-color: green;
+      }
+    }
+  }
+}
 .history {
   background: $secondary;
   &-head {
     border-bottom: 1px solid $underpanel;
   }
-}
-.backups-list {
-  // overflow-x: hidden;
 }
 .changes-card {
   margin: 5px 15px 5px 15px;
@@ -56,9 +68,6 @@ p, a, span, button, div {
       height: 16px;
       font-size: 10px;
       content: attr(data-filename);
-      // filter: invert(1) grayscale(1) contrast(9);
-      // background-clip: text;
-      content: attr(data-filename);
       text-shadow: 1px 0 0 #00000030, -1px 0 0 #00000030, 0 1px 0 #00000030, 0 -1px 0 #00000030, 1px 1px #00000030, -1px -1px 0 #00000030, 1px -1px 0 #00000030, -1px 1px 0 #00000030;
       z-index: 1;
     }
@@ -66,13 +75,11 @@ p, a, span, button, div {
       &:before {
         position: absolute;
         background: inherit;
-        // width: auto;
         left: -2px;
         top: -2px;
         border-radius: 3px;
         height: 7px;
         width: 7px;
-        // font-size: 10px;
         content: ' ';
         z-index: 0;
       }
@@ -80,7 +87,6 @@ p, a, span, button, div {
   }
 }
 .viewer {
-  // min-height: 200px;
   flex: 1 1 30%;
   &-code {
     background: $filetree;

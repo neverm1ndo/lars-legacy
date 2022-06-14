@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
-import { Process } from '../line-process/log-processes';
+import { Process } from '../shared/components/line-process/log-processes';
 import { ContentData } from '../interfaces';
 import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 
@@ -29,6 +29,7 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   @ViewChild('ban') ban: TemplateRef<any>;
   @ViewChild('mute') mute: TemplateRef<any>;
   @ViewChild('death') death: TemplateRef<any>;
+  @ViewChild('cn') cn: TemplateRef<any>;
 
   userContent: any;
 
@@ -52,6 +53,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   isDeath(): boolean {
     return this.type.control === 'dthKilled';
   }
+  isCNRes(): boolean {
+    return this.type.control === 'CnResSuccess';
+  }
 
   userLink(id: number) {
     this.user.openUserProfile(id);
@@ -67,6 +71,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
     }
     if (this.isDeath()) {
       this.contentTpl = this.death;
+    }
+    if (this.isCNRes()) {
+      this.contentTpl = this.cn;
     }
     this.cdr.detectChanges();
   }
@@ -88,9 +95,9 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
         .pipe(map((user) => {
           return {
             id: user.id,
-            name: user.name,
+            name: user.username,
             avatar: user.avatar,
-            group: user.gr
+            group: user.main_group
           }
         }))
         .pipe(switchMap((user) => this.idb.add('user', user)))

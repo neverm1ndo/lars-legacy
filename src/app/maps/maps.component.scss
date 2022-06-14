@@ -16,14 +16,6 @@
       height: 30px!important;
     }
   }
-  .map-inspector-top {
-    height: 48px;
-    width: 100%;
-    .text {
-      font-size: 13px;
-      line-height: 53px;
-    }
-  }
   .map {
     width: 100%;
     height: 100%;
@@ -59,15 +51,11 @@
       }
     }
   }
-  .inspector {
-    border-left: 2px solid $topper;
-    background: $filetree;
-    max-width: 40%;
-    min-width: 28%;
-  }
   .progress {
     height: 2px;
     margin-bottom: -2px;
+    position: relative;
+    top: 0px;
     border-radius: none;
     background: none!important;
     .progressbar {

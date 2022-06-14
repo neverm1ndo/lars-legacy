@@ -1,0 +1,51 @@
+@import 'colors';
+
+.backups-list-item {
+  width: 100%;
+  margin: 2px 0px 2px 0px;
+  background-color: $secondary;
+  border-radius: 6px;
+  max-height: 50px;
+  .item {
+    overflow: hidden;
+    padding: 0px 5px 0px 5px;
+    white-space: nowrap;
+    margin-right: 3px;
+    font-size: 12px;
+    flex: 1 1 25%;
+    overflow: hidden;
+    &-elapsed {
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      white-space: nowrap;
+    }
+  }
+  &_avatar {
+    margin-left: 10px;
+    width: 31px;
+    height: 31px;
+    border-radius: 100%;
+  }
+  &_nickname {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .sub {
+    min-width: 45px;
+  }
+  .marker {
+    width: 8px;
+    padding: 35px 0px 35px 0px;
+    background: red;
+    flex: 0 0 8px;
+  }
+  button {
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    min-height: 40px;
+  }
+}

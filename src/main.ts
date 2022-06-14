@@ -20,8 +20,18 @@ if (AppConfig.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic()
+function bootstrap() {
+  platformBrowserDynamic()
   .bootstrapModule(AppModule, {
     preserveWhitespaces: false
   })
   .catch(err => console.error(err));
+};
+
+
+if (document.readyState === 'complete') {
+  bootstrap();
+} else {
+  document.addEventListener('DOMContentLoaded', bootstrap);
+}
+

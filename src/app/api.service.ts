@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
+import { handleError } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ApiService {
   readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
   readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
   readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
-  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-cfg';
+  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-file';
   readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
   readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
   readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
@@ -28,8 +29,14 @@ export class ApiService {
   readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
   readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
   readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
+  readonly URL_BACKUPS_SIZE: string = AppConfig.api.main + 'backups/size';
   readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
   readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
+  readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
+  readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
+  readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
+
+  readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -80,26 +87,23 @@ export class ApiService {
     if (!filter) filter = [];
     return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(query: string, lim: string, filter: string[]): Observable<any> {
+  getLogFile(query: string, lim: string, filter: string[], date?: { from: string, to: string }): Observable<any> {
     if (query !== this.currentQuery) {
       this.currentPage = 0;
     }
     this.currentQuery = query;
     return this.reloader$.pipe(
-      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter))
+      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter, date))
     )
   }
   getFileInfo(path: string): Observable<any> {
     return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
   }
-  saveFile(path: string, data: string): Observable<any> {
-    return this.http.post(this.URL_SAVE_CONFIG, {
-      file: {
-        path: path,
-        data: data
-      }
-    }, { responseType: 'json' });
+
+  saveFile(form: FormData): Observable<any> {
+    return this.http.post(this.URL_SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
+
   uploadFileMap(form: FormData): Observable<any> {
     return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
@@ -114,13 +118,33 @@ export class ApiService {
     return this.http.get(this.URL_BACKUP_FILE, { params: { name, unix: String(unix) }, responseType: 'text'})
   }
   restoreBackup(path: string, unix: string): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } })
+    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } });
   }
-  getStatsOnline(): Observable<any> {
-    return this.http.get(this.URL_STATS_ONLINE);
+  getBackupsSize(): Observable<any> {
+    return this.http.get(this.URL_BACKUPS_SIZE);
+  }
+  getStatsOnline(date: Date): Observable<any> {
+    return this.http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});
   }
   getStatsChat(): Observable<any> {
     return this.http.get(this.URL_STATS_CHAT);
+  }
+
+  createDirectory(path: string): Observable<any> {
+    return this.http.post(this.URL_MKDIR, { path })
+               .pipe(catchError((error) => handleError(error)));
+  }
+  removeDirectory(path: string): Observable<any> {
+    return this.http.delete(this.URL_RMDIR, { params: { path }})
+               .pipe(catchError((error) => handleError(error)));
+  }
+  moveDirectory(path: string, dest: string): Observable<any> {
+    return this.http.patch(this.URL_MVDIR, { path, dest })
+               .pipe(catchError((error) => handleError(error)));
+  }
+
+  getSampServerMonitor(): Observable<any> {
+    return this.http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
   }
 
   lazyUpdate(page: number): void {
@@ -130,24 +154,26 @@ export class ApiService {
       this.refresh();
     }
   }
+
   search(query: any, page: string, lim: string, filter?: string[], date?: { from?: string, to?: string}): Observable<any> {
     let params: HttpParams = new HttpParams()
     .appendAll({
       search: query,
       page,
       lim,
-      filter: filter?filter.join(','):'',
+      filter: filter?filter.join(','):''
     });
     if (date) {
-      if (date.from) params = params.append('dateFrom', date.from);
-      if (date.to) params = params.append('dateTo', date.to);
+      if (date.from) params = params.append('dateFrom', String(+new Date(date.from)));
+      if (date.to) params = params.append('dateTo', String(+new Date(date.to)));
     }
     return this.http.get(this.URL_SEARCH, { params });
   }
+
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
     let last = JSON.parse(window.localStorage.getItem('last'));
     if (!this.noteIsAlreadyExists(last, key, val)) {
-      if (last[key].length >= (key=='search'?15:7)) {
+      if (last[key].length >= 30) {
         last[key].splice(-(last[key].length), 0, val);
         last[key].pop();
       } else {
@@ -156,6 +182,7 @@ export class ApiService {
       window.localStorage.setItem('last', JSON.stringify(last));
     }
   }
+
   noteIsAlreadyExists(last: any, key: string, val: any): boolean {
     for (let i = 0; i < last[key].length; i++) {
       if (typeof last[key][i] == 'string') {

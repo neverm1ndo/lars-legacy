@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LogLine } from '../interfaces/app.interfaces';
 import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
-import { getProcessTranslation } from '../line-process/log-processes';
+import { getProcessTranslation } from '../shared/components/line-process/log-processes';
 
 @Component({
   selector: 'search-results',
@@ -33,9 +33,8 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('settings')) {
-      this.style = JSON.parse(localStorage.getItem('settings')).listStyle;
-    }
+    this.chunks = [[]];
+    if (window.localStorage.getItem('settings')) this.style = JSON.parse(window.localStorage.getItem('settings')).listStyle;
   }
 
 }
