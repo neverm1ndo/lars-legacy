@@ -34,20 +34,28 @@
               <thead class="overflow-auto">
                 <th>Тип бана</th>
                 <th>Параметр</th>
-                <th>Никнейм</th>
+                <th>Правило</th>
+                <th>IP</th>
+                <th>ID игрока</th>
                 <th>Кем забанен</th>
                 <th>Время бана</th>
                 <th>Авторазбан</th>
                 <th></th>
               </thead>
               <tbody>
-                <tr *ngFor="let ban in bans">
-                  <td><kbd>CN</kbd></td>
-                  <td>13267TT4NRPI3FTB4QPQVWA1DJKIUT</td>
-                  <td>Neverm1ndo</td>
-                  <td>Neverm1ndo</td>
-                  <td>20 Jan 2021 22:22:22</td>
-                  <td>20 Jan 2021 22:22:22</td>
+                <tr *ngFor="let ban of bans">
+                  <td>
+                    <kbd *ngIf="ban.serial_cn">CN</kbd>
+                    <kbd *ngIf="ban.ip">IP</kbd>
+                    <kbd *ngIf="ban.serial_as && ban.serial_ss">AS&SS</kbd>
+                  </td>
+                  <td>{{ ban.serial_cn || ban.serial_as + '&' + ban.serial_ss  }}</td>
+                  <td>{{ ban.rule | rules }}</td>
+                  <td>{{ ban.ip }}</td>
+                  <td>{{ ban.user_id }}</td>
+                  <td>{{ ban.admin_id }}</td>
+                  <td>{{ ban.banned_from | date:'d MMM yy, HH:mm:ss'}}</td>
+                  <td *ngIf="ban.banned_to; else banned_permanently">{{ ban.banned_to | date:'d MMM yy, HH:mm:ss' }}</td>
                   <td><button class="btn btn-light" type="button" name="button">Разбанить</button></td>
                 </tr>
               </tbody>
@@ -59,6 +67,9 @@
         <div class="d-flex flex-fill flex-column justify-content-center align-items-center w-100">
           <span class="text-muted">Банлист пуст</span>
         </div>
+      </ng-template>
+      <ng-template #banned_permanently>
+        <td>Никогда</td>
       </ng-template>
     </div>
   </div>

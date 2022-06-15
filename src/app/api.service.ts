@@ -11,32 +11,33 @@ import { handleError } from './utils';
 })
 export class ApiService {
 
-  readonly URL_LAST: string = AppConfig.api.main + 'logs/last';
-  readonly URL_SEARCH: string =  AppConfig.api.main + 'logs/search';
-  readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
-  readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
-  readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
-  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-file';
-  readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
-  readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
-  readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
-  readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
-  readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
-  readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
-  readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
-  readonly URL_ADMIN_CHANGE_SECONDARY_GROUP: string = AppConfig.api.main + 'admins/change-secondary-group';
-  readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
-  readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
-  readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
-  readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
-  readonly URL_BACKUPS_SIZE: string = AppConfig.api.main + 'backups/size';
-  readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
-  readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
-  readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
-  readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
-  readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
+private readonly URL_LAST: string = AppConfig.api.main + 'logs/last';
+private readonly URL_SEARCH: string =  AppConfig.api.main + 'logs/search';
+private readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
+private readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
+private readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
+private readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-file';
+private readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
+private readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
+private readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
+private readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
+private readonly URL_BANS: string = AppConfig.api.main + 'bans/'
+private readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
+private readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
+private readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
+private readonly URL_ADMIN_CHANGE_SECONDARY_GROUP: string = AppConfig.api.main + 'admins/change-secondary-group';
+private readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
+private readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
+private readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
+private readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
+private readonly URL_BACKUPS_SIZE: string = AppConfig.api.main + 'backups/size';
+private readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
+private readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
+private readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
+private readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
+private readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
 
-  readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
+ private readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
 
   reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
 
@@ -128,6 +129,10 @@ export class ApiService {
   }
   getStatsChat(): Observable<any> {
     return this.http.get(this.URL_STATS_CHAT);
+  }
+
+  getBanList(): Observable<any> {
+    return this.http.get(this.URL_BANS);
   }
 
   createDirectory(path: string): Observable<any> {
