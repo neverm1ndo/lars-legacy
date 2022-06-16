@@ -50,7 +50,10 @@
                     <kbd *ngIf="ban.serial_as && ban.serial_ss">AS&SS</kbd>
                   </td>
                   <td>{{ ban.serial_cn || ban.serial_as + '&' + ban.serial_ss  }}</td>
-                  <td>{{ ban.rule | rules }}</td>
+                  <td>
+                    <span class="d-none d-xl-block">{{ ban.rule | rules }}</span>
+                    <span class="d-block d-xl-none">{{ ban.rule }}</span>
+                  </td>
                   <td>{{ ban.ip }}</td>
                   <td>{{ ban.user_id }}</td>
                   <td>{{ ban.admin_id }}</td>
