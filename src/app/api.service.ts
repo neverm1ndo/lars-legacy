@@ -21,7 +21,7 @@ private readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-c
 private readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
 private readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
 private readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
-private readonly URL_BANS: string = AppConfig.api.main + 'bans/'
+private readonly URL_BANS: string = AppConfig.api.main + 'bans/';
 private readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
 private readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
 private readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
@@ -133,6 +133,12 @@ private readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
 
   getBanList(): Observable<any> {
     return this.http.get(this.URL_BANS);
+  }
+  getBansByCN(cn: string): Observable<any> {
+    return this.http.get(this.URL_BANS + `cn/${cn}`);
+  }
+  getBansByIP(ip: string): Observable<any> {
+    return this.http.get(this.URL_BANS + `ip/${ip}`);
   }
 
   createDirectory(path: string): Observable<any> {
