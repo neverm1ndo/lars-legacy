@@ -59,30 +59,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _terrainBoundingBoxes: Map<string, THREE.Box3> = new Map();
 
   private readonly _mapChunksNames: string[] = [
-    'countryE',
-    'countryW',
-    'countrys',
-    'countryN',
-    'countN2',
-    'LAhills',
-    'SFs',
-    'SFse',
-    'SFe',
-    'SFw',
-    'SFn',
-    'LAw2',
-    'LAwn',
-    'LAw',
-    'LAe',
-    'LAe2',
-    'LAs',
-    'LAs2',
-    'LAn',
-    'LAn2',
-    'vegasN',
-    'vegasE',
-    'vegasS',
-    'vegasW',
+    'countryE', 'countryW', 'countrys', 'countryN', 'countN2',
+    'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
+    'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
+    'vegasN', 'vegasE', 'vegasS', 'vegasW',
   ];
 
   constructor(
@@ -90,26 +70,31 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     private _zone: NgZone,
   ) {}
 
-  private showDebugGUI(): void {
-    const chunksLoaded = this._gui.addFolder('Chunks');
-          chunksLoaded.add(this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length).listen();
-          chunksLoaded.add(this._scene.children, 'length', 0, this._mapChunksNames.length + 2).name('childrens').listen();
-          chunksLoaded.open();
-    const cameraPosition = this._gui.addFolder('Camera');
-          cameraPosition.add(this._camera.position, 'x').listen();
-          cameraPosition.add(this._camera.position, 'y').listen();
-          cameraPosition.add(this._camera.position, 'z').listen();
-          cameraPosition.open();
+  private _showDebugGUI(): void {
+    function createFolder(name: string, fields: any[][], folder?: any) {
+      if (!folder) folder = this._gui.addFolder(name);
+            fields.forEach((args: any[]) => {
+                    folder.add(...args).listen();
+                  });
+            folder.open();
+      return folder;
+    }
+
+    createFolder('Chunks', [
+      [this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length],
+      [this._scene.children, 'length', 0, this._mapChunksNames.length + 2],
+    ]);
+    createFolder('Camera', [
+      ['x', 'y', 'z'].map((axis: string) => [this._camera.position, axis])
+    ]);
     const renderer = this._gui.addFolder('Renderer');
-    const mem = renderer.addFolder('Memory');
-          mem.add(this._renderer.info.memory, 'geometries').listen();
-          mem.add(this._renderer.info.memory, 'textures').listen();
-          mem.open();
-    const render = renderer.addFolder('Render');
-          render.add(this._renderer.info.render, 'triangles').listen();
-          render.add(this, '_limiter').name('Frame limiter');
-          render.open();
-          renderer.open();
+    createFolder('Memory', [
+                    ['geometries', 'textures'].map((type: string) => [this._renderer.info.memory, type])
+                  ], renderer);
+    createFolder('Render', [
+                    [this._renderer.info.render, 'triangles'],
+                    [this, '_limiter'],
+                  ], renderer);
   }
 
   /**
@@ -121,19 +106,21 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     return from(this._mtlLoader.setPath('/assets/sa_map/')
                                .setResourcePath('/assets/sa_map/textures')
                                .loadAsync(`${name}.mtl`))
-          .pipe(map((materials: MTLLoader.MaterialCreator) => {
-            materials.preload();
-            materials.getAsArray().forEach((material: THREE.Material) => {
-              material.transparent = true;
-              material.alphaTest = 0.5;
-            });
-            return materials;
-          }))
-          .pipe(switchMap((materials: MTLLoader.MaterialCreator) =>
-                          from(this._objectLoader.setPath('/assets/sa_map/')
-                                                 .setMaterials(materials)
-                                                 .loadAsync(`${name}.obj`))))
-          .pipe(map((group: THREE.Group) => [group, name]));
+          .pipe(
+            map((materials: MTLLoader.MaterialCreator) => {
+              materials.preload();
+              materials.getAsArray()
+                       .forEach((material: THREE.Material) => {
+                          material.transparent = true;
+                          material.alphaTest = 0.5;
+                        });
+              return materials;
+            }),
+            switchMap((materials: MTLLoader.MaterialCreator) =>
+              from(this._objectLoader.setPath('/assets/sa_map/')
+                                     .setMaterials(materials)
+                                     .loadAsync(`${name}.obj`))),
+            map((group: THREE.Group) => [group, name]));
   }
 
   /**
@@ -210,9 +197,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   */
   private chunkBoundingContainsCamera(): void {
     const boxes = Array.from(this._terrainBoundingBoxes.entries());
-    for (let i = 0; i < boxes.length; i++) {
-      const bounding = boxes[i][1];
-      const name = boxes[i][0];
+    for (let box of boxes) {
+      const [ name, bounding ] = box;
       if (bounding.containsPoint(this._camera.position)) this._scene.add(this._loadedTerrainChunks.get(name));
       else this._scene.remove(this._loadedTerrainChunks.get(name));
     }
@@ -226,7 +212,9 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   */
   private renderingLoop(): void {
     this._renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: false, powerPreference: 'high-performance', });
+    
     console.log('WebGL2 capability:', this._renderer.capabilities.isWebGL2);
+    
     this._renderer.setPixelRatio(devicePixelRatio);
     this._renderer.outputEncoding = THREE.sRGBEncoding;
     this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
@@ -234,7 +222,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._controls.enableDamping = true;
 
-    this.showDebugGUI();
+    this._showDebugGUI();
 
     this._host.nativeElement.appendChild(this._stats.dom);
 
