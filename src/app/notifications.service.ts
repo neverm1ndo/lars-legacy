@@ -40,35 +40,30 @@ export class NotificationsService {
         this.spawnNotification(`Кикбан ${line.nickname}`, `${line.nickname} заблокирован системой по причине ${line.content.message}`);
       }),
     );
-    this.notifications.add(
-      this.ws.getAlertKickban()
-      .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).autoBan))
-      .subscribe((line) => {
-        this.spawnNotification(`Кикбан ${line.nickname}`, `${line.nickname} кикнут системой по причине: ${getProcessTranslation(line.process)}`);
-      })
-    );
-    this.notifications.add(
-      this.ws.getAlertReport()
-      .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).playerReport))
-      .subscribe((line) => {
-        this.spawnNotification(`Жалоба ${line.nickname}`, `${line.content.message}`);
-      })
-    );
-    this.notifications.add(
-      this.ws.getServerStopNotification()
-      .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown))
-      .pipe(switchMap((user) => this.idb.getByIndex('user', 'name', user.username)))
-      .subscribe((user: any) => {
-        this.spawnNotification('Сервер остановлен', `${user.name} остановил работу сервера`, user.avatar);
-      })
-    );
-    this.notifications.add(
-      this.ws.getServerRebootNotification()
-      .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverRestart))
-      .pipe(switchMap((user) => this.idb.getByIndex('user', 'name', user.username)))
-      .subscribe((user: any) => {
-        this.spawnNotification('Сервер перезапускается', `${user.name} запустил перезагрузку сервера`, user.avatar);
-      })
-    );
+    this.notifications.add(this.ws.getAlertKickban()
+        .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).autoBan))
+        .subscribe((line) => {
+          this.spawnNotification(`Кикбан ${line.nickname}`, `${line.nickname} кикнут системой по причине: ${getProcessTranslation(line.process)}`);
+        }))
+      .add(this.ws.getAlertReport()
+        .pipe(filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).playerReport))
+        .subscribe((line) => {
+          this.spawnNotification(`Жалоба ${line.nickname}`, `${line.content.message}`);
+        }))
+      .add(this.ws.getServerStopNotification()
+        .pipe(
+            filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown),
+            switchMap((user) => this.idb.getByIndex('user', 'name', user.username))
+        ).subscribe((user: any) => {
+          this.spawnNotification('Сервер остановлен', `${user.name} остановил работу сервера`, user.avatar);
+        })
+      )
+      .add(this.ws.getServerRebootNotification()
+        .pipe(
+            filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown),
+            switchMap((user) => this.idb.getByIndex('user', 'name', user.username))
+        ).subscribe((user: any) => {
+          this.spawnNotification('Сервер перезапускается', `${user.name} запустил перезагрузку сервера`, user.avatar);
+        }));
   }
 }
