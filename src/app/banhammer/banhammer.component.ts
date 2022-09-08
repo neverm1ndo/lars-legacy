@@ -3,38 +3,9 @@ import { faUserSlash, faBan, faEllipsisV } from '@fortawesome/free-solid-svg-ico
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { take, map } from 'rxjs/operators';
-
-enum BanType {
-  CHEATING,
-  BUG_ABUSE,
-  ADS,
-  PAUSING,
-  DRIVEBY,
-  REJECTED_NICKNAME,
-  INSULT,
-}
-
-enum SearchType {
-  IP,
-  CN,
-  SERIALS,
-  DATE,
-  ANY,
-}
-
-interface Ban {
-  id: number;
-  rule: string;
-  ban_type: BanType,
-  ip: string;
-  serial_cn?: string;
-  serial_as?: number;
-  serial_ss?: string;
-  user_id?: number;
-  admin_id: number;
-  banned_from: Date | number;
-  banned_to?: Date | number; 
-}
+import { Observable } from 'rxjs';
+import { Ban } from '../interfaces';
+import { SearchType } from '../enums';
 
 @Component({
   selector: 'app-banhammer',
@@ -48,7 +19,7 @@ export class BanhammerComponent implements OnInit {
   ) { }
 
 
-  public searchForm = new FormGroup({
+  public searchForm: FormGroup = new FormGroup({
     searchType: new FormControl(SearchType.ANY),
     searchValue: new FormControl(),
   });
@@ -69,19 +40,19 @@ export class BanhammerComponent implements OnInit {
     ban: faUserSlash,
     null: faBan,
     elipsis: faEllipsisV,
-  }
+  };
 
-  search() {
+  search(): Observable<Ban[]> | void {
     const searchForm = this.searchForm.value;
     switch(searchForm.searchType) {
       case SearchType.IP : {
-        return this._api.getBansByIP(searchForm.searchValue)
+        return this._api.getBansByIP(searchForm.searchValue);
       }
       case SearchType.CN : {
-        return this._api.getBansByCN(searchForm.searchValue)
+        return this._api.getBansByCN(searchForm.searchValue);
       }
       default: break;
-    }
+    };
   }
 
   changeDate<T>(date: T): number {
@@ -89,37 +60,25 @@ export class BanhammerComponent implements OnInit {
   }
 
   onDateSelect(event, id: number) {
-    
+    /** Not inplemented */
+  }
+
+  private _bansDateTransform(bans: Ban[]): Ban[] {
+    return bans.map((ban: Ban) => {
+      ban.banned_from = new Date(ban.banned_from).valueOf();
+      if (ban.banned_to) ban.banned_to = new Date(ban.banned_to).valueOf();
+      return ban;
+    });
   }
 
   getBansByCN(cn: string): void {
     this._api.getBansByCN(cn)
-             .pipe(take(1))
-             .pipe(map((bans: Ban[]) => {
-              return bans.map((ban: Ban) => {
-                ban.banned_from = new Date(ban.banned_from).valueOf();
-                if (ban.banned_to) ban.banned_to = new Date(ban.banned_to).valueOf();
-                return ban;
-              });
-             }))
-             .subscribe((bans: Ban[]) => {
-              this.bans = bans;
-             });
+             .pipe(
+              take(1),
+              map(this._bansDateTransform));   
   }
 
   ngOnInit(): void {
-    this._api.getBanList()
-             .pipe(take(1))
-             .pipe(map((bans: Ban[]) => {
-              return bans.map((ban: Ban) => {
-                ban.banned_from = new Date(ban.banned_from).valueOf();
-                if (ban.banned_to) ban.banned_to = new Date(ban.banned_to).valueOf();
-                return ban;
-              });
-             }))
-             .subscribe((bans: Ban[]) => {
-              this.bans = bans;
-             });
   }
 
 }
