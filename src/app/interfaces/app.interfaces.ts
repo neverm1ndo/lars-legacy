@@ -68,3 +68,17 @@ export interface TreeNode {
   type: string;
   expanded?: boolean;
 }
+
+export interface Ban {
+  id: number;
+  rule: string;
+  ban_type: BanType,
+  ip: string;
+  serial_cn?: string;
+  serial_as?: number;
+  serial_ss?: string;
+  user_id?: number;
+  admin_id: number;
+  banned_from: Date | number;
+  banned_to?: Date | number; 
+}
