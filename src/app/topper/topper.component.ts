@@ -51,7 +51,8 @@ export class TopperComponent implements OnInit {
 
   private _devRoomSubscriptions: Subscription = new Subscription();
   private _mainRoomSubscriptions: Subscription = new Subscription();
-  state: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
+  
+  public state: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
 
   isLoggedIn: boolean = false;
   update: boolean = false;
@@ -134,7 +135,7 @@ export class TopperComponent implements OnInit {
     this.userService.openForum();
   }
 
-  subscribeToDevSubscriptions(): void {
+  private _subscribeToDevSubscriptions(): void {
     this._devRoomSubscriptions
       // .add(from(this.electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, 7777)).subscribe((stat) => {
       //   this.state.next(stat?'live':'error');
@@ -169,11 +170,35 @@ export class TopperComponent implements OnInit {
       }));
   }
 
-  subscribeToCommonSubscriptions(): void {
+  private _subscribeToCommonSubscriptions(): void {
     this._mainRoomSubscriptions.add(this.ws.getUpdateMessage().subscribe(() => {
       console.log('%c[update]', 'color: cyan', 'soft update is ready');
       this.update = true;
     }));
+  }
+  /**
+    * Check user
+    * Subscribe to necessary events
+  */
+  private _checkUser(): void {
+    this.userService.user
+    .pipe(
+      tap((user) => {
+        if (user) return user;
+        this._devRoomSubscriptions.unsubscribe();
+        this._mainRoomSubscriptions.unsubscribe();
+      }),
+      filter((user) => !!user),
+      switchMap(() => this.ws.getRoomName())
+    )
+    .subscribe((room: string) => {
+      if (room.includes('devs')) {
+        this._subscribeToDevSubscriptions();
+        console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
+        this.ws.send('get-status');
+      }
+      this._subscribeToCommonSubscriptions();
+    });
   }
 
   ngOnInit(): void {
@@ -184,27 +209,7 @@ export class TopperComponent implements OnInit {
     this.ws.onСonnect().subscribe(() => {
       this.userService.user.next(this.userService.getUserInfo());
     });
-
-    /**
-    * Check user
-    * Subscribe to necessary events
-    */
-    this.userService.user
-        .pipe(tap((user) => {
-          if (user) return user;
-          this._devRoomSubscriptions.unsubscribe();
-          this._mainRoomSubscriptions.unsubscribe();
-        }))
-        .pipe(filter((user) => !!user))
-        .pipe(switchMap(() => this.ws.getRoomName()))
-        .subscribe((room: string) => {
-          if (room.includes('devs')) {
-            this.subscribeToDevSubscriptions();
-            console.log('%c[socket-service]', 'color: tomato', 'Connected to private devs room');
-            this.ws.send('get-status');
-          }
-          this.subscribeToCommonSubscriptions();
-        });
+    this._checkUser();
   }
 
 }
