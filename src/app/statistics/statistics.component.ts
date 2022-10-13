@@ -22,7 +22,7 @@ export class StatisticsComponent implements OnInit {
   today: Date = new Date();
   stats: any = {};
   statTypes = ['Год', 'Месяц', 'Неделя', 'День'];
-  range: any = '';
+  range: any = 'День';
 
   model: NgbDateStruct;
 
@@ -56,7 +56,9 @@ export class StatisticsComponent implements OnInit {
          ticks: {
            color: '#ffffff90',
            stepSize: 1,
-           callback: function (value) { if (Number.isInteger(value)) { return value; } },
+           callback: function (value) { 
+            if (Number.isInteger(value)) return value;
+           },
          },
          position: 'left',
        },
@@ -84,9 +86,9 @@ export class StatisticsComponent implements OnInit {
     this.lineChartData.datasets.push({
       data: online.data,
       label: 'Онлайн',
-      backgroundColor: '#fd7e14',
-      borderColor: '#fd7e14',
-      pointBackgroundColor: "#fd7e14",
+      backgroundColor: '#1271d6',
+      borderColor: '#1271d6',
+      pointBackgroundColor: "#1271d6",
       fill: 'origin'
     });
     this.lineChartData.labels = online.labels
