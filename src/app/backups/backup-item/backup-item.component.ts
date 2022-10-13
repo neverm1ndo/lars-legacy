@@ -1,11 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { faTrash, faPencilAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
+
+enum BackupAction {
+  DELETE,
+  CHANGE
+}
 interface Backup {
   unix: number;
   date: Date,
   expires: Date,
-  action: 'change' | 'delete';
+  action: BackupAction,
   user: {
     nickname: string;
     group_id: string;
