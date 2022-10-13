@@ -93,48 +93,50 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mkdir(path: string) {
-    this._api.createDirectory(path).subscribe(() => {
-      this.reloadFileTree();
-      this._toast.show(`Директория ${path} создана`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path
-        });
-    },
-    (err) => {
-      this._toast.show(`Директория ${path} не создана`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.createDirectory(path)
+             .subscribe(() => {
+                this.reloadFileTree();
+                this._toast.show(`Директория ${path} создана`,
+                  {
+                    classname: 'bg-success text-light',
+                    delay: 5000,
+                    icon: faFolderPlus,
+                    subtext: path
+                  });
+              },
+              (err) => {
+                this._toast.show(`Директория ${path} не создана`,
+                  {
+                    classname: 'bg-danger text-light',
+                    delay: 5000,
+                    icon: faInfo,
+                    subtext: `${err.error.code} ${err.error.path}`
+                  });
+              });
   }
 
   mvdir(path: { path: string; dest: string }) {
-    this._api.moveDirectory(path.path, path.dest).subscribe(() => {
-      this.reloadFileTree();
-      this._toast.show(`Директория ${path.path} переименована`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path.dest
-        });
-    },
-    (err) => {
-      console.error(err);
-      this._toast.show(`Директория ${path} не переименована`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.moveDirectory(path.path, path.dest)
+             .subscribe(() => {
+              this.reloadFileTree();
+              this._toast.show(`Директория ${path.path} переименована`,
+                {
+                  classname: 'bg-success text-light',
+                  delay: 5000,
+                  icon: faFolderPlus,
+                  subtext: path.dest
+                });
+            },
+            (err) => {
+              console.error(err);
+              this._toast.show(`Директория ${path} не переименована`,
+                {
+                  classname: 'bg-danger text-light',
+                  delay: 5000,
+                  icon: faInfo,
+                  subtext: `${err.error.code} ${err.error.path}`
+                });
+            });
   }
 
   rmFile(path: string) {
@@ -142,76 +144,96 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmdir(path: string) {
-    this._api.removeDirectory(path).subscribe(() => {
-      this.reloadFileTree();
-      this._toast.show(`Директория ${path} удалена`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path
-        });
-    }, (err) => {
-      this._toast.show(`Директория ${path} не удалена`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.removeDirectory(path)
+             .subscribe(() => {
+                this.reloadFileTree();
+                this._toast.show(`Директория ${path} удалена`,
+                  {
+                    classname: 'bg-success text-light',
+                    delay: 5000,
+                    icon: faFolderPlus,
+                    subtext: path
+                  });
+              }, (err) => {
+                this._toast.show(`Директория ${path} не удалена`,
+                  {
+                    classname: 'bg-danger text-light',
+                    delay: 5000,
+                    icon: faInfo,
+                    subtext: `${err.error.code} ${err.error.path}`
+                  });
+              });
   }
 
   addNewFile(event: any): void {
-    let files: any[];
+    
+    let files: File[];
     let path: string = '';
-    if (event.filelist) files = event.filelist;
-    else files = event.target.files;
-     if (files.length <= 0) return;
-     let formData: FormData = new FormData();
-     if (event.path) {
-       path = event.path;
-       formData.append('path', path)
-     }
-     for (let file of files) {
-        formData.append('file', file);
-     }
+    
+    if (event.filelist) {
+      files = event.filelist;
+    } else {
+      files = event.target.files;
+    }
+    
+    if (files.length <= 0) return;
+     
+    let formData: FormData = new FormData();
+    
+    if (event.path) {
+      path = event.path;
+      formData.append('path', path)
+    }
+    
+    for (let file of files) {
+      formData.append('file', file);
+    }
+    
     const sub = this._api.uploadFileCfg(formData)
-     .subscribe(event => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.progress = Math.round(100 * event.loaded / event.total);
-          } else if (event instanceof HttpResponse) {
-            if (files.length > 1) {
-              const buildFileList = (files: any): string => {
-                let list = '';
-                for (let file of files) {
-                  list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
-                  this._api.addToRecent('upload', { path, name: file.name, type: 'config'})
-                };
-                return list;
-              }
-              this._toast.show(`Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`,
-                {
-                  classname: 'bg-success text-light',
-                  delay: 5000,
-                  icon: faSave,
-                  subtext: path
-                });
-            } else {
-              this._toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
-                {
-                  classname: 'bg-success text-light',
-                  delay: 3000,
-                  icon: faSave
-                });
-            }
-            this.reloadFileTree();
-            setTimeout(() => { this.clearProgress(); }, 1000);
-            this._uploadsSubscriptions.remove(sub);
-          }
-        },
+                         .subscribe(event => {
+                          if (event.type === HttpEventType.UploadProgress) {
+                            this.progress = Math.round(100 * event.loaded / event.total);
+                          } else if (event instanceof HttpResponse) {
+                            if (files.length > 1) {
+                              const buildFileList = (files: File[]): string => {
+                                let list = '';
+                                
+                                for (let file of files) {
+                                  list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
+                                  this._api.addToRecent('upload', { path, name: file.name, type: 'config'})
+                                };
+                                
+                                return list;
+                              }
+                              
+                              this._toast.show(`Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`,
+                                {
+                                  classname: 'bg-success text-light',
+                                  delay: 5000,
+                                  icon: faSave,
+                                  subtext: path
+                                });
+                            } else {
+                              this._toast.show(`Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
+                                {
+                                  classname: 'bg-success text-light',
+                                  delay: 3000,
+                                  icon: faSave
+                                });
+                            }
+                          
+                            this.reloadFileTree();
+                            
+                            setTimeout(() => { 
+                              this.clearProgress(); 
+                            }, 1000);
+                            
+                            this._uploadsSubscriptions.remove(sub);
+                          }
+                        },
         err => {
           this.clearProgress();
+          
           if (files.length > 1) {
             this._toast.show(`Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`,
               {
@@ -238,17 +260,20 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.paneStates = this.setPanesState();
-    this._route.queryParams
-    .pipe(take(1))
-    .pipe(filter(params => params.path))
-    .subscribe((params) => {
-      this.toConfig({ path: params.path, name: params.name });
-    });
+    this._route.queryParams.pipe(
+                              take(1),
+                              filter(params => params.path)
+                            )
+                            .subscribe((params) => {
+                              this.toConfig({ path: params.path, name: params.name });
+                            });
+    
     this._electron.ipcRenderer.on('download-progress', (_event: any, progress: {total: number, loaded: number}) => {
       this._ngZone.run(() => {
         this.configs.dprogress.next(Math.round(100 * progress.loaded / progress.total));
       });
     });
+    
     this._electron.ipcRenderer.on('download-error', (_event: any, err) => {
       this._ngZone.run(() => {
         this.configs.dprogress.next(0);
@@ -275,6 +300,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
       });
     });
   }
+  
   ngOnDestroy(): void {
     this._uploadsSubscriptions.unsubscribe();
     this._directoriesSubscription.unsubscribe();
