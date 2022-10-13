@@ -50,7 +50,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
   drawGraphics(): void {
     this._zone.runOutsideAngular(() => {
       const WHITE: string = '#afafaf';
-      const PRIMARY: string = '#fd7e14';
+      const PRIMARY: string = '#1271d6';
       const MAX_PLAYERS: number = 64;
       const ctx: CanvasRenderingContext2D = this.graphics.nativeElement.getContext('2d');
       const height: number = MAX_PLAYERS;

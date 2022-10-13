@@ -172,8 +172,9 @@ export class BackupsComponent implements OnInit {
             `body was: ${error.error.message}`);
           }
           return throwError(JSON.parse(error.error));
-        })
-      ).pipe(take(1)).subscribe((data) => {
+        }),
+      take(1))
+      .subscribe((data) => {
           this.current.file.text = data;
       }, (err) => {
         console.error(err);
@@ -200,11 +201,12 @@ export class BackupsComponent implements OnInit {
       message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-    .pipe(switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix))))
-    .pipe(catchError(error => handleError(error)))
-    .pipe(take(1))
-    .subscribe(
-      () => {
+    .pipe(
+      switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix))),
+      catchError(error => handleError(error)),
+      take(1)
+    )
+    .subscribe(() => {
         this._toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,
         {
           classname: 'bg-success text-light',
@@ -227,8 +229,9 @@ export class BackupsComponent implements OnInit {
 
   private _getAdminList() {
     return this._idbService.getAll('user')
-    .pipe(take(1))
-    .pipe(map((users) => {
+    .pipe(
+      take(1),
+      map((users) => {
       return users.reduce((acc: Object, curr: IDBUser) => {
         return {...acc, [curr.name]: { avatar: curr.avatar }}
       }, {});
