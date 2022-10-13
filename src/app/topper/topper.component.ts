@@ -152,6 +152,7 @@ export class TopperComponent implements OnInit {
       .subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server rebooted');
          this.state.next(ServerState.LIVE);
+         this.players = 0;
       }))
       .add(this.ws.getServerStop().subscribe(() => {
          console.log('%c[server]', 'color: magenta', 'server stoped');
