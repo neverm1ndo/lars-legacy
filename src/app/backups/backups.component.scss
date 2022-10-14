@@ -7,8 +7,16 @@ p, a, span, button, div {
   font-size: 13px;
 }
 .head {
-  background: #09090918;
-  border-bottom: 1px solid $secondary;
+  height: 52px;
+  width: 100%;
+  background: $secondary;
+  h6 {
+    font-weight: 300;
+    line-height: 52px;
+    fa-icon {
+      margin-right: 15px;
+    }
+  }
 }
 .list {
   flex: 1 1 70%;
