@@ -1,5 +1,3 @@
-<!-- <app-head></app-head>
-<app-sider></app-sider> -->
 <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
   <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
     <div class="d-flex flex-wrap flex-column h-100 w-100">
@@ -24,7 +22,7 @@
             <div class="d-flex history-list-item flex-fill w-100">
               <ul *ngIf="last.files.length > 0; else emptylist">
                 <li *ngFor="let item of last.files">
-                  <span class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
+                  <span class="history-item" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
               </ul>
             </div>
           </div>
@@ -33,7 +31,7 @@
             <div class="d-flex history-list-item flex-fill w-100">
               <ul *ngIf="last.upload.length > 0; else emptylist">
                 <li *ngFor="let item of last.upload">
-                  <span *ngIf="item.type === 'config'" class="history-item" [routerLink]="['/home/config-editor']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
+                  <span *ngIf="item.type === 'config'" class="history-item" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
                     <br>
                     <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}/{{ item.name }}</span>
                   </span>
