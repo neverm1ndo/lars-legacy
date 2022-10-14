@@ -4,12 +4,7 @@
       <ngx-codemirror
         #editor
         [(ngModel)]="textplain"
-        (input)="checkChanges()"
-        (keydown.backspace)="checkChanges()"
-        (keydown.control.z)="checkChanges()"
-        (keydown.control.y)="checkChanges()"
-        (keydown.control.v)="checkChanges()"
-        (keydown.control.d)="checkChanges()"
+        (keyup)="checkChanges()"
         [options]="cmSettings"
         [autoFocus]="true">
       </ngx-codemirror>

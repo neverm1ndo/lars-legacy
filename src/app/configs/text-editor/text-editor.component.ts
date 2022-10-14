@@ -134,30 +134,30 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const blob = new Blob([this.textplain], { type: this.stats.mime });
     this.loading = true;
     this.configs.saveFileAsBlob(this.path, blob)
-    .subscribe(() => {
-      this.loading = false;
-      this._origin = Buffer.from(this.textplain, 'utf8');
-      this.stats.size = Buffer.byteLength(this._origin);
-      this.changed.next(false);
-      this._toast.show( `Конфигурационный файл успешно сохранен`, {
-        classname: 'bg-success text-light',
-        delay: 3000,
-        icon: faSave,
-        subtext: this.path
-      });
-    },
-    (err) => {
-      this._toast.show( `Конфигурационный файл не был сохранен по причине:`, {
-        classname: 'bg-danger text-light',
-        delay: 6000,
-        icon: faExclamationTriangle,
-        subtext: err.message
-      });
-    }, () => {
-      setTimeout(() => {
-        this.configs.dprogress.next(0);
-      }, 2000);
-    });
+                .subscribe(() => {
+                  this.loading = false;
+                  this._origin = Buffer.from(this.textplain, 'utf8');
+                  this.stats.size = Buffer.byteLength(this._origin);
+                  this.changed.next(false);
+                  this._toast.show( `Конфигурационный файл успешно сохранен`, {
+                    classname: 'bg-success text-light',
+                    delay: 3000,
+                    icon: faSave,
+                    subtext: this.path
+                  });
+                },
+                (err) => {
+                  this._toast.show( `Конфигурационный файл не был сохранен по причине:`, {
+                    classname: 'bg-danger text-light',
+                    delay: 6000,
+                    icon: faExclamationTriangle,
+                    subtext: err.message
+                  });
+                }, () => {
+                  setTimeout(() => {
+                    this.configs.dprogress.next(0);
+                  }, 2000);
+                });
   }
 
   private _refreshCodeMirror(): void {
@@ -167,10 +167,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkChanges(): void {
     if (isEqual(this._origin, Buffer.from(this.textplain, 'utf8'))) {
-      this.changed.next(false);
-    } else {
-      this.changed.next(true);
+      return void (this.changed.next(false));
     }
+    this.changed.next(true);
   }
 
   ngOnInit(): void {
@@ -178,11 +177,13 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cmSettings.theme = JSON.parse(window.localStorage.getItem('settings')).textEditorStyle;
     }
     this._route.queryParams
-    .pipe(tap(params => { this.loading = true; this.path = params.path; this.stats = null; }))
-    .pipe(switchMap((params) =>
+    .pipe(
+      tap(params => { this.loading = true; this.path = params.path; this.stats = null; }),
+      switchMap((params) =>
       iif(() => !params.touch,
                 this.configs.getConfig(params.path),
-                of(['', { mime: 'text/plain', path: params.path, size: 0 }]))))
+                of(['', { mime: 'text/plain', path: params.path, size: 0 }])))
+    )
     .subscribe(([file, info]) => {
       this.stats = info;
       switch (this.stats.mime) {
