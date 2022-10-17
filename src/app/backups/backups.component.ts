@@ -1,20 +1,21 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take, map, switchMap } from 'rxjs/operators'
-import { throwError, combineLatest, from, iif } from 'rxjs';
+import { catchError, take, map, switchMap, filter, scan } from 'rxjs/operators'
+import { throwError, combineLatest, from, iif, BehaviorSubject, of } from 'rxjs';
 import { handleError } from '../utils';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { IDBUser } from '../interfaces';
+import { IDBUser, Backup } from '../interfaces';
+import { settings } from 'cluster';
 
 @Component({
   selector: 'app-backups',
   templateUrl: './backups.component.html',
   styleUrls: ['./backups.component.scss'],
 })
-export class BackupsComponent implements OnInit {
+export class BackupsComponent implements OnInit, OnDestroy {
 
   @ViewChild('binds') binds: ElementRef<HTMLDivElement>;
   @ViewChild('backupsList') backupsItems: ElementRef<HTMLDivElement>;
@@ -27,17 +28,11 @@ export class BackupsComponent implements OnInit {
     private _idbService: NgxIndexedDBService,
   ) { }
 
-  backups = [];
-  size: number = 0;
-  current: any;
+  public $backups: BehaviorSubject<Backup[] | null> = new BehaviorSubject(null);
 
-  actions = {
-    delete: 'удалил',
-    change: 'изменил',
-    restore: 'восстановил'
-  };
+  public current: Backup;
 
-  fa = {
+  public fa = {
     sign: faFileSignature,
     trash: faTrash,
     exCircle: faExclamationCircle,
@@ -45,10 +40,7 @@ export class BackupsComponent implements OnInit {
     hdd: faHdd
   };
 
-  admins: any;
-  loading: boolean = false;
-
-  cmSettings = {
+  public codeMirrorSettings = {
     lineNumbers: true,
     theme: 'dracula',
     lineWrapping: true,
@@ -56,7 +48,7 @@ export class BackupsComponent implements OnInit {
   };
 
   public willBeDeletedSoon(date: Date): boolean {
-    return (Math.round(new Date(date).getTime() / 1000) - Math.round(new Date().getTime() / 1000)) < 86400*2;
+    return (Math.round((new Date(date).getTime() - new Date().getTime()) / 1000)) < 86400*2;
   }
 
   private _createBindBackbone(height: number, color: string, top: number, right: number, filename: string): HTMLDivElement {
@@ -110,7 +102,7 @@ export class BackupsComponent implements OnInit {
 
   private _drawGraph(): void {
     const childs: HTMLCollection = this.backupsItems.nativeElement.children;
-    let topMarge: number = this.binds.nativeElement.getBoundingClientRect().top - 29;
+    let topMarge: number = this.binds.nativeElement.getBoundingClientRect().top - 23;
     let bb: any;
     let prevHeight: number = 0;
     const drawBackbones = () => {
@@ -160,25 +152,19 @@ export class BackupsComponent implements OnInit {
     drawRibs();
   }
 
-  public getBackupFile(name: string, unix: number): void {
-  if (this.current.file.binary) return;
-    this._api.getBackupFile(name, unix).pipe(
-      catchError(error => {
-        if (error.error instanceof ErrorEvent) {
-          console.error('An error occurred:', error.error.message);
-        } else {
-          console.error(
-            `Backend returned code ${error.status}, ` +
-            `body was: ${error.error.message}`);
-          }
-          return throwError(JSON.parse(error.error));
-        }),
-      take(1))
+  public getBackupFile(backup: Backup): void {
+  if (backup.file.binary) return;
+    this._api.getBackupFile(backup.file.name, backup.unix)
+      .pipe(
+        catchError(error => handleError(error)),
+        take(1)
+      )
       .subscribe((data) => {
+          this.current = backup;
           this.current.file.text = data;
       }, (err) => {
         console.error(err);
-        this._toast.show(`Бэкап файла ${this.current.file.name} не был загружен для просмотра по причине:`,             {
+        this._toast.show(`Бэкап файла ${backup.file.name} не был загружен для просмотра по причине:`,             {
           classname: 'bg-danger text-light word-wrap',
           delay: 8000,
           icon: faClipboard,
@@ -202,7 +188,7 @@ export class BackupsComponent implements OnInit {
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
     .pipe(
-      switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix))),
+      switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix.toString()))),
       catchError(error => handleError(error)),
       take(1)
     )
@@ -227,32 +213,49 @@ export class BackupsComponent implements OnInit {
       });
   }
 
-  private _getAdminList() {
-    return this._idbService.getAll('user')
-    .pipe(
-      take(1),
-      map((users) => {
-      return users.reduce((acc: Object, curr: IDBUser) => {
-        return {...acc, [curr.name]: { avatar: curr.avatar }}
-      }, {});
-    }));
+  getAdmins() {
+    // this._idbService.getAll<IDBUser>('user')
+    //                 .pipe(
+    //                   switchMap((users: IDBUser[]) => iif(() => users)
+    //                 )
+    // this._api.getAdminsList()
+    //   .pipe(take(1)),
   }
 
   ngOnInit(): void {
-    const userSettings = window.localStorage.getItem('settings');
-    if (userSettings) this.cmSettings.theme = JSON.parse(userSettings).textEditorStyle;
-    this.loading = true;
-    combineLatest([
-      this._getAdminList(),
-      this._api.getBackupsList().pipe(take(1)),
-      // this._api.getBackupsSize().pipe(take(1)),
-    ])
-    .subscribe(([admins, backups]) => {
-      this.admins = admins;
-      this.backups = backups;
-      this.loading = false;
-      if (backups.length <= 0) return;
-      setTimeout(() => this._drawGraph(), 0);
-    });
+    
+    of(window.localStorage.getItem('settings'))
+      .pipe(
+        filter((settings: string | null) => settings !== null),
+        map((settings: string) => JSON.parse(settings))
+      )
+      .subscribe(({ textEditorStyle }) => {
+        this.codeMirrorSettings.theme = textEditorStyle;
+      });
+
+    
+    
+
+    this._api.getBackupsList()
+      .pipe(
+        take(1),
+      )
+      .subscribe((backups: Backup[]) => {
+        this.$backups.next(backups);
+      });
+    
+    this.$backups
+    .pipe(
+      filter((val) => val !== null),
+    )
+    .subscribe(() => {
+      setTimeout(() => this._drawGraph());
+    })
+
   }
+
+  ngOnDestroy() {
+    this.$backups.complete();
+  }
+
 }

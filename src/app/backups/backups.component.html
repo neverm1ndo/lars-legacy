@@ -15,30 +15,26 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex h-100 flex-row overflow-auto pl-2 pt-1 pb-1">
+                <div *ngIf="($backups | async) as backups; else loading" class="d-flex backups-list h-100 flex-row overflow-auto">
                   <div #binds class="binds"></div>
-                  <div #backupsList  class="d-flex flex-column backups-list w-100 pr-2">
-                    <app-backup-item *ngFor="let backup of backups" [willBeDeletedSoon]="willBeDeletedSoon(backup.expires)" [attr.data-filename]="backup.file.name" [backup-info]="backup" [admin-info]="admins[backup.user.nickname]" (currentToView)="current = $event; current.file.text = undefined ;getBackupFile($event.file.name, $event.unix)"></app-backup-item>
-                    <div *ngIf="backups.length == 0 && !loading" class="d-flex flex-fill justify-content-center align-items-center">
+                  <div #backupsList  class="d-flex flex-column w-100">
+                    <app-backup-item 
+                      *ngFor="let backup of backups" 
+                      [attr.data-filename]="backup.file.name" 
+                      [backup-info]="backup"
+                      [class.active]="backup.unix === current?.unix"
+                      (click)="getBackupFile(backup)">
+                    </app-backup-item>
+                    <div *ngIf="backups.length === 0" class="d-flex flex-fill justify-content-center align-items-center">
                       <p class="text-muted">Нет живых бэкапов</p>
                     </div>
-                    <div *ngIf="backups.length == 0 && loading" class="d-flex flex-fill justify-content-center align-items-center">
-                      <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
-                    </div>
                   </div>
                 </div>
-                <div *ngIf="backups" class="d-flex h-100 flex-row underpanel align-items-center">
-                  <div class="d-flex underpanel-panel pl-2 pr-2">
-                    <fa-icon class="mr-2" [icon]="fa.box"></fa-icon>{{ backups.length }}
+                <ng-template #loading>
+                  <div class="d-flex flex-fill justify-content-center align-items-center">
+                    <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
                   </div>
-                  <!-- <div class="d-flex underpanel-panel pl-2 pr-2 align-items-center">
-                    <fa-icon [icon]="fa.hdd"></fa-icon>
-                    <div class="progress ml-2 mr-2">
-                      <div class="progress-bar" [style.width.%]="50" role="progressbar" attr.aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    {{ backups.length }}
-                  </div> -->
-                </div>
+                </ng-template>
               </div>
               <div *ngIf="current" class="d-flex flex-column viewer">
                 <div class="d-flex flex-row justify-content-between viewer-head align-items-center">
@@ -54,7 +50,7 @@
                     *ngIf="current.file.text && !current.file.binary"
                     #editor
                     [(ngModel)]="current.file.text"
-                    [options]="cmSettings">
+                    [options]="codeMirrorSettings">
                   </ngx-codemirror>
                   <div *ngIf="current.file.binary" class="d-flex flex-fill justify-content-center align-items-center flex-column">
                     <h3 class="text-muted"><fa-icon [icon]="fa.sign"></fa-icon></h3>

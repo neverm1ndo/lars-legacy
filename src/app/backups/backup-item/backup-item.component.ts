@@ -1,27 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { faTrash, faPencilAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
-
-
-enum BackupAction {
-  DELETE,
-  CHANGE
-}
-interface Backup {
-  unix: number;
-  date: Date,
-  expires: Date,
-  action: BackupAction,
-  user: {
-    nickname: string;
-    group_id: string;
-  },
-  file: {
-    name: string;
-    mime: string;
-    path: string;
-    text?: string;
-  }
-};
+import { Backup } from '../../interfaces';
 
 @Component({
   selector: 'app-backup-item',
@@ -32,9 +11,9 @@ interface Backup {
 export class BackupItemComponent implements OnInit {
 
   @Input('backup-info') backup: Backup;
-  @Input('admin-info') admin: any;
-  @Input('willBeDeletedSoon') wbd: boolean;
-  @Output() currentToView: EventEmitter<any> = new EventEmitter();
+  // @Input('admin-info') admin: any;
+  // @Input('willBeDeletedSoon') wbd: boolean;
+  // @Output() currentToView: EventEmitter<any> = new EventEmitter();
 
   fa = {
     pen: faPencilAlt,
@@ -43,11 +22,6 @@ export class BackupItemComponent implements OnInit {
   };
 
   constructor() { }
-
-  toView(backup) {
-    this.currentToView.emit(backup);
-  }
-
   ngOnInit(): void {
   }
 

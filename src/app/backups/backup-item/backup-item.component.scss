@@ -2,10 +2,9 @@
 
 .backups-list-item {
   width: 100%;
-  margin: 2px 0px 2px 0px;
-  background-color: $secondary;
-  border-radius: 6px;
-  max-height: 50px;
+  max-height: 40px;
+  margin: 1px 0 1px 0;
+  cursor: pointer;
   .item {
     overflow: hidden;
     padding: 0px 5px 0px 5px;
@@ -33,13 +32,16 @@
     text-align: center;
     overflow: hidden;
   }
+  &_icon{
+    padding: 0 15px 0 15px;
+  }
   .sub {
     min-width: 45px;
   }
   .marker {
-    width: 8px;
+    width: 3px;
     padding: 35px 0px 35px 0px;
-    background: red;
+    background: inherit;
     flex: 0 0 8px;
   }
   button {
@@ -47,5 +49,8 @@
     margin-right: 10px;
     text-align: center;
     min-height: 40px;
+  }
+  &:hover {
+    background: $underpanel-hover;
   }
 }

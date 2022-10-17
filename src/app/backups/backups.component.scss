@@ -59,6 +59,7 @@ p, a, span, button, div {
 }
 .binds {
   margin-bottom: 5px;
+  margin-left: 15px;
   position: relative;
   z-index: 1;
   .bind {
@@ -69,7 +70,7 @@ p, a, span, button, div {
       transform-origin: top left;
       transform: rotate(-90deg);
       width: auto;
-      top: 55%;
+      top: calc(55% + 20px);
       left: -6px;
       padding: 0px 5px 0px 5px;
       border-radius: 3px;
@@ -91,6 +92,16 @@ p, a, span, button, div {
         content: ' ';
         z-index: 0;
       }
+    }
+  }
+}
+.backups-list {
+  background: $underpanel;
+  margin: 1px 0 1px 0;
+  .active {
+    background: $texteditor;
+    &:hover {
+      background: $texteditor!important;
     }
   }
 }
