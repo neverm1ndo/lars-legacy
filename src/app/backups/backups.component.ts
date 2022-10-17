@@ -3,12 +3,11 @@ import { ApiService } from '../api.service';
 import { ToastService } from '../toast.service';
 import { ElectronService } from '../core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take, map, switchMap, filter, scan } from 'rxjs/operators'
-import { throwError, combineLatest, from, iif, BehaviorSubject, of } from 'rxjs';
+import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
+import { combineLatest, from, iif, BehaviorSubject, of } from 'rxjs';
 import { handleError } from '../utils';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { IDBUser, Backup } from '../interfaces';
-import { settings } from 'cluster';
+import { Backup } from '../interfaces';
 
 @Component({
   selector: 'app-backups',
@@ -25,7 +24,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
     private _api: ApiService,
     private _toast: ToastService,
     private _electron: ElectronService,
-    private _idbService: NgxIndexedDBService,
   ) { }
 
   public $backups: BehaviorSubject<Backup[] | null> = new BehaviorSubject(null);
@@ -213,15 +211,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getAdmins() {
-    // this._idbService.getAll<IDBUser>('user')
-    //                 .pipe(
-    //                   switchMap((users: IDBUser[]) => iif(() => users)
-    //                 )
-    // this._api.getAdminsList()
-    //   .pipe(take(1)),
-  }
-
   ngOnInit(): void {
     
     of(window.localStorage.getItem('settings'))
@@ -235,10 +224,21 @@ export class BackupsComponent implements OnInit, OnDestroy {
 
     
     
-
-    this._api.getBackupsList()
+      combineLatest([
+        this._api.getAdminsList(),
+        this._api.getBackupsList(),
+      ])
       .pipe(
         take(1),
+        map(([admins, backups]: [any, Backup[]]) => {
+          admins = admins.reduce((acc: any, { username, user_avatar }: any) => ({
+           ...acc, [username]: user_avatar
+          }), {})
+          return backups.map((backup: Backup) => {
+            backup.user.avatar = admins[backup.user.nickname];
+            return backup;
+          })
+        })
       )
       .subscribe((backups: Backup[]) => {
         this.$backups.next(backups);

@@ -8,6 +8,7 @@ export interface Backup {
     user: {
       nickname: string;
       group_id: string;
+      avatar?: string;
     },
     file: {
       binary: boolean;
