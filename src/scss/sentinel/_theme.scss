@@ -1,5 +1,6 @@
 .sentinel {
     @import './dropdown';
+    @import './select';
     &.main {
         background-color: $backgroung-main; 
     }
