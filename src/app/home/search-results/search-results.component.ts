@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { LogLine } from '../interfaces/app.interfaces';
+import { LogLine } from '@lars/interfaces/app.interfaces';
 import { faFrownOpen } from '@fortawesome/free-solid-svg-icons';
-import { getProcessTranslation } from '../shared/components/line-process/log-processes';
+import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
 
 @Component({
   selector: 'search-results',

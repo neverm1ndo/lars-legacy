@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { mapCorrectorValueValidator } from '../../shared/directives/map-corrector-validator.directive';
+import { mapCorrectorValueValidator } from '@lars/shared/directives';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'map-corrector',
   templateUrl: './map-corrector.component.html',
-  styleUrls: ['./map-corrector.component.scss']
+  styleUrls: ['./map-corrector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapCorrectorComponent implements OnInit {
 

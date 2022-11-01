@@ -1,20 +1,32 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { handleError } from './utils';
-import { UserData, UserLoginData, IDBUser } from './interfaces';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject, Subject, from } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
+import { handleError } from '@lars/utils';
+import { IUserData, IUserLoginData, IDBUser } from './interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
-import { ElectronService } from './core/services';
+import { ElectronService } from '@lars/core/services';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Workgroup } from './enums';
+import { Workgroup } from '@lars/enums';
+import { ToastService } from './toast.service';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-interface UserSettings {
+interface IUserSettings {
   tray: boolean;
   lineChunk: number;
   listStyle: string;
   textEditorStyle: string;
+  alerts: IUserAlertsSettings;
+}
+
+interface IUserAlertsSettings {
+  silent: boolean;
+  playerReport: boolean;
+  autoBan: boolean;
+  autoBlock: boolean;
+  serverShutdown: boolean;
+  serverRestart: boolean;
 }
 
 type UserGroupTranslation = 'Претендент' | 'Разработчик' | 'Админ' | 'Маппер' | 'Редктор конфигурационных файлов' | 'Бэкапер' | 'Игрок';
@@ -30,21 +42,23 @@ export class UserService {
 
   readonly URL_LOGIN: string = AppConfig.api.auth;
   readonly URL_USER: string = AppConfig.api.user;
-  user: BehaviorSubject<UserData | null> = new BehaviorSubject(this.getUserInfo());
-  error: Subject<any> = new Subject();
+  
+  public loggedInUser$: BehaviorSubject<IUserData | null> = new BehaviorSubject(null);
+  public error$: Subject<any> = new Subject();
 
   constructor(
     private _http: HttpClient,
     private _router: Router,
     private _electron: ElectronService,
-    private _idbService: NgxIndexedDBService
+    private _idbService: NgxIndexedDBService,
+    private _toast: ToastService,
   ) {}
 
-  getUser(name: string): Observable<UserData> {
+  public getUser(name: string): Observable<IUserData> {
     return this._http.get(this.URL_USER, { params: { name: name }});
   }
 
-  getUserGroupName(userGroup: number | Workgroup): UserGroupTranslation {
+  public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {
     const groupMap: UserGroupTranslationMap = {
       [Workgroup.Challenger]: 'Претендент',
       [Workgroup.Dev]: 'Разработчик',
@@ -57,83 +71,101 @@ export class UserService {
     return groupMap[userGroup];
   }
 
-  getUserSettings(): UserSettings {
-    let userSettings: UserSettings = JSON.parse(window.localStorage.getItem('settings'));
-    const defaultSettings: UserSettings = {
-      tray: false,
-      lineChunk: 100,
-      listStyle: 'inline',
-      textEditorStyle: 'material',
-    }
-    const defaultAlerts = {
-      silent: false,
-      playerReport: true,
-      autoBan: true,
-      autoBlock: true,
-      serverShutdown: true,
-      serverRestart: true,
-    }
-    if (!userSettings) {
-      window.localStorage.setItem('settings', JSON.stringify(defaultSettings));
-      window.localStorage.setItem('alerts', JSON.stringify(defaultAlerts));
-      return defaultSettings;
-    }
-    return userSettings;
+  public showAccessError() {
+    const { main_group, secondary_group } = this.loggedInUser$.getValue();
+    this._toast.show('danger', 'Доступ запрещен для вашей группы пользователей', `Ваша роль: ${main_group !== secondary_group ? main_group + ' ' + secondary_group: main_group}`, faExclamationTriangle);
   }
 
-  openUserProfile(id: number): void {
+  public getUserSettings(): IUserSettings {
+    try {
+      const settings: IUserSettings = JSON.parse(window.localStorage.getItem('settings'));
+      if (!settings) throw new Error('Empty user settings. Recovered to default values.');
+      return settings;
+    } catch(err) {
+      console.warn(err);
+      return {
+        tray: false,
+        lineChunk: 100,
+        listStyle: 'inline',
+        textEditorStyle: 'nord',
+        alerts: {
+          silent: false,
+          playerReport: true,
+          autoBan: true,
+          autoBlock: true,
+          serverShutdown: true,
+          serverRestart: true,
+        },
+      };
+    };
+  }
+
+  public openUserForumProfile(id: number): void {
     const url = new URL('/memberlist.php', AppConfig.links.resource);
           url.searchParams.append('mode', 'viewprofile');
           url.searchParams.append('u', id.toString());
     this._electron.shell.openExternal(url.toString());
   }
 
-  openForum(): void {
+  public openForum(): void {
     const url = new URL('/index.php', AppConfig.links.resource);
     this._electron.shell.openExternal(url.toString());
   }
 
-  getUserInfo(): UserData | null {
+  public getCurrentUserInfo(): IUserData | null {
     if (window.localStorage.getItem('user') == null) return null;
     return JSON.parse(window.localStorage.getItem('user'));
   }
 
-  isAuthenticated(): boolean {
-    const userInfo = this.getUserInfo();
-    if (!userInfo?.token) return false;
+  public isAuthenticated(): boolean {
+    const userInfo = this.getCurrentUserInfo();
+    if (!userInfo) return false;
+    
+    this.loggedInUser$.next(userInfo);
+    
     return true;
   }
 
-  setUpUser(user: UserData): Observable<IDBUser> {
+  public appendUserToIDB({ id, username, avatar, main_group, secondary_group }: IUserData): Observable<IDBUser> {
     return this._idbService.add('user', {
-      id: user.id,
-      name: user.username,
-      avatar: user.avatar,
-      group: user.main_group
+      id,
+      avatar,
+      username,
+      main_group,
+      secondary_group
     });
   }
 
-  loginUser(value: UserLoginData): Observable<any> {
-    return this._http.post<UserLoginData>(this.URL_LOGIN, value, { headers: new HttpHeaders ({
-      'Content-Type': 'application/json'
-    })})
-    .pipe(
-      catchError((error) => handleError(error))
-    );
+  public loginUser(loginData: IUserLoginData): Observable<IUserData | HttpErrorResponse> {
+    return this._http.post(this.URL_LOGIN, loginData, 
+                                { 
+                                  withCredentials: true,
+                                  headers: new HttpHeaders ({
+                                    'Content-Type': 'application/json'
+                                  }),
+                                })
+                      .pipe(catchError((error) => handleError(error)));
   }
 
-  async logOut(): Promise<any> {
+  public logoutUser(): void {
     const messageBox: Electron.MessageBoxOptions = {
       type: 'question',
       buttons: ['Да, выйти', 'Отмена'],
       title: 'Подтверждение выхода',
-      message: 'Вы точно хотите выйти с аккаунта?'
+      message: 'Вы точно хотите выйти с аккаунта? Подтверждение завершит текущую активную сессию.'
     };
-    this._electron.ipcRenderer.invoke('message-box', messageBox).then((returnValue: Electron.MessageBoxReturnValue) => {
-      if (returnValue.response !== 0) throw 'REJECTED BY USER';
-      this.user.next(undefined);
-      window.localStorage.removeItem('user');
-      return this._router.navigate(['/login']);
-    });
+    from(this._electron.ipcRenderer.invoke('message-box', messageBox))
+        .pipe(
+          filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response !== 0),
+          switchMap(() => this._http.get(AppConfig.api.auth + '/logout'))
+        )
+        .subscribe({
+          next: () => {
+            this.loggedInUser$.next(null);
+            window.localStorage.removeItem('user');
+            this._router.navigate(['/login']);
+          },
+          error: console.error
+        });
   }
 }

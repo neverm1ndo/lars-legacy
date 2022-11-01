@@ -13,133 +13,111 @@
   pointer-events: none;
 }
 @mixin btn-native {
-  width: 100%;
+  width: 36px;
   height: 100%;
+  border-radius: 0%;
+  padding: 0 11px;
+  border: none;
   cursor: pointer;
   svg {
     cursor: pointer!important;
+  }
+  &:active, &:focus {
+    outline: none;
+    border: none;
   }
 }
 .native-dragzone {
   -webkit-app-region: drag;
 }
-.dropdown-toggle {
-  &::after {
-    display: none;
-  }
-}
-.form-control {
-  border: none;
-}
-.dropdown-menu {
-  width: 100%;
-  left: 0px;
-  border-radius: 0px;
-  background: $dropdown;
-  border: none;
-  max-width: 100%;
-  font-size: 12px;
-  margin: 0px 0px 0px 0px;
-  transition: .1s ease;
-  z-index: -1;
-  .dropdown-item {
-    color: $text;
-    transition: .2s ease;
-    padding-left: 10px;
-    padding-right: 5px;
-    span {
-      position: relative;
-      top: -2px;
-    }
-    svg {
-      margin: auto;
-    }
-    fa-icon {
-      margin-right: 0.7rem;
-    }
-    &:hover, &:focus, &:active  {
-      background: #0000002f!important;
-    }
-    &:disabled, &.disabled {
-      color: #fdfdfd2f!important;
-      opacity: 0.6;
-    }
-  }
-  .dropdown-divider {
-    border-top: 1px solid #0000000f;
-  }
-}
-.btn-native-profile {
-  background: none;
-  border: none;
-  font-size: 12px;
-  color: $text;
-  transition: .2s ease;
-  z-index: 1;
-  position: relative;
-  .btn-profile {
-    min-width: 160px;
-    background: none;
-    border: none;
-    color: $text;
-    height: 100%;
-    &[aria-expanded = true] {
-      background: $tab;
-    }
-  }
-  &:hover, &:focus, &:active, &:focus-within {
-    background: $tab!important;
-    .dropdown-menu {
-      background: $tab;
-    }
-  }
-  svg {
-    height: 18px;
-    width: 18px;
-    margin-left: 15px;
-    position: relative;
-    top: -1px;
-    cursor: pointer!important;
-    path {
-      stroke: $text;
-    }
-  }
-  fa-icon {
-    padding-left: 3px;
-    padding-right: 3px;
-    svg {
-      margin-left: 0px;
-      top: 1px;
-    }
-  }
-  img {
-    height: 20px;
-    width: 20px;
-    position: relative;
-    cursor: pointer!important;
-    top: -1px;
-    border-radius: 100%;
-    background: $tab;
-    margin-right: 15px;
-  }
-}
-.native-close {
-  @include btn-native;
-  &:hover {
-    border: 1px solid #c71f1f!important;
-    background: #c71f1f!important;
-  }
-}
-.native-min {
-  @include btn-native;
-  svg {
-    left: -2px;
-  }
-  &:hover {
-    box-shadow: none!important;
-    background: $tab!important;
-  }
-}
+// .dropdown-toggle {
+
+// }
+// .form-control {
+//   border: none;
+// }
+// .dropdown-menu {
+//   width: 100%;
+//   left: 0px;
+//   border-radius: 0px;
+//   background: $dropdown;
+//   border: none;
+//   max-width: 100%;
+//   font-size: 12px;
+//   margin: 0px 0px 0px 0px;
+//   transition: .1s ease;
+//   z-index: -1;
+//   .dropdown-item {
+//     color: $text;
+//     transition: .2s ease;
+//     padding-left: 10px;
+//     padding-right: 5px;
+//     span {
+//       position: relative;
+//       top: -2px;
+//     }
+//     svg {
+//       margin: auto;
+//     }
+//     fa-icon {
+//       margin-right: 0.7rem;
+//     }
+//     &:hover, &:focus, &:active  {
+//       background: #0000002f!important;
+//     }
+//     &:disabled, &.disabled {
+//       color: #fdfdfd2f!important;
+//       opacity: 0.6;
+//     }
+//   }
+//   .dropdown-divider {
+//     border-top: 1px solid #0000000f;
+//   }
+// }
+// .btn-native-profile {
+//   background: none;
+//   border: none;
+//   font-size: 12px;
+//   color: $text;
+//   transition: .2s ease;
+//   z-index: 1;
+//   position: relative;
+//   .btn-profile {
+//     min-width: 160px;
+//     background: none;
+//     border: none;
+//     color: $text;
+//     height: 100%;
+//     &[aria-expanded = true] {
+//       background: $tab;
+//     }
+//   }
+//   &:hover, &:focus, &:active, &:focus-within {
+//     background: $tab!important;
+//     .dropdown-menu {
+//       background: $tab;
+//     }
+//   }
+//   svg {
+//     height: 18px;
+//     width: 18px;
+//     margin-left: 15px;
+//     position: relative;
+//     top: -1px;
+//     cursor: pointer!important;
+//     path {
+//       stroke: $text;
+//     }
+//   }
+//   fa-icon {
+//     padding-left: 3px;
+//     padding-right: 3px;
+//     svg {
+//       margin-left: 0px;
+//       top: 1px;
+//     }
+//   }
+// }
 .custom-control {
   padding-left: 0px!important;
   label {

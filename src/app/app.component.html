@@ -1,10 +1,12 @@
-<div class="container-fluid main">
-    <div class="d-flex flex-column w-100 h-100">
-      <div class="d-flex row">
+<div class="container-fluid h-100 main g-0 sentinel">
+  <div class="row g-0 w-100 h-100">
+    <div class="d-flex flex-column h-100">
+      <div class="d-flex w-100">
         <app-topper></app-topper>
       </div>
-      <div class="wrapper row align-self-stretch">
-        <router-outlet></router-outlet>
+      <div class="d-flex flex-fill h-100 overflow-auto">
+        <!-- <router-outlet></router-outlet> -->
       </div>
     </div>
   </div>
+</div>

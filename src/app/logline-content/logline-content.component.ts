@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { UserService } from '../user.service';
-import { Process } from '../shared/components/line-process/log-processes';
-import { ContentData } from '../interfaces';
+import { Process } from '@lars/shared/components/line-process/log-processes';
+import { IContentData } from '@lars/interfaces';
 import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 
 @Component({
@@ -14,12 +14,12 @@ import { take, map, switchMap, filter, tap } from 'rxjs/operators';
 export class LoglineContentComponent implements OnInit, AfterViewInit {
 
   constructor(
-    private idb: NgxIndexedDBService,
-    private user: UserService,
-    private cdr: ChangeDetectorRef
+    private _idb: NgxIndexedDBService,
+    private _user: UserService,
+    private _cdr: ChangeDetectorRef
   ) { }
 
-  @Input('content') content: ContentData;
+  @Input('content') content: IContentData;
   @Input('type') type: Process;
 
   contentTpl: TemplateRef<any>;
@@ -58,7 +58,7 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
   }
 
   userLink(id: number) {
-    this.user.openUserProfile(id);
+    this._user.openUserForumProfile(id);
   }
 
   ngAfterViewInit(): void {
@@ -75,39 +75,32 @@ export class LoglineContentComponent implements OnInit, AfterViewInit {
     if (this.isCNRes()) {
       this.contentTpl = this.cn;
     }
-    this.cdr.detectChanges();
+    this._cdr.detectChanges();
   }
 
   ngOnInit(): void {
     if (this.controltype()) {
-      this.idb.getByIndex('user', 'name', this.content.message)
-        .pipe(take(1))
-        .pipe(tap((user) => {
-          if (user) {
-            this.userContent = user;
-            this.contentTpl = this.auth;
-            this.cdr.detectChanges();
-          }
-          return user;
-        }))
-        .pipe(filter((user) => !user))
-        .pipe(switchMap(() => this.user.getUser(this.content.message)
-        .pipe(map((user) => {
-          return {
-            id: user.id,
-            name: user.username,
-            avatar: user.avatar,
-            group: user.main_group
-          }
-        }))
-        .pipe(switchMap((user) => this.idb.add('user', user)))
-      ))
-      .subscribe((user) => {
-        this.userContent = user;
-        this.contentTpl = this.auth;
-        this.cdr.detectChanges();
-      });
-      return;
+      this._idb.getByIndex('user', 'name', this.content.message)
+        .pipe(
+          take(1),
+          tap((user) => {
+            if (user) {
+              this.userContent = user;
+              this.contentTpl = this.auth;
+              this._cdr.detectChanges();
+            }
+            return user;
+          }),
+          filter((user) => !user),
+          switchMap(() => this._user.getUser(this.content.message)),
+          switchMap((user) => this._idb.add('user', user))
+        )
+        .subscribe((user) => {
+          this.userContent = user;
+          this.contentTpl = this.auth;
+          this._cdr.detectChanges();
+        });
+        return;
     }
   }
 }

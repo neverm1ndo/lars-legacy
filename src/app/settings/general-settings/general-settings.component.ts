@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';;
 import { FormGroup, FormControl } from '@angular/forms';
-import { GeoData } from '../../interfaces';
-import { ElectronService } from '../../core/services';
+import { IGeoData } from '@lars/interfaces';
+import { ElectronService } from '@lars/core/services';
+import { Observable, from, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-general-settings',
   templateUrl: './general-settings.component.html',
-  styleUrls: ['./general-settings.component.scss']
+  styleUrls: ['./general-settings.component.scss'],
 })
 export class GeneralSettingsComponent implements OnInit {
 
@@ -14,10 +15,11 @@ export class GeneralSettingsComponent implements OnInit {
     private electron: ElectronService,
   ) { }
 
-  version: string = '';
+  public version$: Observable<string> = from(this.electron.ipcRenderer.invoke('version'));
 
-  date: Date = new Date(Date.now());
-  sampleGeo: GeoData = {
+  public date: Date = new Date();
+  
+  public sampleGeo: IGeoData = {
     country: 'Russian Federation',
     cc: 'RU',
     ip: '127.0.0.1',
@@ -27,13 +29,14 @@ export class GeneralSettingsComponent implements OnInit {
     c: '0.3.7'
   }
 
-  settings = new FormGroup({
+  public settings: FormGroup = new FormGroup({
     tray: new FormControl(false),
     lineChunk: new FormControl(100),
     listStyle: new FormControl('small'),
     textEditorStyle: new FormControl(JSON.parse(localStorage.getItem('settings')).textEditorStyle),
   });
-  textplain: string = `# Create a safe reference to the Underscore object for use below.
+  
+  public textplain: string = `# Create a safe reference to the Underscore object for use below.
   _ = (obj) -> new wrapper(obj)
   # Export the Underscore object for **CommonJS**.
   if typeof(exports) != 'undefined' then exports._ = _
@@ -43,7 +46,7 @@ export class GeneralSettingsComponent implements OnInit {
   # Current version.
   _.VERSION = '1.1.0'`;
 
-  chunkSizes = [
+  public chunkSizes: { id: number; val: number }[] = [
     { id: 0, val: 100 },
     { id: 1, val: 200 },
     { id: 2, val: 300 },
@@ -58,31 +61,26 @@ export class GeneralSettingsComponent implements OnInit {
     return this.settings.value.textEditorStyle;
   }
 
-  cmSettings = {
+  public codemirrorSettings = {
     lineNumbers: true,
     lineWrapping: true,
     mode: 'coffeescript',
     theme: this.textEditorStyle,
     readOnly: true
-  }
+  };
 
-  setup() {
+  public setup() {
     let newSets = this.settings.getRawValue();
     window.localStorage.setItem('settings', JSON.stringify(newSets));
-    this.cmSettings.theme = newSets.textEditorStyle;
-  }
-
-  getVersion() {
-    this.electron.ipcRenderer.invoke('version').then((version: string) => {
-      this.version = version;
-    });
+    this.codemirrorSettings.theme = newSets.textEditorStyle;
   }
 
   ngOnInit(): void {
-    this.getVersion();
-    if (window.localStorage.getItem('settings')) {
-      this.settings.setValue(JSON.parse(window.localStorage.getItem('settings')))
-    } else {
+    try {
+      const settings = window.localStorage.getItem('settings');
+      this.settings.setValue(JSON.parse(settings));
+    } catch (err) {
+      console.warn(err);
       window.localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
     }
   }

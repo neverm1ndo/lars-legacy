@@ -48,4 +48,42 @@ export const ltySh: LibertyIcon = {
   stroke: false,
   data: `<svg class="lty-icon" id="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="529.4117647058823" viewBox="0, 0, 400,529.4117647058823"><g id="svgg"><path id="path0" d="M11.076 8.582 L 1.471 17.163 0.644 259.317 C -0.252 521.848,-0.693 510.269,10.636 521.598 L 18.449 529.412 199.124 529.412 C 317.417 529.412,381.752 528.366,385.457 526.383 C 400.102 518.545,400.000 520.055,400.000 311.785 L 400.000 117.395 386.029 102.092 C 378.346 93.675,353.684 67.261,331.225 43.394 L 290.392 -0.000 155.536 -0.000 L 20.681 -0.000 11.076 8.582 M273.529 61.859 C 273.529 122.760,279.651 129.412,335.691 129.412 L 373.529 129.412 373.529 315.862 C 373.529 483.167,373.052 502.495,368.877 504.097 C 359.310 507.768,33.740 506.093,30.000 502.353 C 26.152 498.505,24.609 32.254,28.431 28.431 C 29.510 27.353,85.098 26.471,151.961 26.471 L 273.529 26.471 273.529 61.859 M130.307 332.224 C 109.688 344.795,114.286 369.060,139.643 381.496 C 163.033 392.968,160.551 402.319,136.432 393.597 C 114.806 385.777,109.327 408.101,130.855 416.322 C 175.363 433.320,202.488 386.034,160.464 364.706 C 138.742 353.682,140.687 344.368,162.944 352.831 C 178.416 358.713,185.505 337.784,170.588 330.264 C 159.713 324.781,141.021 325.691,130.307 332.224 M202.100 328.292 C 200.945 329.447,200.000 350.025,200.000 374.020 L 200.000 417.647 211.765 417.647 L 223.529 417.647 223.529 401.471 L 223.529 385.294 239.706 385.294 L 255.882 385.294 255.882 401.471 L 255.882 417.647 267.647 417.647 L 279.412 417.647 279.412 375.588 C 279.412 331.454,278.069 326.471,266.176 326.471 C 256.584 326.471,252.941 332.299,252.941 347.647 L 252.941 361.765 238.382 361.765 L 223.823 361.765 222.941 344.853 C 222.072 328.188,211.001 319.391,202.100 328.292 " stroke="none" fill="#FDFDFD" fill-rule="evenodd"></path></g></svg>`
 }
-export type ltyIcon = 'lty-logo' | 'lty-old' | 'lty-fs-tree' | 'lty-server-save' | 'lty-ban' | 'lty-bins' | 'lty-sh';
+export const ltyChevron: LibertyIcon = {
+  name: 'lty-chevron',
+  color: '#000000',
+  stroke: false,
+  data: `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg>`
+}
+
+export const ltyMinimize: LibertyIcon = {
+  name: 'lty-minimize',
+  color: '#000000',
+  stroke: false,
+  data: `<svg class="lty-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30">
+          <defs>
+            <path d="" id="c2UyV86x7F"></path><path d="M25.05 20.46L4.95 20.46" id="a5uQaXHvxt"></path>
+          </defs>
+          <g><g>
+          <g><g><use xlink:href="#c2UyV86x7F" opacity="1" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-opacity="1"></use></g></g>
+          <g><g><use xlink:href="#a5uQaXHvxt" opacity="1" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-opacity="1"></use></g></g>
+          </g></g>
+        </svg>`
+}
+
+export const ltyClose: LibertyIcon = {
+  name: 'lty-close',
+  color: '#000000',
+  stroke: false,
+  data: `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30">
+  <defs>
+    <path d="" id="g6pDbVCYY8"></path>
+    <path d="M5.11 5.53L25.11 25.53" id="e3IggXtpF"></path>
+    <path d="M5.11 25.53L25.11 5.53" id="cORYOauw"></path>
+  </defs>
+  <g><g><g><g>
+  <use xlink:href="#g6pDbVCYY8" opacity="1" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-opacity="1"></use></g></g><g><g>
+  <use xlink:href="#e3IggXtpF" opacity="1" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-opacity="1"></use></g></g><g><g>
+  <use xlink:href="#cORYOauw" opacity="1" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" stroke-opacity="1"></use></g></g></g></g>
+  </svg>`
+}
+// export type ltyIcon = 'lty-logo' | 'lty-old' | 'lty-fs-tree' | 'lty-server-save' | 'lty-ban' | 'lty-bins' | 'lty-sh';

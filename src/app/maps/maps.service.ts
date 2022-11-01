@@ -58,16 +58,21 @@ export class MapsService {
   }
 
   mapToObject(xml: string): MapObject[] {
-    let parser = new DOMParser();
+    const parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
+    
     let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
     let objects: MapObject[] = [];
+    
     if (map.getElementsByTagName('parsererror')[0]) {
       let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
       console.warn(`NOT_XML: ${errormsg}`);
     }
+    
     if (!map.getElementsByTagName('map')[0]) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
+    
     const elems = map.getElementsByTagName('map')[0].children;
+    
     for (let i = 0; i < elems.length; i++) {
       const attrs = elems[i].attributes;
       let obj = { name: elems[i].tagName };
@@ -88,10 +93,12 @@ export class MapsService {
         message: `Вы точно хотите удалить карту ${path}? После подтверждения она будет безвозвратно удалена с сервера.`
       }
     return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-    .pipe(filter(val => val.response === 0))
-    .pipe(switchMap(() => this._api.deleteMap(path)))
-    .pipe(take(1))
-    .pipe(catchError((err) => this.handleError(err)))
+          .pipe(
+            filter(val => val.response === 0),
+            switchMap(() => this._api.deleteMap(path)),
+            catchError((err) => this.handleError(err)),
+            take(1),
+          );
   }
 
   saveMapCloud(path: string, objects: MapObject[]): Observable<any> {
@@ -102,17 +109,20 @@ export class MapsService {
         message: `Вы точно хотите сохранить карту ${path}? После подтверждения она будет перезаписана на сервере.`
       }
       return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-      .pipe(filter(val => val.response === 0))
-      .pipe(map(() => {
-        const form = new FormData();
-        const blob = new Blob([this.objectToMap(objects)], { type: 'text/plain' })
-        form.append('file', blob, path);
-        return form;
-      }))
-      .pipe(switchMap((form) => this._api.uploadFileMap(form)))
-      .pipe(filter((event) => event instanceof HttpResponse))
-      .pipe(take(1))
+      .pipe(
+        filter(val => val.response === 0),
+        map(() => {
+          const form = new FormData();
+          const blob = new Blob([this.objectToMap(objects)], { type: 'text/plain' })
+          form.append('file', blob, path);
+          return form;
+        }),
+        switchMap((form) => this._api.uploadFileMap(form)),
+        filter((event) => event instanceof HttpResponse),
+        take(1),
+      );
   }
+  
   saveMapLocal(name: string, objects: MapObject[]) {
     const saveDialogOpts: Electron.SaveDialogOptions = {
       title: 'Сохранить карту как',
@@ -124,44 +134,34 @@ export class MapsService {
       ]
     }
     return from(this._electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
-    .pipe(filter(res => res.filePath && !res.canceled))
-    .pipe(switchMap((res) => from(new Promise((resolve, reject) => {
-      this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
-        err?reject(err):resolve(res.filePath);
-      });
-    }))))
-    .pipe(catchError((err) => this.handleError(err)))
-    .pipe(take(1))
+          .pipe(
+            filter(res => res.filePath && !res.canceled),
+            switchMap((res) => from(new Promise((resolve, reject) => {
+              this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
+                err?reject(err):resolve(res.filePath);
+              });
+            }))),
+            catchError((err) => this.handleError(err)),
+            take(1)
+          );
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
     return this._api.getMap(path.path)
-      .pipe(map((xml: string) => this.mapToObject(xml)))
-      .pipe(catchError((err) => throwError(err)))
+                    .pipe(
+                      map((xml: string) => this.mapToObject(xml)),
+                      catchError(throwError),
+                    )
   }
 
   posZChangeSuccess() {
-    this._toast.show(`Успешное изменение posZ`,
-    {
-      classname: 'bg-success text-light',
-      delay: 5000,
-      icon: faInfo
-    });
+    this._toast.show('success', `Успешное изменение posZ`, null, faInfo);
   }
 
   mapToast(message: string, path: string, icon: IconDefinition, classname: string) {
-    this._toast.show(message, {
-      classname,
-      delay: 6000,
-      icon,
-      subtext: path
-    });
+    this._toast.show('default', message);
   }
+  
   mapNotLoaded(err: Error) {
-    this._toast.show(`Карта не был загружена по причине:`, {
-      classname: 'bg-danger text-light',
-      delay: 6000,
-      icon: faExclamationTriangle,
-      subtext: err.message
-    });
+    this._toast.show('danger', `Карта не был загружена по причине:`, err.message, faExclamationTriangle);
   }
 }

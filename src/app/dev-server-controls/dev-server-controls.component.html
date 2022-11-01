@@ -1,0 +1,29 @@
+<div ngbDropdown [autoClose]="'outside'" class="btn-native-profile">
+  <button
+  ngbDropdownToggle
+  type="button"
+  class="btn-profile pl-2 pr-2 top-btn"
+  name="profile-button">
+    <span>Действия с сервером</span>
+    <lty-icon name="lty-chevron"></lty-icon>
+  </button>
+<ng-container *ngLet="state | async as serverState">
+  <div ngbDropdownMenu aria-labelledby="dropdownTopper">
+    <div data-content="Статус сервера" class="status" ngbDropdownItem>
+      <i [ngClass]="{
+          'led-loading': ( serverRemote.state == 4 ||  serverRemote.state == 2),
+          'led-error': ( serverRemote.state == 0 ||  serverRemote.state == 1)
+      }"
+      class="led">
+      </i>{{ serverState | status }}</div>
+    <div class="dropdown-divider"></div>
+    <button [disabled]="serverState == 4 || serverState == 2 || serverState == 1" (click)="serverRemote.reboot()" ngbDropdownItem><fa-icon [icon]="fa.redo"></fa-icon> <span>Рестарт</span></button>
+    <button [disabled]="serverState == 4 || serverState == 2 || serverState == 3" (click)="serverRemote.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
+    <button [disabled]="serverState == 4 || serverState == 2 || serverState == 1" (click)="serverRemote.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
+    <div class="dropdown-divider"></div>
+    <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
+    <div class="dropdown-menu-helper">
+      <server-stat-graph [players]="players"></server-stat-graph>
+    </div>
+  </div>
+</ng-container>

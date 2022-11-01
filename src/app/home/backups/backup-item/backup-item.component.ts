@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { faTrash, faPencilAlt, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
-import { Backup } from '../../interfaces';
+import { Backup } from '@lars/interfaces';
 
 @Component({
   selector: 'app-backup-item',
@@ -8,12 +8,9 @@ import { Backup } from '../../interfaces';
   styleUrls: ['./backup-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BackupItemComponent implements OnInit {
+export class BackupItemComponent {
 
   @Input('backup-info') backup: Backup;
-  // @Input('admin-info') admin: any;
-  // @Input('willBeDeletedSoon') wbd: boolean;
-  // @Output() currentToView: EventEmitter<any> = new EventEmitter();
 
   fa = {
     pen: faPencilAlt,
@@ -22,7 +19,5 @@ export class BackupItemComponent implements OnInit {
   };
 
   constructor() { }
-  ngOnInit(): void {
-  }
 
 }

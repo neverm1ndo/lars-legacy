@@ -1,6 +1,8 @@
 :host {
+  display: inline-block;
+  vertical-align: baseline;
   ::ng-deep {
-    .lty-icon{
+    svg {
       width: 100%;
       height: 100%;
     }

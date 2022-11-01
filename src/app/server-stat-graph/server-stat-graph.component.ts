@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ElectronService } from '../core/services';
+import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { AppConfig } from '../../environments/environment';
-import { ServerGameMode } from '../../../samp';
+import { AppConfig } from '@lars/../environments/environment';
+import { ServerGameMode } from '@samp';
 import { Subscription, interval } from 'rxjs';
 
 @Component({
@@ -76,7 +76,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
             ctx.fillStyle = WHITE;
             ctx.fillText(String(top/4*(4 - i)), 0, MAX_PLAYERS/4*i + 4);
         }
-        for (let i = 1; i < 25; i++) {
+        for (let i = 1; i < 25; i++) { // FIXME
             grid.moveTo(270/10*i, 0);
             grid.lineTo(270/10*i, height);
             grid.closePath();

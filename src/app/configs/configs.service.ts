@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { ApiService } from '../api.service';
-import { ToastService } from '../toast.service';
-import { ElectronService } from '../core/services';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { ElectronService } from '@lars/core/services';
 import { Router } from '@angular/router';
 
-import { BehaviorSubject, Subject, Observable, combineLatest } from 'rxjs';
-import { tap, filter, takeLast } from 'rxjs/operators';
+import { BehaviorSubject, Subject, Observable, combineLatest, from } from 'rxjs';
+import { tap, filter, takeLast, switchMap } from 'rxjs/operators';
 
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,8 +25,9 @@ export class ConfigsService {
   ) { }
 
   error: Subject<any> = new Subject();
+  
   public reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
-  public dprogress: BehaviorSubject<number> = new BehaviorSubject(0);
+  public dprogress$: BehaviorSubject<number> = new BehaviorSubject(0);
 
   getConfig(path: string): Observable<any> {
     return combineLatest([
@@ -40,18 +41,19 @@ export class ConfigsService {
           form.append('path', dirname(path));
           form.append('file', blob, basename(path));
     return this._api.saveFile(form)
-               .pipe(tap((event) => {
-                 if (event.type === HttpEventType.UploadProgress) this.dprogress.next(Math.round(100 * event.loaded / event.total));
-               }))
-               .pipe(filter((event) => event instanceof HttpResponse))
-               .pipe(takeLast(1))
+                    .pipe(
+                        tap((event) => {
+                          if (event.type === HttpEventType.UploadProgress) this.dprogress$.next(Math.round(100 * event.loaded / event.total));
+                        }),
+                        filter((event) => event instanceof HttpResponse),
+                        takeLast(1)
+                    );
   }
 
-  downloadFile(path: string): void {
-    let filename: string = ((): string => {
-      const spl = path.split('/');
-      return spl[spl.length - 1];
-    })();
+  public downloadFile(path: string): void {
+    
+    let filename: string = basename(path);
+    
     const dialogOpts: Electron.SaveDialogOptions = {
       title: 'Сохранить карту как',
       buttonLabel: 'Сохранить',
@@ -59,22 +61,21 @@ export class ConfigsService {
       filters: [
         { name: 'All Files', extensions: ['*'] }
       ]
-    }
+    };
 
     this._electron.ipcRenderer.invoke('save-dialog', dialogOpts)
-    .then(res => {
-      if (res.filePath && !res.canceled) this._electron.ipcRenderer.send('download-file', { remotePath: path, localPath: res.filePath, token: JSON.parse(window.localStorage.getItem('user')).token });
-    })
-    .catch(res => {
-      this._toast.show(`Файл <b>${ res.filePath }</b> не был загружен`,
-        {
-          classname: 'bg-warning text-dark',
-          delay: 5000,
-          icon: faInfo,
-          subtext: res.message,
-        });
-    console.error(res);
-    });
+                              .then(res => {
+                                if (res.filePath && !res.canceled) 
+                                  this._electron.ipcRenderer.send('download-file', 
+                                    { 
+                                      remotePath: path, 
+                                      localPath: res.filePath, 
+                                    });
+                              })
+                              .catch(res => {
+                                this._toast.show('warning', `Файл <b>${ res.filePath }</b> не был загружен`, res.message, faInfo);
+                                console.error(res);
+                              });
   }
 
   getFileInfo(path: string) {
@@ -96,31 +97,28 @@ export class ConfigsService {
       title: `Подтверждение удаления`,
       message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`,
     };
-    return this._electron.ipcRenderer.invoke('message-box', dialogOpts).then(
-      val => {
-        if (val.response !== 0) return;
-        this._api.deleteMap(path).subscribe(() => {});
-        this._toast.show(`Файл <b>${ path }</b> удален с сервера`,
-          {
-            classname: 'bg-success text-light',
-            delay: 3000,
-            icon: faTrash
-          });
-        this.toEmpty();
-      }
-    ).finally(() => {
-      this.reloadFileTree();
-    });
+    from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
+      .pipe(
+        filter(({ response }) => response !== 0),
+        switchMap(() => this._api.deleteMap(path))
+      )
+      .subscribe({
+        next: () => {
+          this._toast.show('success', `Файл <b>${ path }</b> удален с сервера`, null, faTrash);
+        },
+        error: (err) => {
+          this._toast.show('danger', `Файл <b>${ path }</b> не был удален с сервера`, err, faTrash);
+        },
+        complete: () => {
+          this.reloadFileTree();
+        }
+      })
   }
 
   pathToClipboard(path: string): void {
-    this._electron.ipcRenderer.invoke('clipboard', path).then(() => {
-      this._toast.show('Путь скопирован в буффер обмена',
-      {
-        classname: 'bg-success text-light',
-        delay: 3000,
-        icon: faCopy
-      });
-    });
-  }
+    this._electron.ipcRenderer.invoke('clipboard', path)
+                              .then(() => {
+                                this._toast.show('success', 'Путь скопирован в буффер обмена', null, faCopy);
+                              });
+  };
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
-import { TreeNode } from '../interfaces/app.interfaces';
+import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { sep } from 'path';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class LtyFileTreeService {
 
   constructor() {}
 
-  expandFollowingDirs(nodes: TreeNode, path?: string): TreeNode {
+  expandFollowingDirs(nodes: ITreeNode, path?: string): ITreeNode {
     if (!path) return nodes;
     const separatedPath: string[] = path.split(sep);
     for (let item of nodes.items) {

@@ -1,0 +1,52 @@
+@import "colors";
+
+.ng-select.ng-select-opened > .ng-select-container {
+    background: $topper;
+    border-color: $filetree;
+    color: $text;
+  }
+  .ng-select.ng-select-disabled>.ng-select-container {
+      opacity: 0.2;
+      border-color: $filetree!important;
+      background: $topper;
+  }
+  .custom {
+      border: 0px;
+      min-height: 0px;
+      .ng-select-container {
+        min-height: 0px;
+        border-color: $filetree;
+        background: $topper;
+        color: $text;
+      }
+      .ng-dropdown-panel {
+        border-color: $filetree;
+        .scroll-host {
+          background: $topper;
+        }
+        .ng-select-bottom {
+          background: $topper;
+          color: $text;
+        }
+        .ng-dropdown-panel-items {
+          background: $topper;
+          .ng-option.ng-option-marked {
+            background: $underpanel;
+            color: $text;
+          }
+          .ng-option.ng-option-selected {
+            background: $dropdown;
+            color: $text;
+          }
+          .ng-option  {
+            background: $filetree;
+            color: $text;
+          }
+        }
+      }
+      .ng-option {
+        border-color: $filetree;
+        background-color: $topper;
+        color: $text;
+      }
+  }
