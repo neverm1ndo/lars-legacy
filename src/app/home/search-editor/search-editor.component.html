@@ -1,5 +1,5 @@
 <div class="containter-fluid g-0">
-  <div class="h-100 nopadding d-flex flex-column flex-fill align-items-stretch">
+  <div class="h-100 d-flex flex-column flex-fill align-items-stretch">
     <app-search [loading]="loading" (searchQuery)="search($event)" [lineCounter]="lines" (syncronize)="sync()"></app-search>
     <div #wrapper class="overflow-auto d-flex align-items-stretch flex-fill">
       <search-results [loading]="loading" [searchResult]="chunks"></search-results>

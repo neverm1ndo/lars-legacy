@@ -27,7 +27,6 @@
     input {
       border: none;
       &:active, &:focus {
-        border: none!important;
         box-shadow: none;
       }
     }
@@ -106,11 +105,12 @@
     max-width: none;
     width: 300px;
     z-index: 1;
+    top: 13px!important;
     &::before {
       position: absolute;
       z-index: 1000;
       top: -20px;
-      left: 10px;
+      right: 7px;
       width: 0px;
       height: 0px;
       content: '';
