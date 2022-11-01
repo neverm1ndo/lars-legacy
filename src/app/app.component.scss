@@ -3,8 +3,9 @@
   height: 100vh;
   background: $mainbg;
   .wrapper {
-    flex-grow: 1;
-    flex-wrap: nowrap;
-    min-height: 94%;
+    background: red;
+    // flex-grow: 1;
+    // flex-wrap: nowrap;
+    // min-height: 94%;
   }
 }

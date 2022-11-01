@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy } from '@angular/core';
-import { ApiService } from '../api.service';
-import { ToastService } from '../toast.service';
-import { ElectronService } from '../core/services';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
-import { combineLatest, from, iif, BehaviorSubject, of } from 'rxjs';
-import { handleError } from '../utils';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { Backup } from '../interfaces';
+import { combineLatest, from, iif, BehaviorSubject, of, throwError } from 'rxjs';
+import { handleError } from '@lars/utils';
+// import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { Backup } from '@lars/interfaces';
 
 @Component({
   selector: 'app-backups',
@@ -153,22 +153,20 @@ export class BackupsComponent implements OnInit, OnDestroy {
   public getBackupFile(backup: Backup): void {
   if (backup.file.binary) return;
     this._api.getBackupFile(backup.file.name, backup.unix)
-      .pipe(
-        catchError(error => handleError(error)),
-        take(1)
-      )
-      .subscribe((data) => {
-          this.current = backup;
-          this.current.file.text = data;
-      }, (err) => {
-        console.error(err);
-        this._toast.show(`Бэкап файла ${backup.file.name} не был загружен для просмотра по причине:`,             {
-          classname: 'bg-danger text-light word-wrap',
-          delay: 8000,
-          icon: faClipboard,
-          subtext: err.message
-        });
-      });
+              .pipe(
+                catchError(error => handleError(error)),
+                take(1)
+              )
+              .subscribe({
+                next: (data) => {
+                    this.current = backup;
+                    this.current.file.text = data;
+                }, 
+                error: (err) => {
+                  console.error(err);
+                  this._toast.show('danger', `Бэкап файла ${backup.file.name} не был загружен для просмотра по причине:`, err.message, faExclamationCircle, 7000);
+                }
+              });
   }
 
   public removeBackup() {
@@ -185,29 +183,19 @@ export class BackupsComponent implements OnInit, OnDestroy {
       message: `Вы точно хотите установиить файл бэкапа ${this.current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.current.file.path}.`
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-    .pipe(
-      switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix.toString()))),
-      catchError(error => handleError(error)),
-      take(1)
-    )
-    .subscribe(() => {
-        this._toast.show(`Бэкап файла ${this.current.file.name} успешно установлен`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faClipboardCheck,
-          subtext: this.current.file.path
-        });
-      },
-      (err) => {
-        console.error(err);
-        this._toast.show(`Бэкап файла ${this.current.file.name} не был установлен по причине:`,
-        {
-          classname: 'bg-danger text-light word-wrap',
-          delay: 8000,
-          icon: faClipboard,
-          subtext: err.message
-        });
+      .pipe(
+        switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix.toString()), throwError(() => new Error('Cancelled by user')))),
+        catchError(error => handleError(error)),
+        take(1)
+      )
+      .subscribe({
+        next: () => {
+          this._toast.show('success', `Бэкап файла ${this.current.file.name} успешно установлен`, this.current.file.path, faClipboardCheck);
+        },
+        error: (err) => {
+          console.error(err);
+          this._toast.show('danger', `Бэкап файла ${this.current.file.name} не был установлен по причине:`, err.message, faClipboard);
+        }
       });
   }
 
@@ -244,8 +232,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
         this.$backups.next(backups);
       });
     
-    this.$backups
-    .pipe(
+    this.$backups.pipe(
       filter((val) => val !== null),
     )
     .subscribe(() => {

@@ -1,23 +1,24 @@
 <ngb-toast
-   *ngFor="let toast of toastService.toasts"
-   [class]="toast.classname"
+   *ngFor="let toast of service.toasts"
+   [class]="toast.type"
    [autohide]="true"
-   [delay]="toast.delay || 50000"
-   (hide)="toastService.remove(toast)"
-   (click)="toastService.remove(toast)"
+   [delay]="toast.lifetime || 5000"
+   (hide)="service.remove(toast)"
+   (click)="service.remove(toast)"
    [@toast]
  >
    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-     <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+     <!-- <ng-template [ngTemplateOutlet]="toast.body"></ng-template> -->
    </ng-template>
+   
    <ng-template #text>
      <div class="d-flex flex-row">
        <div *ngIf="toast.icon" class="d-flex toast-icon">
          <fa-icon [icon]="toast.icon"></fa-icon>
        </div>
        <div class="d-flex flex-fill flex-column toast-text w-100">
-         <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.textOrTpl"></span>
-         <span *ngIf="isTemplate(toast)">{{ toast.textOrTpl }}</span>
+         <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.body"></span>
+         <span *ngIf="isTemplate(toast)">{{ toast.body }}</span>
         <div>
           <div *ngIf="toast.subtext">
             <hr>

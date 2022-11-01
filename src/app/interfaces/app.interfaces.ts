@@ -1,20 +1,11 @@
-import Processes from '../shared/components/line-process/log-processes';
-import { Workgroup } from '../enums/workgroup.enum';
+import Processes from '@lars/shared/components/line-process/log-processes';
+import { Workgroup } from '@lars/enums/workgroup.enum';
 
-export interface WsMessage {
-  event: 'reboot-server' | 'launch-server' | 'stop-server' | 'get-status' | 'user-action';
-  msg?: string,
-  options?: any;
-  token?: string;
-}
-export interface UserLoginData {
+export interface IUserLoginData {
   email: string,
   password: string
 }
-export interface Token {
-  token: string
-}
-export interface UserData {
+export interface IUserData {
   id?: number,
   username?: string,
   avatar?: string
@@ -22,7 +13,7 @@ export interface UserData {
   secondary_group?: Workgroup,
   token?: string,
 }
-export interface GeoData {
+export interface IGeoData {
   country?: string;
   cc?: string;
   ip?: string;
@@ -31,7 +22,7 @@ export interface GeoData {
   org?: string;
   c?: string;
 }
-export interface ContentData {
+export interface IContentData {
   time?: string,
   oid?: number,
   op?: string,
@@ -43,12 +34,12 @@ export interface LogLine {
   process: keyof typeof Processes;
   nickname?: string;
   id: number;
-  geo?: GeoData;
-  content?: ContentData;
+  geo?: IGeoData;
+  content?: IContentData;
   multiplier?: number;
 }
 
-export interface SearchQuery {
+export interface ISearchQuery {
   nickname?: string[];
   ip?: string[];
   dateFrom?: string,
@@ -61,8 +52,8 @@ export interface SearchQuery {
   filter?: string;
 }
 
-export interface TreeNode {
-  items?: TreeNode[];
+export interface ITreeNode {
+  items?: ITreeNode[];
   path: string;
   name: string;
   type: string;

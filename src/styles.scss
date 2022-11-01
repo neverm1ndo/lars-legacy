@@ -17,6 +17,8 @@
 @import 'scss/native';
 @import 'scss/cm';
 
+@import 'scss/sentinel/theme';
+
 html, body, app-root {
   margin: 0px 0px 0px 0px;
   left: 0;
@@ -28,10 +30,7 @@ html, body, app-root {
   width: 100%;
   background: $mainbg;
 }
-lty-icon {
-  display: inline-block;
-  vertical-align: baseline;
-}
+
 button:active, button:focus {
   outline: none!important;
 }
@@ -108,11 +107,6 @@ app-sider {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-.native-main {
-  // position: fixed;
-  // height: 100vh;
-  // width: 100%;
-}
 app-search {
   height: 50px;
   background: $secondary;
@@ -135,7 +129,9 @@ button, input, svg, img, .no-select {
 .cursor-through {
   @include cursor-through;
 }
+
 kbd { white-space: nowrap; }
+
 div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   ::-webkit-selection {
     background-color: $clr-clack!important;
@@ -146,6 +142,7 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
     color: white;
   }
 }
+
 ::-webkit-scrollbar {
  background: $topper;
  width: 14px;
@@ -165,57 +162,6 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   &:active, &:focus {
     opacity: 0.5;
   }
-}
-
-.ng-select.ng-select-opened > .ng-select-container {
-  background: $topper;
-  border-color: $filetree;
-  color: $text;
-}
-.ng-select.ng-select-disabled>.ng-select-container {
-    opacity: 0.2;
-    border-color: $filetree!important;
-    background: $topper;
-}
-.custom {
-    border: 0px;
-    min-height: 0px;
-    .ng-select-container {
-      min-height: 0px;
-      border-color: $filetree;
-      background: $topper;
-      color: $text;
-    }
-    .ng-dropdown-panel {
-      border-color: $filetree;
-      .scroll-host {
-        background: $topper;
-      }
-      .ng-select-bottom {
-        background: $topper;
-        color: $text;
-      }
-      .ng-dropdown-panel-items {
-        background: $topper;
-        .ng-option.ng-option-marked {
-          background: $underpanel;
-          color: $text;
-        }
-        .ng-option.ng-option-selected {
-          background: $dropdown;
-          color: $text;
-        }
-        .ng-option  {
-          background: $filetree;
-          color: $text;
-        }
-      }
-    }
-    .ng-option {
-      border-color: $filetree;
-      background-color: $topper;
-      color: $text;
-    }
 }
 
 .spinner {
@@ -250,9 +196,6 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
       stroke-dasharray: 89, 200;
       stroke-dashoffset: -124px;
     }
-  }
-  .spinner .path, .spinner-logo path {
-
   }
   .spinner-logo {
     transform-origin: center center;
@@ -314,3 +257,6 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
       stroke-dashoffset: 0;
     }
   }
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

@@ -1,7 +1,7 @@
 import { Component, TemplateRef } from '@angular/core';
 
-import { ToastService } from '../toast.service';
-import { toast } from '../app.animations';
+import { IToast, ToastService } from '@lars/toast.service';
+import { toast } from '@lars/app.animations';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { toast } from '../app.animations';
   animations: [toast]
 })
 export class ToastsContainer {
-  constructor(public toastService: ToastService) {}
+  constructor(public service: ToastService) {}
 
-  isTemplate(toast: any) { return toast.textOrTpl instanceof TemplateRef; }
+  public isTemplate(toast: IToast) { return toast.body instanceof TemplateRef; }
 }

@@ -21,7 +21,7 @@ export const socketConfig: AuthSocketIoConfig = {
   url: AppConfig.api.socket,
   options: {
     auth: {
-      token: JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')).token:''
+      // token: JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')).token:''
     },
     autoConnect: false
   }
@@ -65,12 +65,12 @@ export class WebSocketService {
     _socket.on('disconnect', (reason: string) => {
       console.log('%c[socket-service]', 'color: tomato', 'Disconnected with reason: ' + reason);
     });
-    this._injector.get(UserService).user.pipe(
-      filter((user) => !!user)
-    ).subscribe((user) => {
-      socketConfig.options.auth.token = user.token;
-      this.connect();
-    });
+    // this._injector.get(UserService).loggedInUser$.pipe(
+    //   filter((user) => !!user)
+    // ).subscribe((user) => {
+    //   // socketConfig.options.auth.token = user.token;
+    //   this.connect();
+    // });
     this.activies = this.getUserActitvity().subscribe((act) => {
       this.usersStates[act.user] = act.action;
     });
@@ -136,7 +136,7 @@ export class WebSocketService {
     return this._socket.fromEvent('server-online');
   }
   clearUserData() {
-    const user = this._injector.get(UserService).user;
+    const user = this._injector.get(UserService).loggedInUser$;
     user.next(undefined);
     window.localStorage.removeItem('user');
   }

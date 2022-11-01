@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { UserService} from '../user.service';
-import { UserData } from '../interfaces';
+import { UserService} from '@lars/user.service';
+import { IUserData } from '@lars/interfaces';
 import { WebSocketService } from '../web-socket.service';
 import { Router } from '@angular/router';
 
@@ -41,22 +41,23 @@ export class LoginComponent implements OnInit {
   logIn() {
     this.loading = true;
     window.localStorage.setItem('lastUser', this.email.value);
-    this._userService.loginUser(this.loginForm.value).subscribe(
-      (response: UserData) => {
-        this.loading = false;
-        this.error = undefined;
-        this._zone.runOutsideAngular(() => {
-          this._userService.user.next(response);
-          window.localStorage.setItem('user', JSON.stringify(response));
-        });
-        this._router.navigate(['/home']);
-        this._ws.connect();
-      },
-      (error) => {
-        this.loading = false;
-        this.error = error;
-        console.error(error);
-      });
+    this._userService.loginUser(this.loginForm.value)
+                     .subscribe({
+                        next: (response: IUserData) => {
+                          this.loading = false;
+                          this.error = undefined;
+                          this._zone.runOutsideAngular(() => {
+                            this._userService.loggedInUser$.next(response);
+                            window.localStorage.setItem('user', JSON.stringify(response));
+                          });
+                          this._router.navigate(['/home']);
+                          this._ws.connect();
+                        },
+                        error: (error) => {
+                          this.loading = false;
+                          this.error = error;
+                          console.error(error);
+                       }});
   }
 
   private _animate(): void {
@@ -129,7 +130,7 @@ export class LoginComponent implements OnInit {
       this.canvas.nativeElement.height = window.innerHeight;
       this._animate();
     });
-    this._userService.error.subscribe((error) => {
+    this._userService.error$.subscribe((error) => {
       this.error = error.status + ' ' + error.message;
     });
     if (window.localStorage.getItem('lastUser')) {

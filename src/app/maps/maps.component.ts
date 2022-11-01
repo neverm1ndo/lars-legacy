@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ApiService } from '../api.service';
-import { ElectronService } from '../core/services';
-import { ToastService } from '../toast.service';
-import { TreeNode } from '../interfaces/app.interfaces';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { ITreeNode } from '@lars/interfaces/app.interfaces';
+import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -18,11 +17,11 @@ import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons'
   styleUrls: ['./maps.component.scss'],
 
 })
-export class MapsComponent implements OnInit, OnDestroy {
+export class MapsComponent implements OnDestroy {
 
   directoriesSubscription: Subscription;
 
-  files: TreeNode;
+  files: ITreeNode;
   expanded: string[] = [];
 
   directories$: Observable<any>;
@@ -38,15 +37,14 @@ export class MapsComponent implements OnInit, OnDestroy {
   paneStates: number[] = this.setPanesState();
 
   constructor(
-    public api: ApiService,
-    public route: ActivatedRoute,
-    private router: Router,
-    public electron: ElectronService,
-    public toast: ToastService,
+    private _api: ApiService,
+    private _router: Router,
+    private _toast: ToastService,
    ) {
-     this.directories$ = this.reloader$.pipe(switchMap(() => api.getMapsDir()));
+     this.directories$ = this.reloader$.pipe(switchMap(() => _api.getMapsDir()));
+    
      this.directoriesSubscription = this.directories$.subscribe(items => {
-       const expandIfExpandedBefore = (nodes: TreeNode) => {
+       const expandIfExpandedBefore = (nodes: ITreeNode) => {
          for (let item of nodes.items) {
            if (item.type !== 'dir') continue;
            if (this.expanded.includes(item.path)) item.expanded = true;
@@ -67,7 +65,7 @@ export class MapsComponent implements OnInit, OnDestroy {
    private setPanesState(): number[] {
      try {
        const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/maps'));
-       if (!states) throw 'undefined states';
+       if (!states) throw 'undefined panes state';
        return states;
      } catch(err) {
        console.error(err);
@@ -85,130 +83,97 @@ export class MapsComponent implements OnInit, OnDestroy {
 
   toMap(path: { path: string, name?: string }) {
     this.currentFilePath = path.path;
-    this.router.navigate(['/home/maps/map'], { queryParams: path });
+    this._router.navigate(['/home/maps/map'], { queryParams: path });
   }
 
   mkdir(path: string) {
-    this.api.createDirectory(path).subscribe(() => {
-      this.reloadFileTree();
-      this.toast.show(`Директория ${path} создана`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path
-        });
-    },
-    (err) => {
-      this.toast.show(`Директория ${path} не создана`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.createDirectory(path)
+            .subscribe({
+              next: () => {
+                this.reloadFileTree();
+                this._toast.show('success', `Директория ${path} создана`, path, faFolderPlus);
+              },
+              error: (err) => {
+                this._toast.show('danger', `Директория ${path} не создана`, `${err.error.code} ${err.error.path}`, faInfo);
+              }
+            });
   }
 
   mvdir(path: { path: string; dest: string }) {
-    this.api.moveDirectory(path.path, path.dest).subscribe(() => {
-      this.reloadFileTree();
-      this.toast.show(`Директория ${path.path} переименована`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path.dest
-        });
-    },
-    (err) => {
-      console.error(err);
-      this.toast.show(`Директория ${path} не переименована`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.moveDirectory(path.path, path.dest)
+             .subscribe({
+                next: () => {
+                  this.reloadFileTree();
+                  this._toast.show('success', `Директория ${path.path} переименована`, path.dest, faFolderPlus);
+                },
+                error: (err) => {
+                  console.error(err);
+                  this._toast.show('danger', `Директория ${path} не переименована`, `${err.error.code} ${err.error.path}`, faInfo);
+                }
+             });
   }
 
   rmdir(path: string) {
-    this.api.removeDirectory(path).subscribe(() => {
-      this.reloadFileTree();
-      this.toast.show(`Директория ${path} удалена`,
-        {
-          classname: 'bg-success text-light',
-          delay: 5000,
-          icon: faFolderPlus,
-          subtext: path
-        });
-    }, (err) => {
-      this.toast.show(`Директория ${path} не удалена`,
-        {
-          classname: 'bg-danger text-light',
-          delay: 5000,
-          icon: faInfo,
-          subtext: `${err.error.code} ${err.error.path}`
-        });
-    });
+    this._api.removeDirectory(path)
+            .subscribe({
+              next: () => {
+                this.reloadFileTree();
+                this._toast.show('success', `Директория ${path} удалена`, path, faFolderPlus);
+              }, 
+              error: (err) => {
+                this._toast.show('danger', `Директория ${path} не удалена`, `${err.error.code} ${err.error.path}`, faInfo);
+              }
+            });
   }
 
-  addNewMap(event: any): void {
-    let files: any[];
+  public addNewMap(event: any): void {
+    let files: File[];
     let path: string;
+    
     if (event.filelist) {
       files = event.filelist;
     } else {
       files = event.target.files;
     }
-   if (files.length <= 0) return;
-   let formData: FormData = new FormData();
-   if (event.path) {
-     formData.append('path', event.path);
-     path = event.path;
-   }
-   for (let file of files) {
-     formData.append('file', file);
-   }
-   this.api.uploadFileMap(formData).subscribe(
-     event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total);
-        } else if (event instanceof HttpResponse) {
-          this.toast.show(`Карта <b>${ files[0].name }</b> успешно добавлена`, { classname: 'bg-success text-light', delay: 3000, icon: faSave });
-          for (let file of files) {
-            this.api.addToRecent('upload', { path, name: file.name, type: 'map'})
-          }
-          this.reloadFileTree();
-          setTimeout(() => { this.progress = 0; }, 1000);
-        }
-      },
-      err => {
-        this.progress = 0;
-        this.toast.show(`Карта <b>${ files[0].name }</b> не была добавлена, или она добавилась, но сервер вернул ошибку`,
-          {
-            classname: 'bg-warning text-dark',
-            delay: 5000,
-            icon: faInfo,
-            subtext: err.message
-           });
-        this.reloadFileTree();
-      });
+    if (files.length <= 0) return;
+    let formData: FormData = new FormData();
+    if (event.path) {
+      formData.append('path', event.path);
+      path = event.path;
+    }
+    
+    for (let file of files) {
+      formData.append('file', file);
+    }
+    
+    this._api.uploadFileMap(formData)
+            .subscribe({
+                next: (event) => {
+                    if (event.type === HttpEventType.UploadProgress) {
+                      this.progress = Math.round(100 * event.loaded / event.total);
+                    } else if (event instanceof HttpResponse) {
+                      
+                      this._toast.show('success', `Карта <b>${ files[0].name }</b> успешно добавлена`, null, faSave);
+                      
+                      for (let file of files) {
+                        this._api.addToRecent('upload', { path, name: file.name, type: 'map'})
+                      }
+                    }
+                  },
+                  error: (err) => {
+                    this._toast.show('warning', `Карта <b>${ files[0].name }</b> не была добавлена, или она добавилась, но сервер вернул ошибку`, err.message, faInfo);
+                  },
+                  complete: () => {
+                    this.reloadFileTree();
+                    setTimeout(() => { 
+                      this.progress = 0; 
+                    }, 1000);
+                  }
+              });
   }
 
-  reloadFileTree(): void {
+  public reloadFileTree(): void {
     this.reloader$.next(null);
-  }
-
-  ngOnInit(): void {
-    // this.route.queryParams
-    // .pipe(take(1))
-    // .pipe(filter(params => (params.name || params.path)))
-    // .subscribe(params => {
-    //   this.currentFilePath = params.path;
-    //   this.toMap({ path: params.path , name: params.name });
-    // });
   }
 
   ngOnDestroy(): void {

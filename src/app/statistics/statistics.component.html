@@ -1,86 +1,84 @@
-<div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
-  <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
-    <div class="d-flex flex-column h-100 w-100">
-      <div class="d-flex w-100 flex-row align-items-center pt-2 pb-2 top">
-        <div class="col-6">
-          <h3>Статистика сервера</h3>
-        </div>
-        <div class="col-6">
-          <ng-select [items]="statTypes"
-            bindLabel="val"
-            [searchable]="false"
-            [clearable]="false"
-            bindValue="id"
-            class="custom"
-            (change)="changeStatsRange()"
-            [(ngModel)]="range">
-          </ng-select>
-        </div>
+<div class="container-fluid g-0 h-100 overflow-auto">
+  <div class="d-flex flex-column h-100 overflow-auto w-100">
+    <div class="d-flex w-100 flex-row align-items-center pt-2 pb-2 top">
+      <div class="col-6">
+        <h3>Статистика сервера</h3>
       </div>
-      <div class="d-flex overflow-auto flex-fill w-100">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-12 panel mt-2">
-              <div class="panel-body">
-                <div class="panel-head">
-                  <div class="d-flex flex-row justify-content-between">
-                    <h5>Статистика онлайна</h5>
-                    <div class="d-flex">
-                      <div class="d-flex flex-fill">
-                        <div class="input-group w-100">
-                          <input class="form-control col-12 h-100" placeholder="{{ today | date:'yyyy-MM-dd' }}"
-                          name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (dateSelect)="dayStatDateSelect($event)">
-                          <button class="btn btn-dark calendar" (click)="d.toggle()" type="button"><fa-icon [icon]="fa.calendar"></fa-icon></button>
-                        </div>
+      <div class="col-6">
+        <ng-select [items]="statTypes"
+          bindLabel="val"
+          [searchable]="false"
+          [clearable]="false"
+          bindValue="id"
+          class="custom"
+          (change)="changeStatsRange()"
+          [(ngModel)]="range">
+        </ng-select>
+      </div>
+    </div>
+    <div class="d-flex overflow-auto flex-fill w-100">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-12 panel mt-2">
+            <div class="panel-body">
+              <div class="panel-head">
+                <div class="d-flex flex-row justify-content-between">
+                  <h5>Статистика онлайна</h5>
+                  <div class="d-flex">
+                    <div class="d-flex flex-fill">
+                      <div class="input-group w-100">
+                        <input class="form-control col-12 h-100" placeholder="{{ today | date:'yyyy-MM-dd' }}"
+                        name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker" (dateSelect)="dayStatDateSelect($event)">
+                        <button class="btn btn-dark calendar" (click)="d.toggle()" type="button"><fa-icon [icon]="fa.calendar"></fa-icon></button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div *ngIf="lineChartData.datasets.length > 0; else loader">
-                  <canvas baseChart
-                    [data]="lineChartData"
-                    [options]="lineChartOptions"
-                    [type]="lineChartType">
-                  </canvas>
+              </div>
+              <div *ngIf="lineChartData.datasets.length > 0; else loader">
+                <canvas baseChart
+                  [data]="lineChartData"
+                  [options]="lineChartOptions"
+                  [type]="lineChartType">
+                </canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 panel mt-2">
+            <div class="panel-body">
+              <div class="panel-head">
+                <h5>Статистика чата</h5>
+              </div>
+              <div *ngIf="stats.chat; else loader" class="panel-list">
+                <div class="panel-list-item d-flex flex-row justify-content-between">
+                  <span>Сообщений в общий чат</span><span>{{ stats.chat.main?stats.chat.main.total:0 }}</span>
+                </div>
+                <div class="panel-list-item d-flex flex-row justify-content-between">
+                  <span>Личных сообщений</span> <span>{{ stats.chat.pm?stats.chat.pm.total:0 }}</span>
+                </div>
+                <div class="panel-list-item d-flex flex-row justify-content-between">
+                  <span>Мутов</span> <span>{{ stats.chat.mutes?stats.chat.mutes.total:0 }}</span>
+                </div>
+                <div class="panel-list-item d-flex flex-row justify-content-between">
+                  <span>Банов</span> <span>{{ stats.chat.bans?stats.chat.bans.total:0 }}</span>
                 </div>
               </div>
             </div>
-            <div class="col-12 panel mt-2">
-              <div class="panel-body">
-                <div class="panel-head">
-                  <h5>Статистика чата</h5>
-                </div>
-                <div *ngIf="stats.chat; else loader" class="panel-list">
-                  <div class="panel-list-item d-flex flex-row justify-content-between">
-                    <span>Сообщений в общий чат</span><span>{{ stats.chat.main?stats.chat.main.total:0 }}</span>
-                  </div>
-                  <div class="panel-list-item d-flex flex-row justify-content-between">
-                    <span>Личных сообщений</span> <span>{{ stats.chat.pm?stats.chat.pm.total:0 }}</span>
-                  </div>
-                  <div class="panel-list-item d-flex flex-row justify-content-between">
-                    <span>Мутов</span> <span>{{ stats.chat.mutes?stats.chat.mutes.total:0 }}</span>
-                  </div>
-                  <div class="panel-list-item d-flex flex-row justify-content-between">
-                    <span>Банов</span> <span>{{ stats.chat.bans?stats.chat.bans.total:0 }}</span>
-                  </div>
-                </div>
+          </div>
+          <div class="col-12 panel mt-2 mb-2">
+            <div class="panel-body">
+              <div class="panel-head">
+                <h5>Статистика игроков</h5>
               </div>
-            </div>
-            <div class="col-12 panel mt-2 mb-2">
-              <div class="panel-body">
-                <div class="panel-head">
-                  <h5>Статистика игроков</h5>
+              <div class="panel-head ">
+                <h6>Статистика убийств из оружия</h6>
+              </div>
+              <div *ngIf="stats.chat; else loader" class="panel-list">
+                <div *ngFor="let weap of stats.chat.kills" class="panel-list-item d-flex flex-row justify-content-between">
+                  <span>{{ weap._id}}</span><span>{{ weap.total }}</span>
                 </div>
-                <div class="panel-head ">
-                  <h6>Статистика убийств из оружия</h6>
-                </div>
-                <div *ngIf="stats.chat; else loader" class="panel-list">
-                  <div *ngFor="let weap of stats.chat.kills" class="panel-list-item d-flex flex-row justify-content-between">
-                    <span>{{ weap._id}}</span><span>{{ weap.total }}</span>
-                  </div>
-                  <div class="d-flex flex-row justify-content-center">
-                    <small *ngIf="stats.chat.kills.length == 0" class="text-muted">Статистика пуста</small>
-                  </div>
+                <div class="d-flex flex-row justify-content-center">
+                  <small *ngIf="stats.chat.kills.length == 0" class="text-muted">Статистика пуста</small>
                 </div>
               </div>
             </div>

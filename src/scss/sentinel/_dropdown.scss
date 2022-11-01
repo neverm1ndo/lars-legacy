@@ -1,0 +1,90 @@
+@import "../animations";
+@import "./colors";
+
+.dropdown { 
+  @include open();
+  &-opened {
+    animation: open .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translate(0px, 0%);
+  }
+  
+  @include close();
+  &-closed {
+    animation: close .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translate(0px, -10%);
+  }
+  
+  &-toggle {
+      &::after {
+          display: none!important;
+      }
+  }
+  &-menu {
+    top: -2px!important;
+    width: 100%;
+    left: 0px;
+    border-radius: 0px;
+    background-color: $dropdown;
+    color: $text;
+    border: none;
+    max-width: 100%;
+    font-size: 12px;
+    margin: 0px 0px 0px 0px;
+    transition: .1s ease;
+    z-index: -1;
+    &-helper {
+      overflow: hidden;
+      position: absolute;
+      width: 300px;
+      height: 100%;
+      background: inherit;
+      border-right: 1px solid #0000000f;
+      float: left;
+      top: 0;
+      left: calc(-100% - 133px);
+      color: inherit;
+      padding: 15px;
+      animation-name: rolltoleft;
+      animation-iteration-count: 1;
+      animation-delay: 0s;
+      z-index: -1;
+      animation-duration: .3s;
+      white-space: nowrap;
+      fa-icon {
+        position: relative;
+        top: -1px;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+  &-divider {
+    border-top: 1px solid #0000000f;
+  }
+  &-item {
+    color: inherit;
+    transition: .2s ease;
+    padding-left: 10px;
+    padding-right: 5px;
+    span {
+      position: relative;
+      top: -2px;
+    }
+    svg {
+      margin: auto;
+    }
+    fa-icon {
+      margin-right: 0.7rem;
+    }
+    &:hover, &:focus, &:active  {
+      background: #0000002f!important;
+      color: inherit;
+    }
+    &:disabled, &.disabled {
+      color: #fdfdfd2f!important;
+      opacity: 0.6;
+    }
+    fa-icon {
+      margin-right: 0.7rem;
+    }
+  }
+}

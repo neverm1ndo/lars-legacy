@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { faFolder, faFileAlt, faMap, faFileCode, faDatabase, faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { TreeNode } from '../../interfaces/app.interfaces';
+import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { LtyFileTreeService } from '../lty-file-tree.service';
 import { extname } from 'path';
@@ -13,7 +13,7 @@ import { extname } from 'path';
 })
 export class FileTreeItemsComponent implements OnInit {
 
-  @Input('child-nodes') childNodes: TreeNode;
+  @Input('child-nodes') childNodes: ITreeNode;
   @Input('expanded') expanded: boolean;
   @Input('isRoot') private _isRoot: boolean;
   @Output() mvdir = new EventEmitter<string>();
@@ -43,7 +43,7 @@ export class FileTreeItemsComponent implements OnInit {
     this._lfts.activeItemPath.next(file.path);
   }
 
-  getFileIcon(item: TreeNode) {
+  getFileIcon(item: ITreeNode) {
     if (item.type === 'dir') return faFolder;
     switch (extname(item.name)) {
       case '.map': return faMap;

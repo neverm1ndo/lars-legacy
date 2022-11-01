@@ -1,7 +1,8 @@
-import { Workgroup } from '../enums';
+import { Workgroup } from '@lars/enums';
 export interface IDBUser {
-  name: string,
-  avatar: string,
-  id: number,
-  group: Workgroup,
+  id: number;
+  username: string;
+  avatar: string;
+  main_group: Workgroup;
+  secondary_group: Workgroup;
 }

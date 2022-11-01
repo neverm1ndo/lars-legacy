@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { ApiService } from '../../api.service';
-import { ToastService } from '../../toast.service';
-import { WebSocketService } from '../../web-socket.service';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { WebSocketService } from '@lars/web-socket.service';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs'
-import { dateValidator } from '../../shared/directives';
+import { dateValidator } from '@lars/shared/directives';
 
 @Component({
   selector: 'app-search',
@@ -66,10 +66,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     return this._api.lazy;
   }
 
-  dateValidator(str: string): boolean {
-    return Date.parse(str) !== NaN;
-  }
-
   sendQuery(): void {
     if (this.searchForm.valid) {
       if (this.query.from !== '' && this.query.to !== '') {
@@ -83,12 +79,11 @@ export class SearchComponent implements OnInit, OnDestroy {
       this._api.addToRecent('search', this.query.query);
     } else {
       let errmsg = '<b>Ошибка валидации поискового запроса</b><hr>';
-      Object.keys(this.searchForm.controls).forEach((key: string) => {
-        if (this.searchForm.controls[key].errors) {
-          errmsg += `<kbd>${key.toUpperCase()}</kbd> Проверьте поле ${key}<br>`
-        }
-      });
-      this._toast.show(errmsg, { classname: 'bg-danger text-light', delay: 3000, icon: faExclamationTriangle });
+      for (let control in this.searchForm.controls) {
+        if (!this.searchForm.controls[control].errors) continue;
+        errmsg += `<kbd>${control.toUpperCase()}</kbd> Проверьте поле ${control}<br>`
+      }
+      this._toast.show('danger', errmsg, null, faExclamationTriangle);
     }
   }
 
@@ -103,14 +98,17 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (!this.quick) {
-      this.$newLinesSub = this._ws.getNewLogLines().subscribe(() => {
-        this.newLineCounter++;
-      });
+      this.$newLinesSub = this._ws.getNewLogLines()
+                                  .subscribe(() => {
+                                    this.newLineCounter++;
+                                  });
     }
     this._route.queryParams.pipe(
-      filter(params => (params.query))
-    ).subscribe(params => {
-      this.searchForm.setValue({ query: params.query, dateFrom: '', dateTo: '' });
+      filter(({ query }: Params) => query)
+    ).subscribe({
+      next: ({ query }: Params) => {
+        this.searchForm.setValue({ query, dateFrom: '', dateTo: '' });
+      }
     });
   }
 

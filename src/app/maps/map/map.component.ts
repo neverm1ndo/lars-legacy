@@ -3,13 +3,13 @@ import { faMap, faPlus, faCubes, faDraftingCompass,
   faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash,
   faCheckCircle, faInfo, faSave, faArchway,
   faTimes, faRulerVertical, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { EditorMode } from '../../enums/map.editor.enum';
+import { EditorMode } from '@lars/enums/map.editor.enum';
 import { MapObject } from '../map.interfaces';
 import { MapEditorComponent } from '../map-editor/map-editor.component';
 import { MapsService } from '../maps.service';
 import { ActivatedRoute } from '@angular/router';
 import { tap, switchMap, filter } from 'rxjs/operators';
-import { mapload, panelSwitch, extrudeToRight } from '../../app.animations';
+import { mapload, panelSwitch, extrudeToRight } from '@lars/app.animations';
 
 interface CurrentMap {
   name: string,
@@ -115,65 +115,80 @@ export class MapComponent implements OnInit {
     this.levelingZ = this.levelingZ? false : true;
   }
   cancelChanges() {
-    if (!this.mapEditor.changed) {
-      this.toViewMode();
-      return;
-    }
+    if (!this.mapEditor.changed) return void (this.toViewMode());
     this.maps.cancelChanges(this.current.path)
-    .then(() => {
-      this.mapEditor.objects = this.current.objects;
-      this.mapEditor.changed = false;
-      this.toViewMode();
-    })
-    .catch(() => {
-      console.log('Cancelling rejected by user')
-    })
+             .then(() => {
+                this.mapEditor.objects = this.current.objects;
+                this.mapEditor.changed = false;
+                this.toViewMode();
+             })
+             .catch(() => {
+                console.log('Cancelling rejected by user')
+             })
   }
 
-  saveMapCloud() {
-    this.maps.saveMapCloud(this.current.path, this.mapEditor.objects).subscribe(() => {
-      this.maps.mapToast(`Карта ${this.current.name} сохранена на сервере`, this.current.path, faCloudUploadAlt, 'bg-success text-light')
-    },
-    (err) => { this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') })
+  public saveMapCloud() {
+    this.maps.saveMapCloud(this.current.path, this.mapEditor.objects)
+             .subscribe({
+                next: () => { 
+                  this.maps.mapToast(`Карта ${this.current.name} сохранена на сервере`, this.current.path, faCloudUploadAlt, 'bg-success text-light')
+                },
+                error: (err) => { 
+                  this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') 
+                }
+              })
   }
-  saveMapLocal() {
-    this.maps.saveMapLocal(this.current.name, this.mapEditor.objects).subscribe((filePath: string) => {
-      this.maps.mapToast(`Карта ${this.current.name} сохранена на локальном диске`, filePath, faCloudDownloadAlt, 'bg-success text-light')
-    },
-    (err) => { this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') })
+  public saveMapLocal() {
+    this.maps.saveMapLocal(this.current.name, this.mapEditor.objects)
+             .subscribe({
+                next: (filePath: string) => {
+                  this.maps.mapToast(`Карта ${this.current.name} сохранена на локальном диске`, filePath, faCloudDownloadAlt, 'bg-success text-light')
+                },
+                error: (err) => { 
+                  this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') 
+                }
+              });
   }
 
-  deleteMapCloud() {
-    this.maps.deleteMapCloud(this.current.path).subscribe(() => {
-      this.maps.mapToast(`Карта ${this.current.name} была удалена с сервера`, this.current.path, faTrash, 'bg-success text-light')
-    },
-    (err) => {
-      console.log(err);
-      this.maps.mapToast(`Карта ${this.current.name} не была удалена`, err.message, faExclamationTriangle, 'bg-danger text-light')
-    })
+  public deleteMapCloud() {
+    this.maps.deleteMapCloud(this.current.path)
+             .subscribe({
+                next: () => {
+                  this.maps.mapToast(`Карта ${this.current.name} была удалена с сервера`, this.current.path, faTrash, 'bg-success text-light')
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.maps.mapToast(`Карта ${this.current.name} не была удалена`, err.message, faExclamationTriangle, 'bg-danger text-light')
+                }
+              });
   }
 
 
   ngOnInit(): void {
     this.route.queryParams
-    .pipe(filter((params) => params.path && params.name))
-    .pipe(tap(params => {
-      this.loading = true;
-      this.current = {
-        path: params.path,
-        name: params.name,
-        objects: []
-      };
-      return params
-    }))
-    .pipe(switchMap(params => this.maps.getMap({path: params.path, name: params.name })))
-    .subscribe((file: MapObject[]) => {
-      this.mapEditor.objects = file;
-      this.current.objects = file;
-      this.loading = false;
-    }, (err) => {
-      console.error(err)
-      this.maps.mapNotLoaded(err);
+    .pipe(
+      filter(({ path, name }) => path && name),
+      tap(({ path, name }) => {
+        this.loading = true;
+        this.current = {
+          path,
+          name,
+          objects: []
+        };
+        return { path, name };
+      }),
+      switchMap(({ path, name }) => this.maps.getMap({ path, name }))
+    )
+    .subscribe({
+      next: (file: MapObject[]) => {
+        this.mapEditor.objects = file;
+        this.current.objects = file;
+        this.loading = false;
+      }, 
+      error: (err) => {
+        console.error(err)
+        this.maps.mapNotLoaded(err);
+      }
     });
   }
 }

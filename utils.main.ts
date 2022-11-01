@@ -1,6 +1,6 @@
-import { createWriteStream, readFile } from 'fs';
+import { createWriteStream, readFile, WriteStream } from 'fs';
 import * as path from 'path';
-import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage } from 'electron';
+import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage, ipcMain, ipcRenderer } from 'electron';
 import axios, { AxiosResponse} from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
@@ -24,41 +24,43 @@ const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
 * @returns {Promise.<any>}
 */
 const downloadFile = async (configuration: any): Promise<Promise<unknown>> => {
-  const w_stream = createWriteStream(configuration.localPath);
-  return axios.get(API + 'utils/download-file' ,
-    { headers: { 'Authorization': 'Bearer ' + configuration.token },
-    httpsAgent: agent,
-    params: { path: configuration.remotePath },
-    responseType: 'stream'
-  })
-  .then((res: AxiosResponse) => {
-    return new Promise((resolve, reject) => {
-      const totalSize = res.headers['content-length'];
-      let error: Error | null = null;
-      let downloaded: number = 0;
-      res.data.pipe(w_stream);
-      res.data.on('data', (data: any) => {
-        downloaded += Buffer.byteLength(data);
-        win.webContents.send('download-progress', { total: totalSize, loaded: downloaded });
-      });
-      res.data.on('error', (error: any) => {
-        win.webContents.send('download-error', error);
-      });
-      w_stream.on('error', err => {
-        error = err;
-        w_stream.close();
-        reject(err);
-      });
-      w_stream.on('close', () => {
-        if (error) return;
-        resolve(true);
-        win.webContents.send('download-end');
-      });
-    });
-  })
-  .catch((err)=> {
-    win.webContents.send('download-error', err);
-  });
+  
+  const stream: WriteStream = createWriteStream(configuration.localPath);
+  
+  return axios.get(API + 'utils/download-file',
+                    { 
+                      httpsAgent: agent,
+                      params: { path: configuration.remotePath },
+                      responseType: 'stream'
+                    })
+                  .then((res: AxiosResponse) => {
+                    return new Promise((resolve, reject) => {
+                      const totalSize = res.headers['content-length'];
+                      let error: Error | null = null;
+                      let downloaded: number = 0;
+                      res.data.pipe(stream);
+                      res.data.on('data', (data: any) => {
+                        downloaded += Buffer.byteLength(data);
+                        win.webContents.send('download-progress', { total: totalSize, loaded: downloaded });
+                      });
+                      res.data.on('error', (error: any) => {
+                        win.webContents.send('download-error', error);
+                      });
+                      stream.on('error', err => {
+                        error = err;
+                        stream.close();
+                        reject(err);
+                      });
+                      stream.on('close', () => {
+                        if (error) return;
+                        resolve(true);
+                        win.webContents.send('download-end');
+                      });
+                    });
+                  })
+                  .catch((err) => {
+                    win.webContents.send('download-error', err);
+                  });
 }
 
 const loadFromAsar = (assetPath: string): Promise<Buffer> => {
@@ -70,16 +72,14 @@ const loadFromAsar = (assetPath: string): Promise<Buffer> => {
   });
 };
 
-const verifyUserToken = async (): Promise<any> => {
+const sign = async (): Promise<any> => {
+  // ipcRenderer.
   return win.webContents.executeJavaScript('window.localStorage.getItem("user");', true)
-  .then(result => {
-     return axios.get(API + 'login/check-token', {
-      httpsAgent: agent,
-      headers: {
-        'Authorization': 'Bearer ' + JSON.parse(result).token
-      }
-    });
-  });
+                        .then((_result) => {
+                          return axios.get(API + 'auth/sign', {
+                            httpsAgent: agent,
+                          });
+                        });
 };
 
 /** Creates tray icon
@@ -116,4 +116,4 @@ const showNotification = (options: NotificationConstructorOptions) => {
   new Notification(options).show()
 }
 
-export { downloadFile, verifyUserToken, createTray, showNotification, args, serve, loadFromAsar };
+export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar };

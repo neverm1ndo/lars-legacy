@@ -27,6 +27,7 @@
     background: url('lars://assets/lbg.webp') no-repeat;
     background-size: contain;
     z-index: 1;
+    position: relative;
   }
   .btn-dark {
     background-color: $topper!important;

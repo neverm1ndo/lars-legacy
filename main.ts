@@ -1,11 +1,12 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard, session } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard, session, MessageBoxOptions } from 'electron';
+import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { verifyUserToken, downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
+import { sign, downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
+import axios from 'axios';
 
 /** Init samp to get server stats later
 * @type {Samp}
@@ -28,7 +29,7 @@ const lock: boolean = app.requestSingleInstanceLock();
 export let splash: BrowserWindow = null;
 
 /** Init system tray
-* @type {Tray>}
+* @type {Tray}
 */
 let tray: Tray;
 /** Creates splash window
@@ -100,22 +101,22 @@ function createWindow(): BrowserWindow {
       autoUpdater.checkForUpdatesAndNotify();
     }
     splash.webContents.send('loading-state', 'Проверка токена авторизации', 85);
-    verifyUserToken()
-      .then(() => {
-        splash.webContents.send('loading-state', 'Токен успешно верифицирован', 100);
-      })
-      .catch((err) => {
-        console.error(err);
-        win.webContents.send('token-verify-denied', true);
-        splash.webContents.send('loading-state', `Токен не прошел верификацию: ${err.code}`, 100);
-      })
-      .finally(() => {
+    // sign()
+    //   .then(() => {
+    //     splash.webContents.send('loading-state', 'Токен успешно верифицирован', 100);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     win.webContents.send('token-verify-denied', true);
+    //     splash.webContents.send('loading-state', `Токен не прошел верификацию: ${err.code}`, 100);
+    //   })
+    //   .finally(() => {
         setTimeout(() => {
           splash.close();
           win.show();
           state.manage(win);
         }, 500);
-      });
+    //   });
   });
 
   if (serve) {
@@ -157,18 +158,14 @@ ipcMain.on('minimize-to-tray', (event: Electron.IpcMainEvent) => {
   tray = createTray();
   $serverInfo.unsubscribe();
 });
-ipcMain.on('close', () => {
-  win.close();
-});
-ipcMain.on('minimize', () => {
-  win.minimize();
-});
-ipcMain.on('reload', () => {
-  win.reload();
-})
+ipcMain.on('close', () => win.close());
+ipcMain.on('minimize', () => win.minimize());
+ipcMain.on('reload', () => win.reload());
+
 ipcMain.on('notification', (_event: Electron.IpcMainEvent, options) => {
   showNotification(options)
 });
+
 ipcMain.handle('server-game-mode', (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
   if (!serve) return samp.getServerInfo(ip, port);
   return samp.testSampServerStats;
@@ -202,18 +199,19 @@ autoUpdater.on('checking-for-update', () => {
 autoUpdater.on('update-downloaded', () => {
   win.webContents.send('update_downloaded');
 });
-autoUpdater.on('update-downloaded', (_event, releaseNotes, releaseName) => {
-  const dialogOpts = {
+autoUpdater.on('update-downloaded', (event: UpdateDownloadedEvent) => {
+  const dialogOpts: MessageBoxOptions = {
     type: 'info',
     buttons: ['Перезапустить', 'Отложить'],
     title: 'Обновление приложения',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    message: process.platform === 'win32' ? event.releaseNotes.toString() : event.releaseName,
     detail: 'Новая версия уже загружена. Перезапустите приложение, чтобы принять изменения.'
   };
 
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
-  });
+  dialog.showMessageBox(dialogOpts)
+        .then((returnValue) => {
+          if (returnValue.response === 0) autoUpdater.quitAndInstall();
+        });
 });
 autoUpdater.on('error', message => {
   console.error('Ошибка при попытке обновить приложение');

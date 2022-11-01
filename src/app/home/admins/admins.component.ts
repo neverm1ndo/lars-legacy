@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie } from '@fortawesome/free-solid-svg-icons';
-import { UserService } from '../user.service';
-import { ApiService } from '../api.service';
-import { ToastService } from '../toast.service';
-import { settings } from '../app.animations';
+import { Component, OnInit } from '@angular/core';
+import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { UserService } from '@lars/user.service';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { settings } from '@lars/app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ElectronService } from '../core/services';
-import { WebSocketService } from '../web-socket.service';
-import { Workgroup, UserActivity } from '../enums';
+import { ElectronService } from '@lars/core/services';
+import { WebSocketService } from '@lars/web-socket.service';
+import { Workgroup, UserActivity } from '@lars/enums';
 
 interface AdminUser {
   user_id: number;
@@ -24,7 +24,7 @@ interface AdminUser {
   styleUrls: ['./admins.component.scss'],
   animations: [settings]
 })
-export class AdminsComponent implements OnInit, OnDestroy {
+export class AdminsComponent implements OnInit {
 
   admins: AdminUser[] = [];
 
@@ -76,7 +76,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
   }
 
   get userInfo () {
-    return this._userService.getUserInfo();
+    return this._userService.getCurrentUserInfo();
   }
 
   adminActivityIcon(state: number) {
@@ -94,7 +94,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
   }
 
   userLink(id: number) {
-    this._userService.openUserProfile(id);
+    this._userService.openUserForumProfile(id);
   }
 
   getFullAdminsList() {
@@ -128,54 +128,52 @@ export class AdminsComponent implements OnInit, OnDestroy {
   /**
   * @deprecated
   */
-  closeAdminSession(username: string) {
-    const dialogOpts = {
-      type: 'question',
-      buttons: ['Зарыть сессию', 'Отмена'],
-      title: 'Подтверждение закрытия сессии',
-      message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
-    };
-    this._electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
-      if (returnValue.response !== 0) return;
-      this._api.closeAdminSession(username).subscribe(() => {
-        this._toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
-          {
-            classname: 'bg-success text-light',
-            delay: 3000,
-            icon: faUserSecret
-          });
-      });
-    }).catch(err => console.error(err));
-  }
+  // closeAdminSession(username: string) {
+  //   const dialogOpts = {
+  //     type: 'question',
+  //     buttons: ['Зарыть сессию', 'Отмена'],
+  //     title: 'Подтверждение закрытия сессии',
+  //     message: `Вы точно хотите закрыть сессию ${username}? Токен доступа пользователя ${username} к LARS будет сброшен.`
+  //   };
+  //   this._electron.ipcRenderer.invoke('message-box', dialogOpts).then((returnValue) => {
+  //     if (returnValue.response !== 0) return;
+  //     this._api.closeAdminSession(username).subscribe(() => {
+  //       this._toast.show(`Закрыта сессия LARS пользователя <b>${ username }</b>. Токен доступа сброшен.`,
+  //         {
+  //           classname: 'bg-success text-light',
+  //           delay: 3000,
+  //           icon: faUserSecret
+  //         });
+  //     });
+  //   }).catch(err => console.error(err));
+  // }
 
   changeAdminGroup(username: string, id: number, group: number) {
-    this._api.setAdminGroup(id, group).subscribe(() => {
-      this._toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`,
-        {
-          classname: 'bg-success text-light',
-          delay: 3000,
-          icon: faUserSecret
-        });
-    });
+    this._api.setAdminGroup(id, group)
+             .subscribe({
+                next: () => {
+                  this._toast.show('success', `Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, null, faUserSecret);
+                },
+                error: (err) => {
+                  this._toast.show('danger', `Админ <b>${ username }</b> не был перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, err, faExclamationCircle);
+                }
+             });
   }
 
   changeSecondaryAdminGroup(username: string, id: number, group: number) {
-    this._api.setAdminSecondaryGroup(id, group).subscribe(() => {
-      this._toast.show(`Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`,
-        {
-          classname: 'bg-success text-light',
-          delay: 3000,
-          icon: faUserSecret
-        });
-    });
+    this._api.setAdminSecondaryGroup(id, group)
+             .subscribe({
+                next: () => {
+                  this._toast.show('success', `Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, null, faUserSecret);
+                },
+                error: (err) => {
+                  this._toast.show('danger', `Админ <b>${ username }</b> не был перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, err, faUserSecret)
+                }
+            });
   }
 
   ngOnInit(): void {
     this.getFullAdminsList();
-  }
-
-  ngOnDestroy(): void {
-    // this.$activies.unsubscribe();
   }
 
 }

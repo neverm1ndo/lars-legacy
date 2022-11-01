@@ -3,9 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LtyFileTreeService } from '../lty-file-tree.service';
 import { Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { TreeNode } from '../../interfaces/app.interfaces';
+import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { faSyncAlt, faFile, faFolderPlus, faFileSignature } from '@fortawesome/free-solid-svg-icons';
-import { settings } from '../../app.animations';
+import { settings } from '@lars/app.animations';
 import { basename, posix } from 'path';
 
 interface FilePathName {
@@ -22,7 +22,7 @@ interface FilePathName {
 })
 export class FileTreeComponent implements OnInit, OnDestroy {
 
-  public node: TreeNode;
+  public node: ITreeNode;
 
   public modals = {
     mkDir: false,
@@ -37,7 +37,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   @Input('current') current: string;
   @Input('canCreate') canCreate: boolean;
-  @Input('items') set nodes(nodes: TreeNode) {
+  @Input('items') set nodes(nodes: ITreeNode) {
     if (!nodes) return;
     this.node = this._lfts.expandFollowingDirs(nodes, this.current);
   };

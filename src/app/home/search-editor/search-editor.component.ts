@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { LogLine } from '../interfaces/app.interfaces';
-import { ApiService } from '../api.service';
-import { UserService } from '../user.service';
+import { LogLine } from '@lars/interfaces/app.interfaces';
+import { ApiService } from '@lars/api.service';
+import { UserService } from '@lars/user.service';
 import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
-import { lazy } from '../app.animations';
+import { lazy } from '@lars/app.animations';
 
 @Component({
   selector: 'app-search-editor',
