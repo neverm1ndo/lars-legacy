@@ -3,6 +3,7 @@
 
 :host {
   height: 100%;
+  color: $text;
   lty-icon {
     width: 34px;
     height: 34px;
@@ -20,10 +21,10 @@
   }
   .top {
     background: $secondary;
-    border-bottom: 1px solid #00000010;
+    border-bottom: 1px solid #00000015;
     padding: 5px 0 5px 10px;
-    color: $text;
     opacity: 0.7;
+    box-sizing: border-box;
     .sync {
       width: 24px;
       margin-right: 5px;
@@ -34,66 +35,8 @@
         font-size: 12px;
         top: -1px;
       }
-      &:hover {
+      &:active, &:target, &:focus, &:hover {
         color: inherit;
-      }
-    }
-  }
-  .texteditor-underpanel {
-    $height: 22px;
-    background: $underpanel;
-    height: $height + 1;
-    font-size: 12px;
-    line-height: $height;
-    color: $text;
-    .panel-left {
-      span {
-        line-height: $height;
-      }
-      .panel {
-        padding-left: 15px;
-        padding-right: 15px;
-        background: none;
-        border: none;
-        color: inherit;
-        height: $height;
-        line-height: $height;
-        overflow: hidden;
-        .autosave-led {
-          display: inline-block;
-          width: 5px;
-          height: 5px;
-          background: #63d87d;
-          border-radius: 100%;
-          position: relative;
-          top: -2px;
-          transition: 0.2s linear;
-        }
-        .led-loading {
-          background: #ffc107!important;
-          animation-name: blink;
-          animation-duration: .5s;
-          animation-iteration-count: infinite;
-        }
-        .led-error {
-          background: #dc3545!important;
-        }
-        fa-icon {
-          font-size: 12px;
-          margin-right: 8px;
-          position: relative;
-          top: -1px;
-        }
-        &:hover {
-          background: $underpanel-hover;
-        }
-        &:disabled {
-          background: $underpanel-hover;
-          opacity: 0.4;
-        }
-        &:active {
-          opacity: 0.7;
-        }
       }
     }
   }
