@@ -20,60 +20,35 @@
   }
   .top {
     background: $secondary;
-    padding-top: 15px;
     border-bottom: 1px solid #00000010;
-    .btn {
-      position: relative;
-      top: -5px;
-    }
-    lty-icon {
-      width: 21px;
-      height: 21px;
-      margin-right: 10px;
-      position: relative;
-      top: -1px;
-    }
+    padding: 5px 0 5px 10px;
+    color: $text;
+    opacity: 0.7;
     .sync {
-      width: 32px;
+      width: 24px;
       margin-right: 5px;
+      padding: 2px;
+      color: var(--bs-gray-600);
       fa-icon {
         position: relative;
-        left: -3px;
+        font-size: 12px;
+        top: -1px;
       }
-    }
-    .btn-file {
-      position: relative;
-      overflow: hidden;
-      height: 32px;
-      // fa-icon {
-      //   margin-right: 5px;
-      // }
-    }
-    .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        cursor: inherit;
-        display: block;
+      &:hover {
+        color: inherit;
+      }
     }
   }
   .texteditor-underpanel {
+    $height: 22px;
     background: $underpanel;
-    height: 31px;
+    height: $height + 1;
     font-size: 12px;
-    line-height: 29px;
+    line-height: $height;
     color: $text;
     .panel-left {
-      line-height: 29px;
       span {
-        line-height: 29px;
+        line-height: $height;
       }
       .panel {
         padding-left: 15px;
@@ -81,8 +56,8 @@
         background: none;
         border: none;
         color: inherit;
-        height: 30px;
-        line-height: 29px;
+        height: $height;
+        line-height: $height;
         overflow: hidden;
         .autosave-led {
           display: inline-block;
@@ -104,8 +79,10 @@
           background: #dc3545!important;
         }
         fa-icon {
-          font-size: 14px;
+          font-size: 12px;
           margin-right: 8px;
+          position: relative;
+          top: -1px;
         }
         &:hover {
           background: $underpanel-hover;
