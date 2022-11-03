@@ -154,14 +154,10 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
 }
 ::-webkit-scrollbar-thumb {
   background: $scrollbar-thumb;
-  border-radius: 3px;
   cursor: default!important;
+  transition: 1s ease;
   &:hover {
-    transition: 1s ease-in-out;
-    border: 1px solid $underpanel-hover;
-  }
-  &:active, &:focus {
-    opacity: 0.5;
+    border: 1px solid $underpanel;
   }
 }
 
