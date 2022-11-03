@@ -2,6 +2,8 @@
   font-size: 13px;
   transition: 0.2s linear;
   background: #3d3e4a;
+  height: 100%;
+  overflow: auto;
   .loading-trigger {
     height: 3px;
     background: linear-gradient(to right, red, orange);

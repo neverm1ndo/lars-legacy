@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class GeoComponent {
 
   @Input('table') table: IGeoData;
-  @Input('tab-style') style: 'normal' | 'inline' | undefined;
 
   fa = { link : faLink };
 
