@@ -1,6 +1,7 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 /* You can add global styles to this file, and also import other style files */
+
 @import 'codemirror/lib/codemirror';
 @import 'codemirror/theme/dracula';
 @import 'codemirror/theme/material';
@@ -20,7 +21,7 @@
 @import 'scss/sentinel/theme';
 
 html, body, app-root {
-  margin: 0px 0px 0px 0px;
+  margin: 0px;
   left: 0;
   right: 0;
   top: 0;
@@ -28,6 +29,7 @@ html, body, app-root {
   position: absolute;
   height: 100%;
   width: 100%;
+  background: $mainbg;
 }
 
 button:active, button:focus {

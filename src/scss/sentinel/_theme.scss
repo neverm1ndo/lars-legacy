@@ -1,6 +1,7 @@
 .sentinel {
     @import './dropdown';
     @import './select';
+    @import './badges';
     &.main {
         background-color: $backgroung-main; 
     }

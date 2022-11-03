@@ -189,7 +189,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngAfterViewInit(): void {
-    this._refreshCodeMirror();
+    // this._refreshCodeMirror();
     if (!window.localStorage.getItem('codemirror/font-size')) {
       window.localStorage.setItem('codemirror/font-size', '13px');
       this.editorStyle.nativeElement.style.fontSize = '13px';

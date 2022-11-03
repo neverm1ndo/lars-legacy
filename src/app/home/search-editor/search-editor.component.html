@@ -1,7 +1,7 @@
-<div class="containter-fluid g-0">
-  <div class="h-100 d-flex flex-column flex-fill align-items-stretch">
+<div class="containter-fluid g-0 overflow-auto h-100">
+  <div class="h-100 d-flex flex-column flex-fill align-items-stretch overflow-auto">
     <app-search [loading]="loading" (searchQuery)="search($event)" [lineCounter]="lines" (syncronize)="sync()"></app-search>
-    <div #wrapper class="overflow-auto d-flex align-items-stretch flex-fill">
+    <div #wrapper class="d-flex align-items-stretch flex-fill overflow-auto">
       <search-results [loading]="loading" [searchResult]="chunks"></search-results>
     </div>
     <div [@lazy] *ngIf="api.lazy" class="lazy-loader">
