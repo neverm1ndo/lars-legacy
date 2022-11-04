@@ -13,6 +13,8 @@ export class LtyFileTreeService {
   public activeItemPath: BehaviorSubject<string | null> = new BehaviorSubject(null);
   public expandedDirs: string[] = [];
 
+  public reloader$: BehaviorSubject<null> = new BehaviorSubject(null);
+
   get currentOpenedContext() {
     return this._currentOpened;
   }

@@ -1,6 +1,20 @@
 @import 'colors';
 $height: 15px;
 :host {
+  .sync {
+    width: 24px;
+    margin-right: 5px;
+    padding: 2px;
+    color: var(--bs-gray-600);
+    fa-icon {
+      position: relative;
+      font-size: 12px;
+      top: -1px;
+    }
+    &:active, &:target, &:focus, &:hover {
+      color: inherit;
+    }
+  }
   .expanded {
     transform: none!important;
   }
@@ -50,6 +64,7 @@ $height: 15px;
     line-height: 26px;
     width: 100%;
     border-left: 1px solid transparent;
+    // box-sizing: content-box;
   }
   .expandedTab {
     border-left: 1px solid #717686;
@@ -85,18 +100,26 @@ $height: 15px;
     & > .item {
       padding-left: 1rem;
       .item-name {
+        .dir-controls {
+          visibility: hidden;
+        }
+        .twistle {
+          padding-left: 1rem;
+        }
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding-right: 15px;
-        padding-left: 5px;
         cursor: pointer;
         &:active, &:focus, &:hover {
           text-decoration: underline;
+          .dir-controls {
+            visibility: inherit;
+          }
         }
-        // &:active, &:focus {
-        //   background: $dropdown;
-        // }
+      }
+      &:hover {
+        background-color: var(--bs-gray-900);
       }
     }
     line-height: 26px;

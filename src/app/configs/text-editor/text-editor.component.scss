@@ -44,23 +44,26 @@
     }
   }
   .infile-search {
+    small {
+      font-size: 11px;
+    }
     .findButton {
       width: 155px;
     }
     &-hide {
-      width: 35px;
-      height: 35px;
+      width: 28px;
+      height: 28px;
       margin-right: 10px;
       svg {
         position: relative;
-        top: -3px;
-        left: -4px;
+        top: -7px;
+        left: -8px;
         width: 20px;
       }
     }
     &-head {
       background: $underpanel;
-      padding: 5px 15px 5px 10px;
+      padding: 2px 15px 2px 10px;
       span {
         font-family: 'Consolas';
       }

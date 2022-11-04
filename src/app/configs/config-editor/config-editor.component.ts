@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ApiService } from '@lars/api.service';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { switchMap, take, filter } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
@@ -8,7 +8,7 @@ import { ToastService } from '@lars/toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
-import { ConfigsService } from '../configs.service';
+import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
 
 @Component({
@@ -20,14 +20,13 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   public files: ITreeNode;
 
-  private _directories$: Observable<any>;
+  public directories$: Observable<any>;
 
   public currentFilePath: string;
   public progress: number = 0;
   public loading: boolean = false;
 
   private _uploadsSubscriptions: Subscription = new Subscription();
-  private _directoriesSubscription: Subscription;
 
   public paneStates: number[] = [];
 
@@ -46,11 +45,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _ngZone: NgZone,
     public configs: ConfigsService,
   ) {
-    this._directories$ = this.configs.reloader$.pipe(switchMap(() => _api.getConfigsDir()));
-    
-    this._directoriesSubscription = this._directories$.subscribe(items => {
-      this.files = items;
-    });
+    this.directories$ = this._api.getConfigsDir();
   }
 
   
@@ -246,6 +241,5 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   
   ngOnDestroy(): void {
     this._uploadsSubscriptions.unsubscribe();
-    this._directoriesSubscription.unsubscribe();
   }
 }
