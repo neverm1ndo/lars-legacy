@@ -8,8 +8,8 @@ import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import { BehaviorSubject, iif, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 
-import { ToastService } from '../../toast.service';
-import { ConfigsService } from '../configs.service';
+import { ToastService } from '@lars/toast.service';
+import { ConfigsService } from '@lars/configs/configs.service';
 
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
 @Component({
@@ -39,6 +39,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           case 'Space' : {
             this._zone.runOutsideAngular(() => {
+              console.log(this.editor.codeMirrorGlobal.then(console.log))
               this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
             });
             break;
@@ -189,7 +190,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngAfterViewInit(): void {
-    // this._refreshCodeMirror();
+    this._refreshCodeMirror();
     if (!window.localStorage.getItem('codemirror/font-size')) {
       window.localStorage.setItem('codemirror/font-size', '13px');
       this.editorStyle.nativeElement.style.fontSize = '13px';

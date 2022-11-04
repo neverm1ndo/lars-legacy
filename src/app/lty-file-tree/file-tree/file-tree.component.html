@@ -10,19 +10,15 @@
     </div>
   </div>
   <div class="d-flex w-100 g-0 flex-fill overflow-auto">
-    <div *ngIf="node; else loaderItems" class="text-left">
+    <div *ngIf="node; else loader" class="text-left w-100">
       <file-tree-items
-      (rmdir)="rmDir($event)"
-      (mvdir)="mvDirEventHandle($event)"
-      (rm)="rmFile($event)"
-      [isRoot]="true"
-      [child-nodes]="node"
-      [expanded]="true"
-      (uploadFileList)="upload($event)">
+        [isRoot]="true"
+        [child-nodes]="node"
+        [expanded]="true">
       </file-tree-items>
     </div>
-    <ng-template #loaderItems>
-      <div class="d-flex h-100">
+    <ng-template #loader>
+      <div class="d-flex h-100 flex-fill">
         <div class="loader w-100 loader-items d-flex align-self-center justify-content-center">
           <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
         </div>
@@ -39,7 +35,7 @@
     </div>
   </div>
 </div>
-<form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<!-- <form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
@@ -113,4 +109,4 @@
       </div>
     </div>
   </div>
-</form>
+</form> -->

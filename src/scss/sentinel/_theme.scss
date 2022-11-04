@@ -135,12 +135,8 @@
     line-height: $height;
     color: $text;
     .panel-left, .panel-right {
-      // line-height: 29px;
       overflow-x: auto;
       overflow-y: hidden;
-      span {
-        // line-height: 29px;
-      }
       .overlap {
         width: 30%;
       }
@@ -152,7 +148,6 @@
         border: none;
         color: inherit;
         height: $height;
-        // line-height: 29px;
         white-space: nowrap;
         overflow: hidden;
         .autosave-led {
@@ -162,7 +157,7 @@
           background: #63d87d;
           border-radius: 100%;
           position: relative;
-          top: -1px;
+          top: -2px;
           transition: 0.2s linear;
         }
         @include blink();
