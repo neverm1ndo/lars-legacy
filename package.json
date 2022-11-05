@@ -84,6 +84,7 @@
     "electron-updater": "5.3.0",
     "electron-window-state": "5.0.3",
     "ng2-charts": "4.0.1",
+    "ngx-cookie-service": "14.0.1",
     "ngx-indexed-db": "11.0.2",
     "ngx-socket-io": "4.3.1",
     "rxjs": "7.5.7",
