@@ -7,8 +7,14 @@
             <div class="progress-bar" [style.width.%]="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
           <file-tree
+            (fileSelect)="toConfig($event)"
+            (mkdir)="mkdir($event)"
+            (rmdir)="rmdir($event)"
+            (mvdir)="mvdir($event)"
             [items]="directories$ | async"
+            [current]="currentFilePath"
             (upload)="addNewFile($event)"
+            (resync)="reloadFileTree()"
             [canCreate]="true">
           </file-tree>
         </div>

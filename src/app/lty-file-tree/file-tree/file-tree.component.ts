@@ -44,14 +44,14 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   };
   @Output() upload = new EventEmitter<Event>();
   
-  // @Output() fileSelect = new EventEmitter<FilePathName>();
-  // @Output() dirSelect = new EventEmitter<string>();
-  // @Output() rmdir = new EventEmitter<string>();
-  // @Output() rm = new EventEmitter<string>();
-  // @Output() mvdir = new EventEmitter<{ path: string; dest: string }>();
-  // @Output() mkdir = new EventEmitter<string>();
-  // @Output() touch = new EventEmitter<string>();
-  // @Output() resync = new EventEmitter<any>();
+  @Output() fileSelect = new EventEmitter<FilePathName>();
+  @Output() dirSelect = new EventEmitter<string>();
+  @Output() rmdir = new EventEmitter<string>();
+  @Output() rm = new EventEmitter<string>();
+  @Output() mvdir = new EventEmitter<{ path: string; dest: string }>();
+  @Output() mkdir = new EventEmitter<string>();
+  @Output() touch = new EventEmitter<string>();
+  @Output() resync = new EventEmitter<any>();
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
     switch (event.key) {
@@ -97,33 +97,33 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     this.modals.mvDir = true;
   }
 
-  // rmDir(path: string) {
-  //   this.rmdir.emit(posix.normalize(path));
-  // }
+  rmDir(path: string) {
+    this.rmdir.emit(posix.normalize(path));
+  }
 
-  // rmFile(path: string) {
-  //   this.rm.emit(posix.normalize(path));
-  // }
+  rmFile(path: string) {
+    this.rm.emit(posix.normalize(path));
+  }
 
-  // mvDir(): void {
-  //   const { path, dest } = this.mvDirGroup.value;
-  //   this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
-  //   this.modals.mvDir = false;
-  // }
+  mvDir(): void {
+    const { path, dest } = this.mvDirGroup.value;
+    this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
+    this.modals.mvDir = false;
+  }
 
-  // touchFile(): void {
-  //   this.touch.emit(posix.join(this.node.path, this.addNewFile.value.path));
-  //   this.modals.touch = false;
-  // }
+  touchFile(): void {
+    this.touch.emit(posix.join(this.node.path, this.addNewFile.value.path));
+    this.modals.touch = false;
+  }
 
   sync(): void {
     this._fileTree.reloader$.next(null);
   }
 
-  // mkDir(): void {
-  //   if (this.addNewDir.value.path) this.mkdir.emit(posix.join(this.node.path, this.addNewDir.value.path));
-  //   this.modals.mkDir = false;
-  // }
+  mkDir(): void {
+    if (this.addNewDir.value.path) this.mkdir.emit(posix.join(this.node.path, this.addNewDir.value.path));
+    this.modals.mkDir = false;
+  }
 
   closeModals(event: MouseEvent): void {
     event.stopPropagation();
@@ -133,19 +133,19 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modals.closeAll();
-    // this._fileTreeEvents.add(
-    //   this._lfts.activeItemPath
-    //   .pipe(filter((path) => !!path))
-    //   .pipe(map((path: string) => {
-    //     return { path, name: basename(path) };
-    //   })).subscribe((file: FilePathName) => {
-    //     // this.fileSelect.emit(file);
-    //   }),
-    // );
-    // this._lfts.activeItemPath.next(this.current);
+    this._fileTreeEvents.add(
+      this._fileTree.activeItemPath
+      .pipe(filter((path) => !!path))
+      .pipe(map((path: string) => {
+        return { path, name: basename(path) };
+      })).subscribe((file: FilePathName) => {
+        this.fileSelect.emit(file);
+      }),
+    );
+    this._fileTree.activeItemPath.next(this.current);
   }
   ngOnDestroy(): void {
     this._fileTreeEvents.unsubscribe();
-    // this._lfts.activeItemPath.next(null);
+    this._fileTree.activeItemPath.next(null);
   }
 }
