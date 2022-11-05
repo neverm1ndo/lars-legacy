@@ -11,8 +11,9 @@ $height: 15px;
       font-size: 12px;
       top: -1px;
     }
-    &:active, &:target, &:focus, &:hover {
+    &:target, &:hover {
       color: inherit;
+      background-color: var(--bs-gray-800);
     }
   }
   .expanded {
@@ -117,9 +118,6 @@ $height: 15px;
             visibility: inherit;
           }
         }
-      }
-      &:hover {
-        background-color: var(--bs-gray-900);
       }
     }
     line-height: 26px;

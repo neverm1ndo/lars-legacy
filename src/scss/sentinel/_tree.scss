@@ -1,0 +1,61 @@
+@import './colors'; 
+.tree {
+    margin: 0px;
+    * {
+        box-shadow: none;
+        &:hover {
+            box-shadow: none;
+        }
+    }
+    &-children {
+        padding-left: 1rem;
+    }
+    .toggle-children-wrapper {
+        padding: 0;
+        margin: 0 0.2rem 0 0.2rem;
+        .toggle-children {
+            width: 15px;
+            height: 15px;
+            background-size: 130%;
+            top: 4px;
+            background-image: url('/assets/icons/native-chevron.svg');
+            transition: .05s ease;
+        }
+        &-expanded {
+            .toggle-children {
+                transform: rotate(0);
+            }
+        }
+        &-collapsed {
+            .toggle-children {
+                transform: rotate(-90deg);
+            }
+        }
+    }
+    .node {
+        &-wrapper {
+            &:hover {
+                background-color: $topper;
+                color: $text-secondary;
+            }
+        }
+        &-content {
+            &-wrapper {
+                width: 100%;
+                fa-icon {
+                    margin-right: 0.5rem;
+                }
+                &-active, &-focused {
+                    background-color: $dropdown;
+                    color: inherit;
+                }
+                &:hover {
+                    background-color: inherit;
+                    color: inherit;
+                    border: none;
+                }
+            }
+        }
+
+    }
+}

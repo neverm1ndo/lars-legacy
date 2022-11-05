@@ -35,6 +35,7 @@
             <div class="panel-left">
               <div class="d-flex justify-content-start align-content-center">
                 <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
+                  <fa-icon [icon]="fa.branch"></fa-icon>
                   {{ path }}{{ (changed | async)?'*':'' }}
                 </button>
                 <div class="panel flex-grow">
