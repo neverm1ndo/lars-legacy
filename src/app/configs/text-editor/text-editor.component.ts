@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
-import { faSave, faSync, faExclamationTriangle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faSync, faExclamationTriangle, faTrash, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
 import { BehaviorSubject, iif, of } from 'rxjs';
@@ -80,7 +80,8 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     save: faSave,
     fetch: faSync,
     copy: faCopy,
-    trash: faTrash
+    trash: faTrash,
+    branch: faCodeBranch
   };
 
   public path: string;
