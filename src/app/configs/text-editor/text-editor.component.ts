@@ -39,7 +39,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           case 'Space' : {
             this._zone.runOutsideAngular(() => {
-              console.log(this.editor.codeMirrorGlobal.then(console.log))
               this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
             });
             break;
@@ -199,8 +198,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.autocomplete = (_cm: any) => {
-        const editor = this.editor.codeMirror;
-        editor.showHint({ hint: this.editor.codeMirrorGlobal.hint.anyword });
+        this.editor.codeMirror.showHint({ hint: this.editor.codeMirrorGlobal.hint.anyword });
       }
     });
   }
