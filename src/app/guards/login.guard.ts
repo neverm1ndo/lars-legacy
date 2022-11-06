@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ import { UserService } from '@lars/user.service';
 export class LoginGuard implements CanActivate {
   constructor(
     private user: UserService,
-    private router: Router
+    private router: Router,
+    private _cookie: CookieService,
   ) {}
   canActivate(
     _route: ActivatedRouteSnapshot,

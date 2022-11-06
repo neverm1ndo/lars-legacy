@@ -18,8 +18,6 @@ export class ToastService {
 
   public toasts: IToast[] = [];
 
-  constructor() {}
-
   public show(
     type: ToastType,
     body: string | TemplateRef<any>,
@@ -34,9 +32,11 @@ export class ToastService {
         icon,
         lifetime
       });
+      console.log(this.toasts)
   }
 
-  public remove(toast: any) {
+  public remove(toast: IToast) {
     this.toasts = this.toasts.filter(t => t !== toast);
+    console.log(this.toasts)
   }
 }

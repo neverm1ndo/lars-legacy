@@ -38,6 +38,7 @@ import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { NotificationsService } from '../notifications.service';
 import { UserActionPipe } from '../pipes/user-action.pipe';
+// import { ToastService } from '@lars/toast.service';
 
 const idbConfig: DBConfig  = {
   name: 'users',
@@ -56,7 +57,7 @@ const idbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, GeoComponent, ToastsContainer, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -76,6 +77,7 @@ const idbConfig: DBConfig  = {
   providers: [
     NotificationsService,
     AuthGuard,
+    // ToastService
   ]
 })
 export class HomeModule {}

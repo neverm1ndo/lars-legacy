@@ -40,7 +40,8 @@ interface UserGroupTranslationMap {
 })
 export class UserService {
 
-  readonly URL_LOGIN: string = AppConfig.api.auth;
+  readonly URL_LOGIN: string = AppConfig.api.auth + 'login';
+  readonly URL_LOGOUT: string = AppConfig.api.auth + 'logout';
   readonly URL_USER: string = AppConfig.api.user;
   
   public loggedInUser$: BehaviorSubject<IUserData | null> = new BehaviorSubject(null);
@@ -156,8 +157,8 @@ export class UserService {
     };
     from(this._electron.ipcRenderer.invoke('message-box', messageBox))
         .pipe(
-          filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response !== 0),
-          switchMap(() => this._http.get(AppConfig.api.auth + '/logout'))
+          filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response === 0),
+          switchMap(() => this._http.get(this.URL_LOGOUT, {responseType: 'text'}))
         )
         .subscribe({
           next: () => {

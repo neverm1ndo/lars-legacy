@@ -136,11 +136,9 @@ export const mapload = trigger('mapload', [
   ])
 ]);
 
-export const toast = trigger(
-      'toast',
+export const toast = trigger('toast',
       [
-        transition(
-          ':enter',
+        transition(':enter',
           [
             style({
                opacity : '0', transform: 'translateY(-10%)'
@@ -152,8 +150,7 @@ export const toast = trigger(
             ]))
           ]
         ),
-        transition(
-          ':leave',
+        transition(':leave',
           [
             style({
                opacity : '1', transform: 'translateY(-10%)'
@@ -163,10 +160,10 @@ export const toast = trigger(
               style({ opacity : '1', transform: 'translateY(0%)'  }),
               style({ opacity : '0', transform: 'translateY(-10%)'  })
             ]))
-          ]
-        )
+          ])
       ]
-    )
+    );
+
 export const upfade = trigger('upfade', [
   state('*', style({ opacity : '1', transform: 'translateY(0%)' })),
     state('void', style({
