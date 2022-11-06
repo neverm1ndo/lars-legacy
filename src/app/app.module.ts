@@ -24,9 +24,11 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DevServerControlsModule } from './dev-server-controls/dev-server-controls.module';
+import { ToastService } from './toast.service';
+import { ToastsContainer } from './toasts-container/toasts-container.component';
 
 @NgModule({
-  declarations: [AppComponent, TopperComponent],
+  declarations: [AppComponent, TopperComponent, ToastsContainer],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
@@ -50,7 +52,7 @@ import { DevServerControlsModule } from './dev-server-controls/dev-server-contro
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: AppConfig.production })
   ],
-  providers: [],
+  providers: [ToastService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

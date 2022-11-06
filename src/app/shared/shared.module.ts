@@ -7,13 +7,14 @@ import { PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent
 
 import { WebviewDirective, LetDirective } from './directives/';
 
-import { FileSizePipe } from '../pipes/file-size.pipe';
-import { RolePipe } from '../pipes/role.pipe';
-import { RulesPipe } from '../pipes/rules.pipe';
+import { FileSizePipe } from '@lars/pipes/file-size.pipe';
+import { RolePipe } from '@lars/pipes/role.pipe';
+import { RulesPipe } from '@lars/pipes/rules.pipe';
 
 @NgModule({
   declarations: [PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, LetDirective],
   imports: [CommonModule, TranslateModule],
-  exports: [TranslateModule, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, SimpleLineProcessComponent, LineProcessComponent, LetDirective]
+  exports: [TranslateModule, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, SimpleLineProcessComponent, LineProcessComponent, LetDirective],
+  providers: []
 })
 export class SharedModule {}

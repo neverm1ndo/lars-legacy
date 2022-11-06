@@ -1,15 +1,13 @@
 <ngb-toast
    *ngFor="let toast of service.toasts"
-   [class]="toast.type"
+   [class]="'bg-'+toast.type"
+   [animation]="true"
    [autohide]="true"
-   [delay]="toast.lifetime || 5000"
-   (hide)="service.remove(toast)"
-   (click)="service.remove(toast)"
-   [@toast]
+   (hidden)="service.remove(toast)"
  >
-   <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-     <!-- <ng-template [ngTemplateOutlet]="toast.body"></ng-template> -->
-   </ng-template>
+ <ng-container *ngTemplateOutlet="text"></ng-container>
+   
+  <!-- <ng-template #template></ng-template> -->
    
    <ng-template #text>
      <div class="d-flex flex-row">

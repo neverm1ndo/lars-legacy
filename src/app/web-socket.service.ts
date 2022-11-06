@@ -65,12 +65,12 @@ export class WebSocketService {
     _socket.on('disconnect', (reason: string) => {
       console.log('%c[socket-service]', 'color: tomato', 'Disconnected with reason: ' + reason);
     });
-    // this._injector.get(UserService).loggedInUser$.pipe(
-    //   filter((user) => !!user)
-    // ).subscribe((user) => {
-    //   // socketConfig.options.auth.token = user.token;
-    //   this.connect();
-    // });
+    this._injector.get(UserService).loggedInUser$.pipe(
+      filter((user) => !!user)
+    ).subscribe((user) => {
+      // socketConfig.options.auth.token = user.token;
+      this.connect();
+    });
     this.activies = this.getUserActitvity().subscribe((act) => {
       this.usersStates[act.user] = act.action;
     });
