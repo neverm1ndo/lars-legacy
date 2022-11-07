@@ -55,8 +55,8 @@ export class UserService {
     private _toast: ToastService,
   ) {}
 
-  public getUser(name: string): Observable<IUserData> {
-    return this._http.get(this.URL_USER, { params: { name: name }});
+  public getUserByUsername(username: string): Observable<IUserData> {
+    return this._http.get(this.URL_USER, { params: { name: username }});
   }
 
   public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {

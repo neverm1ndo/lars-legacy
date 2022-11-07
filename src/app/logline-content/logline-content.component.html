@@ -1,16 +1,28 @@
 
 <ng-template #auth>
-  <div class="user w-100 bg-shade-{{ type.type }}">
-    <img src="{{ userContent.avatar }}"/>
-    <a (click)="userLink(userContent.id)">{{ userContent.name }}</a>
-    <span class="badge badge-dark">{{ userContent.id}}</span>
-    <small>{{ userContent.group | role }}</small>
-  </div>
+  <ng-container *ngLet="user$ | async as user">
+    <div class="user w-100 bg-{{ type.type }}">
+      <ng-container *ngIf="user; else loading">
+        <img src="{{ user.avatar }}"/>
+        <a class="text-light" (click)="userLink(user.id)">{{ user.username }}</a>
+        <span class="badge bg-dark">{{ user.id}}</span>
+        <small>{{ user.main_group | role }}</small>
+        <small class="ms-2" *ngIf="user.main_group !== user.secondary_group">
+          {{ user.secondary_group }}
+        </small>
+      </ng-container>
+      <ng-template #loading>
+        <div class="loader w-100 loader-items d-flex align-self-center justify-content-center">
+          <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
+        </div> 
+      </ng-template>
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #ban>
   <div class="bancard w-100 bg-{{type.type}}">
     <div class="bancard-head">
-      <small>Выдан администратором <u>{{ content.op }}</u> </small><span class="badge badge-dark ml-1">{{ content.oid }}</span><br>
+      <small>Выдан администратором <u>{{ content.op }}</u> </small><span class="badge bg-dark ml-1">{{ content.oid }}</span><br>
     </div>
     <div class="bancard-body">
       <small>{{ content.time }} {{ content.message }}</small><br>
@@ -19,7 +31,7 @@
   </div>
 </ng-template>
 <ng-template #death>
-  <span><kbd>{{content.op}} <span class="badge badge-dark">{{ content.oid }}</span></kbd> {{ content.message }} </span>
+  <span><kbd>{{content.op}} <span class="badge bg-dark">{{ content.oid }}</span></kbd> {{ content.message }} </span>
 </ng-template>
 <ng-template #cn>
   <a class="btn btn-small btn-dark text-left" [routerLink]="['/home/search']" [queryParams]="{ query: 'cn:' + content.message }">
