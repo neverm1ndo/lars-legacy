@@ -1,10 +1,16 @@
-import { Component, OnInit, AfterViewInit, Input, ChangeDetectionStrategy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { UserService } from '../user.service';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UserService } from '@lars/user.service';
 import { Process } from '@lars/shared/components/line-process/log-processes';
 import { IContentData, IUserData } from '@lars/interfaces';
-import { switchMap, catchError } from 'rxjs/operators';
-import { iif, Observable, of } from 'rxjs';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
+enum ContentTemplate {
+  BANNED,
+  AUTH,
+  MUTED,
+  DEATH,
+  CN,
+}
 
 @Component({
   selector: 'logline-content',
@@ -12,94 +18,57 @@ import { iif, Observable, of } from 'rxjs';
   styleUrls: ['./logline-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoglineContentComponent implements OnInit, AfterViewInit {
+export class LoglineContentComponent {
 
   constructor(
-    private _idb: NgxIndexedDBService,
     private _user: UserService,
-    private _cdr: ChangeDetectorRef,
   ) { }
 
+  public faSearch = faSearch;
+
   @Input('content') content: IContentData;
-  @Input('type') type: Process;
-
-
-  public contentTpl: TemplateRef<any>;
-
-  public user$: Observable<IUserData>;
-
-  @ViewChild('auth') auth: TemplateRef<any>;
-  @ViewChild('default') default: TemplateRef<any>;
-  @ViewChild('ban') ban: TemplateRef<any>;
-  @ViewChild('mute') mute: TemplateRef<any>;
-  @ViewChild('death') death: TemplateRef<any>;
-  @ViewChild('cn') cn: TemplateRef<any>;
+  @Input('type') process: Process;
 
   private _isAuth(): boolean {
-    switch (this.type.control) {
+    switch (this.process.control) {
       case 'authCorrectAdm': return true;
       case 'authIncorrect': return true;
       case 'authCorrectUsr': return true;
-      default: return false;
+      default: {
+        return false;
+      }
     }
   }
 
   private _isBanned(): boolean {
     const banned = ['disconnectBan', 'disconnectKick']
-    return banned.includes(this.type.control);
+    return banned.includes(this.process.control);
   }
   private _isMuted(): boolean {
     const banned = ['chatHandBlock'];
-    return banned.includes(this.type.control);
+    return banned.includes(this.process.control);
   }
   private _isDeath(): boolean {
-    return this.type.control === 'dthKilled';
+    return this.process.control === 'dthKilled';
   }
-  private _isCNRes(): boolean {
-    return this.type.control === 'CnResSuccess';
+  private _isCNResponse(): boolean {
+    return this.process.control === 'CnResSuccess';
   }
 
   userLink(id: number) {
     this._user.openUserForumProfile(id);
   }
 
-  private _setTemplate(): TemplateRef<any> {
+  setTemplate(): string {
     switch (true) {
-      case this._isBanned():
-        return this.ban;   
-      case this._isMuted():      
-        return this.mute;
-      case this._isDeath():
-        return this.death;
-      case this._isCNRes():
-        return this.cn;
-      case this._isAuth():
-           this.user$ = this._idb.getByIndex('user', 'username', this.content.message)
-                .pipe(
-                  switchMap((user) => iif(() => !user, 
-                                          this._user.getUserByUsername(this.content.message)
-                                                    .pipe(
-                                                      switchMap(({ username, avatar, main_group, secondary_group, id }) => this._idb.add('user', {
-                                                        id,
-                                                        username,
-                                                        avatar,
-                                                        main_group,
-                                                        secondary_group,
-                                                      })),
-                                                      catchError(() => this._idb.getByIndex('user', 'username', this.content.message))
-                                                    ), 
-                                          of(user))),
-                );
-        return this.auth;
-      default:
-        return this.default;
+      case this._isBanned(): return ContentTemplate[0];   
+      case this._isAuth(): {
+        return ContentTemplate[1];
+      }
+      case this._isMuted(): return ContentTemplate[2];
+      case this._isDeath(): return ContentTemplate[3];
+      case this._isCNResponse(): return ContentTemplate[4];
     }
   }
 
-  ngAfterViewInit(): void {
-    this.contentTpl = this._setTemplate();
-    this._cdr.detectChanges();
-  }
-
-  ngOnInit(): void {}
 }

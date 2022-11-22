@@ -11,7 +11,7 @@ export interface IUserData {
   avatar?: string
   main_group?: Workgroup,
   secondary_group?: Workgroup,
-  token?: string,
+  token: string,
 }
 export interface IGeoData {
   country?: string;
@@ -20,13 +20,16 @@ export interface IGeoData {
   as?: number;
   ss?: string;
   org?: string;
-  c?: string;
+  cli?: string;
 }
 export interface IContentData {
-  time?: string,
-  oid?: number,
-  op?: string,
-  message?: string
+  time?: string;
+  oid?: number;
+  auth?: IUserData;
+  dm_id?: string;
+  op?: string;
+  weapon?: string;
+  message?: string;
 }
 export interface LogLine {
   unix: number;

@@ -5,6 +5,7 @@ import { switchMap, catchError } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
 import { handleError } from './utils';
+import { LogLine } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -37,14 +38,6 @@ export class ApiService {
   readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
 
   readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
-
-  reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
-
-  public lazy: boolean = false;
-
-  currentPage: number = 0;
-  currentQuery: string = '';
-
 
   constructor(
     private http: HttpClient,
@@ -85,16 +78,10 @@ export class ApiService {
   }
   getLast(filter?: string[]): Observable<any> {
     if (!filter) filter = [];
-    return this.http.get(this.URL_LAST, { params: { page: this.currentPage.toString(), lim: this.getChunkSize(), filter: filter.join(',')}});
+    return this.http.get(this.URL_LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
   }
-  getLogFile(query: string, lim: string, filter: string[], date?: { from: string, to: string }): Observable<any> {
-    if (query !== this.currentQuery) {
-      this.currentPage = 0;
-    }
-    this.currentQuery = query;
-    return this.reloader$.pipe(
-      switchMap(() => this.search(query, this.currentPage.toString(), lim, filter, date))
-    )
+  getLogFile(query: string, page: number, limit: number, filter: string[], date?: { from: string, to: string }): Observable<LogLine[]> {
+    return this.search(query, page, limit, filter, date);
   }
   getFileInfo(path: string): Observable<any> {
     return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
@@ -147,40 +134,38 @@ export class ApiService {
     return this.http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
   }
 
-  lazyUpdate(page: number): void {
-    if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
-      this.lazy = true;
-      this.currentPage += page;
-      this.refresh();
-    }
-  }
+  // lazyUpdate(page: number): void {
+  //   if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
+  //     this.lazy = true;
+  //     this.currentPage += page;
+  //     this.refresh();
+  //   }
+  // }
 
-  search(query: any, page: string, lim: string, filter?: string[], date?: { from?: string, to?: string}): Observable<any> {
-    let params: HttpParams = new HttpParams()
-    .appendAll({
+  search(query: any, page: number, limit: number, filter?: string[], date?: { from?: string, to?: string}): Observable<LogLine[]> {
+    let params: HttpParams = new HttpParams().appendAll({
       search: query,
-      page,
-      lim,
-      filter: filter?filter.join(','):''
+      page: page.toString(),
+      lim: limit.toString(),
+      filter: filter ? filter.join(',') : '',
     });
     if (date) {
-      if (date.from) params = params.append('dateFrom', String(+new Date(date.from)));
-      if (date.to) params = params.append('dateTo', String(+new Date(date.to)));
+      if (date.from) params = params.append('dateFrom', new Date(date.from).valueOf());
+      if (date.to) params = params.append('dateTo', new Date(date.to).valueOf());
     }
-    return this.http.get(this.URL_SEARCH, { params });
+    return this.http.get<LogLine[]>(this.URL_SEARCH, { params });
   }
 
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
-    let last = JSON.parse(window.localStorage.getItem('last'));
-    if (!this.noteIsAlreadyExists(last, key, val)) {
-      if (last[key].length >= 30) {
-        last[key].splice(-(last[key].length), 0, val);
-        last[key].pop();
-      } else {
-        last[key].push(val);
-      }
-      window.localStorage.setItem('last', JSON.stringify(last));
+    let last: string = JSON.parse(window.localStorage.getItem('last'));
+    if (this.noteIsAlreadyExists(last, key, val)) return;
+    if (last[key].length >= 30) {
+      last[key].splice(-(last[key].length), 0, val);
+      last[key].pop();
+    } else {
+      last[key].push(val);
     }
+    window.localStorage.setItem('last', JSON.stringify(last));
   }
 
   noteIsAlreadyExists(last: any, key: string, val: any): boolean {
@@ -196,9 +181,5 @@ export class ApiService {
       }
     }
     return false;
-  }
-
-  refresh(): void {
-    this.reloader$.next(null);
   }
 }

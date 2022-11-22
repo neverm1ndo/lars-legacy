@@ -1,11 +1,57 @@
-<div class="containter-fluid g-0 overflow-auto h-100">
-  <div class="h-100 d-flex flex-column flex-fill align-items-stretch overflow-auto">
-    <app-search [loading]="loading" (searchQuery)="search($event)" [lineCounter]="lines" (syncronize)="sync()"></app-search>
-    <div #wrapper class="d-flex align-items-stretch flex-fill overflow-auto">
-      <search-results [loading]="loading" [searchResult]="chunks"></search-results>
+<div class="containter-fluid g-0 h-100">
+  <div class="h-100 d-flex flex-column flex-fill align-items-stretch">
+    <div class="container-fluid g-3">
+      <app-search (searchQuery)="search($event)" (syncronize)="sync()"></app-search>
     </div>
-    <div [@lazy] *ngIf="api.lazy" class="lazy-loader">
+    <div class="container-fluid g-0 h-100">
+      <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" class="viewport" itemSize="30">
+        <div *cdkVirtualFor="let line of list$ | async" class="row logline" [class.banned]="isBanned(line.process)">
+          <ng-container *ngLet="line.process | process as process">
+            <div class="col-2">
+              <div class="h-100 d-flex align-items-center">
+                <span>{{ line.date | date:'d MMM yy, HH:mm:ss' }}</span>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="h-100 d-flex align-items-center">
+                <span placement="right" [title]="line.process" class="badge bg-{{ process.type }}">{{ process.translate }}</span>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="h-100 d-flex align-items-center">
+                <a class="mr-1 nickname" [routerLink]="['/home/search']" [queryParams]="{ query: 'nn:' + line.nickname }">
+                  <span>{{ line.nickname }}</span>
+                  <span class="badge bg-dark">{{ line.id }}</span> 
+                </a>
+              </div>
+            </div>
+            <div class="col-4">
+              <div *ngIf="line.content" class="h-100 w-100 d-flex align-items-center">
+                <span class="badge badge-dark mr-2" *ngIf="line.multiplier"> x{{ line.multiplier + 1}} </span>
+                <!-- {{ process | json }} -->
+                <logline-content [content]="line.content" [type]="process"></logline-content>
+              </div>
+            </div>
+          </ng-container>
+          <!-- <ng-container *ngLet="line.geo as geo"> -->
+            <div *ngIf="line.geo as geo" class="col-12 col-md-12 offset-lg-2 col-lg-10">
+              <geo [table]="geo"></geo>
+            </div>
+          <!-- </ng-container> -->
+        </div>
+      </cdk-virtual-scroll-viewport>
+      <!-- <div class="example-footer">Content after</div> -->
+      <!-- <div *ngIf="loading" class="loader">
+        <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
+      </div> -->
+      <!-- <div *ngIf="chunks[0].length == 0 && !loading" class="list-empty d-flex flex-row align-items-center">
+        <div class="d-flex w-100 align-self-center">
+          <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
+        </div>
+      </div> -->
+    </div>
+    <!-- <div [@lazy] *ngIf="api.lazy" class="lazy-loader">
       <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
-    </div>
+    </div> -->
   </div>
 </div>

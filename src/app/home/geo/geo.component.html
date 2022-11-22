@@ -1,13 +1,13 @@
-<table class="geotable inline mt-1" *ngIf="table">
+<table class="geotable inline" *ngIf="table">
   <tr>
-    <td class="pr-2 pl-2"><span (click)="sendQueryIP()" class="text-dashed">{{ table.ip }}</span></td>
-    <td class="pr-2 pl-2">{{ table.country }}</td>
-    <td class="pr-2 pl-2">CC: {{ table.cc}}</td>
-    <td class="pr-2 pl-2">AS: {{ table.as }}</td>
-    <td class="pr-2 pl-2"><button class="btn btn-sm btn-dark" (click)="sendQuery()" name="button" placement="left" tooltipClass="light-tooltip" [ngbTooltip]="tipContent"><fa-icon [icon]="fa.link"></fa-icon></button></td>
-    <td class="pr-2 pl-2">SS: {{ table.ss }}</td>
-    <td class="pr-2 pl-2">{{ table.org }}</td>
-    <td class="pr-2 pl-2">{{ table.c }}</td>
+    <td><span (click)="sendQueryIP()" class="text-dashed">{{ table.ip }}</span></td>
+    <td>{{ table.country }}</td>
+    <td>CC: {{ table.cc}}</td>
+    <td>AS: {{ table.as }}</td>
+    <td><button class="btn btn-sm btn-dark" (click)="sendQuery()" name="button" placement="right" tooltipClass="light-tooltip" [ngbTooltip]="tipContent"><fa-icon [icon]="fa.link"></fa-icon></button></td>
+    <td>SS: {{ table.ss }}</td>
+    <td>{{ table.org }}</td>
+    <td>{{ table.cli }}</td>
   </tr>
 </table>
 <ng-template #tipContent let-greeting="greeting">Поиск по <b>данной связке</b></ng-template>
