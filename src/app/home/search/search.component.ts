@@ -62,9 +62,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  get lazy() {
-    return this._api.lazy;
-  }
+  // get lazy() {
+  //   return this._api.lazy;
+  // }
 
   sendQuery(): void {
     if (this.searchForm.valid) {
@@ -92,7 +92,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   sync(): void {
-    this._api.currentPage = 0;
+    // this._api.currentPage = 0;
     this.syncronize.emit(true);
   }
 

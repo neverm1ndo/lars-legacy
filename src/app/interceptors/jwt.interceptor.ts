@@ -11,13 +11,13 @@ import { UserService } from '../user.service';
 @Injectable()
 export class JWTInterceptor implements HttpInterceptor {
 
-  constructor(public userService: UserService) {}
+  constructor(private _user: UserService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (this.userService.isAuthenticated()) {      
+    if (this._user.isAuthenticated()) {      
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${this.userService.getUserInfo().token}`
+          Authorization: `Bearer ${this._user.loggedInUser$.getValue().token}`
         }
       });
     }

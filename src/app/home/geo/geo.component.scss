@@ -4,24 +4,26 @@
     white-space: nowrap;
   }
   .geotable {
+    $padding-y: 0.1rem;
+    margin-top: $padding-y;
+    margin-bottom: $padding-y;
     tr {
       td {
+        font-size: 11px;
         $gutter: 0.5rem;
         padding-left: $gutter;
         padding-right: $gutter;
+        .btn {
+          padding-top: $padding-y;
+          padding-bottom: $padding-y;
+        }
       }
     }
   }
   .inline {
     width: 100%;
     background: $topper;
-    border-radius: 3px;
-  }
-  .chain {
-    height: 46px;
-    max-width: 46px;
-    padding-left: 5px!important;
-    padding-right: 5px!important;
+    border-radius: 2px;
   }
   .text-dashed {
     border-bottom: 1px dashed $text;

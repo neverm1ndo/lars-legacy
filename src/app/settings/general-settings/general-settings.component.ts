@@ -26,7 +26,7 @@ export class GeneralSettingsComponent implements OnInit {
     as: 12345,
     ss: '8C5EE8AAFD459854D8F9DDCC5A4E8C',
     org: 'Rostelecom OJSC',
-    c: '0.3.7'
+    cli: '0.3.7'
   }
 
   public settings: FormGroup = new FormGroup({

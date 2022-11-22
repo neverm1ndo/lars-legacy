@@ -11,6 +11,9 @@ import { LtyFileTreeModule } from '../lty-file-tree/lty-file-tree.module';
 
 import { HomeRoutingModule } from './home-routing.module';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JWTInterceptor } from '../interceptors/jwt.interceptor';
+
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SiderComponent } from './sider/sider.component';
@@ -20,11 +23,9 @@ import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SearchResultsComponent } from './search-results/search-results.component';
 import { SearchEditorComponent } from './search-editor/search-editor.component';
 import { GeoComponent } from './geo/geo.component';
 
-import { ToastsContainer } from '../toasts-container/toasts-container.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BanhammerComponent } from './banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
@@ -38,7 +39,8 @@ import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { NotificationsService } from '../notifications.service';
 import { UserActionPipe } from '../pipes/user-action.pipe';
-// import { ToastService } from '@lars/toast.service';
+
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const idbConfig: DBConfig  = {
   name: 'users',
@@ -57,7 +59,7 @@ const idbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchResultsComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -73,10 +75,16 @@ const idbConfig: DBConfig  = {
     NgSelectModule,
     NgChartsModule,
     LtyFileTreeModule,
+    ScrollingModule,
   ],
   providers: [
     NotificationsService,
     AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTInterceptor,
+      multi: true
+    }
     // ToastService
   ]
 })

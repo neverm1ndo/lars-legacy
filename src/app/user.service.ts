@@ -7,12 +7,11 @@ import { IUserData, IUserLoginData, IDBUser } from './interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
 import { ElectronService } from '@lars/core/services';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Workgroup } from '@lars/enums';
 import { ToastService } from './toast.service';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-interface IUserSettings {
+export interface IUserSettings {
   tray: boolean;
   lineChunk: number;
   listStyle: string;
@@ -51,12 +50,11 @@ export class UserService {
     private _http: HttpClient,
     private _router: Router,
     private _electron: ElectronService,
-    private _idbService: NgxIndexedDBService,
     private _toast: ToastService,
   ) {}
 
   public getUserByUsername(username: string): Observable<IUserData> {
-    return this._http.get(this.URL_USER, { params: { name: username }});
+    return this._http.get<IUserData>(this.URL_USER, { params: { name: username }});
   }
 
   public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {
@@ -127,18 +125,8 @@ export class UserService {
     return true;
   }
 
-  public appendUserToIDB({ id, username, avatar, main_group, secondary_group }: IUserData): Observable<IDBUser> {
-    return this._idbService.add('user', {
-      id,
-      avatar,
-      username,
-      main_group,
-      secondary_group
-    });
-  }
-
   public loginUser(loginData: IUserLoginData): Observable<IUserData | HttpErrorResponse> {
-    return this._http.post(this.URL_LOGIN, loginData, 
+    return this._http.post<IUserData>(this.URL_LOGIN, loginData, 
                                 { 
                                   withCredentials: true,
                                   headers: new HttpHeaders ({

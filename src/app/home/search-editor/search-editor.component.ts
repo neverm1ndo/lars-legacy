@@ -1,106 +1,95 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { LogLine } from '@lars/interfaces/app.interfaces';
 import { ApiService } from '@lars/api.service';
-import { UserService } from '@lars/user.service';
-import { switchMap } from 'rxjs/operators';
+import { UserService, IUserSettings } from '@lars/user.service';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, map, combineLatest } from 'rxjs';
 import { lazy } from '@lars/app.animations';
+import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
 
 @Component({
   selector: 'app-search-editor',
   templateUrl: './search-editor.component.html',
   styleUrls: ['./search-editor.component.scss'],
-  animations: [lazy]
+  animations: [lazy],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchEditorComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SearchEditorComponent implements OnInit, OnDestroy {
 
-  @ViewChild('wrapper') wrapper: ElementRef<any>;
+  public reloader$: BehaviorSubject<null> = new BehaviorSubject(null);
 
-  lines: number = 0;
-  chunks: LogLine[][] = [[]];
-  scroll: any;
-  glfSubber: Subscription = new Subscription();
-  filter: any;
-  loading: boolean = true;
-  lim: string = String(this.user.getUserSettings().lineChunk);
+  public list$: Observable<LogLine[]>;
+
+  private currentPage$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(
-    public api: ApiService,
-    public user: UserService,
-    public route: ActivatedRoute,
-    private router: Router,
+    private _api: ApiService,
+    private _user: UserService,
+    private _route: ActivatedRoute,
+    private _router: Router,
   ) {
-    const userFilter = JSON.parse(window.localStorage.getItem('filter'));
-    this.filter = Object.keys(userFilter).filter((key: string) => userFilter[key] === false);
+    const filter$ = of(window.localStorage.getItem('filter'))
+                                          .pipe(
+                                             map((filter) => Object.keys(JSON.parse(filter)).filter((key: string) => filter[key])),
+                                          );
+    const limit$: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
+    
+    this.list$ = this._route.queryParams
+                            .pipe(
+                              mergeMap(({ query, from, to, page }: Params) => combineLatest([
+                                                                          filter$.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
+                                                                          limit$,
+                                                                        ])),
+                              switchMap(([{ query, processFilter, from, to, page }, limit]) => this.reloader$.pipe(
+                                                                            switchMap(() => this.currentPage$),
+                                                                            switchMap((current: number) => this._api.getLogFile(query || '', page ?? current, limit, processFilter, { from, to }))
+                                                                          )),
+                            );
+                              // map((logline: LogLine[]) => logline.map((line: LogLine) => {
+                              //   line.process
+                              // })));
   }
 
-  search(query: any): void {
-    this.chunks = [[]];
-    this.loading = true;
-    this.lines = 0;
-    this.router.navigate(['/home/search'], { queryParams: { query: query.query, from: query.from, to: query.to }})
-  }
-
-  refresh(): void {
-    this.loading = true;
-    this.api.refresh();
-  }
-
-  sync(): void {
-    this.loading = true;
-    this.lines = 0;
-    this.chunks = [[]];
-    this.api.refresh();
-  }
-
-  isBottom(): boolean {
-    if (this.wrapper.nativeElement.scrollTop === this.wrapper.nativeElement.scrollHeight - this.wrapper.nativeElement.offsetHeight) {
-      return true;
-    }
-    return false;
-  }
-  isTop(): boolean {
-    if (this.wrapper.nativeElement.scrollTop === 0) return true;
-    return false;
-  }
-
-
-
-  ngAfterViewInit(): void {
-    this.scroll = fromEvent(this.wrapper.nativeElement, 'scroll')
-    .pipe(
-      debounceTime(1200)
-    ).subscribe(() => {
-      if (!this.isBottom()) return;
-      if (this.lines % +this.user.getUserSettings().lineChunk == 0) this.api.lazyUpdate(1);
+  public search({ query, from, to }: any): void {
+    this._router.navigate(['/home/search'], {
+      queryParams: {
+        page: 0,
+        query,
+        from,
+        to,
+      }
     });
   }
 
+  public refresh(): void {
+    // this.loading = true;
+    // this.api.refresh();
+  }
+
+  
+  public isBanned(processname: any) {
+    const banned = ['<disconnect/ban>', '<disconnect/kick>'];
+    return banned.includes(processname);
+  }
+
+  public getProcessTranslation(processname: any) {
+    return getProcessTranslation(processname);
+  }
+
+  public sync(): void {
+    this.reloader$.next(null);
+  }
+
+  public lazyLoadChunk() {
+    const val: number = this.currentPage$.value; 
+    this.currentPage$.next(val + 1);
+  }
+
   ngOnInit(): void {
-    this.api.currentPage = 0;
-    this.glfSubber.add(
-    this.route.queryParams
-    .pipe(tap((params: Params) => {
-      if (this.api.currentPage === 0) {
-        this.loading = true;
-        this.lines = 0;
-        this.chunks = [[]];
-      }
-      if (params.query !== this.api.currentQuery) this.sync();
-    }))
-    .pipe(switchMap((params: Params) => this.api.getLogFile(params.query?params.query:'', this.lim, this.filter, { from: params.from, to: params.to })))
-    .subscribe((lines: LogLine[]) => {
-      this.loading = false;
-      this.api.lazy = false;
-      if (this.chunks.length > 5) this.chunks.shift();
-      if (this.chunks[0].length == 0) this.chunks = [];
-      this.chunks.push(...[lines]);
-      this.lines += lines.length;
-    }));
+
   }
   ngOnDestroy(): void {
-    if (this.glfSubber) this.glfSubber.unsubscribe();
+    // if (this.glfSubber) this.glfSubber.unsubscribe();
   }
 }
