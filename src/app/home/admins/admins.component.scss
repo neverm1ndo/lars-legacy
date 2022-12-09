@@ -3,6 +3,7 @@
 
 :host {
   font-size: 11px;
+  height: 100%;
   .playerlog {
     background: $texteditor;
   }
@@ -17,6 +18,7 @@
     h6 {
       font-weight: 300;
       line-height: 50px;
+      margin: 0;
       fa-icon {
         margin-right: 15px;
       }
@@ -81,6 +83,7 @@
     width: 40px;
   }
   .rm-adm {
+    position: relative;
     &:after {
       content: "";
       width: 10px;
@@ -101,9 +104,6 @@
       margin-left: 5px;
       margin-top: 3px;
     }
-  }
-  .add-adm {
-    margin-top: 9px;
   }
   .td-username {
     width: 150px;
