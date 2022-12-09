@@ -45,6 +45,7 @@ button:active, button:focus {
   font-size: 13px;
   border: none;
   transition: 0.1s linear;
+  border-radius: 3px;
   &-dark {
     background-color: transparent!important;
     &:hover, &:active, &:focus {
@@ -113,10 +114,14 @@ app-search {
   background: $secondary;
   width: 100%;
 }
+.input-group {
+  border-radius: 3px;
+}
 .form-control {
   background-color: $clr-formcontrol!important;
   color: $text!important;
   border: 1px solid transparent!important;
+  border-radius: 3px;
 }
 .btn-primary {
   background: $primary;
