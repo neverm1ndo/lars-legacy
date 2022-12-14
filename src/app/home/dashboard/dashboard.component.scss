@@ -19,11 +19,8 @@
   }
   .history-list {
     background: $topper;
-    // border-radius: 0.3rem;
-    // margin-left: 0.4rem;
-    // margin-right: 0.4rem;
-    // border-bottom: 1px solid $filetree;
-    flex: 1 1 auto;
+    // flex: 1 1 0%;
+    // width: 33%;
     overflow-y: hidden!important;
     ::-webkit-scrollbar {
        width: 5px;
@@ -54,7 +51,7 @@
       .history-item {
         cursor: pointer;
         opacity: 0.8;
-        width: 100%;
+        // width: 100%;
         &:hover {
           color: $text-secondary;
           text-decoration: underline;
