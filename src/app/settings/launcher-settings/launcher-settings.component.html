@@ -1,130 +1,132 @@
-<div class="col-12 pt-3 pb-3">
-  <div class="d-flex justify-content-between align-content-center mb-2">
-    <div class="">
-      <h6 class="display-6">Лаунчер SAMP</h6>
-      <small>Настройки запуска клиента SAMP</small>
-    </div>
-  </div>
-  <form [formGroup]="settings" (change)="setup()">
+<div class="container-fluid overflow-auto">
+  <div class="col-12 pt-3 pb-3">
     <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="mr-4">
-        <h6>Путь до клиента SAMP</h6>
+      <div class="">
+        <h6 class="display-6">Лаунчер SAMP</h6>
+        <small>Настройки запуска клиента SAMP</small>
       </div>
-      <div class="col-6 form-group mb-0">
-        <div (click)="setPath()" class="input-group has-validation">
-          <div class="input-group-prepend">
-            <button class="btn btn-light" type="button" name="button">
-              <fa-icon [icon]="fa.folder"></fa-icon>
-            </button>
-          </div>
-          <input class="form-control"
-            aria-label="samp.exe path"
-            aria-describedby="button-path"
-            formControlName="samp"
-            type="text"
-            id="samp"
-            [ngClass]="{
-              'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched) || clientExists === false,
-              'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched) || clientExists === true
-            }"
-            readonly
-            required
-          >
-          <div class="invalid-feedback" *ngIf="settings.controls['samp'].errors">
-            <span *ngIf="settings.controls['samp'].errors.required"> Укажите путь до samp.exe</span>
-          </div>
-          <div class="invalid-feedback" *ngIf="!clientExists && !settings.controls['samp'].errors">
-            <span><fa-icon [icon]="fa.err"></fa-icon> Не обнаружен samp.exe</span>
-          </div>
-          <div class="valid-feedback" *ngIf="clientExists && !settings.controls['samp'].errors">
-            <span><fa-icon [icon]="fa.ok"></fa-icon> samp.exe обнаружен</span>
+    </div>
+    <form [formGroup]="settings" (change)="setup()">
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="mr-4">
+          <h6>Путь до клиента SAMP</h6>
+        </div>
+        <div class="col-6 form-group mb-0">
+          <div (click)="setPath()" class="input-group has-validation">
+            <div class="input-group-prepend">
+              <button class="btn btn-light" type="button" name="button">
+                <fa-icon [icon]="fa.folder"></fa-icon>
+              </button>
+            </div>
+            <input class="form-control"
+              aria-label="samp.exe path"
+              aria-describedby="button-path"
+              formControlName="samp"
+              type="text"
+              id="samp"
+              [ngClass]="{
+                'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched) || clientExists === false,
+                'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched) || clientExists === true
+              }"
+              readonly
+              required
+            >
+            <div class="invalid-feedback" *ngIf="settings.controls['samp'].errors">
+              <span *ngIf="settings.controls['samp'].errors.required"> Укажите путь до samp.exe</span>
+            </div>
+            <div class="invalid-feedback" *ngIf="!clientExists && !settings.controls['samp'].errors">
+              <span><fa-icon [icon]="fa.err"></fa-icon> Не обнаружен samp.exe</span>
+            </div>
+            <div class="valid-feedback" *ngIf="clientExists && !settings.controls['samp'].errors">
+              <span><fa-icon [icon]="fa.ok"></fa-icon> samp.exe обнаружен</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="">
-        <h6>Никнейм</h6>
-      </div>
-      <div class="col-6 form-group mb-0">
-        <input
-        class="form-control"
-        formControlName="nickname"
-        type="text"
-        id="nickname"
-        [ngClass]="{
-          'is-invalid': settings.controls['nickname'].invalid && (settings.dirty || settings.touched),
-          'is-valid': settings.controls['nickname'].valid && (settings.dirty || settings.touched)
-        }"
-        />
-        <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['nickname'].errors">
-          <span *ngIf="settings.controls['nickname'].errors.minlength"><fa-icon [icon]="fa.err"></fa-icon> Минимальное кол-во вимволов в нике {{ settings.controls['nickname'].errors.minlength.requiredLength }}</span>
-          <span *ngIf="settings.controls['nickname'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Для входа необходим никнейм</span>
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="">
+          <h6>Никнейм</h6>
         </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="">
-        <h6>IP</h6>
-        <small>IP адрес сервера</small>
-      </div>
-      <div class="col-6 form-group mb-0">
-        <input
-        class="form-control"
-        formControlName="ip"
-        type="ip"
-        id="id"
-        [ngClass]="{
-          'is-invalid': settings.controls['ip'].invalid && (settings.dirty || settings.touched),
-          'is-valid': settings.controls['ip'].valid && (settings.dirty || settings.touched)
-        }"
-        required
-        />
-        <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['ip'].errors">
-          <span *ngIf="settings.controls['ip'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Укажите IP сервера</span>
-          <span *ngIf="settings.controls['ip'].errors.pattern"><fa-icon [icon]="fa.err"></fa-icon> IP невалиден</span>
-        </div>
-      </div>
-    </div>
-    <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="">
-        <h6>Порт</h6>
-        <small>Порт сервера</small>
-      </div>
-      <div class="col-6 form-group mb-0">
-        <input
+        <div class="col-6 form-group mb-0">
+          <input
           class="form-control"
-          formControlName="port"
-          min="0"
-          type="number"
-          id="port"
+          formControlName="nickname"
+          type="text"
+          id="nickname"
           [ngClass]="{
-            'is-invalid': settings.controls['port'].invalid && (settings.dirty || settings.touched),
-            'is-valid': settings.controls['port'].valid && (settings.dirty || settings.touched)
+            'is-invalid': settings.controls['nickname'].invalid && (settings.dirty || settings.touched),
+            'is-valid': settings.controls['nickname'].valid && (settings.dirty || settings.touched)
+          }"
+          />
+          <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['nickname'].errors">
+            <span *ngIf="settings.controls['nickname'].errors.minlength"><fa-icon [icon]="fa.err"></fa-icon> Минимальное кол-во вимволов в нике {{ settings.controls['nickname'].errors.minlength.requiredLength }}</span>
+            <span *ngIf="settings.controls['nickname'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Для входа необходим никнейм</span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="">
+          <h6>IP</h6>
+          <small>IP адрес сервера</small>
+        </div>
+        <div class="col-6 form-group mb-0">
+          <input
+          class="form-control"
+          formControlName="ip"
+          type="ip"
+          id="id"
+          [ngClass]="{
+            'is-invalid': settings.controls['ip'].invalid && (settings.dirty || settings.touched),
+            'is-valid': settings.controls['ip'].valid && (settings.dirty || settings.touched)
           }"
           required
-        />
-        <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['port'].errors">
-          <span *ngIf="settings.controls['port'].errors.required"> Укажите порт сервера</span>
-          <span *ngIf="settings.controls['port'].errors.min"> Номер порта должен быть больше 0</span>
+          />
+          <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['ip'].errors">
+            <span *ngIf="settings.controls['ip'].errors.required"><fa-icon [icon]="fa.err"></fa-icon> Укажите IP сервера</span>
+            <span *ngIf="settings.controls['ip'].errors.pattern"><fa-icon [icon]="fa.err"></fa-icon> IP невалиден</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="">
-        <h6>Пароль</h6>
-        <small>Пароль для входа на сервер, если требуется</small>
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="">
+          <h6>Порт</h6>
+          <small>Порт сервера</small>
+        </div>
+        <div class="col-6 form-group mb-0">
+          <input
+            class="form-control"
+            formControlName="port"
+            min="0"
+            type="number"
+            id="port"
+            [ngClass]="{
+              'is-invalid': settings.controls['port'].invalid && (settings.dirty || settings.touched),
+              'is-valid': settings.controls['port'].valid && (settings.dirty || settings.touched)
+            }"
+            required
+          />
+          <div class="form-control-feedback invalid-feedback" *ngIf="settings.controls['port'].errors">
+            <span *ngIf="settings.controls['port'].errors.required"> Укажите порт сервера</span>
+            <span *ngIf="settings.controls['port'].errors.min"> Номер порта должен быть больше 0</span>
+          </div>
+        </div>
       </div>
-      <div class="col-6 formGroup mb-0">
-        <input class="form-control" formControlName="password" type="password" id="password" />
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="">
+          <h6>Пароль</h6>
+          <small>Пароль для входа на сервер, если требуется</small>
+        </div>
+        <div class="col-6 formGroup mb-0">
+          <input class="form-control" formControlName="password" type="password" id="password" />
+        </div>
       </div>
-    </div>
-    <hr>
-    <div class="d-flex justify-content-between align-content-center mb-2">
-      <div class="">
-        <h6 class="display-6">Лаунчер open.mp</h6>
-        <small>Настройки запуска клиента open.mp</small>
+      <hr>
+      <div class="d-flex justify-content-between align-content-center mb-2">
+        <div class="">
+          <h6 class="display-6">Лаунчер open.mp</h6>
+          <small>Настройки запуска клиента open.mp</small>
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

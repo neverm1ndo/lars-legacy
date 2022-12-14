@@ -29,7 +29,7 @@
   }
   .sid {
     background: $filetree;
-    width: 200px;
+    min-width: 200px;
     span {
       line-height: normal;
     }
