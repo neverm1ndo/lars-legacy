@@ -1,4 +1,4 @@
-<div class="container-fluid pt-2 pb-2 h-100 overflow-auto">
+<div class="container-fluid w-100 pt-2 pb-2 h-100">
     <div class="d-flex flex-column h-100">
         <div>
           <small><fa-icon [icon]="fa.search"></fa-icon>Быстрый поиск</small>
@@ -7,42 +7,46 @@
         <div>
           <app-search [quick]="true"></app-search>
         </div>
-      <div class="d-flex flex-row w-100 flex-fill overflow-auto history">
-        <div class="d-flex flex-column h-100 history-list">
-          <h6><fa-icon [icon]="fa.searchp"></fa-icon>Поисковые запросы</h6>
-          <div class="d-flex history-list-item flex-fill w-100">
-            <ul *ngIf="last.search.length > 0; else emptylist">
-              <li class="clip" *ngFor="let item of last.search"><span class="history-item" [routerLink]="['/home/search']" [queryParams]="{query: item}">{{ item }}</span></li>
-            </ul>
-          </div>
-        </div>
-        <div class="d-flex flex-column h-100 history-list">
-          <h6><fa-icon [icon]="fa.dir"></fa-icon>Последние файлы</h6>
-          <div class="d-flex history-list-item flex-fill w-100">
-            <ul *ngIf="last.files.length > 0; else emptylist">
-              <li *ngFor="let item of last.files">
-                <span class="history-item" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
-            </ul>
-          </div>
-        </div>
-        <div class="d-flex flex-column h-100 history-list">
-          <h6><fa-icon [icon]="fa.up"></fa-icon>Последние загрузки</h6>
-          <div class="d-flex history-list-item flex-fill w-100">
-            <ul *ngIf="last.upload.length > 0; else emptylist">
-              <li *ngFor="let item of last.upload">
-                <span *ngIf="item.type === 'config'" class="history-item" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
-                  <br>
-                  <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}/{{ item.name }}</span>
-                </span>
-                <span *ngIf="item.type === 'map'" class="history-item" [routerLink]="['/home/maps']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
-                  <br>
-                  <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.map"></fa-icon> {{ item.path }}/{{ item.name }}</span>
-                </span>
-              </li>
-            </ul>
-            <ng-template #emptylist><small class="hint">История пуста</small></ng-template>
+      <div class="d-flex flex-fill justify-content-stretch overflow-auto history">
+        <div class="container-fluid h-100">          
+          <div class="row h-100">
+            <div class="d-flex g-0 col-4 flex-column h-100 history-list">
+              <h6><fa-icon [icon]="fa.searchp"></fa-icon>Поисковые запросы</h6>
+              <div class="history-list-item">
+                <ul class="overflow-hidden" *ngIf="last.search.length > 0; else emptylist">
+                  <li class="clip" *ngFor="let item of last.search"><span class="history-item" [routerLink]="['/home/search']" [queryParams]="{query: item}">{{ item }}</span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="d-flex g-0 col-4 flex-column h-100 history-list">
+              <h6><fa-icon [icon]="fa.dir"></fa-icon>Последние файлы</h6>
+              <div class="d-flex history-list-item w-100">
+                <ul *ngIf="last.files.length > 0; else emptylist">
+                  <li class="clip" *ngFor="let item of last.files">
+                    <span class="history-item" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}<br><span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}</span></span></li>
+                </ul>
+              </div>
+            </div>
+            <div class="d-flex g-0 col-4 flex-column h-100 history-list">
+              <h6><fa-icon [icon]="fa.up"></fa-icon>Последние загрузки</h6>
+              <div class="d-flex history-list-item">
+                <ul *ngIf="last.upload.length > 0; else emptylist">
+                  <li *ngFor="let item of last.upload">
+                    <span *ngIf="item.type === 'config'" class="history-item clip" [routerLink]="['/home/configs']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
+                      <br>
+                      <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.code"></fa-icon> {{ item.path }}/{{ item.name }}</span>
+                    </span>
+                    <span *ngIf="item.type === 'map'" class="history-item clip" [routerLink]="['/home/maps']" [queryParams]="{path: item.path, name: item.name}">{{ item.name }}
+                      <br>
+                      <span class="history-underitem"><fa-icon class="mr-1" [icon]="fa.map"></fa-icon> {{ item.path }}/{{ item.name }}</span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <ng-template #emptylist><small class="hint">История пуста</small></ng-template>
   </div>
 </div>
