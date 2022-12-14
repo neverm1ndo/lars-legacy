@@ -62,24 +62,24 @@ label::before {
 input[type="radio"] {
   width: 0px;
   height: 0px;
+  display: none;
 }
 label::after {
   content: "";
   position: absolute;
-  width: 18px;
-  height: 18px;
-  background-color: $topper;
-  border: 13px solid $topper;
+  width: 14px;
+  height: 14px;
+  background-color: $primary;
+  border: 11px solid $primary;
   border-radius: 100%;
   top: 50%;
-  left: -35px;
+  left: -33px;
   transform: translateY(-50%) scale(0);
-  transition: transform 400ms ease;
+  transition: transform 200ms ease;
 }
 
 input[type="radio"]:checked + label::before {
   border-color: none;
-
 }
 
 input[type="radio"]:checked + label::after {
