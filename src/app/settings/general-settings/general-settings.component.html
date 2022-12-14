@@ -1,6 +1,6 @@
-<div class="d-flex flex-column h-100 p-4">
+<div class="container-fluid d-flex flex-column h-100 overflow-auto">
   <form [formGroup]="settings" (change)="setup()">
-    <div class="d-flex justify-content-between align-content-center mb-2">
+    <div class="d-flex justify-content-between align-content-center mt-2 mb-2">
       <div class="">
         <h6>Сворачивать в трей</h6>
         <small>Прятать LARS в трей при сворачивании приложения</small>
@@ -70,7 +70,7 @@
     [options]="codemirrorSettings"
     ></ngx-codemirror>
   </div>
-  <hr>
+  <!-- <hr>
   <div class="credits d-flex w-100">
     <div class="d-flex flex-row w-100 justify-content-between">
       <div class="d-flex flex-column">
@@ -83,5 +83,5 @@
         <img src="lars://assets/images/codemirror.png" alt="">
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

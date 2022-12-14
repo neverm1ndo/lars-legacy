@@ -1,22 +1,18 @@
-<!-- <div class="playerlog h-100 nopadding d-flex flex-column flex-fill align-self-stretch">
-  <div class="wrapper-main overflow-auto d-flex align-items-stretch flex-fill">
-    <div class="jumbotron col-12 p-0 pr-0 mb-0 h-100 w-100"> -->
-      <div class="container-fluid h-100 g-0">
-        <div class="d-flex flex-row h-100 overflow-auto">
-          <div class="d-flex h-100 flex-column p-3 sid">
-            <div class="d-flex justify-content-between mb-2">
-              <h3 class="display-6">Настройки</h3>
-            </div>
-            <button routerLink="./general" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Общие</b></button>
-            <button routerLink="./filter" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Фильтр</b></button>
-            <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Оповещения</b></button>
-            <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Лаунчер</b></button>
-          </div>
-          <div [@settingsRoute]="prepareRoute(outlet)" class="d-flex flex-column flex-fill overflow-auto h-100">
-            <router-outlet #outlet="outlet"></router-outlet>
-          </div>
-        </div>
+<div class="container-fluid h-100 g-0">
+  <div class="d-flex flex-row h-100 overflow-auto">
+    <div class="d-flex h-100 flex-column sid">
+      <div class="d-flex justify-content-between mb-2">
+        <h4>Настройки</h4>
       </div>
-    <!-- </div>
+      <button routerLink="./general" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Общие</b></button>
+      <button routerLink="./filter" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Фильтр</b></button>
+      <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Оповещения</b></button>
+      <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Лаунчер</b></button>
+    </div>
+    <div [@settingsRoute]="prepareRoute(outlet)" class="d-flex flex-column flex-fill overflow-auto h-100">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
   </div>
-</div> -->
+</div>
+
+
