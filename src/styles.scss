@@ -73,16 +73,11 @@ button:active, button:focus {
 .wrapper-main {
   width: auto;
 }
-app-auth, app-dashboard, app-login, app-home, app-search-editor, search-results {
-  width: 100%;
-}
 app-topper {
   width: 100%;
   height: 35px;
   display: flex;
-  background-color: $topper;
   z-index: 20;
-  // position: fixed;
   position: relative;
 }
 app-sider {
@@ -100,7 +95,7 @@ app-sider {
 }
 .toast-text {
   opacity: 0.8;
-  padding: 10px 35px 10px 10px;
+  padding: 10px 10px 10px 10px;
   // float: right;
 }
 .toast-icon {
@@ -146,23 +141,6 @@ div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
   ::selection {
     background-color: $clr-clack!important;
     color: white;
-  }
-}
-
-::-webkit-scrollbar {
- background: $topper;
- width: 14px;
- height: 14px;
-}
-::-webkit-scrollbar-corner {
-  background: $topper;
-}
-::-webkit-scrollbar-thumb {
-  background: $scrollbar-thumb;
-  cursor: default!important;
-  transition: 1s ease;
-  &:hover {
-    border: 1px solid $underpanel;
   }
 }
 

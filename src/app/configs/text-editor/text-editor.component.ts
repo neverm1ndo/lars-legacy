@@ -19,8 +19,6 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
 })
 export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public changed: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
   public search: boolean = false;
 
   @ViewChild('editor') editor: CodemirrorComponent;
@@ -30,7 +28,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (event.ctrlKey) {
         switch (event.code) {
           case 'KeyS' : {
-            if (this.changed.getValue()) this.saveFile();
+            if (this.configs.changed$.getValue()) this.saveFile();
             break;
           }
           case 'KeyF' : {
@@ -56,36 +54,25 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
   }
+  
   @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
     if (event.ctrlKey) {
       const size = +this.editorStyle.nativeElement.style.fontSize.substring(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
         this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
-        window.localStorage.setItem('CE_fontSize', this.editorStyle.nativeElement.style.fontSize);
+        window.localStorage.setItem('codemirror/font-size', this.editorStyle.nativeElement.style.fontSize);
     }
   }
 
   public textplain: string;
-  public loading: boolean = false;
 
   public codemirrorSettings = { // CodeMirror settings
     lineNumbers: true,
     theme: 'dracula',
     lineWrapping: true,
-    mode: 'coffeescript'
+    mode: 'coffeescript',
   };
 
   private _origin: Buffer;
-
-  public fa = {
-    save: faSave,
-    fetch: faSync,
-    copy: faCopy,
-    trash: faTrash,
-    branch: faCodeBranch
-  };
-
-  public path: string;
-  public stats: any;
 
   public query = {
     find: '',
@@ -117,35 +104,33 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkChanges();
   }
 
-  deleteFile(): void {
-    this.configs.deleteFile(this.path);
-  }
-
-  pathToClipboard(): void {
-    this.configs.pathToClipboard(this.path);
-  }
-
   saveFile(): void {
-    const blob = new Blob([this.textplain], { type: this.stats.mime });
-    this.loading = true;
-    this.configs.saveFileAsBlob(this.path, blob)
+    const blob = new Blob([this.textplain], { type: this.configs.stats$.getValue().mime });
+    this.configs.loading.next(true);
+    this.configs.saveFileAsBlob(this.configs.path, blob)
                 .subscribe({
                   next: () => {
-                    this.loading = false;
                     this._origin = Buffer.from(this.textplain, 'utf8');
-                    this.stats.size = Buffer.byteLength(this._origin);
-                    this.changed.next(false);
-                    this._toast.show('success', `Конфигурационный файл успешно сохранен`, this.path, faSave);
+                    this.configs.stats$.getValue().size = Buffer.byteLength(this._origin);
+                    this.configs.changed$.next(false);
+                    this.configs.error.next(null);
+                    this._toast.show('success', `Конфигурационный файл успешно сохранен`, this.configs.path, faSave);
                   },
                   error: (err) => {
+                    this.configs.error.next(err);
                     this._toast.show('danger', `Конфигурационный файл не был сохранен по причине:`, err.message, faExclamationTriangle);
                   }, 
                   complete: () => {
+                    this.configs.loading.next(false);
                     setTimeout(() => {
                       this.configs.dprogress$.next(0);
                     }, 2000);
                   }
                 });
+  }
+
+  deleteFile(): void {
+    this.configs.deleteFile(this.configs.path);
   }
 
   private _refreshCodeMirror(): void {
@@ -155,9 +140,9 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   checkChanges(): void {
     if (isEqual(this._origin, Buffer.from(this.textplain, 'utf8'))) {
-      return void (this.changed.next(false));
+      return void (this.configs.changed$.next(false));
     }
-    this.changed.next(true);
+    this.configs.changed$.next(true);
   }
 
   ngOnInit(): void {
@@ -166,7 +151,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this._route.queryParams
     .pipe(
-      tap(params => { this.loading = true; this.path = params.path; this.stats = null; }),
+      tap(params => { this.configs.loading.next(true); this.configs.path = params.path; }),
       switchMap((params) =>
       iif(() => !params.touch,
                 this.configs.getConfig(params.path),
@@ -174,21 +159,26 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     )
     .subscribe({
       next: ([file, info]) => {
-        this.stats = info;
-        switch (this.stats.mime) {
+        this.configs.stats$.next(info);
+        switch (info.mime) {
           case 'text/xml': this.codemirrorSettings.mode = 'xml'; break;
           case 'application/x-sh': this.codemirrorSettings.mode = 'shell'; break;
           default: this.codemirrorSettings.mode = 'coffeescript'; break;
         }
+        this.configs.changed$.next(false);
         this.textplain = file;
         this._origin = Buffer.from(file, 'utf-8');
-        this.loading = false;
+        this.configs.loading.next(false);
       }, 
       error: (err) => {
+        this.configs.error.next(err);
         this._toast.show('danger', `Конфигурационный файл не был загружен по причине:`, err, faExclamationTriangle);
+      },
+      complete: () => {
       }
     });
   }
+  
   ngAfterViewInit(): void {
     this._refreshCodeMirror();
     if (!window.localStorage.getItem('codemirror/font-size')) {
@@ -204,6 +194,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    this.changed.complete();
+    // this.changed.complete();
   }
 }

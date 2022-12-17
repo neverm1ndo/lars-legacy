@@ -1,12 +1,18 @@
-<div class="container-fluid h-100 main g-0 sentinel">
-  <div class="row g-0 w-100 h-100">
-    <div class="d-flex flex-column h-100">
-      <div class="d-flex w-100">
-        <app-topper></app-topper>
-        <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
-      </div>
-      <div class="d-flex flex-fill w-100 h-100 overflow-auto">
-        <router-outlet></router-outlet>
+<div class="container-fluid h-100 g-0 sentinel">
+  <div class="d-flex flex-column h-100 w-100 main">
+    <div class="d-flex flex-shrink-0">
+      <app-topper></app-topper>
+      <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+    </div>
+    <div class="d-flex flex-fill flex-row main">
+      <div class="d-flex app">
+        <div class="d-flex flex-fill app-main overflow-hidden">
+          <div class="app-layers d-flex flex-fill flex-column">
+            <div aria-hidden="false" class="layer platform-win32">
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
