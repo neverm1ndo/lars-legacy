@@ -24,16 +24,23 @@ export class ConfigsService {
     private _router: Router
   ) { }
 
-  error: Subject<any> = new Subject();
+  public error: Subject<Error | null> = new Subject();
   
   public reloader$: BehaviorSubject<any> = new BehaviorSubject(null);
   public dprogress$: BehaviorSubject<number> = new BehaviorSubject(0);
+
+  public stats$: BehaviorSubject<any> = new BehaviorSubject(null);
+  public changed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  public loading: Subject<boolean> = new Subject();
+
+  public path: string = '';
 
   getConfig(path: string): Observable<any> {
     return combineLatest([
       this._api.getConfigText(path),
       this._api.getFileInfo(path)
-    ])
+    ]);
   }
 
   saveFileAsBlob(path: string, blob: Blob): Observable<any> {
@@ -78,24 +85,24 @@ export class ConfigsService {
                               });
   }
 
-  getFileInfo(path: string) {
+  public getFileInfo(path: string) {
     return this._api.getFileInfo(path);
   }
 
-  toEmpty() {
+  public toEmpty() {
     this._router.navigate(['/home/config-editor/empty']);
   }
 
-  reloadFileTree() {
+  public reloadFileTree() {
     this.reloader$.next(null);
   }
 
-  async deleteFile(path: string): Promise<any> {
-    const dialogOpts = {
+  public async deleteFile(path: string): Promise<any> {
+    const dialogOpts: Electron.MessageBoxOptions = {
       type: 'warning',
       buttons: ['Удалить', 'Отмена'],
       title: `Подтверждение удаления`,
-      message: `Вы точно хотите удалить файл ${path}? После подтверждения он будет безвозвратно удален с сервера.`,
+      message: `Вы точно хотите удалить файл ${ path }? После подтверждения он будет безвозвратно удален с сервера.`,
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
       .pipe(

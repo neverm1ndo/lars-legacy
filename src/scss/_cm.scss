@@ -1,6 +1,8 @@
 @import 'colors';
 ngx-codemirror {
   width: 100%;
+  flex: 1 1 auto;
+  display: flex;
 }
 .CodeMirror {
   height: 100%;

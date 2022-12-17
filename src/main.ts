@@ -14,6 +14,8 @@ import 'codemirror/mode/coffeescript/coffeescript';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/anyword-hint';
 
+// import 'codemirror/addon/wrap/hardwrap';
+
 import './addon/search/search';
 
 if (AppConfig.production) {

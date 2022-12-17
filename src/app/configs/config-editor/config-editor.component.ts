@@ -6,7 +6,7 @@ import { switchMap, take, filter } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { ToastService } from '@lars/toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus, faCodeBranch, faCopy, faSync, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
 import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
@@ -32,8 +32,11 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   fa = {
     conf: faFileSignature,
-    save: faSave,
-    del: faTrash
+    save: faCloudUploadAlt,
+    trash: faTrash,
+    fetch: faSync,
+    copy: faCopy,
+    branch: faCodeBranch
   };
 
   constructor(
@@ -76,9 +79,17 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     else this._router.navigate(['/home/configs/binary'], { queryParams: { path: path.path , name: path.name }});
   }
 
-  touchFile(path: string) {
+  public touchFile(path: string) {
     this.currentFilePath = path;
     this._router.navigate(['/home/configs/doc'], { queryParams: { path, touch: true }});
+  }
+
+  public deleteFile(): void {
+    this.configs.deleteFile(this.configs.path);
+  }
+
+  public pathToClipboard(): void {
+    this.configs.pathToClipboard(this.configs.path);
   }
 
   reloadFileTree(): void {
@@ -229,6 +240,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
         this._toast.show('danger', `Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`, err.message, faInfo);
       });
     });
+    
     this._electron.ipcRenderer.on('download-end', () => {
       this._ngZone.run(() => {
         this._toast.show('success', `Файл <b>${ this.currentFilePath }</b> успешно загружен`, null, faInfo);
@@ -240,6 +252,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
+    this.configs.stats$.next(null);
     this._uploadsSubscriptions.unsubscribe();
   }
 }

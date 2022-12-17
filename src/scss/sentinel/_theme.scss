@@ -2,15 +2,39 @@
     @import './dropdown';
     @import './select';
     @import './badges';
-    &.main {
-        background-color: $backgroung-main; 
+    @import 'constants';
+    ::-webkit-scrollbar {
+      background: $scrollbar;
+      width: 12px;
+      height: 14px;
+    }
+    ::-webkit-scrollbar-corner {
+      background: $topper;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: $scrollbar-thumb;
+      cursor: default!important;
+      transition: 1s ease;
+      &:hover {
+        background: $scrollbar-hover;
+      }
+    }
+    .main {
+      background-color: $backgroung-main; 
+    }
+    .filter-form {
+      &::-webkit-scrollbar {
+       background: $scrollbar;
+      }
     }
     .topbar {
+      height: $topbar-height;
+      background-color: $topper;
         .btn {
             &.native {
                 &-close, &-min {
-                    height: 36px;
-                    width: 36px;
+                    height: $topbar-height;
+                    width: $topbar-height;
                     @include btn-native;
                 }
                 &-close {
@@ -172,7 +196,7 @@
         }
         fa-icon {
           font-size: 12px;
-          margin-right: 8px;
+          // margin-right: 8px;
           position: relative;
           top: -1px;
         }
@@ -194,6 +218,56 @@
     }
     .panel-left {
       flex: 1 1 33%;
+    }
+  }
+  .infile-search {
+    small {
+      font-size: 11px;
+    }
+    .findButton {
+      width: 155px;
+    }
+    &-hide {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      svg {
+        position: relative;
+        top: -7px;
+        left: -8px;
+        width: 20px;
+      }
+    }
+    &-head {
+      background: $secondary;
+      padding: 2px 15px 2px 10px;
+      border-bottom: 1px solid #00000015;
+      box-sizing: border-box;
+      span {
+        font-family: 'Consolas';
+      }
+      i {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 100%;
+      }
+    }
+    &-body {
+      background: $filetree;
+      button, input {
+        font-size: 13px!important;
+        border: none!important;
+      }
+      input {
+        font-family: 'Consolas';
+      }
+      button {
+        width: 200px;
+        margin-left: 15px;
+        height: 32px;
+      }
     }
   }
 }
