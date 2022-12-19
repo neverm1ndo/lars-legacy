@@ -1,3 +1,14 @@
+body > .dropdown {
+    .dropdown-menu {
+      background-color: $dropdown;
+      color: white;
+      .dropdown-item {
+        background-color: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+    }
+}
 .sentinel {
     @import './dropdown';
     @import './select';

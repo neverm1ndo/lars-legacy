@@ -55,6 +55,7 @@
     }
     .logline {
       $gutter: 0.5rem;
+      height: 28px;
       border-bottom: 1px solid #0000000f;
       font-size: 12px;
       line-height: 14px;
@@ -95,6 +96,12 @@
           &:hover {
             color: #ffffff90;
           }
+      }
+      .geo-container {
+        position: relative;
+        .dropdown-menu {
+          z-index: 1;
+        }
       }
     }
     .expanded {

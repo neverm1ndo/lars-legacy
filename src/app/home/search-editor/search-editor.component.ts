@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { BehaviorSubject, Observable, of, map, combineLatest } from 'rxjs';
 import { lazy } from '@lars/app.animations';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
+import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-search-editor',
@@ -60,6 +61,10 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
         to,
       }
     });
+  }
+
+  public fa = {
+    globe: faGlobeEurope,
   }
 
   public refresh(): void {
