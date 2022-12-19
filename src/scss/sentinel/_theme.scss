@@ -3,6 +3,7 @@
     @import './select';
     @import './badges';
     @import 'constants';
+    @import '../animations';
     ::-webkit-scrollbar {
       background: $scrollbar;
       width: 12px;
@@ -55,7 +56,7 @@
                   }
                   &:hover {
                     box-shadow: none!important;
-                    background: $tab;
+                    background: $dropdown;
                   }
                   &:active { 
                     background: $dropdown;  
@@ -79,7 +80,7 @@
                         color: inherit;
                         height: inherit;
                         &[aria-expanded = true] {
-                            background: $tab;
+                            background: $dropdown;
                         }
                         img {
                             height: 20px;
@@ -88,7 +89,7 @@
                             cursor: pointer!important;
                             top: -1px;
                             border-radius: 100%;
-                            background: $tab;
+                            background: $dropdown;
                             margin-right: 15px;
                         }
                         svg {
@@ -104,9 +105,9 @@
                         }
                     }
                     &:hover, &:focus, &:active, &:focus-within {
-                        background: $tab!important;
+                        background: $dropdown!important;
                         .dropdown-menu {
-                            background: $tab;
+                            background: $dropdown;
                         }
                     }
                 }
