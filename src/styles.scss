@@ -31,6 +31,12 @@ html, body, app-root {
   width: 100%;
   background: $mainbg;
 }
+body > .dropdown {
+  &-menu {
+    background-color: black;
+    color: white;
+  }
+}
 
 button:active, button:focus {
   outline: none!important;
