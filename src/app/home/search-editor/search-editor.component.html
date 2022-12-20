@@ -1,11 +1,11 @@
 <div class="containter-fluid g-0 h-100">
-  <div class="h-100 d-flex flex-column flex-fill align-items-stretch">
+  <div class="h-100 d-flex flex-column w-100 align-items-stretch">
     <div class="container-fluid g-3">
       <app-search (searchQuery)="search($event)" (syncronize)="sync()"></app-search>
     </div>
-    <div class="container-fluid g-0 h-100">
-      <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" class="viewport" itemSize="30">
-        <div *cdkVirtualFor="let line of list$ | async" class="row logline" [class.banned]="isBanned(line.process)">
+    <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" class="viewport" itemSize="28">
+      <div class="container-fluid g-0 h-100">
+        <div *cdkVirtualFor="let line of list$ | async" class="d-flex flex-row logline" [class.banned]="isBanned(line.process)">
           <ng-container *ngLet="line.process | process as process">
             <div class="col-2">
               <div class="h-100 d-flex align-items-center">
@@ -35,7 +35,7 @@
                     <geo ngbDropdownItem [table]="geo"></geo>
                   </div>
                 </div>
-                <div *ngIf="line.content" class="flex-fill d-flex align-items-center">
+                <div *ngIf="line.content" class="flex-fill d-flex align-items-center w-100">
                   <span class="badge badge-dark mr-2" *ngIf="line.multiplier"> x{{ line.multiplier + 1}} </span>
                   <logline-content [content]="line.content" [type]="process"></logline-content>
                 </div>
@@ -43,7 +43,8 @@
             </div>
           </ng-container>
         </div>
-      </cdk-virtual-scroll-viewport>
+      </div>
+    </cdk-virtual-scroll-viewport>
       <!-- <div class="example-footer">Content after</div> -->
       <!-- <div *ngIf="loading" class="loader">
         <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
@@ -53,7 +54,6 @@
           <h4><fa-icon [icon]="fa.sad"></fa-icon><br>По данному запросу ничего не найдено</h4>
         </div>
       </div> -->
-    </div>
     <!-- <div [@lazy] *ngIf="api.lazy" class="lazy-loader">
       <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
     </div> -->

@@ -94,6 +94,9 @@ input[type="radio"]:checked + label::after {
   	100%{transform: scale(1);}
   }
 }
+.cdk-virtual-scroll-content-wrapper {
+  width: 100%;
+}
 ngb-datepicker {
   border: none;
   z-index: 1!important;
