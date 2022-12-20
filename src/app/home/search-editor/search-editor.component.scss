@@ -1,6 +1,7 @@
 @import 'colors';
 :host {
   height: 100%;
+  width: 100%;
   .lazy-loader {
     position: fixed;
     bottom: 15px;
@@ -23,6 +24,7 @@
     transition: 0.2s linear;
     background: #303136;
     height: 100%;
+    width: 100%;
     .loading-trigger {
       height: 3px;
       background: linear-gradient(to right, red, orange);
@@ -63,6 +65,7 @@
       padding-right: $gutter;
       box-sizing: border-box;
       transition: .05s linear;
+      width: 100%;
       .badge {
         border-radius: 1px;
         font-size: 11px;
@@ -77,9 +80,12 @@
       }
       cursor: pointer;
       background: $filetree;
-      // &:hover {
-      //   background: $scrollbar-thumb;
-      // }
+      &:hover {
+        background: black;
+        .message-shadow {
+          box-shadow: 0px -27px 0px 14px rgba(0, 0, 0, 0.93) inset!important;
+        }
+      }
       .line-id {
         font-size: 10px;
         opacity: 0.7;
