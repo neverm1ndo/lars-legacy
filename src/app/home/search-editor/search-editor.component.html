@@ -4,7 +4,7 @@
       <app-search (searchQuery)="search($event)" (syncronize)="sync()" [loading]="$loading | async"></app-search>
     </div>
     <ng-container *ngLet="$list | async as list">
-      <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" class="viewport" itemSize="28">
+      <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" [attr.data-listlength]="list.length" [attr.data-limit]="$limit | async" class="viewport" itemSize="28">
         <div class="container-fluid g-0 h-100">
           <div *cdkVirtualFor="let line of list" class="d-flex flex-row logline" [class.banned]="isBanned(line.process)">
             <ng-container *ngLet="line.process | process as process">
