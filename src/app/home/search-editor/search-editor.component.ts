@@ -4,7 +4,7 @@ import { ApiService } from '@lars/api.service';
 import { UserService, IUserSettings } from '@lars/user.service';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BehaviorSubject, Subject, Observable, of, map, combineLatest, tap } from 'rxjs';
+import { BehaviorSubject, Subject, Observable, of, map, combineLatest, tap, filter, Subscription } from 'rxjs';
 import { lazy } from '@lars/app.animations';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
 import { faGlobe, faSadTear, faFingerprint } from '@fortawesome/free-solid-svg-icons';
@@ -20,9 +20,15 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
 
   public $reloader: BehaviorSubject<null> = new BehaviorSubject(null);
 
-  public $list: Observable<LogLine[]>;
+  // public $list: Observable<LogLine[]>;
 
-  private $currentPage: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private _pageReciever: Subscription;
+
+  private $currentPage: BehaviorSubject<number> = new BehaviorSubject(0);
+
+  public $list: BehaviorSubject<LogLine[]> = new BehaviorSubject([]);
+
+  public $limit: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
 
   constructor(
     private _api: ApiService,
@@ -34,22 +40,21 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
                                           .pipe(
                                              map((filter) => Object.keys(JSON.parse(filter)).filter((key: string) => filter[key])),
                                           );
-    const $limit: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
     
-    this.$list = this._route.queryParams
-                            .pipe(
-                              mergeMap(({ query, from, to, page }: Params) => combineLatest([
-                                                                          $filter.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
-                                                                          $limit,
-                                                                        ])),
-                              switchMap(([{ query, processFilter, from, to, page }, limit]) => this.$reloader.pipe(
-                                                                            switchMap(() => this.$currentPage),
-                                                                            switchMap((current: number) => this._api.getLogFile(query || '', page ?? current, limit, processFilter, { from, to }))
-                                                                          )),
-                              tap(() => {
-                                this.$loading.next(false);
-                              })
-                            );
+    this._pageReciever = this._route.queryParams.pipe(
+        mergeMap(({ query, from, to, page }: Params) => combineLatest([
+                                                    $filter.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
+                                                    this.$limit,
+                                                  ])),
+        switchMap(([{ query, processFilter, from, to, page }, limit]) => this.$reloader.pipe(
+                                                      switchMap(() => this.$currentPage.pipe(filter(() => this.$list.value.length % limit == 0))),
+                                                      switchMap((currentPage: number) => this._api.getLogFile(query || '', page ?? currentPage, limit, processFilter, { from, to }))
+                                                    )),
+        map((page: LogLine[]) => [...this.$list.value, ...page]),
+    ).subscribe((lines: LogLine[]) => {
+      this.$loading.next(false);
+      this.$list.next(lines);
+    });
   }
 
   public search({ query, from, to }: any): void {
@@ -70,13 +75,6 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
   }
 
   public $loading: Subject<boolean> = new Subject();
-
-
-  public refresh(): void {
-    // this.$loading.next(true);
-    // this.sync();
-  }
-
   
   public isBanned(processname: any) {
     const banned = ['<disconnect/ban>', '<disconnect/kick>'];
@@ -88,7 +86,7 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
   }
 
   public sync(): void {
-    this.$loading.next(true);
+    this.$list.next([]);
     this.$reloader.next(null);
   }
 
@@ -97,7 +95,11 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
     this.$currentPage.next(val + 1);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
   
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this._pageReciever.unsubscribe();
+  }
 }

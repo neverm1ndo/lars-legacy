@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Output, EventEmitter } from '@angular/core';
-import { debounceTime, fromEvent, filter } from 'rxjs';
+import { debounceTime, fromEvent, filter, takeUntil } from 'rxjs';
 
 @Directive({
   selector: '[lazyLoad]'
@@ -10,8 +10,8 @@ export class LazyLoadDirective {
     private _host: ElementRef,
   ) {
     this._scrollEvent$.subscribe({ next: () => {
-      this.onBottom.emit(null) 
-    }})
+      this.onBottom.emit(null);
+    }});
   }
 
   private get host() {
@@ -30,7 +30,8 @@ export class LazyLoadDirective {
   private _scrollEvent$ = fromEvent(this.host, 'scroll')
                         .pipe(
                           filter(() => this._isBottom()),
-                          debounceTime(1200)
-                        )
+                          debounceTime(1200),
+                          filter(() => this.host.dataset.listlength % this.host.dataset.limit === 0)
+                        );
 
 }
