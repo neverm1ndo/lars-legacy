@@ -1,6 +1,17 @@
 @import 'colors';
 
 :host {
+  .spin {
+    fa-icon {
+      transform-origin: center center;
+      position: relative;
+      animation: spin .5s ease infinite;
+      display: block;
+    }
+  }
+  @keyframes spin {
+    100% { transform: rotate(360deg);}
+  }
   .btn {
     margin-right: 5px;
     .new-line-counter {

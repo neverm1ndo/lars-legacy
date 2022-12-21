@@ -10,7 +10,7 @@ export class RolePipe implements PipeTransform {
     [Workgroup.Dev]: 'Разработчик',
     [Workgroup.Admin]: 'Админ',
     [Workgroup.Mapper]: 'Маппер',
-    [Workgroup.CFR]: 'Редактор конфигурационных файлов',
+    [Workgroup.CFR]: 'Ред. конф. файлов',
     [Workgroup.Backuper]: 'Бэкапер',
   }
 

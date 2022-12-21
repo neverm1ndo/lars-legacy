@@ -8,12 +8,12 @@
           <div class="big-drop" ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <div class="w-100 date-dropdown">
               <fa-icon [icon]="fa.calendar"></fa-icon><span> Ограничение по дате</span>
-            <hr>
+              <hr>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">От</span>
                 </div>
-                <input  [ngClass]="{
+                <input [ngClass]="{
                   'is-invalid': searchForm.controls['dateFrom'].invalid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateFrom'].value,
                   'is-valid': searchForm.controls['dateFrom'].valid && (searchForm.dirty || searchForm.touched) && searchForm.controls['dateFrom'].value
                 }" formControlName="dateFrom" name="dateFrom" type="text" class="form-control" placeholder="01 Jan 1970 00:00:00" aria-label="dd.mm.yyyy" aria-describedby="basic-addon1">
@@ -32,8 +32,10 @@
         </div>
       </div>
       <div *ngIf="!quick" class="d-flex flex-row pe-2">
-        <button (mouseenter)="newLineCounter = 0" [attr.data-newlines]="newLineCounter" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading"><fa-icon [icon]="fa.sync"></fa-icon><i *ngIf="newLineCounter !== 0" class="bg-danger text-light new-line-counter">{{newLineCounter}}</i></button>
-        <button class="btn btn-dark" [routerLink]="['/home/search']" name="sync"><fa-icon [icon]="fa.hist"></fa-icon></button>
+        <button [class.spin]="loading" (mouseenter)="newLineCounter = 0" [attr.data-newlines]="newLineCounter" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading">
+          <fa-icon [icon]="fa.sync"></fa-icon>
+          <i *ngIf="newLineCounter !== 0" class="bg-danger text-light new-line-counter">{{ newLineCounter }}</i>
+        </button>
         <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
         <div class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">
           <kbd><fa-icon [icon]="fa.vsquare"></fa-icon> {{lineCounter}}</kbd>

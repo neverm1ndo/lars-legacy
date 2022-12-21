@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
@@ -6,14 +6,14 @@ import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { WebSocketService } from '@lars/web-socket.service';
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs'
+import { Subject, Subscription } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
@@ -51,7 +51,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     private _toast: ToastService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _ws: WebSocketService
+    private _ws: WebSocketService,
+    private _zone: NgZone,
   ) { }
 
   get query() {
@@ -61,10 +62,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       to: this.searchForm.get('dateTo').value
     }
   }
-
-  // get lazy() {
-  //   return this._api.lazy;
-  // }
 
   sendQuery(): void {
     if (this.searchForm.valid) {
@@ -92,17 +89,18 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   sync(): void {
-    // this._api.currentPage = 0;
     this.syncronize.emit(true);
   }
 
   ngOnInit(): void {
-    if (!this.quick) {
+    if (this.quick) return;
+    this._zone.runOutsideAngular(() => {
       this.$newLinesSub = this._ws.getNewLogLines()
-                                  .subscribe(() => {
-                                    this.newLineCounter++;
-                                  });
-    }
+                                  .subscribe({ next: () => {
+                                      this.newLineCounter++;
+                                  }});
+                                
+    });
     this._route.queryParams.pipe(
       filter(({ query }: Params) => query)
     ).subscribe({
@@ -111,8 +109,9 @@ export class SearchComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  
   ngOnDestroy() {
     if (this.$newLinesSub) this.$newLinesSub.unsubscribe();
   }
+
 }

@@ -4,10 +4,10 @@ import { ApiService } from '@lars/api.service';
 import { UserService, IUserSettings } from '@lars/user.service';
 import { mergeMap, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BehaviorSubject, Observable, of, map, combineLatest } from 'rxjs';
+import { BehaviorSubject, Subject, Observable, of, map, combineLatest, tap } from 'rxjs';
 import { lazy } from '@lars/app.animations';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
-import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons';
+import { faGlobe, faSadTear, faFingerprint } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-search-editor',
@@ -18,11 +18,11 @@ import { faGlobeEurope } from '@fortawesome/free-solid-svg-icons';
 })
 export class SearchEditorComponent implements OnInit, OnDestroy {
 
-  public reloader$: BehaviorSubject<null> = new BehaviorSubject(null);
+  public $reloader: BehaviorSubject<null> = new BehaviorSubject(null);
 
-  public list$: Observable<LogLine[]>;
+  public $list: Observable<LogLine[]>;
 
-  private currentPage$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private $currentPage: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(
     private _api: ApiService,
@@ -30,26 +30,26 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
   ) {
-    const filter$ = of(window.localStorage.getItem('filter'))
+    const $filter = of(window.localStorage.getItem('filter'))
                                           .pipe(
                                              map((filter) => Object.keys(JSON.parse(filter)).filter((key: string) => filter[key])),
                                           );
-    const limit$: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
+    const $limit: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
     
-    this.list$ = this._route.queryParams
+    this.$list = this._route.queryParams
                             .pipe(
                               mergeMap(({ query, from, to, page }: Params) => combineLatest([
-                                                                          filter$.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
-                                                                          limit$,
+                                                                          $filter.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
+                                                                          $limit,
                                                                         ])),
-                              switchMap(([{ query, processFilter, from, to, page }, limit]) => this.reloader$.pipe(
-                                                                            switchMap(() => this.currentPage$),
+                              switchMap(([{ query, processFilter, from, to, page }, limit]) => this.$reloader.pipe(
+                                                                            switchMap(() => this.$currentPage),
                                                                             switchMap((current: number) => this._api.getLogFile(query || '', page ?? current, limit, processFilter, { from, to }))
                                                                           )),
+                              tap(() => {
+                                this.$loading.next(false);
+                              })
                             );
-                              // map((logline: LogLine[]) => logline.map((line: LogLine) => {
-                              //   line.process
-                              // })));
   }
 
   public search({ query, from, to }: any): void {
@@ -64,12 +64,17 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
   }
 
   public fa = {
-    globe: faGlobeEurope,
+    globe: faGlobe,
+    sad: faSadTear,
+    fingerprint: faFingerprint,
   }
 
+  public $loading: Subject<boolean> = new Subject();
+
+
   public refresh(): void {
-    // this.loading = true;
-    // this.api.refresh();
+    // this.$loading.next(true);
+    // this.sync();
   }
 
   
@@ -83,18 +88,16 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
   }
 
   public sync(): void {
-    this.reloader$.next(null);
+    this.$loading.next(true);
+    this.$reloader.next(null);
   }
 
   public lazyLoadChunk() {
-    const val: number = this.currentPage$.value; 
-    this.currentPage$.next(val + 1);
+    const val: number = this.$currentPage.value; 
+    this.$currentPage.next(val + 1);
   }
 
-  ngOnInit(): void {
-
-  }
-  ngOnDestroy(): void {
-    // if (this.glfSubber) this.glfSubber.unsubscribe();
-  }
+  ngOnInit(): void {}
+  
+  ngOnDestroy(): void {}
 }

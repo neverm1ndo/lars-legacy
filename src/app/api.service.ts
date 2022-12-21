@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
@@ -40,98 +40,98 @@ export class ApiService {
   readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
 
   constructor(
-    private http: HttpClient,
-    private user: UserService
+    private _http: HttpClient,
+    private _user: UserService
   ) {}
 
   getChunkSize(): string {
-    return this.user.getUserSettings().lineChunk.toString();
+    return this._user.getUserSettings().lineChunk.toString();
   }
 
   getAdminsList(): Observable<any> {
-    return this.http.get(this.URL_ADMINS_LIST);
+    return this._http.get(this.URL_ADMINS_LIST);
   }
   setAdminGroup(id: number, group: number) {
-    return this.http.put(this.URL_ADMIN_CHANGE_GROUP, { id, group: group })
+    return this._http.put(this.URL_ADMIN_CHANGE_GROUP, { id, group: group })
   }
   setAdminSecondaryGroup(id: number, group: number) {
-    return this.http.put(this.URL_ADMIN_CHANGE_SECONDARY_GROUP, { id, group: group })
+    return this._http.put(this.URL_ADMIN_CHANGE_SECONDARY_GROUP, { id, group: group })
   }
   closeAdminSession(username: string): Observable<any> {
-    return this.http.get(this.URL_ADMIN_TOKEN_EXPIRATION, { params: { username: username }})
+    return this._http.get(this.URL_ADMIN_TOKEN_EXPIRATION, { params: { username: username }})
   }
   getConfigsDir(): Observable<any> {
-    return this.http.get(this.URL_CONFIGS);
+    return this._http.get(this.URL_CONFIGS);
   }
   getMapsDir(): Observable<any> {
-    return this.http.get(this.URL_MAPS);
+    return this._http.get(this.URL_MAPS);
   }
   getConfigText(path: string): Observable<any> {
-     return this.http.get(this.URL_CONFIG, { params: { path: path }, responseType: 'text'});
+     return this._http.get(this.URL_CONFIG, { params: { path: path }, responseType: 'text'});
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
-    return this.http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
+    return this._http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
   }
   deleteMap(path: string) {
-    return this.http.delete(this.URL_DELETE_FILE, { params: { path: path }});
+    return this._http.delete(this.URL_DELETE_FILE, { params: { path: path }});
   }
   getLast(filter?: string[]): Observable<any> {
     if (!filter) filter = [];
-    return this.http.get(this.URL_LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
+    return this._http.get(this.URL_LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
   }
   getLogFile(query: string, page: number, limit: number, filter: string[], date?: { from: string, to: string }): Observable<LogLine[]> {
     return this.search(query, page, limit, filter, date);
   }
   getFileInfo(path: string): Observable<any> {
-    return this.http.get(this.URL_FILE_INFO, { params: { path: path }});
+    return this._http.get(this.URL_FILE_INFO, { params: { path: path }});
   }
 
   saveFile(form: FormData): Observable<any> {
-    return this.http.post(this.URL_SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL_SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
 
   uploadFileMap(form: FormData): Observable<any> {
-    return this.http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
   uploadFileCfg(form: FormData): Observable<any> {
-    return this.http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
 
   getBackupsList(): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_LIST)
+    return this._http.get(this.URL_BACKUPS_LIST)
   }
   getBackupFile(name: string, unix: number): Observable<any> {
-    return this.http.get(this.URL_BACKUP_FILE, { params: { name, unix: String(unix) }, responseType: 'text'})
+    return this._http.get(this.URL_BACKUP_FILE, { params: { name, unix: String(unix) }, responseType: 'text'})
   }
   restoreBackup(path: string, unix: string): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } });
+    return this._http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } });
   }
   getBackupsSize(): Observable<any> {
-    return this.http.get(this.URL_BACKUPS_SIZE);
+    return this._http.get(this.URL_BACKUPS_SIZE);
   }
   getStatsOnline(date: Date): Observable<any> {
-    return this.http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});
+    return this._http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});
   }
   getStatsChat(): Observable<any> {
-    return this.http.get(this.URL_STATS_CHAT);
+    return this._http.get(this.URL_STATS_CHAT);
   }
 
   createDirectory(path: string): Observable<any> {
-    return this.http.post(this.URL_MKDIR, { path })
+    return this._http.post(this.URL_MKDIR, { path })
                .pipe(catchError((error) => handleError(error)));
   }
   removeDirectory(path: string): Observable<any> {
-    return this.http.delete(this.URL_RMDIR, { params: { path }})
+    return this._http.delete(this.URL_RMDIR, { params: { path }})
                .pipe(catchError((error) => handleError(error)));
   }
   moveDirectory(path: string, dest: string): Observable<any> {
-    return this.http.patch(this.URL_MVDIR, { path, dest })
+    return this._http.patch(this.URL_MVDIR, { path, dest })
                .pipe(catchError((error) => handleError(error)));
   }
 
   getSampServerMonitor(): Observable<any> {
-    return this.http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
+    return this._http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
   }
 
   // lazyUpdate(page: number): void {
@@ -153,7 +153,7 @@ export class ApiService {
       if (date.from) params = params.append('dateFrom', new Date(date.from).valueOf());
       if (date.to) params = params.append('dateTo', new Date(date.to).valueOf());
     }
-    return this.http.get<LogLine[]>(this.URL_SEARCH, { params });
+    return this._http.get<LogLine[]>(this.URL_SEARCH, { params });
   }
 
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
