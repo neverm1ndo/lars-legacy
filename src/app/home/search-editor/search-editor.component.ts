@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { LogLine } from '@lars/interfaces/app.interfaces';
 import { ApiService } from '@lars/api.service';
 import { UserService, IUserSettings } from '@lars/user.service';
 import { mergeMap, switchMap } from 'rxjs/operators';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { BehaviorSubject, Subject, Observable, of, map, combineLatest, tap, filter, Subscription } from 'rxjs';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
+import { BehaviorSubject, Observable, of, map, combineLatest, tap, filter, Subscription } from 'rxjs';
 import { lazy } from '@lars/app.animations';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
 import { faGlobe, faSadTear, faFingerprint } from '@fortawesome/free-solid-svg-icons';
@@ -20,8 +21,6 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
 
   public $reloader: BehaviorSubject<null> = new BehaviorSubject(null);
 
-  // public $list: Observable<LogLine[]>;
-
   private _pageReciever: Subscription;
 
   private $currentPage: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -30,11 +29,21 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
 
   public $limit: Observable<number> = of(this._user.getUserSettings()).pipe(map(({ lineChunk }: IUserSettings) => lineChunk));
 
+  private _navigationUrlHistory: string[] = [];
+  
+  @HostListener('document:keyup', ['$event']) kbdNavigate(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'Escape' : return void(this._navigateBack());
+      default: return;
+    };
+  }
+
   constructor(
     private _api: ApiService,
     private _user: UserService,
     private _route: ActivatedRoute,
     private _router: Router,
+    private _location: Location,
   ) {
     const $filter = of(window.localStorage.getItem('filter'))
                                           .pipe(
@@ -42,12 +51,13 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
                                           );
     
     this._pageReciever = this._route.queryParams.pipe(
-        mergeMap(({ query, from, to, page }: Params) => combineLatest([
+        switchMap(({ query, from, to, page }: Params) => combineLatest([
                                                     $filter.pipe(map((processFilter: any) => ({ query, from, to, processFilter, page }))),
                                                     this.$limit,
                                                   ])),
+        tap(() => { this._clearList(); }),
         switchMap(([{ query, processFilter, from, to, page }, limit]) => this.$reloader.pipe(
-                                                      switchMap(() => this.$currentPage.pipe(filter(() => this.$list.value.length % limit == 0))),
+                                                      switchMap(() => this.$currentPage),
                                                       switchMap((currentPage: number) => this._api.getLogFile(query || '', page ?? currentPage, limit, processFilter, { from, to }))
                                                     )),
         map((page: LogLine[]) => [...this.$list.value, ...page]),
@@ -55,6 +65,28 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
       this.$loading.next(false);
       this.$list.next(lines);
     });
+
+    this._router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event: NavigationEnd) => event.urlAfterRedirects),
+    ).subscribe({
+      next: (url: string) => {
+        if (this._navigationUrlHistory[this._navigationUrlHistory.length - 1] === url) return;
+        this._navigationUrlHistory.push(url);
+      }
+    });
+  }
+
+  private _navigateBack(): void {
+    const _back = () => {
+      this._navigationUrlHistory.pop();
+      this._location.back();
+    };
+    this._navigationUrlHistory.length > 1 ? _back() : null;
+  }
+
+  private _clearList(): void {
+    this.$list.next([]);
   }
 
   public search({ query, from, to }: any): void {
@@ -74,7 +106,7 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
     fingerprint: faFingerprint,
   }
 
-  public $loading: Subject<boolean> = new Subject();
+  public $loading: BehaviorSubject<boolean> = new BehaviorSubject(true);
   
   public isBanned(processname: any) {
     const banned = ['<disconnect/ban>', '<disconnect/kick>'];
@@ -86,13 +118,13 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
   }
 
   public sync(): void {
-    this.$list.next([]);
+    this._clearList();
+    this.$loading.next(true);
     this.$reloader.next(null);
   }
 
   public lazyLoadChunk() {
-    const val: number = this.$currentPage.value; 
-    this.$currentPage.next(val + 1);
+    this.$currentPage.next(this.$currentPage.value + 1);
   }
 
   ngOnInit(): void {

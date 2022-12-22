@@ -32,8 +32,8 @@
         </div>
       </div>
       <div *ngIf="!quick" class="d-flex flex-row pe-2">
-        <button [class.spin]="loading" (mouseenter)="newLineCounter = 0" [attr.data-newlines]="newLineCounter" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading">
-          <fa-icon [icon]="fa.sync"></fa-icon>
+        <button (mouseenter)="newLineCounter = 0" [attr.data-newlines]="newLineCounter" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading">
+          <fa-icon [class.spin]="loading" [icon]="fa.sync"></fa-icon>
           <i *ngIf="newLineCounter !== 0" class="bg-danger text-light new-line-counter">{{ newLineCounter }}</i>
         </button>
         <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>

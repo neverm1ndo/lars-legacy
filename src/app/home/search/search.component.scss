@@ -2,18 +2,23 @@
 
 :host {
   .spin {
-    fa-icon {
-      transform-origin: center center;
-      position: relative;
-      animation: spin .5s ease infinite;
-      display: block;
-    }
+    transform-origin: 11.5px 10.5px;
+    position: relative;
+    animation: spin .5s ease infinite;
+    display: block;
   }
   @keyframes spin {
     100% { transform: rotate(360deg);}
   }
   .btn {
     margin-right: 5px;
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    .center {
+      width: 19px;
+      height: 19px;
+    }
     .new-line-counter {
       position: absolute;
       padding: 0px 6px 0px 6px;
@@ -78,8 +83,8 @@
     }
   }
   .head {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     max-height: 50px;
     button[type="submit"] {
       border: 1px solid $clr-formcontrol;
@@ -102,6 +107,11 @@
     background-color: transparent!important;
     border: none;
     transition: 0.1s linear;
+    text-align: center;
+    vertical-align: middle;
+    fa-icon {
+      display: block;
+    }
     &:hover, &:active, &:focus {
       background-color: rgb(0 0 0 / 30%)!important;
     }
