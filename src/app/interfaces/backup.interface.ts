@@ -3,6 +3,7 @@ import { BackupAction } from "@lars/enums/backup.action.enum";
 export interface Backup {
     unix: number;
     date: Date,
+    hash: string;
     expires: Date,
     action: BackupAction,
     user: {

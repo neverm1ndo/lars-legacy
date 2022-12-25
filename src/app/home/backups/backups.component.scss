@@ -1,4 +1,8 @@
 @import 'colors';
+:host {
+  width: 100%;
+  height: 100%;
+}
 h4 {
   font-weight: lighter;
   margin: 5px 0px 5px 0px;
@@ -20,26 +24,6 @@ p, a, span, button, div {
 }
 .list {
   flex: 1 1 70%;
-}
-.underpanel {
-  max-height: 28px!important;
-  background-color: $underpanel;
-  &-panel {
-    .progress {
-      width: 100px;
-      border-radius: 0px;
-      height: 3px;
-      &-bar {
-        background-color: green;
-      }
-    }
-  }
-}
-.history {
-  background: $secondary;
-  &-head {
-    border-bottom: 1px solid $underpanel;
-  }
 }
 .changes-card {
   margin: 5px 15px 5px 15px;
@@ -96,19 +80,11 @@ p, a, span, button, div {
   }
 }
 .backups-list {
-  background: $underpanel;
-  margin: 1px 0 1px 0;
-  .active {
-    background: $texteditor;
-    &:hover {
-      background: $texteditor!important;
-    }
-  }
+  background: $filetree;
 }
 .viewer {
-  flex: 1 1 30%;
   &-code {
-    background: $filetree;
+    background: $texteditor;
     overflow: hidden;
     pre {
       color: $text-secondary;
@@ -127,8 +103,7 @@ p, a, span, button, div {
     }
   }
   &-head {
-    background: $underpanel;
-    padding: 5px 15px 5px 10px;
+    background: $topper;
     &-elapse {
       text-overflow: ellipsis;
       overflow-x: hidden;
@@ -152,8 +127,6 @@ p, a, span, button, div {
     }
   }
   &-bottom {
-    border-top: 1px solid $secondary;
-    background: $underpanel;
     padding: 5px;
     button {
       min-height: 20px;

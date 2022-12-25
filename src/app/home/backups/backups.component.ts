@@ -1,34 +1,30 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
-import { combineLatest, from, iif, BehaviorSubject, of, throwError } from 'rxjs';
+import { catchError, take, map, switchMap, filter, mergeMap } from 'rxjs/operators'
+import { from, iif, of, throwError, Observable, tap } from 'rxjs';
 import { handleError } from '@lars/utils';
-// import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { Backup } from '@lars/interfaces';
+import { IOutputAreaSizes } from 'angular-split';
 
 @Component({
   selector: 'app-backups',
   templateUrl: './backups.component.html',
   styleUrls: ['./backups.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackupsComponent implements OnInit, OnDestroy {
 
   @ViewChild('binds') binds: ElementRef<HTMLDivElement>;
   @ViewChild('backupsList') backupsItems: ElementRef<HTMLDivElement>;
-
-  constructor(
-    private _renderer: Renderer2,
-    private _api: ApiService,
-    private _toast: ToastService,
-    private _electron: ElectronService,
-  ) { }
-
-  public $backups: BehaviorSubject<Backup[] | null> = new BehaviorSubject(null);
+  
+  public $backups: Observable<Backup[]> = this._api.getBackupsList();
 
   public current: Backup;
+
+  public paneStates: number[] = [];
 
   public fa = {
     sign: faFileSignature,
@@ -44,34 +40,79 @@ export class BackupsComponent implements OnInit, OnDestroy {
     lineWrapping: true,
     readOnly: true
   };
+  
+  constructor(
+    private _renderer: Renderer2,
+    private _api: ApiService,
+    private _toast: ToastService,
+    private _electron: ElectronService,
+  ) {
+    this.paneStates = this._setPanesState();
+  }
+
+
+  public savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
+    window.localStorage.setItem('lars/ui/panes/backups', JSON.stringify(event.sizes));
+  }
+
+  private _setPanesState(): number[] {
+    try {
+      const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/backups'));
+      if (!states) throw 'undefined states';
+      return states;
+    } catch(err) {
+      console.error(err);
+      return [20, 80];
+    }
+  }
 
   public willBeDeletedSoon(date: Date): boolean {
     return (Math.round((new Date(date).getTime() - new Date().getTime()) / 1000)) < 86400*2;
   }
 
+  private _applyStylesPx(this: any, styles: { [key: string] : any }) {
+    for (let style in styles) {
+      this.style[style] = styles[style] + 'px';
+    };
+  }
+
   private _createBindBackbone(height: number, color: string, top: number, right: number, filename: string): HTMLDivElement {
     const line = this._renderer.createElement('div');
     this._renderer.addClass(line, 'bind');
-    line.style.height = height + 'px';
+    
+    const styles = {
+      height,
+      width: 3,
+      marginLeft: right,
+      marginRight: 8,
+      top,
+    };
+
     line.style.background = color;
-    line.style.width = '3px';
-    line.style.marginLeft = right + 'px';
-    line.style.marginRight = '8px';
     line.dataset.filename = filename;
-    line.style.top = top + 'px';
     line.style.position = 'relative';
+    
+    this._applyStylesPx.call(line, styles);
+
     return line;
   }
 
   private _createBindRib(width: number, color: string, top: number, left: number): HTMLDivElement {
     const line = this._renderer.createElement('div');
     this._renderer.addClass(line, 'bind-rib')
-    line.style.width = width + 3 + 'px';
-    line.style.height = '3px';
+    
+    const styles = {
+      width: (width + 3) + 'px',
+      height: 3,
+      top,
+      left,
+    };
+    
     line.style.background = color;
-    line.style.top = top + 'px';
-    line.style.left = left + 'px';
     line.style.position = 'relative';
+
+    this._applyStylesPx.call(line, styles);
+
     return line;
   }
 
@@ -82,28 +123,31 @@ export class BackupsComponent implements OnInit, OnDestroy {
      this.binds.nativeElement.append(this._createBindRib(width, color, top, left * 8));
   }
   private _colorGenerator(filenames: any[]): string[] {
+    
     function hashCode(str: string) {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
          hash = str.charCodeAt(i) + ((hash << 5) - hash);
       }
       return hash;
-    }
-    function intToRGB(i: number){
+    };
+    
+    function intToRGB(i: number): string {
       let c = (i & 0x00FFFFFF)
           .toString(16)
           .toUpperCase();
       return "00000".substring(0, 6 - c.length) + c;
-    }
+    };
+    
     return filenames.map((filename: string) => '#' + intToRGB(hashCode(filename)));
   }
 
-  private _drawGraph(): void {
+  private async _drawGraph(): Promise<void> {
     const childs: HTMLCollection = this.backupsItems.nativeElement.children;
     let topMarge: number = this.binds.nativeElement.getBoundingClientRect().top - 23;
     let bb: any;
     let prevHeight: number = 0;
-    const drawBackbones = () => {
+    const drawBackbones = async () => {
       const uniqueFileNames: Set<string> = new Set();
       for (let i = 0; i < childs.length; i++) {
         const filename = childs[i].getAttribute('data-filename');
@@ -137,7 +181,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
       }
     }
     let ribs: number = 0;
-    const drawRibs = () => {
+    const drawRibs = async () => {
       const bbs = Object.keys(bb);
       for (let i = 0; i < childs.length; i++) {
         const filename = childs[i].getAttribute('data-filename');
@@ -151,8 +195,8 @@ export class BackupsComponent implements OnInit, OnDestroy {
   }
 
   public getBackupFile(backup: Backup): void {
-  if (backup.file.binary) return;
-    this._api.getBackupFile(backup.file.name, backup.unix)
+    if (backup.file.binary) return;
+    this._api.getBackupFile(backup.hash)
               .pipe(
                 catchError(error => handleError(error)),
                 take(1)
@@ -169,13 +213,13 @@ export class BackupsComponent implements OnInit, OnDestroy {
               });
   }
 
-  public removeBackup() {
+  public removeBackup(): void {
     /**
     * Not Implemented;
     */
   }
 
-  public restoreBackup() {
+  public restoreBackup(): void {
     const dialogOpts: Electron.MessageBoxOptions = {
       type: 'warning',
       buttons: ['Да, установить', 'Отмена'],
@@ -184,7 +228,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
       .pipe(
-        switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.file.path, this.current.unix.toString()), throwError(() => new Error('Cancelled by user')))),
+        switchMap((val) => iif(() => val.response == 0, this._api.restoreBackup(this.current.hash), throwError(() => new Error('Cancelled by user')))),
         catchError(error => handleError(error)),
         take(1)
       )
@@ -200,7 +244,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    
     of(window.localStorage.getItem('settings'))
       .pipe(
         filter((settings: string | null) => settings !== null),
@@ -209,40 +252,9 @@ export class BackupsComponent implements OnInit, OnDestroy {
       .subscribe(({ textEditorStyle }) => {
         this.codeMirrorSettings.theme = textEditorStyle;
       });
-
-    
-    
-      combineLatest([
-        this._api.getAdminsList(),
-        this._api.getBackupsList(),
-      ])
-      .pipe(
-        take(1),
-        map(([admins, backups]: [any, Backup[]]) => {
-          admins = admins.reduce((acc: any, { username, user_avatar }: any) => ({
-           ...acc, [username]: user_avatar
-          }), {})
-          return backups.map((backup: Backup) => {
-            backup.user.avatar = admins[backup.user.nickname];
-            return backup;
-          })
-        })
-      )
-      .subscribe((backups: Backup[]) => {
-        this.$backups.next(backups);
-      });
-    
-    this.$backups.pipe(
-      filter((val) => val !== null),
-    )
-    .subscribe(() => {
-      setTimeout(() => this._drawGraph());
-    })
-
   }
 
   ngOnDestroy() {
-    this.$backups.complete();
   }
 
 }
