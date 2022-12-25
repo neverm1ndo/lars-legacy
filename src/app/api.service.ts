@@ -11,33 +11,72 @@ import { LogLine } from './interfaces';
   providedIn: 'root'
 })
 export class ApiService {
+ 
+  protected URL = (() => {
+    const main: string = AppConfig.api.main;
+    const routes = {
+      LOGS: {
+        __route: 'logs',
+        LAST: 'last',
+        SEARCH: 'search',
+      },
+      CONFIGS: {
+        __route: 'configs',
+        FILE_TREE: 'config-files-tree',
+        CONFIG_FILE: 'config-file',
+        FILE_STATS: 'file-info',
+        UPLOAD: 'upload-file',
+        SAVE_FILE: 'save-config',
+      },
+      MAPS: {
+        __route: 'maps',
+        FILE_TREE: 'maps-file-tree',
+        MAP_FILE: 'map-file',
+        UPLOAD: 'upload-map'
+      },
+      ADMINS: {
+        __route: 'admins',
+        LIST: 'list',
+        CHANGE_MAIN_GROUP: 'change-group',
+        CHANGE_SECONDARY_GROUP: 'change-secondary-group',
+      },
+      BACKUPS: {
+        __route: 'backups',
+        LIST: 'backups-list',
+        RESTORE: 'restore-backup',
+        REMOVE: 'remove-backup',
+        BACKUP_FILE: 'backup-file',
+        SIZE: 'size',
+      },
+      STATS: {
+        __route: 'stats',
+        ONLINE: 'online',
+        CHAT: 'chat',
+      },
+      UTILS: {
+        __route: 'utils',
+        DELETE_FILE: 'delete-file',
+        MKDIR: 'mkdir',
+        RMDIR: 'rmdir',
+        MVDIR: 'mvdir',
+      }
+    };
 
-  readonly URL_LAST: string = AppConfig.api.main + 'logs/last';
-  readonly URL_SEARCH: string =  AppConfig.api.main + 'logs/search';
-  readonly URL_CONFIGS: string =  AppConfig.api.main + 'configs/config-files-tree';
-  readonly URL_CONFIG: string =  AppConfig.api.main + 'configs/config-file';
-  readonly URL_FILE_INFO: string =  AppConfig.api.main + 'configs/file-info';
-  readonly URL_UPLOAD_CFG: string =  AppConfig.api.main + 'configs/upload-file';
-  readonly URL_SAVE_CONFIG: string =  AppConfig.api.main + 'configs/save-config';
-  readonly URL_UPLOAD_MAP: string =  AppConfig.api.main + 'maps/upload-map';
-  readonly URL_MAPS: string =  AppConfig.api.main + 'maps/maps-files-tree';
-  readonly URL_MAPINFO: string = AppConfig.api.main + 'maps/map-file';
-  readonly URL_DELETE_FILE: string = AppConfig.api.main + 'utils/delete-file';
-  readonly URL_ADMINS_LIST: string = AppConfig.api.main + 'admins/list';
-  readonly URL_ADMIN_CHANGE_GROUP: string = AppConfig.api.main + 'admins/change-group';
-  readonly URL_ADMIN_CHANGE_SECONDARY_GROUP: string = AppConfig.api.main + 'admins/change-secondary-group';
-  readonly URL_ADMIN_TOKEN_EXPIRATION: string = AppConfig.api.main + 'admins/expire-token';
-  readonly URL_BACKUPS_LIST: string = AppConfig.api.main + 'backups/backups-list';
-  readonly URL_BACKUPS_RESTORE: string = AppConfig.api.main + 'backups/restore-backup';
-  readonly URL_BACKUP_FILE: string = AppConfig.api.main + 'backups/backup-file';
-  readonly URL_BACKUPS_SIZE: string = AppConfig.api.main + 'backups/size';
-  readonly URL_STATS_ONLINE: string = AppConfig.api.main + 'stats/online';
-  readonly URL_STATS_CHAT: string = AppConfig.api.main + 'stats/chat';
-  readonly URL_MKDIR: string = AppConfig.api.main + 'utils/mkdir';
-  readonly URL_RMDIR: string = AppConfig.api.main + 'utils/rmdir';
-  readonly URL_MVDIR: string = AppConfig.api.main + 'utils/mvdir';
+    function buildTree(routes: any): typeof routes {
+      const routeName: string = routes.__route + '/';
+      for (let route in routes) {
+        if (typeof routes[route] === 'string') {
+          if (route.startsWith('_')) continue;
+          routes[route] = main + routeName + routes[route]; 
+        } else {
+          routes[route] = buildTree(routes[route]);
+        }
+      }
+      return routes;
+    }
 
-  readonly SERVER_MONITOR: string = AppConfig.links.server_monitor;
+    return buildTree(routes);
+  })();
 
   constructor(
     private _http: HttpClient,
@@ -49,98 +88,88 @@ export class ApiService {
   }
 
   getAdminsList(): Observable<any> {
-    return this._http.get(this.URL_ADMINS_LIST);
+    return this._http.get(this.URL.ADMINS.LIST);
   }
   setAdminGroup(id: number, group: number) {
-    return this._http.put(this.URL_ADMIN_CHANGE_GROUP, { id, group: group })
+    return this._http.put(this.URL.ADMINS.CHANGE_MAIN_GROUP, { id, group: group })
   }
   setAdminSecondaryGroup(id: number, group: number) {
-    return this._http.put(this.URL_ADMIN_CHANGE_SECONDARY_GROUP, { id, group: group })
-  }
-  closeAdminSession(username: string): Observable<any> {
-    return this._http.get(this.URL_ADMIN_TOKEN_EXPIRATION, { params: { username: username }})
+    return this._http.put(this.URL.ADMINS.CHANGE_SECONDARY_GROUP, { id, group: group })
   }
   getConfigsDir(): Observable<any> {
-    return this._http.get(this.URL_CONFIGS);
+    return this._http.get(this.URL.CONFIGS.FILE_TREE);
   }
   getMapsDir(): Observable<any> {
-    return this._http.get(this.URL_MAPS);
+    return this._http.get(this.URL.MAPS.FILE_TREE);
   }
   getConfigText(path: string): Observable<any> {
-     return this._http.get(this.URL_CONFIG, { params: { path: path }, responseType: 'text'});
+     return this._http.get(this.URL.CONFIGS.CONFIG_FILE, { params: { path: path }, responseType: 'text'});
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
-    return this._http.get(this.URL_MAPINFO, { params: { path: path }, headers: headers, responseType: 'text' });
+    return this._http.get(this.URL.MAP.MAP_FILE, { params: { path: path }, headers: headers, responseType: 'text' });
   }
   deleteMap(path: string) {
-    return this._http.delete(this.URL_DELETE_FILE, { params: { path: path }});
+    return this._http.delete(this.URL.UTILS.DELETE_FILE, { params: { path: path }});
   }
   getLast(filter?: string[]): Observable<any> {
     if (!filter) filter = [];
-    return this._http.get(this.URL_LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
+    return this._http.get(this.URL.LOGS.LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
   }
   getLogFile(query: string, page: number, limit: number, filter: string[], date?: { from: string, to: string }): Observable<LogLine[]> {
     return this.search(query, page, limit, filter, date);
   }
   getFileInfo(path: string): Observable<any> {
-    return this._http.get(this.URL_FILE_INFO, { params: { path: path }});
+    return this._http.get(this.URL.CONFIGS.FILE_STATS, { params: { path: path }});
   }
 
   saveFile(form: FormData): Observable<any> {
-    return this._http.post(this.URL_SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL.CONFIGS.SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
 
   uploadFileMap(form: FormData): Observable<any> {
-    return this._http.post(this.URL_UPLOAD_MAP, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL.MAPS.UPLOAD, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
   uploadFileCfg(form: FormData): Observable<any> {
-    return this._http.post(this.URL_UPLOAD_CFG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL.CONFIGS.UPLOAD, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
 
   getBackupsList(): Observable<any> {
-    return this._http.get(this.URL_BACKUPS_LIST)
+    return this._http.get(this.URL.BACKUPS.LIST)
   }
-  getBackupFile(name: string, unix: number): Observable<any> {
-    return this._http.get(this.URL_BACKUP_FILE, { params: { name, unix: String(unix) }, responseType: 'text'})
+  getBackupFile(hash: string): Observable<any> {
+    return this._http.get(`${this.URL.BACKUPS.FILE}/${hash}`, { responseType: 'text' })
   }
-  restoreBackup(path: string, unix: string): Observable<any> {
-    return this._http.get(this.URL_BACKUPS_RESTORE, { params: { path, unix } });
+  restoreBackup(hash: string): Observable<any> {
+    return this._http.get(`${this.URL.BACKUPS.RESTORE}/${hash}`);
   }
+  removeBackup(hash: string): Observable<any> {
+    return this._http.delete(`${this.URL.BACKUPS.REMOVE}/${hash}`);
+  }
+  
   getBackupsSize(): Observable<any> {
-    return this._http.get(this.URL_BACKUPS_SIZE);
+    return this._http.get(this.URL.BACKUPS.SIZE);
   }
+
   getStatsOnline(date: Date): Observable<any> {
-    return this._http.get(this.URL_STATS_ONLINE, { params: { day: date.toISOString()}});
+    return this._http.get(this.URL.STATS.ONLINE, { params: { day: date.toISOString()}});
   }
   getStatsChat(): Observable<any> {
-    return this._http.get(this.URL_STATS_CHAT);
+    return this._http.get(this.URL.STATS.CHAT);
   }
 
   createDirectory(path: string): Observable<any> {
-    return this._http.post(this.URL_MKDIR, { path })
+    return this._http.post(this.URL.UTILS.MKDIR, { path })
                .pipe(catchError((error) => handleError(error)));
   }
   removeDirectory(path: string): Observable<any> {
-    return this._http.delete(this.URL_RMDIR, { params: { path }})
+    return this._http.delete(this.URL.UTILS.RMDIR, { params: { path }})
                .pipe(catchError((error) => handleError(error)));
   }
   moveDirectory(path: string, dest: string): Observable<any> {
-    return this._http.patch(this.URL_MVDIR, { path, dest })
+    return this._http.patch(this.URL.UTILS.MVDIR, { path, dest })
                .pipe(catchError((error) => handleError(error)));
   }
-
-  getSampServerMonitor(): Observable<any> {
-    return this._http.get(this.SERVER_MONITOR, { params: { ip: new URL(AppConfig.api.main).host, port: 7777 }});
-  }
-
-  // lazyUpdate(page: number): void {
-  //   if (this.currentPage >= 0 && (this.currentPage + page) !== -1) {
-  //     this.lazy = true;
-  //     this.currentPage += page;
-  //     this.refresh();
-  //   }
-  // }
 
   search(query: any, page: number, limit: number, filter?: string[], date?: { from?: string, to?: string}): Observable<LogLine[]> {
     let params: HttpParams = new HttpParams().appendAll({
@@ -153,7 +182,7 @@ export class ApiService {
       if (date.from) params = params.append('dateFrom', new Date(date.from).valueOf());
       if (date.to) params = params.append('dateTo', new Date(date.to).valueOf());
     }
-    return this._http.get<LogLine[]>(this.URL_SEARCH, { params });
+    return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
   }
 
   addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
