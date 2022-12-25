@@ -86,6 +86,10 @@ p, a, span, button, div {
   &-code {
     background: $texteditor;
     overflow: hidden;
+    lty-icon {
+      width: 32px;
+      height: 32px;
+    }
     pre {
       color: $text-secondary;
       padding: 10px;

@@ -117,6 +117,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
                     this._toast.show('success', `Конфигурационный файл успешно сохранен`, this.configs.path, faSave);
                   },
                   error: (err) => {
+                    console.error(err);
                     this.configs.error.next(err);
                     this._toast.show('danger', `Конфигурационный файл не был сохранен по причине:`, err.message, faExclamationTriangle);
                   }, 

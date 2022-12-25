@@ -7,5 +7,5 @@ export const handleError = (error: HttpErrorResponse): Observable<HttpErrorRespo
   } else {
     console.error( `Backend returned code ${error.status} \n body was: ${error.error}`);
   }
-  return throwError(error);
+  return throwError(() => error);
 };

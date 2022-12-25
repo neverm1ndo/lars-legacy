@@ -124,7 +124,7 @@ export class ApiService {
   }
 
   saveFile(form: FormData): Observable<any> {
-    return this._http.post(this.URL.CONFIGS.SAVE_CONFIG, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
+    return this._http.post(this.URL.CONFIGS.SAVE_FILE, form, { reportProgress: true, observe: 'events', responseType: 'blob' });
   }
 
   uploadFileMap(form: FormData): Observable<any> {
@@ -138,7 +138,7 @@ export class ApiService {
     return this._http.get(this.URL.BACKUPS.LIST)
   }
   getBackupFile(hash: string): Observable<any> {
-    return this._http.get(`${this.URL.BACKUPS.FILE}/${hash}`, { responseType: 'text' })
+    return this._http.get(`${this.URL.BACKUPS.BACKUP_FILE}/${hash}`, { responseType: 'text' })
   }
   restoreBackup(hash: string): Observable<any> {
     return this._http.get(`${this.URL.BACKUPS.RESTORE}/${hash}`);
