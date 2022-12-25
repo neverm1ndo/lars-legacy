@@ -13,9 +13,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BackupsComponent } from './backups.component';
 import { BackupItemComponent } from './backup-item/backup-item.component';
+import { BackupsGraphDirective } from './directives/backups-graph.directive';
+import { BackupsGraphItemDirective } from './directives/backups-graph-item.directive';
+import { BackupsService } from './backups.service';
 
 @NgModule({
-  declarations: [BackupsComponent, BackupItemComponent],
+  declarations: [BackupsComponent, BackupItemComponent, BackupsGraphDirective, BackupsGraphItemDirective],
   imports: [
     CommonModule,
     BackupsRoutingModule,
@@ -28,6 +31,7 @@ import { BackupItemComponent } from './backup-item/backup-item.component';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  providers: [BackupsService]
 })
 export class BackupsModule { }
