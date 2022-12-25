@@ -4,7 +4,7 @@ import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map, switchMap, filter, mergeMap, takeUntil } from 'rxjs/operators'
-import { from, iif, of, throwError, Observable, tap, BehaviorSubject, Subject } from 'rxjs';
+import { from, iif, of, concat, throwError, Observable, tap, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { handleError } from '@lars/utils';
 import { Backup } from '@lars/interfaces';
 import { IOutputAreaSizes } from 'angular-split';
@@ -24,6 +24,8 @@ export class BackupsComponent implements OnInit, OnDestroy {
   public $backups: Observable<Backup[]> = this._api.getBackupsList();
   public $current: BehaviorSubject<Backup> = new BehaviorSubject(null);
   public $error: Subject<Error> = new Subject();
+
+  private _graphDrawSubscription: Subscription;
 
   public paneStates: number[] = [];
 
@@ -266,9 +268,14 @@ export class BackupsComponent implements OnInit, OnDestroy {
       .subscribe(({ textEditorStyle }) => {
         this.codeMirrorSettings.theme = textEditorStyle;
       });
+    
+      this._graphDrawSubscription = this.$backups.subscribe({
+        next: () => setTimeout(() => this._drawGraph(), 0),
+      });
   }
 
   ngOnDestroy() {
+    this._graphDrawSubscription.unsubscribe();
   }
 
 }
