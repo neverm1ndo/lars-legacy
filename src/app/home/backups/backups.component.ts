@@ -3,8 +3,8 @@ import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd, faToolbox } from '@fortawesome/free-solid-svg-icons';
-import { catchError, take, map, switchMap, filter, mergeMap, takeUntil } from 'rxjs/operators'
-import { from, iif, of, concat, throwError, Observable, tap, BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
+import { from, iif, of, throwError, Observable, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { handleError } from '@lars/utils';
 import { Backup } from '@lars/interfaces';
 import { IOutputAreaSizes } from 'angular-split';
@@ -46,7 +46,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
   };
   
   constructor(
-    private _renderer: Renderer2,
     private _api: ApiService,
     private _toast: ToastService,
     private _electron: ElectronService,
@@ -93,7 +92,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
   }
 
   public showBackupView(backup: Backup) {
-    this.$current.next(backup);
+    this.$current.next(backup)
     this._api.getBackupFile(backup.hash)
                     .pipe(
                       catchError(error => this.__handleError(error)),
