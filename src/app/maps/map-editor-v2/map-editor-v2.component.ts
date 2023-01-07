@@ -71,7 +71,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   private _showDebugGUI(): void {
-    function createFolder(name: string, fields: any[][], folder?: any) {
+    const createFolder = (name: string, fields: any[][], folder?: any) => {
+      console.log(fields)
       if (!folder) folder = this._gui.addFolder(name);
             fields.forEach((args: any[]) => {
                     folder.add(...args).listen();
@@ -84,17 +85,12 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
       [this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length],
       [this._scene.children, 'length', 0, this._mapChunksNames.length + 2],
     ]);
-    createFolder('Camera', [
+    createFolder('Camera',
       ['x', 'y', 'z'].map((axis: string) => [this._camera.position, axis])
-    ]);
+    );
     const renderer = this._gui.addFolder('Renderer');
-    createFolder('Memory', [
-                    ['geometries', 'textures'].map((type: string) => [this._renderer.info.memory, type])
-                  ], renderer);
-    createFolder('Render', [
-                    [this._renderer.info.render, 'triangles'],
-                    [this, '_limiter'],
-                  ], renderer);
+    createFolder('Memory', ['geometries', 'textures'].map((type: string) => [this._renderer.info.memory, type]), renderer);
+    createFolder('Render', [[this._renderer.info.render, 'triangles'], [this, '_limiter']], renderer);
   }
 
   /**
@@ -277,7 +273,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._renderer.forceContextLoss();
 
     /** Destroy GUI */
-    this._gui.destroy();
+    if (this._gui) this._gui.destroy();
     this._stats.end();
   }
 }
