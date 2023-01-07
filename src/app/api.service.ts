@@ -30,7 +30,7 @@ export class ApiService {
       },
       MAPS: {
         __route: 'maps',
-        FILE_TREE: 'maps-file-tree',
+        FILE_TREE: 'maps-files-tree',
         MAP_FILE: 'map-file',
         UPLOAD: 'upload-map'
       },
