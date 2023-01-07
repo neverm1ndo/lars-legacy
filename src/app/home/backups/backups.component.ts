@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd, faToolbox } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
-import { from, iif, of, throwError, Observable, BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { from, iif, of, throwError, Observable, BehaviorSubject, Subject, mergeMap, merge, takeWhile, debounceTime } from 'rxjs';
 import { handleError } from '@lars/utils';
 import { Backup } from '@lars/interfaces';
 import { IOutputAreaSizes } from 'angular-split';
@@ -17,15 +17,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackupsComponent implements OnInit, OnDestroy {
-
-  @ViewChild('binds') binds: ElementRef<HTMLDivElement>;
-  @ViewChild('backupsList') backupsItems: ElementRef<HTMLDivElement>;
   
   public $backups: Observable<Backup[]> = this._api.getBackupsList();
-  public $current: BehaviorSubject<Backup> = new BehaviorSubject(null);
+  private $currentSubject: BehaviorSubject<Backup> = new BehaviorSubject(null);
+  public $current: Observable<Backup> = merge(this.$currentSubject, this.$currentSubject.pipe(
+                                            filter((backup) => backup !== null),
+                                            debounceTime(500),
+                                            switchMap((backup: Backup) => this._getBackupFile(backup.hash)
+                                                                              .pipe(map((text: string) => {
+                                                                                backup.file.text = text;
+                                                                                return backup;
+                                                                              })))
+                                         ));
+  
   public $error: Subject<Error> = new Subject();
-
-  private _graphDrawSubscription: Subscription;
 
   public paneStates: number[] = [];
 
@@ -79,33 +84,16 @@ export class BackupsComponent implements OnInit, OnDestroy {
     return throwError(() => error);                               
   }
 
-  public getBackupFile(backup: Backup): Observable<string> {  
-    return this._api.getBackupFile(backup.hash)
-                    .pipe(
-                      catchError(error => this.__handleError(error)),
-                      take(1)
-                    );
-  }
-
   public closeView() {
-    this.$current.next(null);
+    this.$currentSubject.next(null);
   }
 
   public showBackupView(backup: Backup) {
-    this.$current.next(backup)
-    this._api.getBackupFile(backup.hash)
-                    .pipe(
-                      catchError(error => this.__handleError(error)),
-                      take(1)
-                    )
-                    .subscribe((text: string) => {
-                      backup.file.text = text;
-                      this.$current.next(backup);
-                    })
+    this.$currentSubject.next(backup);
   }
 
   public removeBackup(): void {
-    const current: Backup = this.$current.value;
+    const current: Backup = this.$currentSubject.value;
 
     const dialogOpts: Electron.MessageBoxOptions = {
       type: 'warning',
@@ -126,19 +114,19 @@ export class BackupsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error(err);
-        this._toast.show('danger', `Бэкап файла ${this.$current.value.file.name} не был удален по причине:`, err.message, faClipboard);
+        this._toast.show('danger', `Бэкап файла ${this.$currentSubject.value.file.name} не был удален по причине:`, err.message, faClipboard);
       }
     });
   }
 
   public restoreBackup(): void {
-    const current: Backup = this.$current.value;
+    const current: Backup = this.$currentSubject.value;
     
     const dialogOpts: Electron.MessageBoxOptions = {
       type: 'warning',
       buttons: ['Да, установить', 'Отмена'],
       title: `Подтверждение установки бэкапа`,
-      message: `Вы точно хотите установиить файл бэкапа ${current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.$current.value.file.path}.`
+      message: `Вы точно хотите установиить файл бэкапа ${current.file.name}? После подтверждения файл бэкапа ЗАМЕНИТ собой текущий файл ${this.$currentSubject.value.file.path}.`
     };
     
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
@@ -157,6 +145,14 @@ export class BackupsComponent implements OnInit, OnDestroy {
         }
       });
   }
+  
+  private _getBackupFile(hash: string): Observable<string> {
+    return this._api.getBackupFile(hash)
+                    .pipe(
+                      catchError(error => this.__handleError(error)),
+                      take(1)
+                    );
+  }
 
   ngOnInit(): void {
     of(window.localStorage.getItem('settings'))
@@ -167,7 +163,6 @@ export class BackupsComponent implements OnInit, OnDestroy {
       .subscribe(({ textEditorStyle }) => {
         this.codeMirrorSettings.theme = textEditorStyle;
       });
-
   }
 
   ngOnDestroy() {}
