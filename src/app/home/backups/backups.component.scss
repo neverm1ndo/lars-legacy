@@ -114,6 +114,7 @@ p, a, span, button, div {
   }
   &-head {
     background: $topper;
+    margin-top: -5px;
     &-elapse {
       text-overflow: ellipsis;
       overflow-x: hidden;
