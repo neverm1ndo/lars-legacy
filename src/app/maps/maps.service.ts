@@ -5,7 +5,7 @@ import { ElectronService } from './../core/services';
 import { MapObject } from './map.interfaces';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
-import { filter, switchMap, take, catchError, map } from 'rxjs/operators';
+import { filter, switchMap, take, catchError, map, tap } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 
@@ -28,7 +28,7 @@ export class MapsService {
         `Backend returned code ${error.status}, ` +
         `body was: ${JSON.stringify(error.error)}`);
     }
-    return throwError(error);
+    return throwError(() => error);
   }
 
   objectToMap(object: any[]): string {
@@ -146,9 +146,11 @@ export class MapsService {
           );
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
+    console.log(path)
     return this._api.getMap(path.path)
                     .pipe(
                       map((xml: string) => this.mapToObject(xml)),
+                      // tap(console.log),
                       catchError(throwError),
                     )
   }

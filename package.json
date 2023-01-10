@@ -76,6 +76,8 @@
     "@ngrx/store": "14.3.2",
     "@ngrx/store-devtools": "14.3.2",
     "@popperjs/core": "^2.10.2",
+    "@types/dat.gui": "0.7.7",
+    "@types/three": "0.148.0",
     "angular-split": "14.1.0",
     "bootstrap": "^5.2.0",
     "chart.js": "^3.6.0",

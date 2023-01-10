@@ -107,7 +107,7 @@ export class ApiService {
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
-    return this._http.get(this.URL.MAP.MAP_FILE, { params: { path: path }, headers: headers, responseType: 'text' });
+    return this._http.get(this.URL.MAPS.MAP_FILE, { params: { path: path }, headers: headers, responseType: 'text' });
   }
   deleteMap(path: string) {
     return this._http.delete(this.URL.UTILS.DELETE_FILE, { params: { path: path }});

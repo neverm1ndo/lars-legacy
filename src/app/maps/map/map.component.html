@@ -1,8 +1,7 @@
 <div *ngIf="current; else load" class="mb-0 h-100 w-100 d-flex justify-content-stretch overflow-auto">
-      <!-- <map-editor-v2></map-editor-v2> -->
       <div class="d-flex h-100 justify-content-stretch align-items-center flex-fill overflow-hidden">
         <div class="d-flex flex-column h-100 w-100">
-          <div class="d-flex justify-content-between flex-row overflow-hidden title w-100 map-top no-select cursor-through">
+          <!-- <div class="d-flex justify-content-between flex-row overflow-hidden title w-100 map-top no-select cursor-through">
             <div>
               <span class="badge badge-light"><fa-icon [icon]="fa.map"></fa-icon>
                 <span class="pre-badge">{{ current.name }}</span>
@@ -25,18 +24,20 @@
                 <ng-template #limitDanger><fa-icon class="ttp-icon" [icon]="fa.info"></fa-icon>Превышен лимит</ng-template>
               </span>
             </div>
-          </div>
-          <div class="d-flex flex-fill map">
-            <div class="d-flex flex-fill overflow-auto w-100 h-100 overflow-hidden">
+          </div> -->
+          <!-- <div class="d-flex flex-fill map">
+            <div class="d-flex flex-fill overflow-auto w-100 h-100">
               <map-editor [@mapload]="loading"></map-editor>
+              <map-editor-v2></map-editor-v2>
             </div>
-            <div *ngIf="loading" class="blured-fix mb-0 d-flex justify-content-center">
+            <div *ngIf="loading" class="blured-fix mb-0 d-flex w-100 justify-content-center">
               <div class="loader d-flex align-self-center">
                 <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
               </div>
             </div>
-          </div>
-          <div class="map-bottom d-flex flex-column flex-nowrap justify-content-center align-items-center">
+          </div> -->
+          <map-editor-v2 [map]="current.objects"></map-editor-v2>
+          <!-- <div class="map-bottom d-flex flex-column flex-nowrap justify-content-center align-items-center">
             <div [@panelSwitch] *ngIf="levelingZ" class="d-flex align-items-center justify-content-center">
               <map-corrector [toCorrect]="mapEditor.getAverage('posZ')" [icon]="fa.ruler.vert" [title]="'Выравнивание по Z координате'" (corrected)="correctObjectsZLeveling($event)"></map-corrector>
             </div>
@@ -52,7 +53,7 @@
               <button disabled ngbTooltip="Сохранить на сервере" placement="top" (click)="saveMapCloud()" type="button" class="btn btn-light"><lty-icon name="lty-server-save"></lty-icon></button>
               <button ngbTooltip="Удалить" placement="top" (click)="deleteMapCloud()" type="button" class="btn btn-light"><fa-icon [icon]="fa.trash"></fa-icon></button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
  </div>
