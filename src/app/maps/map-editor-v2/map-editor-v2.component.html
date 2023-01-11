@@ -1,5 +1,14 @@
-<div class="mb-0 h-100 w-100 d-flex justify-content-stretch overflow-auto">
-  <div class="d-flex flex-fill overflow-auto w-100 h-100 overflow-hidden">
+<div class="mb-0 h-100 w-100 d-flex flex-column justify-content-stretch">
+  <div class="d-flex flex-fill">
     <canvas #view style="height: 100%; width: 100%;"></canvas>
+  </div>
+  <div class="tools">
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.save"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.undo"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.redo"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.map"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.download"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.upload"></fa-icon></button>
+    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.list"></fa-icon></button>
   </div>
 </div>

@@ -3,15 +3,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Stats from 'three/examples/jsm/libs/stats.module';
-import { from, concat, Observable, BehaviorSubject, merge, of, combineLatest, zip } from 'rxjs';
-import { catchError, concatAll, concatMap, map, switchMap, take, tap, zipAll } from 'rxjs/operators';
+import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
 import { getObjectNameById } from '../sa.objects';
 
 import { MapObject } from '../map.interfaces';
-import { Color, Vector3, MathUtils } from 'three';
+import { MathUtils } from 'three';
+
+import { outlineMaterial } from '@lars/shared/materials/outline.material';
+
+import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, faList } from '@fortawesome/free-solid-svg-icons';
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -45,7 +48,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _camera!: THREE.PerspectiveCamera;
   private _controls: OrbitControls;
 
-  private get canvas(): HTMLElement {
+  private get canvas(): HTMLCanvasElement {
     return this._canvas.nativeElement;
   }
 
@@ -67,13 +70,27 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _loadedMapGroup: THREE.Group = new THREE.Group();
 
+  private _cursorRayCaster: THREE.Raycaster = new THREE.Raycaster();
+  private _pointer: THREE.Vector2 = new THREE.Vector2();
+
+  private _intersectedMapObject: THREE.Mesh = new THREE.Mesh();
+
   private readonly _mapChunksNames: string[] = [
-    'countryE', 
-    'countryW', 'countrys', 'countryN', 'countN2',
+    'countryE', 'countryW', 'countrys', 'countryN', 'countN2',
     'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
     'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
     'vegasN', 'vegasE', 'vegasS', 'vegasW',
   ];
+
+  public fa = {
+    save: faSave,
+    undo: faUndo,
+    redo: faRedo,
+    map: faMap,
+    download: faCloudDownloadAlt,
+    upload: faCloudUploadAlt,
+    list: faList,
+  };
 
   constructor(
     private _host: ElementRef,
@@ -102,6 +119,29 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     createFolder('Render', [[this._renderer.info.render, 'triangles'], [this, '_limiter']], renderer);
   }
 
+  private _handleMouseEvents(): void {
+    fromEvent<MouseEvent>(this.canvas, 'click').subscribe({
+      next: (event: MouseEvent) => {
+        var rect = this._renderer.domElement.getBoundingClientRect();
+        this._pointer.x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
+        this._pointer.y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
+        this._handleRaycasterIntersectMapObjects();
+      },
+    });
+  }
+
+  private _handleRaycasterIntersectMapObjects() {
+    this._camera.updateMatrixWorld();
+    this._cursorRayCaster.setFromCamera(this._pointer, this._camera);
+    const intersects = this._cursorRayCaster.intersectObjects(this._loadedMapGroup.children);
+
+      if (this._intersectedMapObject.uuid !== (intersects[0].object as any).uuid) {
+        (this._intersectedMapObject as any).material.color.set(0xffffff);
+        this._intersectedMapObject = intersects[0].object as any;
+        (this._intersectedMapObject as any).material.color.set(0xff0000);
+      }
+  }
+
   private _fetchObject(name: string): Observable<THREE.Group> {
     if (!name) return of(this._makeErrorBox());
     return from(this._mtlLoader.setPath('/assets/sa_map/')
@@ -122,7 +162,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               from(this._objectLoader.setPath('/assets/sa_map/')
                                      .setMaterials(materials)
                                      .loadAsync(`${name}.obj`))),
-            catchError(() => of(this._makeErrorBox()))
+            catchError(() => of(this._makeErrorBox())),
+            map((group: THREE.Group) => {
+              group.name = name;
+              return group;
+            })
           )
   }
 
@@ -279,6 +323,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
       if (DELTA > INTERVAL) {
         this._controls.update();
+        // this._handleRaycasterIntersectMapObjects();
         if (this._terrainBoundingBoxes.size == this._mapChunksNames.length) this._chunkBoundingContainsCamera();
         this._renderer.render(this._scene, this._camera);
         this._stats.update();
@@ -300,6 +345,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     return  concat(...clean.map((object: MapObject) => this._fetchObject(this._getMapObjectNameById(object.model))
                                                             .pipe(map((group: THREE.Group) => {
                                                               group.position.set(object.posX, object.posZ, -object.posY);
+                                                              group.userData.dimension = object.dimension;
+                                                              group.userData.type = object.name;
+                                                              group.userData.model = object.model;
+                                                              group.userData.interior = object.interior;
 
                                                               const rotation: [number, number, number] = [object.rotX, object.rotZ, object.rotY].map((deg: number) => MathUtils.degToRad(deg)) as [number, number, number];
 
@@ -315,6 +364,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._createScene();
     this._zone.runOutsideAngular(() => {
       this._renderingLoop();
+      this._handleMouseEvents();
     });
   }
 
