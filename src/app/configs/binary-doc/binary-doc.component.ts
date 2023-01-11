@@ -4,6 +4,7 @@ import { ConfigsService } from '../configs.service';
 import { UserService } from '../../user.service';
 import { tap, switchMap } from 'rxjs/operators';
 import { faFileSignature, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Workgroup } from '@lars/enums';
 
 @Component({
   selector: 'app-binary-doc',
@@ -20,10 +21,14 @@ export class BinaryDocComponent implements OnInit {
     del: faTrash
   }
 
+  get userMainGroup(): Workgroup {
+    return this.user.loggedInUser$.value.main_group;
+  }
+
   constructor(
     private route: ActivatedRoute,
     public config: ConfigsService,
-    public user: UserService,
+    private user: UserService,
     private router: Router
   ) { }
 
