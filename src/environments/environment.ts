@@ -7,9 +7,9 @@ export const AppConfig = {
   },
   api: {
     socket: 'wss://localhost:8443/',
-    main: 'https://localhost:8443/v2/',
-    auth: 'https://localhost:8443/v2/login',
-    user: 'https://localhost:8443/v2/login/user',
+    main: 'https://localhost:8443/v2/lars/',
+    auth: 'https://localhost:8443/v2/auth/',
+    user: 'https://localhost:8443/v2/auth/user',
     validation: 'https://localhost:8443/v2/login/check-token'
   }
 };
