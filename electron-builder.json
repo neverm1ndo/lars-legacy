@@ -4,7 +4,7 @@
   "appId": "ru.nmnd.lars",
   "publish": {
     "provider": "github",
-    "owner": "neverm1ndo",
+    "owner": "neverm1ndo"
   },
   "asar": true,
   "directories": {
@@ -26,16 +26,16 @@
     "!tsconfig.json",
     "!tslint.json",
     "!*.map",
-    "!dist/angular-electron/assets/sa_map/*",
+    "!dist/angular-electron/browser/assets/sa_map/*",
     "!coverage",
     "!deployer",
     "!.vscode",
     "!.angular"
   ],
   "nsis": {
-    "installerIcon": "dist/assets/icons/favicon.ico",
-    "uninstallerIcon": "dist/assets/icons/favicon_u.ico",
-    "installerHeaderIcon": "dist/assets/icons/favicon.ico",
+    "installerIcon": "dist/angular-electron/browser/assets/icons/favicon.ico",
+    "uninstallerIcon": "dist/angular-electron/browser/assets/icons/favicon_u.ico",
+    "installerHeaderIcon": "dist/angular-electron/browser/assets/icons/favicon.ico",
     "installerSidebar": "build/installerSidebar.bmp",
     "uninstallerSidebar": "build/uninstallerSidebar.bmp",
     "uninstallDisplayName": "${productName} ${version}",
@@ -48,7 +48,7 @@
     "createStartMenuShortcut": true
   },
   "win": {
-    "icon": "dist/assets/icons/favicon.ico",
+    "icon": "dist/angular-electron/browser/assets/icons/favicon.ico",
     "target": [
       "nsis"
     ]
