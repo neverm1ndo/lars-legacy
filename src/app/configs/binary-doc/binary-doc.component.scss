@@ -1,27 +1,31 @@
 @import "colors";
-.progress {
-  height: 2px;
-  margin-bottom: -2px;
-  border-radius: none;
-  background: none!important;
-  .progressbar {
-    background: $primary!important;
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  .progress {
+    height: 2px;
+    margin-bottom: -2px;
+    border-radius: none;
+    background: none!important;
+    .progressbar {
+      background: $primary!important;
+    }
   }
-}
-.text-edit-block {
-  color: $text;
-  text-align: center;
-  height: 100%;
-  h4 {
-    width: 100%;
-    opacity: 0.2;
-    font-weight: 300;
-  }
-  h3 {
-    width: 100%;
-    font-weight: 300;
-  }
-  table {
-    opacity: 0.5;
+  .text-edit-block {
+    color: $text;
+    text-align: center;
+    height: 100%;
+    h4 {
+      width: 100%;
+      opacity: 0.2;
+      font-weight: 300;
+    }
+    h3 {
+      width: 100%;
+      font-weight: 300;
+    }
+    table {
+      opacity: 0.5;
+    }
   }
 }
