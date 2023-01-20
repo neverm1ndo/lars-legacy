@@ -14,7 +14,6 @@ export class NotificationsService {
   
   constructor(
     private ws: WebSocketService,
-    private idb: NgxIndexedDBService,
   ) {}
 
   spawnNotification(title: string, body: string, image?: string) {
@@ -48,16 +47,14 @@ export class NotificationsService {
       this.ws.getServerStopNotification()
              .pipe(
                 filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown),
-                switchMap((user) => this.idb.getByIndex('user', 'name', user.username))
              ).subscribe((user: any) => {
-                this.spawnNotification('Сервер остановлен', `${user.name} остановил работу сервера`, user.avatar);
+                this.spawnNotification('Сервер остановлен', `${user.name} остановил работу сервера`, user.user_avatar);
              }),
       this.ws.getServerRebootNotification()
       .pipe(
           filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown),
-          switchMap((user) => this.idb.getByIndex('user', 'name', user.username))
       ).subscribe((user: any) => {
-        this.spawnNotification('Сервер перезапускается', `${user.name} запустил перезагрузку сервера`, user.avatar);
+        this.spawnNotification('Сервер перезапускается', `${user.username} запустил перезагрузку сервера`, user.user_avatar);
       }),
     ];
     for (const subscription of subscriptions) {
