@@ -52,7 +52,7 @@ class Samp {
 
   public async getServerInfo(ip: string, port: number): Promise<ServerGameMode> {
     return Promise.all(
-      [Opcode.I, Opcode.R, Opcode.D].map(async (res: Opcode) => await this._request(ip, port, res))
+      [Opcode.I, Opcode.R,/** Opcode.D */].map(async (res: Opcode) => await this._request(ip, port, res))
     ).then(([gameMode, rules, playersList]) => {
       let info: ServerGameMode = gameMode;
           info.rules = rules,
@@ -66,13 +66,17 @@ class Samp {
   private _request(ip: string, port: number, opcode: Opcode): Promise<any> {
     return new Promise((resolve, reject) => {
       const socket = dgram.createSocket("udp4");
-      let packet: Buffer = Buffer.alloc(10 + opcode.length);
+      const packet: Buffer = Buffer.alloc(10 + opcode.length);
 
       packet.write('SAMP');
-      packet[4] = Number(ip.split('.')[0]);
-      packet[5] = Number(ip.split('.')[1]);
-      packet[6] = Number(ip.split('.')[2]);
-      packet[7] = Number(ip.split('.')[3]);
+      
+      [
+        packet[4],
+        packet[5],
+        packet[6],
+        packet[7]
+      ] = ip.split('.').map((u) => +u);
+
       packet[8] = port & 0xFF;
       packet[9] = port >> 8 & 0xFF;
       packet[10] = opcode.charCodeAt(0);
