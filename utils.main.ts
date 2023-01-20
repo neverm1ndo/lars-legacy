@@ -103,7 +103,7 @@ const sign = async (): Promise<any> => {
 */
 const createTray = (): Tray => {
   let appIcon = new Tray(nativeImage.createEmpty());
-      appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, 'dist/assets/icons/favicon.ico')));
+      appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico')));
   
   const contextMenu = Menu.buildFromTemplate([
     {

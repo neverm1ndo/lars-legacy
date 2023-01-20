@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "lars": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -19,7 +19,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": "dist/angular-electron/browser",
+            "outputPath": "dist/lars/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -110,24 +110,24 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "lars:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "lars:build:dev"
             },
             "web": {
-              "browserTarget": "angular-electron:build:web"
+              "browserTarget": "lars:build:web"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "lars:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "lars:build"
           }
         },
         "test": {
@@ -168,7 +168,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/angular-electron/server",
+            "outputPath": "dist/lars/server",
             "main": "src/main.server.ts",
             "tsConfig": "src/tsconfig.server.json",
             "stylePreprocessorOptions": {
@@ -224,23 +224,23 @@
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev",
-              "serverTarget": "angular-electron:server:dev"
+              "browserTarget": "lars:build:dev",
+              "serverTarget": "lars:server:dev"
             },
             "web": {
-              "browserTarget": "angular-electron:build:web",
-              "serverTarget": "angular-electron:server:web"
+              "browserTarget": "lars:build:web",
+              "serverTarget": "lars:server:web"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production",
-              "serverTarget": "angular-electron:server:production"
+              "browserTarget": "lars:build:production",
+              "serverTarget": "lars:server:production"
             }
           },
           "defaultConfiguration": "production"
         }
       }
     },
-    "angular-electron-e2e": {
+    "lars-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -256,7 +256,7 @@
       }
     }
   },
-  "defaultProject": "angular-electron",
+  "defaultProject": "lars",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

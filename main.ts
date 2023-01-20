@@ -6,7 +6,6 @@ import * as url from 'url';
 import { sign, downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
-import axios from 'axios';
 
 /** Init samp to get server stats later
 * @type {Samp}
@@ -84,7 +83,7 @@ function createWindow(): BrowserWindow {
     title: 'LARS',
     show: false,
     frame: false,
-    icon: path.join(__dirname, 'dist/angular-electron/browser/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
@@ -130,7 +129,7 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const url: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'angular-electron', 'browser', 'assets' , url.pathname) });
+    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets' , url.pathname) });
   });
   win.on('show', (_event: any) => {
     if (tray) tray.destroy();
@@ -241,9 +240,10 @@ try {
       /**
       * Load Anguar DevTools on serve
       */
-      if (serve) session.defaultSession.loadExtension(path.normalize('C:/Users/nmnd/AppData/Local/Google/Chrome/User Data/Default/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')).then(({ id }: { id : string}) => {
-        console.log('[ADT] DevTools loaded', id);
-      });
+      if (serve) session.defaultSession.loadExtension(path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0'))
+                                       .then(({ id }: { id : string}) => {
+                                          console.log('[ADT] DevTools loaded', id);
+                                       });
       createWindow();
     });
 

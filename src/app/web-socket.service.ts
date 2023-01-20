@@ -21,7 +21,7 @@ export const socketConfig: AuthSocketIoConfig = {
   url: AppConfig.api.socket,
   options: {
     auth: {
-      // token: JSON.parse(localStorage.getItem('user'))?JSON.parse(localStorage.getItem('user')).token:''
+      token: `${JSON.parse(localStorage.getItem('user')).token}`,
     },
     autoConnect: false
   }
@@ -47,7 +47,7 @@ export class WebSocketService {
           switch (val.url) {
             case '/home/dash': { _socket.emit('user-action', UserActivity.IDLE); break; }
             case '/home/search': { _socket.emit('user-action', UserActivity.IN_LOGS); break; }
-            case '/home/config-editor': { _socket.emit('user-action', UserActivity.REDACT); break; }
+            case '/home/configs': { _socket.emit('user-action', UserActivity.REDACT); break; }
             case '/home/maps': { _socket.emit('user-action', UserActivity.IN_MAPS); break; }
             case '/home/banhammer': { _socket.emit('user-action', UserActivity.IN_BANS); break; }
             case '/home/admins': { _socket.emit('user-action', UserActivity.IN_ADM); break };
@@ -60,7 +60,6 @@ export class WebSocketService {
       });
     _socket.on('connect', () => {
       console.log('%c[socket-service]', 'color: tomato', `Connected to Liberty-Admin-Node`);
-      this.send('get-room');
     });
     _socket.on('disconnect', (reason: string) => {
       console.log('%c[socket-service]', 'color: tomato', 'Disconnected with reason: ' + reason);
@@ -68,7 +67,7 @@ export class WebSocketService {
     this._injector.get(UserService).loggedInUser$.pipe(
       filter((user) => !!user)
     ).subscribe((user) => {
-      // socketConfig.options.auth.token = user.token;
+      // (socketConfig as AuthSocketIoConfig).options.auth.token = user.token;
       this.connect();
     });
     this.activies = this.getUserActitvity().subscribe((act) => {
@@ -137,7 +136,7 @@ export class WebSocketService {
   }
   clearUserData() {
     const user = this._injector.get(UserService).loggedInUser$;
-    user.next(undefined);
+          user.next(undefined);
     window.localStorage.removeItem('user');
   }
   disconnect() {
