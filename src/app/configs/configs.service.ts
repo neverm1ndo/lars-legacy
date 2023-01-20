@@ -71,13 +71,12 @@ export class ConfigsService {
     };
 
     this._electron.ipcRenderer.invoke('save-dialog', dialogOpts)
-                              .then(res => {
-                                if (res.filePath && !res.canceled) 
-                                  this._electron.ipcRenderer.send('download-file', 
-                                    { 
-                                      remotePath: path, 
-                                      localPath: res.filePath, 
-                                    });
+                              .then((res: Electron.SaveDialogReturnValue) => {
+                                if (!res.filePath && res.canceled) return;
+                                this._electron.ipcRenderer.send('download-file', { 
+                                  remotePath: path, 
+                                  localPath: res.filePath, 
+                                });
                               })
                               .catch(res => {
                                 this._toast.show('warning', `Файл <b>${ res.filePath }</b> не был загружен`, res.message, faInfo);
