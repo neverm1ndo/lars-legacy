@@ -1,6 +1,6 @@
 {
   "productName": "LARS",
-  "copyright": "MIT © 2022 ${author}",
+  "copyright": "MIT © 2023 ${author}",
   "appId": "ru.nmnd.lars",
   "publish": {
     "provider": "github",
@@ -26,16 +26,16 @@
     "!tsconfig.json",
     "!tslint.json",
     "!*.map",
-    "!dist/angular-electron/browser/assets/sa_map/*",
+    "!dist/lars/browser/assets/sa_map/*",
     "!coverage",
     "!deployer",
     "!.vscode",
     "!.angular"
   ],
   "nsis": {
-    "installerIcon": "dist/angular-electron/browser/assets/icons/favicon.ico",
-    "uninstallerIcon": "dist/angular-electron/browser/assets/icons/favicon_u.ico",
-    "installerHeaderIcon": "dist/angular-electron/browser/assets/icons/favicon.ico",
+    "installerIcon": "dist/lars/browser/assets/icons/favicon.ico",
+    "uninstallerIcon": "dist/lars/browser/assets/icons/favicon_u.ico",
+    "installerHeaderIcon": "dist/lars/browser/assets/icons/favicon.ico",
     "installerSidebar": "build/installerSidebar.bmp",
     "uninstallerSidebar": "build/uninstallerSidebar.bmp",
     "uninstallDisplayName": "${productName} ${version}",
@@ -48,7 +48,7 @@
     "createStartMenuShortcut": true
   },
   "win": {
-    "icon": "dist/angular-electron/browser/assets/icons/favicon.ico",
+    "icon": "dist/lars/browser/assets/icons/favicon.ico",
     "target": [
       "nsis"
     ]
