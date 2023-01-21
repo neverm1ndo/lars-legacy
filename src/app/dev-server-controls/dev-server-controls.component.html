@@ -7,7 +7,7 @@
     <span>Действия с сервером</span>
     <lty-icon name="lty-chevron"></lty-icon>
   </button>
-<ng-container *ngLet="state | async as serverState">
+<ng-container *ngLet="state$ | async as serverState">
   <div ngbDropdownMenu aria-labelledby="dropdownTopper">
     <div data-content="Статус сервера" class="status" ngbDropdownItem>
       <i [ngClass]="{

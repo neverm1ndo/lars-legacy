@@ -17,14 +17,26 @@ type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
 interface AuthSocketIoConfig extends SocketIoConfig {
   options?: Merge<Auth, SocketIoConfig['options']>
 }
+
+const userToken: string = ((): string => {
+  let user = localStorage.getItem('user');
+  if (!user) return '';
+  return JSON.parse(user).token;
+})();
+
 export const socketConfig: AuthSocketIoConfig = {
   url: AppConfig.api.socket,
   options: {
     auth: {
-      token: `${JSON.parse(localStorage.getItem('user')).token}`,
+      token: userToken,
     },
-    autoConnect: false
-  }
+    path: '/notifier/',
+    autoConnect: false,
+    extraHeaders: {
+      'Authorization': `Bearer ${userToken}`,
+    },
+    withCredentials: true,
+  },
 };
 
 @Injectable({
@@ -67,7 +79,6 @@ export class WebSocketService {
     this._injector.get(UserService).loggedInUser$.pipe(
       filter((user) => !!user)
     ).subscribe((user) => {
-      // (socketConfig as AuthSocketIoConfig).options.auth.token = user.token;
       this.connect();
     });
     this.activies = this.getUserActitvity().subscribe((act) => {

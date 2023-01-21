@@ -5,8 +5,8 @@
         <small class="native-dragzone no-select label">LARS</small>
       </div>
     </div>
-    <div *ngIf="userService.loggedInUser$ | async as user" class="d-flex flex-row">
-      <div [@extrudeRight] *ngIf="update" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end btn-group top-btn" role="remote-group">
+    <div *ngIf="isLoggedIn | async as user" class="d-flex flex-row">
+      <div [@extrudeRight] *ngIf="$update | async" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end btn-group top-btn" role="remote-group">
           <button
           (click)="reload()"
           type="button"
@@ -32,7 +32,7 @@
             <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
             <!-- <button *ngIf="user.main_group !== 10" (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button> -->
             <div class="dropdown-divider"></div>
-            <button ngbDropdownItem (click)="userService.logoutUser()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
+            <button ngbDropdownItem (click)="logout()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
           </div>
         </div>
       </div>
