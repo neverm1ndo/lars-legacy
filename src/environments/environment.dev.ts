@@ -6,10 +6,14 @@ export const AppConfig = {
     server_monitor: 'https://apps.nmnd.ru/api/samp'
   },
   api: {
-    socket: 'wss://localhost:8443/',
-    main: 'https://localhost:8443/v2/lars/',
-    auth: 'https://localhost:8443/v2/auth/',
-    user: 'https://localhost:8443/v2/auth/user',
+    // socket: 'wss://localhost:8443/',
+    // main: 'https://localhost:8443/v2/lars/',
+    // auth: 'https://localhost:8443/v2/auth/',
+    // user: 'https://localhost:8443/v2/auth/user',
+    socket: 'wss://svr.gta-liberty.ru/',
+    main: 'https://svr.gta-liberty.ru/v2/lars/',
+    auth: 'https://svr.gta-liberty.ru/v2/auth/',
+    user: 'https://svr.gta-liberty.ru/v2/auth/user',
     validation: 'https://localhost:8443/v2/login/check-token'
   }
 };

@@ -63,6 +63,7 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
         map((page: LogLine[]) => [...this.$list.value, ...page]),
     ).subscribe((lines: LogLine[]) => {
       this.$loading.next(false);
+      console.log(lines);
       this.$list.next(lines);
     });
 
