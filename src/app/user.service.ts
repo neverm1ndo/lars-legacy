@@ -146,12 +146,12 @@ export class UserService {
     from(this._electron.ipcRenderer.invoke('message-box', messageBox))
         .pipe(
           filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response === 0),
-          switchMap(() => this._http.get(this.URL_LOGOUT, {responseType: 'text'}))
+          switchMap(() => this._http.post(this.URL_LOGOUT, {}, {responseType: 'text'}))
         )
         .subscribe({
           next: () => {
             this.loggedInUser$.next(null);
-            window.localStorage.removeItem('user');
+            localStorage.removeItem('user');
             this._router.navigate(['/login']);
           },
           error: console.error

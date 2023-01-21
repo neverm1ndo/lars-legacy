@@ -5,7 +5,7 @@ import { ElectronService } from '@lars/core/services';
 import { WebSocketService } from '@lars/web-socket.service';
 import { ExecException } from 'child_process';
 import { join } from 'path';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription, TeardownLogic } from 'rxjs';
 
 enum ServerState {
   ERROR,
@@ -36,7 +36,9 @@ export class DevServerControlsComponent implements OnInit {
     private _router: Router,
   ) { }
 
-  public state: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
+  public state$: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
+
+  private _devRoomSubscriptions: Subscription = new Subscription();
 
   public fa = {
     signout: faSignOutAlt,
@@ -67,47 +69,47 @@ export class DevServerControlsComponent implements OnInit {
     },
   };
 
-  // private _subscribeToDevSubscriptions(): void {
-  //   const subscriptions: TeardownLogic[] = [
-  //     this.ws.getServerState()
-  //            .subscribe((state: ServerState) => {
-  //              console.log('%c[server]', 'color: magenta', 'status:', state);
-  //              this.state.next(state);
-  //            }),
-  //     this.ws.getServerError()
-  //            .subscribe((stderr: string) => {
-  //              console.error('%c[server]', 'color: magenta', stderr);
-  //              this.state.next(ServerState.ERROR);
-  //            }),
-  //     this.ws.getServerReboot()
-  //            .subscribe(() => {
-  //               console.log('%c[server]', 'color: magenta', 'server rebooted');
-  //               this.state.next(ServerState.LIVE);
-  //               this.players = 0;
-  //            }),
-  //     this.ws.getServerStop()
-  //            .subscribe(() => {
-  //               console.log('%c[server]', 'color: magenta', 'server stoped');
-  //               this.state.next(ServerState.STOPED);
-  //               this.players = 0;
-  //            }),
-  //     this.ws.getServerLaunch()
-  //            .subscribe(() => {
-  //               console.log('%c[server]', 'color: magenta', 'server launched');
-  //               this.state.next(ServerState.LIVE);
-  //            }),
-  //     this.ws.getServerOnline()
-  //            .subscribe((players: number) => {
-  //               this.players = players;
-  //            }),
-  //     this.state.subscribe((state: ServerState) => {
-  //               this.server.state = state;
-  //            }),
-  //   ];
-  //   for (let subscription of subscriptions) {
-  //     this._devRoomSubscriptions.add(subscription);
-  //   };
-  // }
+  private _subscribeToDevSubscriptions(): void {
+    const subscriptions: TeardownLogic[] = [
+      this._socket.getServerState()
+                  .subscribe((state: ServerState) => {
+                    console.log('%c[server]', 'color: magenta', 'status:', state);
+                    this.state$.next(state);
+                  }),
+      this._socket.getServerError()
+                  .subscribe((stderr: string) => {
+                    console.error('%c[server]', 'color: magenta', stderr);
+                    this.state$.next(ServerState.ERROR);
+                  }),
+      this._socket.getServerReboot()
+                  .subscribe(() => {
+                      console.log('%c[server]', 'color: magenta', 'server rebooted');
+                      this.state$.next(ServerState.LIVE);
+                      this.players = 0;
+                  }),
+      this._socket.getServerStop()
+                  .subscribe(() => {
+                      console.log('%c[server]', 'color: magenta', 'server stoped');
+                      this.state$.next(ServerState.STOPED);
+                      this.players = 0;
+                  }),
+      this._socket.getServerLaunch()
+                  .subscribe(() => {
+                      console.log('%c[server]', 'color: magenta', 'server launched');
+                      this.state$.next(ServerState.LIVE);
+                  }),
+      this._socket.getServerOnline()
+                  .subscribe((players: number) => {
+                      this.players = players;
+                  }),
+      this.state$.subscribe((state: ServerState) => {
+                    this.serverRemote.state = state;
+                  }),
+    ];
+    for (let subscription of subscriptions) {
+      this._devRoomSubscriptions.add(subscription);
+    };
+  }
 
   public launchSAMP(): void {
     try {
@@ -138,6 +140,13 @@ export class DevServerControlsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._subscribeToDevSubscriptions();
+    this._socket.send('get-status');
+  }
+
+  ngOnDestroy(): void {
+    this._devRoomSubscriptions.unsubscribe();
+    this.state$.complete();
   }
 
 }
