@@ -3,7 +3,7 @@
     <div data-width="-50" class="marker d-flex flex-fill"></div>
   </div>
   <div class="d-flex flex-row justify-content-stretch h-100 align-items-center flex-fill">
-    <div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="d-flex col-3 flex-row justify-content-start align-items-center">
       <img class="backups-list-item_avatar d-flex" [src]="backup.user.avatar" [alt]="backup.user.nickname"/>
       <div class="backups-list-item_nickname d-flex">{{ backup.user.nickname }}</div>
     </div>
@@ -11,7 +11,7 @@
       <fa-icon [icon]="backup.action === 0 ? fa.trash : fa.pen"></fa-icon>
     </div>
     <div class="item d-flex flex-column no-select">
-      <div class="d-flex flex-fill">
+      <div class="d-flex">
         <span class="item-elapsed" [title]="backup.file.name">
           {{ backup.file.name }}
         </span>
@@ -22,7 +22,7 @@
         </span>
       </div>
     </div>
-    <div class="item d-flex flex-column no-select flex-fill">
+    <div class="item d-flex flex-column no-select">
       <div class="d-flex flex-fill">
         <div class="item-elapsed">
           <ng-container *ngLet="backup.date | date:'d MMM yy, HH:mm:ss' as date">
