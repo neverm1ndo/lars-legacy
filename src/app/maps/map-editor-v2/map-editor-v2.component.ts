@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import Stats from 'three/examples/jsm/libs/stats.module';
-import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
+import { from, concat, Observable, BehaviorSubject, of, fromEvent, zip, iif } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
 import { getObjectNameById } from '../sa.objects';
@@ -75,11 +75,13 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _intersectedMapObject: THREE.Mesh = new THREE.Mesh();
 
+  private _alreadyLoaded: Set<number> = new Set();
+
   private readonly _mapChunksNames: string[] = [
     'countryE', 'countryW', 'countrys', 'countryN', 'countN2',
-    'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
-    'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
-    'vegasN', 'vegasE', 'vegasS', 'vegasW',
+    // 'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
+    // 'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
+    // 'vegasN', 'vegasE', 'vegasS', 'vegasW',
   ];
 
   public fa = {
@@ -144,6 +146,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _fetchObject(name: string): Observable<THREE.Group> {
     if (!name) return of(this._makeErrorBox());
+    // if (this._alreadyLoaded.has(name)) return of(this._loadedMapGroup.children.find((child) => child.userData.type === name).clone() as THREE.Group)
     return from(this._mtlLoader.setPath('/assets/sa_map/')
                                .setResourcePath('/assets/sa_map/textures')
                                .loadAsync(`${name}.mtl`))
@@ -190,7 +193,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-  * @param {string} id map object id
   * @returns {Observable<[THREE.Group, string]>}
   * Load map objects one by one from *.map file
   */
@@ -237,13 +239,14 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         this.$mapObjects.pipe(
           tap(() => {
             this._loadedMapGroup.clear();
+            this._alreadyLoaded.clear();
             this._scene.add(this._loadedMapGroup);
           }),
           switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
         ).subscribe({
           next: (object) => {
             this._loadedMapGroup.add(object);
-
+            this._alreadyLoaded.add(object.userData.type);
             if (this.$mapObjects.value.length !== this._loadedMapGroup.children.length) return;
             
             
@@ -265,6 +268,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     const axesHelper = new THREE.AxesHelper(50);
     this._scene.add(axesHelper);
+  }
+
+  private __loadMapChunks() {
+    const chunks = this._mapChunksNames.map((name: string) => this._loadMapChunk(name));
+    return concat(chunks);
   }
 
   /**
@@ -335,28 +343,50 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _makeErrorBox(): THREE.Group {
     const box = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({color: COLOR.RED });
+    const material = new THREE.MeshBasicMaterial({ color: COLOR.RED });
     const group = new THREE.Group();
           group.add(new THREE.Mesh(box, material));
+          group.name = 'error_box';
     return group;
   }
 
   private _fetchMapObjects(clean: MapObject[]): Observable<THREE.Group> {
-    return  concat(...clean.map((object: MapObject) => this._fetchObject(this._getMapObjectNameById(object.model))
-                                                            .pipe(map((group: THREE.Group) => {
-                                                              group.position.set(object.posX, object.posZ, -object.posY);
-                                                              group.userData.dimension = object.dimension;
-                                                              group.userData.type = object.name;
-                                                              group.userData.model = object.model;
-                                                              group.userData.interior = object.interior;
+    const models: Set<number> = new Set();
 
-                                                              const rotation: [number, number, number] = [object.rotX, object.rotZ, object.rotY].map((deg: number) => MathUtils.degToRad(deg)) as [number, number, number];
+    for(let object of clean) models.add(object.model);
+          
+    const objectsToLoad: Observable<THREE.Group>[] = Array.from(models)
+                                                          .map((model: number) => this._fetchObject(this._getMapObjectNameById(model)));
+    
+    return concat(...objectsToLoad).pipe(
+      take(objectsToLoad.length),
+      tap((group: THREE.Group) => {
+        group.userData.initial = true;
+        this._loadedMapGroup.add(group);
+      })
+    );
 
-                                                              group.rotation.set(...rotation);
-                                                              return group;
-                                                            }))
-                                                          )
-            );
+    // objectsToLoad: Observable<THREE.Group>[] = clean.map(
+    //   (object: MapObject) => iif(
+    //     () => this._alreadyLoaded.has(object.model), 
+    //     of(this._loadedMapGroup.children.find((obj) => obj.userData.model === object.model).clone()), 
+    //     this._fetchObject(this._getMapObjectNameById(object.model)))
+    //         .pipe(
+    //           map((group: THREE.Group) => {
+              
+    //             this._alreadyLoaded.add(object.model);
+    //             group.position.set(object.posX, object.posZ, -object.posY);
+    //             group.userData.dimension = object.dimension;
+    //             group.userData.type = object.name;
+    //             group.userData.model = object.model;
+    //             group.userData.interior = object.interior;
+
+    //             const rotation: [number, number, number] = [object.rotX, object.rotZ, object.rotY].map((deg: number) => MathUtils.degToRad(deg)) as [number, number, number];
+
+    //             group.rotation.set(...rotation);
+    //             return group;
+    //         })));
+    // return concat(...objectsToLoad)
   }
 
   ngAfterViewInit(): void {
