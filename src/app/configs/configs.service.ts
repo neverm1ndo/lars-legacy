@@ -11,6 +11,7 @@ import { tap, filter, takeLast, switchMap } from 'rxjs/operators';
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 import { basename, dirname } from 'path';
+import { UserService } from '@lars/user.service';
 
 @Injectable({
   providedIn: 'any'
@@ -21,7 +22,8 @@ export class ConfigsService {
     private _electron: ElectronService,
     private _api: ApiService,
     private _toast: ToastService,
-    private _router: Router
+    private _router: Router,
+    private _user: UserService,
   ) { }
 
   public error: Subject<Error | null> = new Subject();
@@ -76,6 +78,7 @@ export class ConfigsService {
                                 this._electron.ipcRenderer.send('download-file', { 
                                   remotePath: path, 
                                   localPath: res.filePath, 
+                                  token: this._user.getCurrentUserInfo().token,
                                 });
                               })
                               .catch(res => {
