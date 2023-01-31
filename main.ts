@@ -3,7 +3,7 @@ import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { sign, downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
+import { downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
 
