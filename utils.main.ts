@@ -28,7 +28,7 @@ const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
 /** Downloads file and saves to th local disk
 * @returns {Promise.<any>}
 */
-const downloadFile = async (configuration: { localPath: string; remotePath: string }): Promise<unknown> => {
+const downloadFile = async (configuration: { localPath: string; remotePath: string, token: string }): Promise<unknown> => {
   
   const stream: WriteStream = createWriteStream(configuration.localPath);
 
@@ -36,6 +36,9 @@ const downloadFile = async (configuration: { localPath: string; remotePath: stri
     httpsAgent: agent,
     params: { 
       path: configuration.remotePath 
+    },
+    headers: {
+      'Authorization': `Bearer ${configuration.token}`
     },
     responseType: 'stream'
   };
