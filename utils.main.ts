@@ -4,6 +4,7 @@ import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeIm
 import axios, { AxiosRequestConfig, AxiosResponse} from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
+import * as dotenv from 'dotenv';
 
 /** Define HTTPS agent for axios (Insecure HACK (TLS/CA))
 * @type {Agent}
@@ -17,6 +18,10 @@ const agent: Agent = new Agent({
 */
 const args: string[] = process.argv.slice(1),
       serve = args.some(val => val === '--serve');
+
+dotenv.config({ 
+  path: './main.env',
+});
 
 const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
 
@@ -35,9 +40,7 @@ const downloadFile = async (configuration: { localPath: string; remotePath: stri
     responseType: 'stream'
   };
 
-  const url: URL = new URL('/v2/utils/download-file', API); 
-
-  console.log(API, url.toString());
+  const url: URL = new URL(process.env.DOWNLOAD_UTIL!, API);
   
   return axios.get(url.toString(), requestConfig)
               .then((res: AxiosResponse) => new Promise((resolve, reject) => {

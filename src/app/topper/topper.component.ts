@@ -46,7 +46,6 @@ export class TopperComponent implements OnInit {
   constructor(
     private _electron: ElectronService,
     private _userService: UserService,
-    private _socket: WebSocketService,
   ) {}
 
   get isLoggedIn() {
@@ -68,15 +67,6 @@ export class TopperComponent implements OnInit {
   public openForum(): void {
     this._userService.openForum();
   }
-
-  // private _subscribeToCommonSubscriptions(): void {
-  //   this._mainRoomSubscriptions.add(
-  //     this._socket.getUpdateMessage()
-  //                 .subscribe(() => {
-  //                     console.log('%c[update]', 'color: cyan', 'soft update is ready');
-  //                     this.$update.next(true);
-  //                   }));
-  // }
 
   ngOnInit(): void {
   }
