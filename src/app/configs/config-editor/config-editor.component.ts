@@ -6,7 +6,7 @@ import { switchMap, take, filter } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { ToastService } from '@lars/toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faSave, faInfo, faFileSignature, faTrash, faFolderPlus, faCodeBranch, faCopy, faSync, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { faWindowRestore, faSave, faInfo, faFileSignature, faTrash, faFolderPlus, faCodeBranch, faCopy, faSync, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
 import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
@@ -36,7 +36,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     trash: faTrash,
     fetch: faSync,
     copy: faCopy,
-    branch: faCodeBranch
+    branch: faCodeBranch,
+    window: faWindowRestore,
   };
 
   constructor(
@@ -82,6 +83,10 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   public touchFile(path: string) {
     this.currentFilePath = path;
     this._router.navigate(['/home/configs/doc'], { queryParams: { path, touch: true }});
+  }
+
+  public openRemoteWindow(): void {
+    window.open(location.href + '&remote=1', '_blank')
   }
 
   public deleteFile(): void {
