@@ -9,6 +9,8 @@
 
 :host {
   display: flex;
+  position: relative;
+  z-index: 6;
 }
 
 .options {

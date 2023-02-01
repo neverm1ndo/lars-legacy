@@ -9,14 +9,17 @@
     height: 34px;
   }
   .popup {
-    &-window-head {
-      padding: 10px 15px 0 15px;
-    }
-    &-window-body {
-      padding: 0 15px 0 15px;
-    }
-    input {
-      font-size: inherit;
+    &-window {
+      padding: 0.5rem;
+      &-head {
+        padding: 10px 15px 0 15px;
+      }
+      &-body {
+        padding: 0 15px 0 15px;
+      }
+      input {
+        font-size: inherit;
+      }
     }
   }
   .top {
