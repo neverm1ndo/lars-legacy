@@ -54,6 +54,10 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     );
   }
 
+  public saveFile() {
+    this.configs.saveFile();
+  }
+
   
   public savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
     window.localStorage.setItem('lars/ui/panes/configs', JSON.stringify(event.sizes));
@@ -152,8 +156,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   addNewFile(event: any): void {
-
-    console.log(event)
     
     let files: File[];
     let path: string = '';

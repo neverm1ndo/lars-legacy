@@ -38,11 +38,17 @@ export class ConfigsService {
 
   public path: string = '';
 
+  public saveFrom$: Subject<null> = new Subject();
+
   getConfig(path: string): Observable<any> {
     return combineLatest([
       this._api.getConfigText(path),
       this._api.getFileInfo(path)
     ]);
+  }
+
+  saveFile() {
+    this.saveFrom$.next(null);
   }
 
   saveFileAsBlob(path: string, blob: Blob): Observable<any> {
