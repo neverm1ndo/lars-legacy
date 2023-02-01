@@ -27,6 +27,9 @@ p, a, span, button, div {
     }
   }
 }
+.bg {
+  background: #242427;
+}
 .list {
   flex: 1 1 70%;
 }
@@ -55,7 +58,6 @@ p, a, span, button, div {
   margin-right: -$gutter;
   border-right: $gutter solid #242427;
   z-index: -1;
-  background: #242427;
   .bind {
     &:before {
       position: relative;
