@@ -108,7 +108,7 @@ export class ConfigsService {
     };
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
       .pipe(
-        filter(({ response }) => response !== 0),
+        filter(({ response }) => response !== 1),
         switchMap(() => this._api.deleteMap(path))
       )
       .subscribe({

@@ -42,7 +42,6 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     if (!nodes) return;
     this.node = this._fileTree.expandFollowingDirs(nodes, this.current);
   };
-  @Output() upload = new EventEmitter<Event>();
   
   @Output() fileSelect = new EventEmitter<FilePathName>();
   @Output() dirSelect = new EventEmitter<string>();
@@ -52,6 +51,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   @Output() mkdir = new EventEmitter<string>();
   @Output() touch = new EventEmitter<string>();
   @Output() resync = new EventEmitter<any>();
+  @Output() addNew = new EventEmitter<Event>();
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
     switch (event.key) {
@@ -114,6 +114,10 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   touchFile(): void {
     this.touch.emit(posix.join(this.node.path, this.addNewFile.value.path));
     this.modals.touch = false;
+  }
+
+  upload(event: any): void {
+    this.addNew.emit(event);
   }
 
   sync(): void {

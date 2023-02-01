@@ -49,7 +49,9 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _ngZone: NgZone,
     public configs: ConfigsService,
   ) {
-    this.directories$ = this._api.getConfigsDir();
+    this.directories$ = this.configs.reloader$.pipe(
+      switchMap(() => this._api.getConfigsDir())
+    );
   }
 
   
@@ -89,8 +91,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     window.open(location.href + '&remote=1', '_blank')
   }
 
-  public deleteFile(): void {
-    this.configs.deleteFile(this.configs.path);
+  public deleteFile(path?: string): void {
+    this.configs.deleteFile(path || this.configs.path);
   }
 
   public pathToClipboard(): void {
@@ -150,6 +152,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   addNewFile(event: any): void {
+
+    console.log(event)
     
     let files: File[];
     let path: string = '';
@@ -195,8 +199,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                               } else {
                                 this._toast.show('success', `Конфигурационный файл <b>${files[0].name}</b> успешно загружен`, null, faSave);
                               }
-                            
-                              this.reloadFileTree();
                               
                               setTimeout(() => { 
                                 this.clearProgress(); 
@@ -215,10 +217,11 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                             }
                             
                             console.error(err);
-                            
-                            this.reloadFileTree();
                             this._uploadsSubscriptions.remove(sub)
                           },
+                          complete: () => {
+                            this.reloadFileTree();
+                          }
                         });
                         this._uploadsSubscriptions.add(sub);
   }

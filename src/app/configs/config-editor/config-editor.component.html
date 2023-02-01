@@ -13,8 +13,9 @@
             (mvdir)="mvdir($event)"
             [items]="directories$ | async"
             [current]="currentFilePath"
-            (upload)="addNewFile($event)"
+            (addNew)="addNewFile($event)"
             (resync)="reloadFileTree()"
+            (rm)="deleteFile($event)"
             [canCreate]="true">
           </file-tree>
         </div>

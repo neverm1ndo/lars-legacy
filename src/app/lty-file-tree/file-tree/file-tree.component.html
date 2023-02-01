@@ -12,8 +12,12 @@
   <div class="d-flex w-100 g-0 flex-fill overflow-auto">
     <div *ngIf="node; else loader" class="text-left w-100">
       <file-tree-items
+        (rmdir)="rmDir($event)"
+        (mvdir)="mvDirEventHandle($event)"
+        (rm)="rmFile($event)"
         [isRoot]="true"
         [child-nodes]="node"
+        (uploadFileList)="upload($event)"
         [expanded]="true">
       </file-tree-items>
     </div>
@@ -26,7 +30,7 @@
     </ng-template>
   </div>
 </div>
-<!-- <form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
+<form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
   <div class="popup-window d-flex flex-column">
     <div class="popup-window-head">
       <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
@@ -100,4 +104,4 @@
       </div>
     </div>
   </div>
-</form> -->
+</form>
