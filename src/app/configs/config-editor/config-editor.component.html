@@ -60,7 +60,7 @@
                 <div class="panel flex-grow">
                   ANSI
                 </div>
-                <button [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(configs.changed$ | async)">
+                <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(configs.changed$ | async)">
                   <fa-icon [icon]="fa.save"></fa-icon>
                   <ng-template #saveTooltip>
                     <span class="d-sm-none d-md-inline">Сохранить</span>
