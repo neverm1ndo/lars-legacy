@@ -1,11 +1,11 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { BackupsService } from '../backups.service';
 
 @Directive({
   selector: '[graphContainer]'
 })
-export class BackupsGraphDirective {
+export class BackupsGraphDirective implements OnDestroy {
 
   constructor(
     private _host: ElementRef,
@@ -142,6 +142,10 @@ export class BackupsGraphDirective {
     };
     drawBackbones();
     drawRibs();
+  }
+
+  ngOnDestroy(): void {
+    this._backups.graphItems = [];
   }
 
 }

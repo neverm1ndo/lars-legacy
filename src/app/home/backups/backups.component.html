@@ -7,7 +7,7 @@
   <ng-container *ngLet="$current | async as current; let i = index;">
     <as-split direction="vertical" [gutterSize]="5" (dragEnd)="savePanesState($event)">
       <as-split-area [size]="current? paneStates[0]: 100">
-        <div class="d-flex flex-column h-100">
+        <div class="d-flex flex-column h-100 bg">
           <ng-container *ngLet="($backups | async) as backups;">
             <div *ngIf="backups; else loading" class="d-flex backups-list h-100 flex-row overflow-auto">
               <div graphContainer #binds class="binds"></div>

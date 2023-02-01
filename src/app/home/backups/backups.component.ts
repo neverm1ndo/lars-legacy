@@ -157,6 +157,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     of(window.localStorage.getItem('settings'))
       .pipe(
+        take(1),
         filter((settings: string | null) => settings !== null),
         map((settings: string) => JSON.parse(settings))
       )
@@ -165,6 +166,8 @@ export class BackupsComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+
+  }
 
 }
