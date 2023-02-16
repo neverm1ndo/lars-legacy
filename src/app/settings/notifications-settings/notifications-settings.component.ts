@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { IUserData } from '@lars/interfaces';
+import { UserService } from '@lars/user.service';
 
 @Component({
   selector: 'notifications-settings',
@@ -9,7 +10,9 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 })
 export class NotificationsSettingsComponent implements OnInit {
 
-  constructor(private idb: NgxIndexedDBService) {}
+  constructor(
+    private _user: UserService,
+  ) {}
 
   settings = new FormGroup({
     silent: new FormControl(false),
@@ -39,17 +42,16 @@ export class NotificationsSettingsComponent implements OnInit {
   }
 
   testNotification(): void {
-    this.idb.getByIndex('user', 'name', JSON.parse(localStorage.getItem('user')).username)
-    .subscribe((user: any) => {
-      new Notification('Это тестовое оповещение!', {
-        body: 'Это оповещение вызвано кнопкой "Тест оповещений"',
-        timestamp: Date.now(),
-        lang: 'ru-RU',
-        silent: !this.sets.silent,
-        icon: user.avatar,
-        requireInteraction: true,
-        image: user.avatar
-      });
+    const { avatar }: IUserData = this._user.getCurrentUserInfo();
+
+    new Notification('Это тестовое оповещение!', {
+      body: 'Это оповещение вызвано кнопкой "Тест оповещений"',
+      timestamp: Date.now(),
+      lang: 'ru-RU',
+      silent: !this.sets.silent,
+      icon: avatar,
+      requireInteraction: true,
+      image: avatar
     });
   }
 
