@@ -9,7 +9,7 @@
       <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Оповещения</b></button>
       <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Лаунчер</b></button>
     </div>
-    <div [@settingsRoute]="prepareRoute(outlet)" class="d-flex flex-column flex-fill overflow-auto h-100">
+    <div class="d-flex flex-column flex-fill overflow-auto h-100">
       <router-outlet #outlet="outlet"></router-outlet>
     </div>
   </div>
