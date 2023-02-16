@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, BehaviorSubject, Subject, from } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { handleError } from '@lars/utils';
-import { IUserData, IUserLoginData, IDBUser } from './interfaces';
+import { IUserData, IUserLoginData } from './interfaces';
 import { Router } from '@angular/router';
 import { AppConfig } from '../environments/environment';
 import { ElectronService } from '@lars/core/services';
@@ -51,7 +51,24 @@ export class UserService {
     private _router: Router,
     private _electron: ElectronService,
     private _toast: ToastService,
-  ) {}
+  ) {
+    this._checkUserSettings();
+  }
+
+
+  private _checkUserSettings(): void {
+    if (window.localStorage.getItem('settings') !== null) return;
+    const { tray, textEditorStyle, lineChunk, listStyle, alerts }: IUserSettings = this.getUserSettings();
+    
+    const setup: [string, any][] = [
+      ['settings', { tray, textEditorStyle, lineChunk, listStyle }],
+      ['alerts', alerts],
+    ];
+    
+    for (let [key, value] of setup) {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
+  }
 
   public getUserByUsername(username: string): Observable<IUserData> {
     return this._http.get<IUserData>(this.URL_USER, { params: { name: username }});
@@ -76,10 +93,13 @@ export class UserService {
   }
 
   public getUserSettings(): IUserSettings {
+
+    const EMPTY_SETTINGS_ERROR: Error = new Error('Empty user settings. Recovered to default values.');
+
     try {
-      const settings: IUserSettings = JSON.parse(window.localStorage.getItem('settings'));
-      if (!settings) throw new Error('Empty user settings. Recovered to default values.');
-      return settings;
+      const settingsAsString: string | null = window.localStorage.getItem('settings');
+      if (!settingsAsString) throw EMPTY_SETTINGS_ERROR;
+      return JSON.parse(settingsAsString);
     } catch(err) {
       console.warn(err);
       return {

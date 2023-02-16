@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';;
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { IGeoData } from '@lars/interfaces';
 import { ElectronService } from '@lars/core/services';
-import { Observable, from, Subject } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { UserService } from '@lars/user.service';
 
 @Component({
   selector: 'app-general-settings',
@@ -12,10 +13,11 @@ import { Observable, from, Subject } from 'rxjs';
 export class GeneralSettingsComponent implements OnInit {
 
   constructor(
-    private electron: ElectronService,
-  ) { }
+    private _electron: ElectronService,
+    private _user: UserService,
+  ) {}
 
-  public version$: Observable<string> = from(this.electron.ipcRenderer.invoke('version'));
+  public version$: Observable<string> = from(this._electron.ipcRenderer.invoke('version'));
 
   public date: Date = new Date();
   
@@ -33,7 +35,7 @@ export class GeneralSettingsComponent implements OnInit {
     tray: new FormControl(false),
     lineChunk: new FormControl(100),
     listStyle: new FormControl('small'),
-    textEditorStyle: new FormControl(JSON.parse(localStorage.getItem('settings')).textEditorStyle),
+    textEditorStyle: new FormControl('dracula'),
   });
   
   public textplain: string = `# Create a safe reference to the Underscore object for use below.
@@ -76,13 +78,9 @@ export class GeneralSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    try {
-      const settings = window.localStorage.getItem('settings');
-      this.settings.setValue(JSON.parse(settings));
-    } catch (err) {
-      console.warn(err);
-      window.localStorage.setItem('settings', JSON.stringify(this.settings.getRawValue()));
-    }
+    const { tray, lineChunk, listStyle, textEditorStyle } = this._user.getUserSettings();
+    this.settings.setValue({ tray, lineChunk, listStyle, textEditorStyle });
+    this.setup();
   }
 
 }
