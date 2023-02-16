@@ -21,6 +21,7 @@
 |ip:| Префикс для поиска по IP|ip:127.0.0.1|
 |serial:|Префикс для поиска по связке серийных номеров| serial:12345*FBDFCFVJGBGYCDHFHVVFGCHVBFKV
 |srl:|Алиас для serial:|srl:12345*FBDFCFVJGBGYCDHFHVVFGCHVBFKV
+|cn:| Префикс для поиска по CN:|cn:L3HGQYLPSANDKA8IQRC8L51UW2L22X
 
 Мультипоиск с префиксами производится аналогично с рядовым поиском по никнеймам, т.е через `&`.
 
