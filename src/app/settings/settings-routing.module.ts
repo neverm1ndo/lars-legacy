@@ -10,10 +10,10 @@ import { LauncherSettingsComponent } from './launcher-settings/launcher-settings
 const routes: Routes = [
   { path: '', component: SettingsComponent, children: [
     { path: '', pathMatch: 'full', redirectTo: 'general' },
-    { path: 'general', component: GeneralSettingsComponent, data: { animation: 'general' } },
-    { path: 'filter', component: FilterComponent, data: { animation: 'filter' } },
-    { path: 'alerts', component: NotificationsSettingsComponent, data: { animation: 'alerts' } },
-    { path: 'launcher', component: LauncherSettingsComponent, data: { animation: 'launcher' } },
+    { path: 'general', component: GeneralSettingsComponent },
+    { path: 'filter', component: FilterComponent },
+    { path: 'alerts', component: NotificationsSettingsComponent },
+    { path: 'launcher', component: LauncherSettingsComponent },
   ]}
 ];
 
