@@ -14,6 +14,7 @@
             [items]="directories$ | async"
             [current]="currentFilePath"
             (addNew)="addNewFile($event)"
+            (touch)="touchFile($event)"
             (resync)="reloadFileTree()"
             (rm)="deleteFile($event)"
             [canCreate]="true">
