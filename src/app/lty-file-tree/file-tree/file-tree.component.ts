@@ -122,6 +122,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   sync(): void {
     this._fileTree.reloader$.next(null);
+    this.resync.emit();
   }
 
   mkDir(): void {
