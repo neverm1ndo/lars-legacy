@@ -76,14 +76,14 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   private _isNotBinary(name: string): boolean {
     const splited = name.split('.');
-    return ['amx', 'so', 'db', 'cadb'].every((bin: string) => splited[splited.length - 1] !== bin);
+    return ['amx', 'so', 'db', 'cadb', 'log'].every((bin: string) => splited[splited.length - 1] !== bin);
   }
 
-  public toConfig(path: { path: string, name?: string }) {
-    this.currentFilePath = path.path;
-    if (path.name) this._api.addToRecent('files', path);
-    if (this._isNotBinary(path.name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path: path.path , name: path.name }});
-    else this._router.navigate(['/home/configs/binary'], { queryParams: { path: path.path , name: path.name }});
+  public toConfig({ path, name }: { path: string, name?: string }) {
+    this.currentFilePath = path;
+    if (name) this._api.addToRecent('files', path);
+    if (this._isNotBinary(name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path, name}});
+    else this._router.navigate(['/home/configs/binary'], { queryParams: { path, name }});
   }
 
   public touchFile(path: string) {
