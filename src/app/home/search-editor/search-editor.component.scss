@@ -80,6 +80,9 @@
         padding-left: 15px;
         padding-top: 3px;
         padding-right: 15px;
+        &.bg-warning {
+          color: var(--bs-dark);
+        }
         &.process {
           text-transform: uppercase;
         }

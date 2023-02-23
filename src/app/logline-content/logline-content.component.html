@@ -38,10 +38,23 @@
   </ng-container>
   <ng-container *ngSwitchDefault>
     <div class="message-container">
-      <div class="message-content">
-        <span>{{ content.time }}</span>
+      <span>{{ content.time }}</span>
+      <div *ngIf="content.message" class="message-content">
         <span>{{ content.message }}</span>
       </div>
+      <span *ngIf="content.target as target">
+        <fa-icon class="ms-2 me-2" [icon]="faUser"></fa-icon>
+        <span>{{ target.username }}</span>
+        <span><kbd>{{ target.id }}</kbd></span>
+      </span>
+      <span *ngIf="content.numbers as numbers">
+        <kbd class="me-1" *ngFor="let number of numbers">{{ number }}</kbd>
+      </span>
+      <span *ngIf="content.props as props ">
+        <span *ngFor="let prop of props | entries">
+          {{prop[0]}} <kbd>{{prop[1]}}</kbd>
+        </span>
+      </span>
     </div>
   </ng-container>
 </ng-container>

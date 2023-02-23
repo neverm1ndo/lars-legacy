@@ -5,6 +5,9 @@
   .message-container {
     position: relative;
     width: 100%;
+    span {
+      line-height: $height;
+    }
   }
   .message-content {
     position: relative;
@@ -24,7 +27,6 @@
       text-overflow: ellipsis;
       max-height: $height;
       transition: max-height .1s ease;
-      line-height: $height;
       padding: 0px 6px 0px 6px;
       box-sizing: border-box;
       overflow: hidden;
@@ -125,6 +127,7 @@
       }
       &-warning {
         background-color: #e8c763;
+        color: var(--bs-dark);
       }
       &-success {
         background-color: #449055;
