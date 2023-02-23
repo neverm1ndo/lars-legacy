@@ -33,7 +33,7 @@
                 <div class="d-flex flex-row w-100">
                   <div ngbDropdown [autoClose]="true" container="body" *ngIf="line.geo as geo" class="d-flex me-1 geo-container">
                     <button ngbDropdownToggle class="btn btn-sm btn-dark">
-                      <fa-icon [icon]="fa.globe"></fa-icon>
+                      <fa-icon [icon]="fa.globe"></fa-icon><u class="d-none d-lg-inline ms-2">Раскрыть гео</u>
                     </button>
                     <div ngbDropdownMenu aria-labelledby="geoDropdown">
                       <geo ngbDropdownItem [table]="geo"></geo>

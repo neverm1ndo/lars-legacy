@@ -30,6 +30,16 @@ export interface IContentData {
   op?: string;
   weapon?: string;
   message?: string;
+  target?: {
+    username: string;
+    id: number;
+  },
+  props?: {
+    [key: string]: any;
+  },
+  action?: string;
+  targetType?: string;
+  numbers?: number[];
 }
 export interface LogLine {
   unix: number;

@@ -288,6 +288,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'info',
       control: 'chatAutoBlock'
     },
+    '<chat/mute/cancel>': {
+      translate: 'Отмена блокировки чата',
+      type: 'info',
+      control: 'chatCancelMute'
+    },
     '<chat/unmute/auto>': {
       translate: 'Автоматическая разблокировка чата',
       type: 'info',
@@ -462,6 +467,36 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       translate: 'Создание TDM',
       type: 'tdm',
       control: 'tdmCreate'
+    },
+    '<base_jump/create>': {
+      translate: 'Создание бэйсджампа',
+      type: 'derby',
+      control: 'bjCreate'
+    },
+    '<base_jump/destroy>': {
+      translate: 'Уничтожение бэйсджампа',
+      type: 'derby',
+      control: 'bjDestroy'
+    },
+    '<base_jump/leave>': {
+      translate: 'Выход с бэйсджампа',
+      type: 'derby',
+      control: 'bjLeave'
+    },
+    '<base_jump/enter>': {
+      translate: 'Вход в бэйсджамп',
+      type: 'derby',
+      control: 'bjEnter'
+    },
+    '<derby/create>': {
+      translate: 'Создание дерби',
+      type: 'derby',
+      control: 'derbyCreate'
+    },
+    '<derby/destroy>': {
+      translate: 'Уничтожение дерби',
+      type: 'derby',
+      control: 'derbyDestroy'
     },
     '<derby/leave>': {
       translate: 'Выход с дерби',

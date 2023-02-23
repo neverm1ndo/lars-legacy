@@ -2,8 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { UserService } from '@lars/user.service';
 import { Process } from '@lars/shared/components/line-process/log-processes';
 import { IContentData, IUserData } from '@lars/interfaces';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import { faSearch, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 enum ContentTemplate {
   BANNED,
   AUTH,
@@ -25,6 +24,7 @@ export class LoglineContentComponent {
   ) { }
 
   public faSearch = faSearch;
+  public faUser = faUserAlt;
 
   @Input('content') content: IContentData;
   @Input('type') process: Process;
@@ -62,9 +62,7 @@ export class LoglineContentComponent {
   setTemplate(): string {
     switch (true) {
       case this._isBanned(): return ContentTemplate[0];   
-      case this._isAuth(): {
-        return ContentTemplate[1];
-      }
+      case this._isAuth():  return ContentTemplate[1];
       case this._isMuted(): return ContentTemplate[2];
       case this._isDeath(): return ContentTemplate[3];
       case this._isCNResponse(): return ContentTemplate[4];

@@ -44,6 +44,8 @@ const downloadFile = async (configuration: { localPath: string; remotePath: stri
   };
 
   const url: URL = new URL(process.env.DOWNLOAD_UTIL!, API);
+
+  console.log('Download URL:', url.toString());
   
   return axios.get(url.toString(), requestConfig)
               .then((res: AxiosResponse) => new Promise((resolve, reject) => {
