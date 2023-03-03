@@ -29,11 +29,13 @@
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'DEATH'">
-    <span><kbd>{{ content.op }} <span class="badge bg-dark">{{ content.oid }}</span></kbd> {{ content.message }} </span>
+    <div class="message-container">
+      <span><fa-icon class="me-2" [icon]="fa.faSkullCrossbones"></fa-icon> {{ content.op }} <kbd>{{ content.oid }}</kbd> {{ content.weapon }} </span>
+    </div>
   </ng-container>
   <ng-container *ngSwitchCase="'CN'">
     <a class="btn btn-small btn-dark text-left cn" [routerLink]="['/home/search']" [queryParams]="{ query: 'cn:' + content.message }">
-      <fa-icon [icon]="faSearch"></fa-icon>{{ content.message }}
+      <fa-icon [icon]="fa.faSearch"></fa-icon>{{ content.message }}
     </a>
   </ng-container>
   <ng-container *ngSwitchDefault>
@@ -43,7 +45,7 @@
         <span>{{ content.message }}</span>
       </div>
       <span *ngIf="content.target as target">
-        <fa-icon class="ms-2 me-2" [icon]="faUser"></fa-icon>
+        <fa-icon class="ms-2 me-2" [icon]="fa.faUserAlt"></fa-icon>
         <span>{{ target.username }}</span>
         <span><kbd>{{ target.id }}</kbd></span>
       </span>

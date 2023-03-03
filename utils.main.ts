@@ -4,33 +4,30 @@ import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeIm
 import axios, { AxiosRequestConfig, AxiosResponse} from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
-import * as dotenv from 'dotenv';
 
 /** Define HTTPS agent for axios (Insecure HACK (TLS/CA))
-* @type {Agent}
+ * @type {Agent}
 */
 const agent: Agent = new Agent({
   rejectUnauthorized: false
 });
 
 /** Define launch arguments
-* @type {Array.<string>}
+ * @type {Array.<string>}
 */
 const args: string[] = process.argv.slice(1),
-      serve = args.some(val => val === '--serve');
-
-dotenv.config({ 
-  path: './main.env',
-});
+serve = args.some(val => val === '--serve');
 
 const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
 
+console.log('API init:', API);
 /** Downloads file and saves to th local disk
 * @returns {Promise.<any>}
 */
 const downloadFile = async (configuration: { localPath: string; remotePath: string, token: string }): Promise<unknown> => {
   
   const stream: WriteStream = createWriteStream(configuration.localPath);
+  
 
   const requestConfig: AxiosRequestConfig = { 
     httpsAgent: agent,
@@ -45,7 +42,6 @@ const downloadFile = async (configuration: { localPath: string; remotePath: stri
 
   const url: URL = new URL(process.env.DOWNLOAD_UTIL!, API);
 
-  console.log('Download URL:', url.toString());
   
   return axios.get(url.toString(), requestConfig)
               .then((res: AxiosResponse) => new Promise((resolve, reject) => {
