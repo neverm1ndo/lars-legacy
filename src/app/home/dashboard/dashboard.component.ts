@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { faFolder, faSearch, faSearchPlus, faCloudUploadAlt, faMap, faFileCode } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faSearch, faSearchPlus, faCloudUploadAlt, faMap, faFileCode, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +21,8 @@ export class DashboardComponent implements OnInit {
      searchp: faSearchPlus,
      up: faCloudUploadAlt,
      map: faMap,
-     code: faFileCode
+     code: faFileCode,
+     date: faCalendar,
    }
   constructor() { }
 

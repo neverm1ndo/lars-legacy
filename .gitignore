@@ -69,4 +69,4 @@ package-lock.json
 Thumbs.db
 
 #env
-main.env
+*.env

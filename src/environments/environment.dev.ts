@@ -10,6 +10,6 @@ export const AppConfig = {
     main: 'https://localhost:8443/v2/lars/',
     auth: 'https://localhost:8443/v2/auth/',
     user: 'https://localhost:8443/v2/auth/user',
-    validation: 'https://localhost:8443/v2/login/check-token'
+    validation: 'https://localhost:8443/v2/login/check-token',
   }
 };

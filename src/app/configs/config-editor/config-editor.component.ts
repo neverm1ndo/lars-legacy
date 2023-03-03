@@ -81,7 +81,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   public toConfig({ path, name }: { path: string, name?: string }) {
     this.currentFilePath = path;
-    if (name) this._api.addToRecent('files', path);
+    if (name) this._api.addToRecent('files', { path, name });
     if (this._isNotBinary(name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path, name}});
     else this._router.navigate(['/home/configs/binary'], { queryParams: { path, name }});
   }

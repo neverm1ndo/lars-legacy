@@ -73,7 +73,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (this.quick) {
         this._router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
       }
-      this._api.addToRecent('search', this.query.query);
+      this._api.addToRecent('search', { q: this.query.query, date: Date.now() });
     } else {
       let errmsg = '<b>Ошибка валидации поискового запроса</b><hr>';
       for (let control in this.searchForm.controls) {
