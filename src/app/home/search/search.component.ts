@@ -8,6 +8,7 @@ import { WebSocketService } from '@lars/web-socket.service';
 import { filter } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
+import { HistoryListEnum } from '@lars/enums';
 
 @Component({
   selector: 'app-search',
@@ -73,7 +74,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (this.quick) {
         this._router.navigate(['home/search'], {queryParams: { query: this.query.query, lim: '50', page: '0', from: this.query.from, to: this.query.to }})
       }
-      this._api.addToRecent('search', { q: this.query.query, date: Date.now() });
+      this._api.addToRecent(HistoryListEnum.SEARCH, { q: this.query.query, date: Date.now() });
     } else {
       let errmsg = '<b>Ошибка валидации поискового запроса</b><hr>';
       for (let control in this.searchForm.controls) {

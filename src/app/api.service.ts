@@ -6,6 +6,9 @@ import { AppConfig } from '../environments/environment';
 import { UserService } from './user.service';
 import { handleError } from './utils';
 import { LogLine } from './interfaces';
+import * as _ from 'lodash';
+import { HistoryListEnum } from './enums';
+import { HistoryStorage } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -185,30 +188,40 @@ export class ApiService {
     return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
   }
 
-  addToRecent(key: string, val: any): void { // FIXME: REPLACE TO THE SEPARATE HISTORY SERVICE
-    let last: string = JSON.parse(window.localStorage.getItem('last'));
-    if (this.noteIsAlreadyExists(last, key, val)) return;
-    if (last[key].length >= 30) {
-      last[key].splice(-(last[key].length), 0, val);
-      last[key].pop();
-    } else {
-      last[key].push(val);
-    }
-    window.localStorage.setItem('last', JSON.stringify(last));
-  }
 
-  noteIsAlreadyExists(last: any, key: string, val: any): boolean {
-    for (let i = 0; i < last[key].length; i++) {
-      if (typeof last[key][i] == 'string') {
-        if (last[key][i] === val) {
-          return true;
+  /**
+   * HISTORY
+   */
+
+  addToRecent(entry: HistoryListEnum, val: any): void {
+      try {
+        const stored = window.localStorage.getItem('history');
+  
+        if (!stored) throw new Error('History is not configured in localStorage');
+        const packedHistory: HistoryStorage = JSON.parse(stored);
+
+        const specificHistoryList = packedHistory[entry];
+
+        for (let i = 0; i < specificHistoryList.length; i++) {
+          const item = specificHistoryList[i];
+          if (_.isEqual(item, val)) {
+            specificHistoryList.splice(i, 1);
+            break;
+          }
         }
-      } else {
-        if (last[key][i].path === val.path && last[key][i].name === val.name) {
-          return true;
+
+        specificHistoryList.unshift(val);
+
+        if (specificHistoryList.length >= 30) {
+          specificHistoryList.pop();
         }
+
+        packedHistory[entry] = specificHistoryList;
+
+        window.localStorage.setItem('history', JSON.stringify(packedHistory));
+      
+      } catch(error) {
+        console.warn(error);
       }
-    }
-    return false;
   }
 }

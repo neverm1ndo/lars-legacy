@@ -72,3 +72,11 @@ export interface ITreeNode {
   type: string;
   expanded?: boolean;
 }
+
+export interface HistoryStorageItem {
+  [key: number | string]: string;
+}
+
+export interface HistoryStorage {
+  [key: number]: HistoryStorageItem[]
+}

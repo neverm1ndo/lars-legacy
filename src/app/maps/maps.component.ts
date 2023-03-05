@@ -9,6 +9,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { IOutputAreaSizes } from 'angular-split';
 
 import { faInfo, faSave, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { HistoryListEnum } from '@lars/enums';
 
 
 @Component({
@@ -156,7 +157,7 @@ export class MapsComponent implements OnDestroy {
                       this._toast.show('success', `Карта <b>${ files[0].name }</b> успешно добавлена`, null, faSave);
                       
                       for (let file of files) {
-                        this._api.addToRecent('upload', { path, name: file.name, type: 'map'})
+                        this._api.addToRecent(HistoryListEnum.UPLOADS, { path, name: file.name, type: 'map'})
                       }
                     }
                   },
