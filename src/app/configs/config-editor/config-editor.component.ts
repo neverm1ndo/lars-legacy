@@ -10,6 +10,7 @@ import { faWindowRestore, faSave, faInfo, faFileSignature, faTrash, faFolderPlus
 import { ElectronService } from '@lars/core/services';
 import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
+import { HistoryListEnum } from '@lars/enums';
 
 @Component({
   selector: 'app-config-editor',
@@ -81,7 +82,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   public toConfig({ path, name }: { path: string, name?: string }) {
     this.currentFilePath = path;
-    if (name) this._api.addToRecent('files', { path, name });
+    if (name) this._api.addToRecent(HistoryListEnum.CONFIGS, { path, name });
     if (this._isNotBinary(name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path, name}});
     else this._router.navigate(['/home/configs/binary'], { queryParams: { path, name }});
   }
@@ -191,7 +192,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                                   
                                   for (let file of files) {
                                     list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
-                                    this._api.addToRecent('upload', { path, name: file.name, type: 'config'})
+                                    this._api.addToRecent(HistoryListEnum.UPLOADS, { path, name: file.name, type: 'config'})
                                   };
                                   
                                   return list;

@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faFolder, faSearch, faSearchPlus, faCloudUploadAlt, faMap, faFileCode, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { HistoryListEnum } from '@lars/enums';
+import { HistoryStorage } from '@lars/interfaces';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +15,7 @@ export class DashboardComponent implements OnInit {
    innerHeight: number;
    version: string = '1.0';
 
-   last: any;
+   public history: HistoryStorage;
 
    fa = {
      dir: faFolder,
@@ -27,11 +29,17 @@ export class DashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    if (!window.localStorage.getItem('last')) {
-      this.last = { search: [], upload: [], files: []};
-      window.localStorage.setItem('last', JSON.stringify(this.last));
+    const storedHistory = window.localStorage.getItem('history');
+    if (!storedHistory) {
+      this.history = {
+        [HistoryListEnum.SEARCH]: [], 
+        [HistoryListEnum.CONFIGS]: [], 
+        [HistoryListEnum.UPLOADS]: [], 
+      };
+      
+      window.localStorage.setItem('history', JSON.stringify(this.history));
     }
-    this.last = JSON.parse(window.localStorage.getItem('last'));
+    this.history = JSON.parse(storedHistory);
   }
 
 }
