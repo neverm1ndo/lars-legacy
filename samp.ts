@@ -82,7 +82,6 @@ class Samp {
       packet[10] = opcode.charCodeAt(0);
 
       try {
-        console.info('Sending packet: ', packet);
         socket.send(packet, 0, packet.length, port, ip);
       } catch (err) {
         console.error(err);

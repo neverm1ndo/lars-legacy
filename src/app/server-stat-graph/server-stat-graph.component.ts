@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { AppConfig } from '@lars/../environments/environment';
 import { ServerGameMode } from '@samp';
-import { Subscription, interval } from 'rxjs';
+import { Observable, interval, switchMap, from, map } from 'rxjs';
+import { PingResponse } from 'ping';
 
 @Component({
   selector: 'server-stat-graph',
@@ -12,29 +13,27 @@ import { Subscription, interval } from 'rxjs';
   styleUrls: ['./server-stat-graph.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerStatGraphComponent implements OnInit, OnDestroy {
+export class ServerStatGraphComponent implements OnInit {
 
   constructor(
     private _electron: ElectronService,
     private _zone: NgZone,
-    private _cfr: ChangeDetectorRef,
+    private _cdr: ChangeDetectorRef,
   ) { }
 
-  @Input('players') set players(players: number) {
-    if (!this.stat) return;
-    this.stat.players.online = players;
-    this._points.push(players);
-    this.drawGraphics();
-  }
-
   private _points: number[] = [];
-  public stat: ServerGameMode;
+  public $stat: Observable<ServerGameMode> = interval(10000).pipe(
+    switchMap(() => from(this.getServerInfo()))
+  );
 
-  timer: Subscription = interval(30000).subscribe(() => {
-    this.players = this.stat.players.online;
-  });
+  private $ping: Observable<number> = interval(5000).pipe(
+    switchMap(() => from(this._electron.ipcRenderer.invoke('ping', 'svr.gta-liberty.ru', {
+      timeout: 100,
+    }))),
+    map((ping: PingResponse) => +ping.avg)
+  );
 
-  fa: { [iconName: string]: IconDefinition } = {
+  public fa: { [iconName: string]: IconDefinition } = {
     users: faUsers,
     server: faServer,
     locked: faLock,
@@ -43,8 +42,17 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
 
   @ViewChild('graphics') graphics: ElementRef<HTMLCanvasElement>;
 
-  getMaxExistingPoint(): number {
+  private _getMaxExistingPoint(): number {
     return Math.max.apply(null, this._points);
+  }
+
+  private _pingServer(): void {
+      this.$ping.subscribe({
+        next: (ping: number) => {
+          this._points.push(ping);
+          this.drawGraphics();
+        }
+      });
   }
 
   drawGraphics(): void {
@@ -56,7 +64,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       const height: number = MAX_PLAYERS;
       let offset: number = 0;
       let top: number = 0;
-      let maxPoint: number = this.getMaxExistingPoint();
+      let maxPoint: number = this._getMaxExistingPoint();
 
       if (maxPoint <= MAX_PLAYERS) top = MAX_PLAYERS;
       if (maxPoint <= 32) top = 32;
@@ -104,27 +112,15 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       ctx.fill(area);
       drawGrid();
     });
-    this._cfr.detectChanges();
+    this._cdr.detectChanges();
   }
 
-  async getServerInfo(): Promise<void> {
+  async getServerInfo(): Promise<ServerGameMode> {
     const PORT: number = 7777;
-    return this._electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, PORT)
-               .then((info: ServerGameMode) => {
-                 this.stat = info;
-                 this._points.push(info.players.online);
-                 return Promise.resolve();
-               });
+    return this._electron.ipcRenderer.invoke('server-game-mode', new URL(AppConfig.api.main).host, PORT);
   }
 
   ngOnInit(): void {
-    this.getServerInfo()
-        .then(() => {
-          this.drawGraphics();
-        });
-  }
-
-  ngOnDestroy(): void {
-    this.timer.unsubscribe();
+    this._pingServer();
   }
 }
