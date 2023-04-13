@@ -19,7 +19,7 @@ const agent: Agent = new Agent({
 const args: string[] = process.argv.slice(1),
 serve = args.some(val => val === '--serve');
 
-const API: URL = new URL('https://' + serve ? 'localhost:8443': 'svr.gta-liberty.ru');
+const API: URL = new URL('https://' + (serve ? 'localhost:8443': 'svr.gta-liberty.ru'));
 
 console.log('API init:', API);
 /** Downloads file and saves to th local disk
