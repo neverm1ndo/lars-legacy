@@ -3,9 +3,10 @@ import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { downloadFile, createTray, showNotification, serve, loadFromAsar } from './utils.main';
+import { downloadFile, createTray, showNotification, serve, loadFromAsar, pingHost } from './utils.main';
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
+import { PingConfig, PingResponse } from 'ping';
 
 /** Init samp to get server stats later
 * @type {Samp}
@@ -100,22 +101,11 @@ function createWindow(): BrowserWindow {
       autoUpdater.checkForUpdatesAndNotify();
     }
     splash.webContents.send('loading-state', 'Проверка токена авторизации', 85);
-    // sign()
-    //   .then(() => {
-    //     splash.webContents.send('loading-state', 'Токен успешно верифицирован', 100);
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     win.webContents.send('token-verify-denied', true);
-    //     splash.webContents.send('loading-state', `Токен не прошел верификацию: ${err.code}`, 100);
-    //   })
-    //   .finally(() => {
-        setTimeout(() => {
-          splash.close();
-          win.show();
-          state.manage(win);
-        }, 500);
-    //   });
+      setTimeout(() => {
+        splash.close();
+        win.show();
+        state.manage(win);
+      }, 500);
   });
 
   if (serve) {
@@ -186,6 +176,10 @@ ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => {
 });
 ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> => {
   return loadFromAsar(assetPath);
+});
+
+ipcMain.handle('ping', (_event: Electron.IpcMainInvokeEvent, host: string, options: PingConfig): Promise<PingResponse> => {
+  return pingHost(host, options);
 });
 
 /** AutoUpdater handlers */

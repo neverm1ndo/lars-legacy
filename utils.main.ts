@@ -4,6 +4,7 @@ import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeIm
 import axios, { AxiosRequestConfig, AxiosResponse} from 'axios';
 import { Agent } from 'https';
 import { win } from './main';
+import * as ping from 'ping';
 
 /** Define HTTPS agent for axios (Insecure HACK (TLS/CA))
  * @type {Agent}
@@ -18,7 +19,7 @@ const agent: Agent = new Agent({
 const args: string[] = process.argv.slice(1),
 serve = args.some(val => val === '--serve');
 
-const API: string = serve?process.env.DEV_API!:process.env.PROD_API!;
+const API: URL = new URL('https://' + serve ? 'localhost:8443': 'svr.gta-liberty.ru');
 
 console.log('API init:', API);
 /** Downloads file and saves to th local disk
@@ -40,9 +41,8 @@ const downloadFile = async (configuration: { localPath: string; remotePath: stri
     responseType: 'stream'
   };
 
-  const url: URL = new URL(process.env.DOWNLOAD_UTIL!, API);
+  const url: URL = new URL('/v2/lars/utils/download-file', API);
 
-  
   return axios.get(url.toString(), requestConfig)
               .then((res: AxiosResponse) => new Promise((resolve, reject) => {
                 const totalSize = res.headers['content-length'];
@@ -137,4 +137,8 @@ const showNotification = (options: NotificationConstructorOptions) => {
   new Notification(options).show()
 }
 
-export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar };
+const pingHost = (host: string, options: ping.PingConfig): Promise<ping.PingResponse> => {
+  return ping.promise.probe(host, options);
+}
+
+export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar, pingHost };
