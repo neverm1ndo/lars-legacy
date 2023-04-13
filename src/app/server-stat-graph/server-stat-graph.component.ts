@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { AppConfig } from '@lars/../environments/environment';
 import { ServerGameMode } from '@samp';
-import { Observable, interval, switchMap, from, map } from 'rxjs';
+import { Observable, interval, switchMap, from, map, tap } from 'rxjs';
 import { PingResponse } from 'ping';
 
 @Component({
@@ -18,7 +18,6 @@ export class ServerStatGraphComponent implements OnInit {
   constructor(
     private _electron: ElectronService,
     private _zone: NgZone,
-    private _cdr: ChangeDetectorRef,
   ) { }
 
   private _points: number[] = [];
@@ -26,11 +25,11 @@ export class ServerStatGraphComponent implements OnInit {
     switchMap(() => from(this.getServerInfo()))
   );
 
-  private $ping: Observable<number> = interval(5000).pipe(
+  private $ping: Observable<number | unknown> = interval(5000).pipe(
     switchMap(() => from(this._electron.ipcRenderer.invoke('ping', 'svr.gta-liberty.ru', {
       timeout: 100,
     }))),
-    map((ping: PingResponse) => +ping.avg)
+    map((ping: PingResponse) => ping.time || 999)
   );
 
   public fa: { [iconName: string]: IconDefinition } = {
@@ -103,16 +102,12 @@ export class ServerStatGraphComponent implements OnInit {
         offset = 10*i;
         area.lineTo(20 + offset, height - this._points[i]*(height/top));
       }
-      area.lineTo(20 + offset, height);
-      area.lineTo(20, height)
-      area.closePath();
       ctx.strokeStyle = PRIMARY;
+      ctx.lineWidth = 3;
       ctx.fillStyle = PRIMARY;
       ctx.stroke(area);
-      ctx.fill(area);
       drawGrid();
     });
-    this._cdr.detectChanges();
   }
 
   async getServerInfo(): Promise<ServerGameMode> {
