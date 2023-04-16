@@ -9896,6 +9896,6 @@ export function getObjectNameById(id: string) {
     "18628": "cs_landbit_10_a",
     "18629": "cs_landbit_06_a",
     "18630": "cs_landbit_20_a"
-  };
+  } as const;
   return SA_OBJECTS[id];
 }
