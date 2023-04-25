@@ -4,8 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import Stats from 'three/examples/jsm/libs/stats.module';
-import { from, concat, Observable, BehaviorSubject, of, fromEvent, zip, iif } from 'rxjs';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
+import { catchError, map, switchMap, take, tap, mergeMap } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
 import { getObjectNameById } from '../sa.objects';
 
@@ -15,6 +15,8 @@ import { MathUtils } from 'three';
 import { outlineMaterial } from '@lars/shared/materials/outline.material';
 
 import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, faList } from '@fortawesome/free-solid-svg-icons';
+import { ElectronService } from '@lars/core/services';
+import * as path from 'path';
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -24,6 +26,12 @@ enum COLOR {
   WHITE = 0xFFFFFF,
   WATER = 0x4785A9,
   SKY   = 0xBBF2FF,
+}
+
+interface ResourcesPackSettings {
+  protocol: string;
+  host: string;
+  textures: string;
 }
 
 @Component({
@@ -41,6 +49,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   };
 
   private $mapObjects: BehaviorSubject<MapObject[]> = new BehaviorSubject(null);
+
+  public $loading: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   private _FOV: number = 80;
   private _nearClippingPlane: number = 1;
@@ -75,10 +85,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _intersectedMapObject: THREE.Mesh = new THREE.Mesh();
 
-  private _alreadyLoaded: Set<number> = new Set();
+  private readonly _resourcesPackSettings: ResourcesPackSettings = this._loadResouresPackSettings();
 
   private readonly _mapChunksNames: string[] = [
-    'countryE', 'countryW', 'countrys', 'countryN', 'countN2',
+    'countryE', 
+    // 'countryW', 'countrys', 'countryN', 'countN2',
     // 'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
     // 'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
     // 'vegasN', 'vegasE', 'vegasS', 'vegasW',
@@ -97,7 +108,24 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _host: ElementRef,
     private _zone: NgZone,
+    private _electron: ElectronService,
   ) {}
+
+  private _loadResouresPackSettings(): ResourcesPackSettings {
+    try {
+      const settings = localStorage.getItem('lars/maps/resourcesURI');
+      if (!settings) throw new Error('[ME] Resource pack settings is empty');
+
+      return JSON.parse(settings) as ResourcesPackSettings;
+    } catch (err) {
+      console.warn(err);
+      return {
+        protocol: 'file',
+        host: '',
+        textures: 'txd_in',
+      };
+    }
+  }
 
   private _showDebugGUI(): void {
     const createFolder = (name: string, fields: any[][], folder?: any) => {
@@ -111,7 +139,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     createFolder('Chunks', [
       [this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length],
-      [this._scene.children, 'length', 0, this._mapChunksNames.length + 2],
+      [this._loadedMapGroup.children, 'length', 0, this._mapChunksNames.length + 2],
     ]);
     createFolder('Camera',
       ['x', 'y', 'z'].map((axis: string) => [this._camera.position, axis])
@@ -137,16 +165,49 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._cursorRayCaster.setFromCamera(this._pointer, this._camera);
     const intersects = this._cursorRayCaster.intersectObjects(this._loadedMapGroup.children);
 
-      if (this._intersectedMapObject.uuid !== (intersects[0].object as any).uuid) {
+      if (this._intersectedMapObject.uuid !== (intersects[0].object as THREE.Object3D).uuid) {
         (this._intersectedMapObject as any).material.color.set(0xffffff);
         this._intersectedMapObject = intersects[0].object as any;
         (this._intersectedMapObject as any).material.color.set(0xff0000);
       }
   }
 
-  private _fetchObject(name: string): Observable<THREE.Group> {
+  private _loadModelFromFileSystem(name: string): Observable<THREE.Group> {
+    const { protocol, host, textures } = this._resourcesPackSettings;
+    const resourcesPackURI: string = encodeURI(`${protocol}://${host}${textures}`);
+    return from<Promise<string>>(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.mtl`)))
+          .pipe(
+            map((buffer: string) => this._mtlLoader.setResourcePath(resourcesPackURI).parse(buffer, '')),
+            map((materials: MTLLoader.MaterialCreator) => {
+              materials.preload();
+              materials.getAsArray()
+                       .forEach((material: THREE.Material) => {
+                          material.transparent = true;
+                          material.alphaTest = 0.5;
+                        });
+              return materials;
+            }),
+            switchMap((materials: MTLLoader.MaterialCreator) => 
+              from(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.obj`))).pipe(
+                map((buffer: Buffer) => this._objectLoader.setMaterials(materials)
+                                                          .parse(buffer.toString()))
+              )
+            ),
+            catchError(() => of(this._makeErrorBox())),
+            map((group: THREE.Group) => {
+              group.name = name;
+              return group;
+            })
+          );
+  };
+
+  /**
+   * TODO: merge with _loadObjectFromFileSystem
+   * @param name 
+   * @returns 
+   */
+  private _fetchObjectFromServer(name: string): Observable<THREE.Group> {
     if (!name) return of(this._makeErrorBox());
-    // if (this._alreadyLoaded.has(name)) return of(this._loadedMapGroup.children.find((child) => child.userData.type === name).clone() as THREE.Group)
     return from(this._mtlLoader.setPath('/assets/sa_map/')
                                .setResourcePath('/assets/sa_map/textures')
                                .loadAsync(`${name}.mtl`))
@@ -170,7 +231,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               group.name = name;
               return group;
             })
-          )
+          );
   }
 
   /**
@@ -179,9 +240,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   * Load map chunk by name
   */
   private _loadMapChunk(name: string): Observable<[THREE.Group, string]> {
-    return this._fetchObject(name).pipe(
-      map((group: THREE.Group) => [group, name]),
-    )
+    return this._loadModelFromFileSystem(name)
+               .pipe(
+                  map((group: THREE.Group) => [group, name]),
+               );
   }
 
   /**
@@ -220,10 +282,9 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     this._scene.fog = new THREE.Fog(COLOR.SKY, this._farClippingPlane - 150, this._farClippingPlane);
 
-    concat(...this._mapChunksNames.map((name: string) => this._loadMapChunk(name)))
-    .pipe(take(this._mapChunksNames.length))
-    .subscribe({
-      next: ([chunk, name]) => {
+    const _loadMapChunks: Observable<[THREE.Group, string]> = this.__loadMapChunks()
+    .pipe(
+      tap(([chunk, name]) => {
         chunk.name = name;
         this._loadedTerrainChunks.set(name, chunk);
 
@@ -233,32 +294,31 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               box.set(newMin, newMax);
 
         this._terrainBoundingBoxes.set(name, box);
+      }),
+    );
+
+    _loadMapChunks.pipe(
+      mergeMap(() => this.__loadMapObjects())
+    )
+    .subscribe({
+      next: (group) => {
+        this._loadedMapGroup.add(group);
+
+        if (this._loadedMapGroup.children.length !== this.$mapObjects.value.length) return; 
+        this._scene.add(this._loadedMapGroup);
+        this.__setCameraLookAtInitialMapObject();
+        
+        this._zone.run(() => {
+          this.$loading.next(false);
+        });
+      
       },
       error: console.error,
       complete: () => {
-        this.$mapObjects.pipe(
-          tap(() => {
-            this._loadedMapGroup.clear();
-            this._alreadyLoaded.clear();
-            this._scene.add(this._loadedMapGroup);
-          }),
-          switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
-        ).subscribe({
-          next: (object) => {
-            this._loadedMapGroup.add(object);
-            this._alreadyLoaded.add(object.userData.type);
-            if (this.$mapObjects.value.length !== this._loadedMapGroup.children.length) return;
-            
-            
-            const { posX, posY, posZ } = this.$mapObjects.value[this.$mapObjects.value.length - 2];
-  
-            this._camera.position.set(posX + 10, posZ + 10, -posY + 10);
-            this._camera.lookAt(posX, posZ, -posY);
-            this._controls.target.set(posX, posZ, -posY);
-          },
-        })
+        console.log('complete');
       }
     });
+    
 
     const ASPECT_RATIO: number = this._getAspectRatio();
     this._camera = new THREE.PerspectiveCamera(this._FOV, ASPECT_RATIO, this._nearClippingPlane, this._farClippingPlane);
@@ -270,9 +330,28 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._scene.add(axesHelper);
   }
 
+  private __loadMapObjects(): Observable<THREE.Group> {
+    return this.$mapObjects.pipe(
+      tap(() => {
+        console.log(this._loadedMapGroup.children.length, 'removed');
+        this._loadedMapGroup.clear();
+      }),
+      switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
+    );
+  }
+
+  private __setCameraLookAtInitialMapObject(): void {
+    const [initialObject] = this._loadedMapGroup.children;
+    const { x, y, z } = initialObject.position;
+
+    this._camera.position.set(x + 10, z + 10, -y + 10);
+    this._camera.lookAt(x, z, -y);
+    this._controls.target.set(x, z, -y);
+  }
+
   private __loadMapChunks() {
     const chunks = this._mapChunksNames.map((name: string) => this._loadMapChunk(name));
-    return concat(chunks);
+    return concat(...chunks).pipe(take(chunks.length));
   }
 
   /**
@@ -331,7 +410,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
       if (DELTA > INTERVAL) {
         this._controls.update();
-        // this._handleRaycasterIntersectMapObjects();
+        
         if (this._terrainBoundingBoxes.size == this._mapChunksNames.length) this._chunkBoundingContainsCamera();
         this._renderer.render(this._scene, this._camera);
         this._stats.update();
@@ -351,50 +430,41 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _fetchMapObjects(clean: MapObject[]): Observable<THREE.Group> {
-    const models: Set<number> = new Set();
 
-    for(let object of clean) models.add(object.model);
+    const objectsToLoad: Observable<THREE.Group>[] = clean.map(
+      (object: MapObject) => this._loadModelFromFileSystem(this._getMapObjectNameById(object.model))
+        .pipe(
+          map((group: THREE.Group) => {
           
-    const objectsToLoad: Observable<THREE.Group>[] = Array.from(models)
-                                                          .map((model: number) => this._fetchObject(this._getMapObjectNameById(model)));
+            group.position.set(object.posX, object.posZ, -object.posY);
+            
+            group.userData.dimension = object.dimension;
+            group.userData.type = object.name;
+            group.userData.model = object.model;
+            group.userData.interior = object.interior;
+
+            const rotation: number[] = [object.rotX, object.rotZ, object.rotY].map((deg: number) => MathUtils.degToRad(deg)) as number[];
+
+            group.rotation.set(...rotation as [number, number, number]);
+            return group;
+        })));
     
     return concat(...objectsToLoad).pipe(
-      take(objectsToLoad.length),
+      take(clean.length),
       tap((group: THREE.Group) => {
         group.userData.initial = true;
         this._loadedMapGroup.add(group);
       })
     );
-
-    // objectsToLoad: Observable<THREE.Group>[] = clean.map(
-    //   (object: MapObject) => iif(
-    //     () => this._alreadyLoaded.has(object.model), 
-    //     of(this._loadedMapGroup.children.find((obj) => obj.userData.model === object.model).clone()), 
-    //     this._fetchObject(this._getMapObjectNameById(object.model)))
-    //         .pipe(
-    //           map((group: THREE.Group) => {
-              
-    //             this._alreadyLoaded.add(object.model);
-    //             group.position.set(object.posX, object.posZ, -object.posY);
-    //             group.userData.dimension = object.dimension;
-    //             group.userData.type = object.name;
-    //             group.userData.model = object.model;
-    //             group.userData.interior = object.interior;
-
-    //             const rotation: [number, number, number] = [object.rotX, object.rotZ, object.rotY].map((deg: number) => MathUtils.degToRad(deg)) as [number, number, number];
-
-    //             group.rotation.set(...rotation);
-    //             return group;
-    //         })));
-    // return concat(...objectsToLoad)
   }
 
   ngAfterViewInit(): void {
     (document.body.querySelector('.dg.ac') as HTMLElement).style.top = '40px';
-    this._createScene();
     this._zone.runOutsideAngular(() => {
+      this._createScene();
       this._renderingLoop();
-      this._handleMouseEvents();
+      
+      // this._handleMouseEvents();
     });
   }
 

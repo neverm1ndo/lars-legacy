@@ -146,11 +146,9 @@ export class MapsService {
           );
   }
   getMap(path: { path: string, name?: string}): Observable<any> {
-    console.log(path)
     return this._api.getMap(path.path)
                     .pipe(
                       map((xml: string) => this.mapToObject(xml)),
-                      // tap(console.log),
                       catchError(throwError),
                     )
   }

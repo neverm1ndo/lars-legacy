@@ -3,7 +3,7 @@ import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { downloadFile, createTray, showNotification, serve, loadFromAsar, pingHost } from './utils.main';
+import { downloadFile, createTray, showNotification, serve, loadFromAsar, pingHost, loadFromFileSystem } from './utils.main';
 
 import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
@@ -181,6 +181,10 @@ ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: str
 
 ipcMain.handle('ping', (_event: Electron.IpcMainInvokeEvent, host: string, options: PingConfig): Promise<PingResponse> => {
   return pingHost(host, options);
+});
+
+ipcMain.handle('model', (_event: Electron.IpcMainInvokeEvent, path: string): Promise<Buffer> => {
+  return loadFromFileSystem(path);
 });
 
 /** AutoUpdater handlers */

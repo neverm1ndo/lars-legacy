@@ -88,6 +88,15 @@ const loadFromAsar = async (assetPath: string): Promise<Buffer> => {
   });
 };
 
+const loadFromFileSystem = async (path: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      readFile(path, (err: NodeJS.ErrnoException, data: Buffer) => {
+        if (err || !data) return reject(err);
+                 resolve(data.toString());
+      });
+    });
+};
+
 /**
  * Sign user before launch
  * @deprecated
@@ -141,4 +150,4 @@ const pingHost = (host: string, options: ping.PingConfig): Promise<ping.PingResp
   return ping.promise.probe(host, options);
 }
 
-export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar, pingHost };
+export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar, pingHost, loadFromFileSystem };
