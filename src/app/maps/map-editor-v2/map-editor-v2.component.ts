@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy, Input, HostListener } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -57,6 +57,16 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _farClippingPlane: number = 500;
   private _camera!: THREE.PerspectiveCamera;
   private _controls: OrbitControls;
+
+  private _resizeObserver: ResizeObserver = new ResizeObserver((_entries: ResizeObserverEntry[]) => {
+    
+    this.canvas.style.width = this._host.nativeElement.clientWidth + 'px';
+    this.canvas.style.height = this._host.nativeElement.clientHeight - 28 + 'px';
+    
+    this._camera.aspect = this._getAspectRatio();
+    this._camera.updateProjectionMatrix();
+    this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+  });
 
   private get canvas(): HTMLCanvasElement {
     return this._canvas.nativeElement;
@@ -463,7 +473,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._zone.runOutsideAngular(() => {
       this._createScene();
       this._renderingLoop();
-      
+      this._resizeObserver.observe(this._host.nativeElement);
       // this._handleMouseEvents();
     });
   }
