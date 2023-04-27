@@ -1,9 +1,10 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy, Input, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy, OnDestroy, Input } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import Stats from 'three/examples/jsm/libs/stats.module';
+
 import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
 import { catchError, map, switchMap, take, tap, mergeMap } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
@@ -17,6 +18,7 @@ import { outlineMaterial } from '@lars/shared/materials/outline.material';
 import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, faList } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
 import * as path from 'path';
+import { MapsService } from '../maps.service';
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -119,6 +121,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     private _host: ElementRef,
     private _zone: NgZone,
     private _electron: ElectronService,
+    private _maps: MapsService,
   ) {}
 
   private _loadResouresPackSettings(): ResourcesPackSettings {
@@ -179,6 +182,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         (this._intersectedMapObject as any).material.color.set(0xffffff);
         this._intersectedMapObject = intersects[0].object as any;
         (this._intersectedMapObject as any).material.color.set(0xff0000);
+
+        // const nameText3D: THREE.TextGeomtry = 
       }
   }
 
@@ -321,6 +326,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         this._zone.run(() => {
           this.$loading.next(false);
         });
+
+        this._maps.mapGroupToXML(this._loadedMapGroup);
       
       },
       error: console.error,
@@ -448,6 +455,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
           
             group.position.set(object.posX, object.posZ, -object.posY);
             
+            group.userData.id = object.id;
             group.userData.dimension = object.dimension;
             group.userData.type = object.name;
             group.userData.model = object.model;
@@ -468,13 +476,17 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  public debugMap() {
+    this._maps.mapGroupToXML(this._loadedMapGroup);
+  }
+
   ngAfterViewInit(): void {
     (document.body.querySelector('.dg.ac') as HTMLElement).style.top = '40px';
     this._zone.runOutsideAngular(() => {
       this._createScene();
       this._renderingLoop();
       this._resizeObserver.observe(this._host.nativeElement);
-      // this._handleMouseEvents();
+      this._handleMouseEvents();
     });
   }
 

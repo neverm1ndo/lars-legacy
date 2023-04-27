@@ -8,6 +8,8 @@ import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map, tap } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
+import { Group, MathUtils } from 'three';
+import { UserService } from '@lars/user.service';
 
 @Injectable({
   providedIn: 'any'
@@ -17,7 +19,8 @@ export class MapsService {
   constructor(
     private _electron: ElectronService,
     private _api: ApiService,
-    private _toast: ToastService
+    private _toast: ToastService,
+    private _user: UserService,
   ) { }
 
   private handleError(error: HttpErrorResponse): Observable<any> {
@@ -31,16 +34,42 @@ export class MapsService {
     return throwError(() => error);
   }
 
-  objectToMap(object: any[]): string {
-    let res: string = '';
-    for (let i = 0; i < object.length; i++) {
-      Object.keys(object[i]).forEach((e: string, j: number) => {
-        if (j === 0) res += `<${object[i][e]} `
-        else res += `${e}="${object[i][e]}" `;
-        if (j === Object.keys(object[i]).length - 1) res += `/>\n`;
-      });
+  public mapGroupToXML(mapGroup: Group): XMLDocument {
+    const xmlNamespaceURI: string = 'http://www.w3.org/1999/xhtml';
+    const resultXML: XMLDocument = document.implementation.createDocument(xmlNamespaceURI, 'map', null);
+
+    const map: Element = resultXML.querySelector('map');
+          map.setAttribute('edf:definitions', 'editor_main');
+    
+    for (let object of mapGroup.children) {
+      const objectElement: Element = resultXML.createElementNS(xmlNamespaceURI, object.userData.type);
+
+      delete object.userData.type;
+      delete object.userData.initial;
+      
+      for (let attribute in object.userData) {
+        objectElement.setAttribute(attribute, object.userData[attribute]);
+      }
+      
+      let { x: posX, y: posY, z: posZ } = object.position;
+      let { x: rotX, y: rotY, z: rotZ } = object.rotation;
+
+      [rotX, rotY, rotZ] = [rotX, rotY, rotZ].map((rad: number) => MathUtils.radToDeg(rad));
+
+      const objectPositioning = { posX, posY, posZ, rotX, rotY, rotZ };
+      
+      for (let attribute in objectPositioning) {
+        objectElement.setAttribute(attribute, objectPositioning[attribute]);
+      }
+
+      map.appendChild(objectElement);
     }
-    return `<map edf:definitions="editor_main">\n` + res + `<!--\n LARS gta-liberty.ru \n-->\n` + '</map>';
+
+    const postComment: Comment = resultXML.createComment(`\n\tLARS gta-liberty.ru\n\tLast edited by ${this._user.loggedInUser$.value.username}\n\t${new Date().toISOString()}\n`);
+    
+    resultXML.append(postComment);
+
+    return resultXML;
   }
 
   async cancelChanges(path: string): Promise<any> {
@@ -113,8 +142,8 @@ export class MapsService {
         filter(val => val.response === 0),
         map(() => {
           const form = new FormData();
-          const blob = new Blob([this.objectToMap(objects)], { type: 'text/plain' })
-          form.append('file', blob, path);
+          // const blob = new Blob([this.ma(objects)], { type: 'text/plain' })
+          // form.append('file', blob, path);
           return form;
         }),
         switchMap((form) => this._api.uploadFileMap(form)),
@@ -137,9 +166,9 @@ export class MapsService {
           .pipe(
             filter(res => res.filePath && !res.canceled),
             switchMap((res) => from(new Promise((resolve, reject) => {
-              this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
-                err?reject(err):resolve(res.filePath);
-              });
+              // this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
+              //   err?reject(err):resolve(res.filePath);
+              // });
             }))),
             catchError((err) => this.handleError(err)),
             take(1)
