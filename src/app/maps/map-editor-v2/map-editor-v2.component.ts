@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
+import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
@@ -75,7 +76,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _renderer!: THREE.WebGLRenderer;
+  private _labelRenderer: CSS2DRenderer = new CSS2DRenderer();
   private _scene!: THREE.Scene;
+
+  private _layers = [];
 
   private _loadingManager: THREE.LoadingManager = new THREE.LoadingManager();
   private _objectLoader: OBJLoader = new OBJLoader(this._loadingManager);
@@ -95,7 +99,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _cursorRayCaster: THREE.Raycaster = new THREE.Raycaster();
   private _pointer: THREE.Vector2 = new THREE.Vector2();
 
-  private _intersectedMapObject: THREE.Mesh = new THREE.Mesh();
+  private _selectedMapObject: THREE.Mesh = new THREE.Mesh();
 
   private readonly _resourcesPackSettings: ResourcesPackSettings = this._loadResouresPackSettings();
 
@@ -171,20 +175,43 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         this._handleRaycasterIntersectMapObjects();
       },
     });
+    fromEvent<MouseEvent>(this.canvas, 'contextmenu').subscribe({
+      next: (event: MouseEvent) => {
+        this._removeSelectionOfSelectedMapObject();
+      },
+    });
   }
 
-  private _handleRaycasterIntersectMapObjects() {
+  private _handleRaycasterIntersectMapObjects(): void {
     this._camera.updateMatrixWorld();
     this._cursorRayCaster.setFromCamera(this._pointer, this._camera);
     const intersects = this._cursorRayCaster.intersectObjects(this._loadedMapGroup.children);
 
-      if (this._intersectedMapObject.uuid !== (intersects[0].object as THREE.Object3D).uuid) {
-        (this._intersectedMapObject as any).material.color.set(0xffffff);
-        this._intersectedMapObject = intersects[0].object as any;
-        (this._intersectedMapObject as any).material.color.set(0xff0000);
+    
+    if (intersects.length === 0) return;
+    
+    let intersected = intersects[0].object;
 
-        // const nameText3D: THREE.TextGeomtry = 
-      }
+    if (this._selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
+      this._removeAllObjectChildrens(this._selectedMapObject);
+      (this._selectedMapObject as any).material.color.set(0xffffff);
+      this._selectedMapObject = intersected as any;
+      (this._selectedMapObject as any).material.color.set(0xff0000);
+
+      const intersectedObjectDiv: HTMLDivElement = document.createElement('div');
+            intersectedObjectDiv.className = 'label';
+            intersectedObjectDiv.textContent = `${this._selectedMapObject.parent.userData.id}\n(${this._selectedMapObject.parent.userData.model})`;
+            intersectedObjectDiv.style.backgroundColor = 'transparent';
+
+      const intersectedObjectLabel: CSS2DObject = new CSS2DObject(intersectedObjectDiv);
+            intersectedObjectLabel.position.set(this._selectedMapObject.position.x, this._selectedMapObject.position.y, this._selectedMapObject.position.z);
+            this._selectedMapObject.add(intersectedObjectLabel);
+            intersectedObjectLabel.layers.set(0);
+    }
+  }
+
+  private _removeAllObjectChildrens(object: THREE.Object3D) {
+    for (let children of object.children) object.remove(children);
   }
 
   private _loadModelFromFileSystem(name: string): Observable<THREE.Group> {
@@ -215,6 +242,12 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             })
           );
   };
+
+  private _removeSelectionOfSelectedMapObject() {
+    this._removeAllObjectChildrens(this._selectedMapObject);
+    (this._selectedMapObject as any).material.color.set(0xffffff);
+    this._selectedMapObject = new THREE.Mesh();
+  }
 
   /**
    * TODO: merge with _loadObjectFromFileSystem
@@ -290,6 +323,15 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   * Adds light, fog, terrain chunks and camera
   */
   private _createScene(): void {
+    this._labelRenderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this._labelRenderer.domElement.style.position = 'absolute';
+    this._labelRenderer.domElement.style.top = '0px';
+    this._labelRenderer.domElement.style.pointerEvents = 'none';
+    this._labelRenderer.domElement.style.fontSize = '12px';
+		
+    this._host.nativeElement.appendChild(this._labelRenderer.domElement);
+
+
     const light = new THREE.AmbientLight(COLOR.WHITE, 1);
     this._scene = new THREE.Scene();
     this._scene.background = new THREE.Color(COLOR.SKY);
@@ -350,6 +392,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private __loadMapObjects(): Observable<THREE.Group> {
     return this.$mapObjects.pipe(
       tap(() => {
+        this._removeAllObjectChildrens(this._selectedMapObject);
         console.log(this._loadedMapGroup.children.length, 'removed');
         this._loadedMapGroup.clear();
       }),
@@ -430,6 +473,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         
         if (this._terrainBoundingBoxes.size == this._mapChunksNames.length) this._chunkBoundingContainsCamera();
         this._renderer.render(this._scene, this._camera);
+        this._labelRenderer.render(this._scene, this._camera);
         this._stats.update();
         if (this._limiter) DELTA = DELTA % INTERVAL;
       }
