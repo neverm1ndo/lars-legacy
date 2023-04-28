@@ -14,7 +14,12 @@ import { getObjectNameById } from '../sa.objects';
 import { MapObject } from '../map.interfaces';
 import { MathUtils } from 'three';
 
-import { outlineMaterial } from '@lars/shared/materials/outline.material';
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
+import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectionShader";
 
 import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, faList } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
@@ -78,6 +83,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _renderer!: THREE.WebGLRenderer;
   private _labelRenderer: CSS2DRenderer = new CSS2DRenderer();
+  
   private _scene!: THREE.Scene;
 
   private _layers = [];
@@ -101,6 +107,11 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _pointer: THREE.Vector2 = new THREE.Vector2();
 
   private _selectedMapObject: THREE.Mesh = new THREE.Mesh();
+  
+  private _outlinePass: OutlinePass;
+  private _composer: EffectComposer; 
+  private _renderPass: RenderPass;
+  private _effectFXAA: ShaderPass;
 
   private readonly _resourcesPackSettings: ResourcesPackSettings = this._loadResouresPackSettings();
 
@@ -196,19 +207,35 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     if (this._selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
       this._removeAllObjectChildrens(this._selectedMapObject);
       (this._selectedMapObject as any).material.color.set(0xffffff);
-      this._selectedMapObject = intersected as any;
-      (this._selectedMapObject as any).material.color.set(0xff0000);
-
-      const intersectedObjectDiv: HTMLDivElement = document.createElement('div');
-            intersectedObjectDiv.className = 'label';
-            intersectedObjectDiv.textContent = `${this._selectedMapObject.parent.userData.id}\n(${this._selectedMapObject.parent.userData.model})`;
-            intersectedObjectDiv.style.backgroundColor = 'transparent';
-
-      const intersectedObjectLabel: CSS2DObject = new CSS2DObject(intersectedObjectDiv);
-            intersectedObjectLabel.position.set(this._selectedMapObject.position.x, this._selectedMapObject.position.y, this._selectedMapObject.position.z);
-            this._selectedMapObject.add(intersectedObjectLabel);
-            intersectedObjectLabel.layers.set(0);
+      this._focusObject(intersected);
     }
+  }
+
+  private _focusObject(object: THREE.Object3D) {
+    this._selectedMapObject = object as any;
+    // (this._selectedMapObject as any).material.color.set(0xff0000);
+
+    const intersectedObjectDiv = this._createTextLabel(`${object.parent.userData.id}\n(${object.parent.userData.model})`);
+
+    const intersectedObjectLabel: CSS2DObject = new CSS2DObject(intersectedObjectDiv);
+          intersectedObjectLabel.position.set(this._selectedMapObject.position.x, this._selectedMapObject.position.y, this._selectedMapObject.position.z);
+          this._selectedMapObject.add(intersectedObjectLabel);
+    
+    intersectedObjectLabel.layers.set(0);
+
+    this._outlinePass.selectedObjects = [this._selectedMapObject];
+    
+    // this._selectedMapObject.material = outlineMaterial;
+  }
+
+  private _createTextLabel(text: string): HTMLDivElement {
+    const intersectedObjectDiv: HTMLDivElement = document.createElement('div');
+          intersectedObjectDiv.className = 'label';
+          intersectedObjectDiv.textContent = text;
+          intersectedObjectDiv.style.backgroundColor = 'transparent';
+          intersectedObjectDiv.style.whiteSpace = 'pre-wrap';
+          intersectedObjectDiv.style.textAlign = 'center';
+    return intersectedObjectDiv;
   }
 
   private _removeAllObjectChildrens(object: THREE.Object3D) {
@@ -246,6 +273,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _removeSelectionOfSelectedMapObject() {
     this._removeAllObjectChildrens(this._selectedMapObject);
+    this._outlinePass.selectedObjects = [];
     (this._selectedMapObject as any).material.color.set(0xffffff);
     this._selectedMapObject = new THREE.Mesh();
   }
@@ -386,6 +414,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._camera.far = this._farClippingPlane;
     this._camera.near = this._nearClippingPlane;
 
+    /** Helpers */
     const axesHelper = new THREE.AxesHelper(50);
     this._scene.add(axesHelper);
   }
@@ -394,7 +423,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     return this.$mapObjects.pipe(
       tap(() => {
         this._removeAllObjectChildrens(this._selectedMapObject);
-        console.log(this._loadedMapGroup.children.length, 'removed');
         this._loadedMapGroup.clear();
       }),
       switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
@@ -449,6 +477,47 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._renderer.outputEncoding = THREE.sRGBEncoding;
     this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
+    /** Shader effect */
+    /** Composer */
+    this._composer = new EffectComposer(this._renderer);
+    this._composer.setPixelRatio(devicePixelRatio);
+
+    /** Render pass */
+    this._renderPass = new RenderPass(this._scene, this._camera);
+    this._composer.addPass(this._renderPass);
+    
+    /** Outline pass */
+    this._outlinePass = new OutlinePass(
+      new THREE.Vector2(this.canvas.clientWidth, this.canvas.clientHeight),
+      this._scene,
+      this._camera
+    );
+    
+    this._outlinePass.edgeStrength = 10.0;
+    this._outlinePass.edgeGlow = 0;
+    this._outlinePass.edgeThickness = 0.3;
+    this._outlinePass.pulsePeriod = 0;
+    this._outlinePass.usePatternTexture = false;
+    this._outlinePass.visibleEdgeColor.set(COLOR.RED);
+    this._outlinePass.hiddenEdgeColor.set(COLOR.BLUE);
+
+    this._composer.addPass(this._outlinePass);
+
+    // Shader fxaa
+    this._effectFXAA = new ShaderPass(FXAAShader);
+    this._effectFXAA.uniforms["resolution"].value.set(
+      1 / window.innerWidth,
+      1 / window.innerHeight
+    );
+    this._effectFXAA.renderToScreen = true;
+
+    const gammaCorrectionPass: ShaderPass = new ShaderPass(GammaCorrectionShader);
+
+    this._composer.addPass(this._effectFXAA);
+    this._composer.addPass(gammaCorrectionPass);
+
+    /** Controls */
+
     this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._controls.enableDamping = true;
 
@@ -473,8 +542,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
         this._controls.update();
         
         if (this._terrainBoundingBoxes.size == this._mapChunksNames.length) this._chunkBoundingContainsCamera();
-        this._renderer.render(this._scene, this._camera);
+
         this._labelRenderer.render(this._scene, this._camera);
+        this._composer.render();
+        
         this._stats.update();
         if (this._limiter) DELTA = DELTA % INTERVAL;
       }
