@@ -69,6 +69,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._camera.aspect = this._getAspectRatio();
     this._camera.updateProjectionMatrix();
     this._renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this._labelRenderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
   });
 
   private get canvas(): HTMLCanvasElement {
