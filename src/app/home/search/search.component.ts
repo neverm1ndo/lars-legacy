@@ -5,8 +5,7 @@ import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faC
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { WebSocketService } from '@lars/web-socket.service';
-import { filter } from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs'
+import { Observable, Subject, Subscription, merge, mergeMap, map, filter } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
 import { HistoryListEnum } from '@lars/enums';
 
@@ -38,8 +37,12 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   public datepickers: boolean = false;
-  private $newLinesSub: Subscription;
-  public newLineCounter: number = 0;
+
+  private $clearNotifier: Subject<number> = new Subject();
+  public $newLines: Observable<number> = merge(
+    this.$clearNotifier,
+    this._ws.getNewLogLines(),
+  );
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
@@ -85,6 +88,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearNewLinesNotifier() {
+   this.$clearNotifier.next(0);
+  }
+
   openDatePickers(): void {
     this.datepickers = this.datepickers?true:false;
   }
@@ -95,13 +102,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.quick) return;
-    this._zone.runOutsideAngular(() => {
-      this.$newLinesSub = this._ws.getNewLogLines()
-                                  .subscribe({ next: () => {
-                                      this.newLineCounter++;
-                                  }});
-                                
-    });
+
     this._route.queryParams.pipe(
       filter(({ query }: Params) => query)
     ).subscribe({
@@ -112,7 +113,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy() {
-    if (this.$newLinesSub) this.$newLinesSub.unsubscribe();
   }
 
 }
