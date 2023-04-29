@@ -33,7 +33,7 @@
       </div>
       <div *ngIf="!quick" class="d-flex flex-row pe-2">
         <ng-container *ngLet="$newLines | async as newLines">
-          <button (mouseenter)="clearNewLinesNotifier()" [attr.data-newlines]="newLines" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading">
+          <button [attr.data-newlines]="newLines" class="btn btn-dark" (click)="sync()" name="sync" [disabled]="loading">
             <fa-icon [class.spin]="loading" [icon]="fa.sync"></fa-icon>
             <i *ngIf="newLines !== 0" class="bg-danger text-light new-line-counter">{{ newLines }}</i>
           </button>

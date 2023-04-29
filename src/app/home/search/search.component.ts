@@ -5,7 +5,7 @@ import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faC
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { WebSocketService } from '@lars/web-socket.service';
-import { Observable, Subject, Subscription, merge, mergeMap, map, filter, scan, iif, of, count, switchMap, startWith } from 'rxjs'
+import { Observable, Subject, Subscription, merge, mergeMap, map, filter, scan, iif, of, count, switchMap, startWith, BehaviorSubject, tap, fromEvent } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
 import { HistoryListEnum } from '@lars/enums';
 
@@ -38,22 +38,22 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   public datepickers: boolean = false;
 
-  private $clearNotifier: Subject<number> = new Subject();
-  
-  public $newLines: Observable<number> = merge(
-    this.$clearNotifier,
-    this._ws.getNewLogLines()
-            .pipe(
-              startWith(0),
-              scan((acc) => acc++),
-            ),
-  )
+  public $newLinesCounter: BehaviorSubject<number> = new BehaviorSubject(0);
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
   @Input('quick') quick: boolean = false;
   @Input('loading') loading: boolean = true;
   @Input('lineCounter') lineCounter: number = 0;
+
+  public $newLines: Observable<any> = merge(
+    this._ws.getNewLogLines()
+            .pipe(map(() => 1)),
+    this.syncronize.asObservable()
+                   .pipe(map(() => 0)),
+  ).pipe(
+    scan((acc, val) => val === 0 ? 0 : acc + val, 0),
+  );
 
   constructor(
     private _api: ApiService,
@@ -91,10 +91,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       }
       this._toast.show('danger', errmsg, null, faExclamationTriangle);
     }
-  }
-
-  clearNewLinesNotifier() {
-   this.$clearNotifier.next(0);
   }
 
   openDatePickers(): void {
