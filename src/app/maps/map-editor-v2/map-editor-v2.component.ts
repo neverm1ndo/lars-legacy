@@ -141,18 +141,23 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   private _loadResouresPackSettings(): ResourcesPackSettings {
+    const resourcesStorageItem: string = 'lars/maps/resourcesURI';
     try {
-      const settings = localStorage.getItem('lars/maps/resourcesURI');
+      const settings = localStorage.getItem(resourcesStorageItem);
       if (!settings) throw new Error('[ME] Resource pack settings is empty');
 
       return JSON.parse(settings) as ResourcesPackSettings;
     } catch (err) {
       console.warn(err);
-      return {
+      
+      const defaultSettings: ResourcesPackSettings = {
         protocol: 'file',
         host: '',
         textures: 'txd_in',
-      };
+      } as const;
+
+      localStorage.setItem(resourcesStorageItem, JSON.stringify(defaultSettings));
+      return defaultSettings;
     }
   }
 
@@ -213,7 +218,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _focusObject(object: THREE.Object3D) {
     this._selectedMapObject = object as any;
-    // (this._selectedMapObject as any).material.color.set(0xff0000);
 
     const intersectedObjectDiv = this._createTextLabel(`${object.parent.userData.id}\n(${object.parent.userData.model})`);
 
@@ -224,8 +228,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     intersectedObjectLabel.layers.set(0);
 
     this._outlinePass.selectedObjects = [this._selectedMapObject];
-    
-    // this._selectedMapObject.material = outlineMaterial;
   }
 
   private _createTextLabel(text: string): HTMLDivElement {

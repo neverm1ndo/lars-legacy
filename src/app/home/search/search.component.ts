@@ -5,7 +5,7 @@ import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faC
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { WebSocketService } from '@lars/web-socket.service';
-import { Observable, Subject, Subscription, merge, mergeMap, map, filter } from 'rxjs'
+import { Observable, Subject, Subscription, merge, mergeMap, map, filter, scan, iif, of, count, switchMap, startWith } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
 import { HistoryListEnum } from '@lars/enums';
 
@@ -39,10 +39,15 @@ export class SearchComponent implements OnInit, OnDestroy {
   public datepickers: boolean = false;
 
   private $clearNotifier: Subject<number> = new Subject();
+  
   public $newLines: Observable<number> = merge(
     this.$clearNotifier,
-    this._ws.getNewLogLines(),
-  );
+    this._ws.getNewLogLines()
+            .pipe(
+              startWith(0),
+              scan((acc) => acc++),
+            ),
+  )
 
   @Output() searchQuery = new EventEmitter<any>();
   @Output() syncronize = new EventEmitter<boolean>();
