@@ -1,63 +1,88 @@
-<div class="container-fluid g-0 h-100">
-  <div class="d-flex flex-column h-100">
-    <div class="d-flex align-self-start flex-column w-100">
-      <div class="col-12 head">
-        <div class="row h-100">
-          <div class="h-100 col-3 align-items-center d-flex">
-            <h6 class="mb-0"><fa-icon [icon]="fa.ban"></fa-icon>Банлист</h6>
-          </div>
-          <div class="h-100 col-2 align-items-center d-flex">
-            <ng-select [items]="searchTypes"
-            bindLabel="val"
-            [searchable]="false"
-            [clearable]="false"
-            bindValue="id"
-            class="custom w-100"
-            [(ngModel)]="currentSearchType">
-          </ng-select>
-          </div>
-          <div class="h-100 col-7 form-group mb-0 align-items-center d-flex">
-            <input class="form-control"
-              aria-describedby="button-path"
-              placeholder="Поиск"
-              type="text"
-              required>
-          </div>
+<div class="container-fluid d-flex flex-column g-0 h-100">
+    <div class="container-fluid head">
+      <div class="row h-100">
+        <div class="col-3">
+          <h6><fa-icon [icon]="fa.ban"></fa-icon>Банлист</h6>
+        </div>
+        <div class="h-100 col-2 align-items-center d-flex">
+          <ng-select [items]="searchTypes"
+          bindLabel="val"
+          [searchable]="false"
+          [clearable]="false"
+          bindValue="id"
+          class="custom w-100"
+          [(ngModel)]="currentSearchType">
+        </ng-select>
+        </div>
+        <div class="h-100 col-7 form-group mb-0 align-items-center d-flex">
+          <input class="form-control"
+            aria-describedby="button-path"
+            placeholder="Поиск"
+            type="text"
+            required>
         </div>
       </div>
     </div>
-    <div *ngIf="bans; else empty" class="d-flex flex-fill">
-      <div class="col-12">
-        <div class="row">
-          <table class="table w-100">
-            <thead class="overflow-auto">
-              <th>Тип бана</th>
-              <th>Параметр</th>
-              <th>Никнейм</th>
-              <th>Кем забанен</th>
-              <th>Время бана</th>
-              <th>Авторазбан</th>
-              <th></th>
-            </thead>
+    <div class="d-flex list">
+        <table class="table w-100">
+          <thead>
+            <th>ID</th>
+            <th>Код бана</th>
+            <th>Параметр</th>
+            <th>Причина</th>
+            <th>Никнейм</th>
+            <th>Кем забанен</th>
+            <th>Время бана</th>
+            <th>Авторазбан</th>
+            <th></th>
+          </thead>
+          <ng-container *ngLet="$bans | async as bans">
             <tbody>
-              <tr *ngFor="let ban in bans">
-                <td><kbd>CN</kbd></td>
-                <td>13267TT4NRPI3FTB4QPQVWA1DJKIUT</td>
-                <td>Neverm1ndo</td>
-                <td>Neverm1ndo</td>
-                <td>20 Jan 2021 22:22:22</td>
-                <td>20 Jan 2021 22:22:22</td>
-                <td><button class="btn btn-light" type="button" name="button">Разбанить</button></td>
+              <tr *ngFor="let ban of bans">
+                <td>{{ ban.id }}</td>
+                <td><kbd>{{ ban.ban_type }}</kbd></td>
+                <td>{{ ban.serial_cn }}</td>
+                <td>{{ ban.rule }}</td>
+                <td>
+                  <kbd *ngIf="ban.user_id">{{ ban.user_id }}</kbd>
+                  <span>
+                    {{ ban.banned_username }}
+                  </span>
+                </td>
+                <td>
+                  <img class="avatar" [src]="ban.admin_avatar" [alt]="ban.admin_username">
+                  {{ ban.admin_username }}
+                </td>
+                <td>{{ ban.banned_from | date:'d MMM yy, HH:mm:ss' }}</td>
+                <td>
+                  <ng-container *ngIf="ban.banned_to; else permanent">
+                    <span>
+                      {{ ban.banned_to | date:'d MMM yy, HH:mm:ss' }}
+                    </span>
+                  </ng-container>
+                  <ng-template #permanent>
+                    <span>Никогда</span>
+                  </ng-template>
+                </td>
+                <!-- <td><button class="btn btn-light" type="button" name="button">Разбанить</button></td> -->
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>
-          </table>
-        </div>
-      </div>
+          </ng-container>
+        </table>
     </div>
     <ng-template #empty>
       <div class="d-flex flex-fill flex-column justify-content-center align-items-center w-100">
         <span class="text-muted">Банлист пуст</span>
       </div>
     </ng-template>
-  </div>
 </div>

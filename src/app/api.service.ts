@@ -9,6 +9,7 @@ import { LogLine } from './interfaces';
 import * as _ from 'lodash';
 import { HistoryListEnum } from './enums';
 import { HistoryStorage } from './interfaces';
+import { BanRule } from './interfaces/bans.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,10 @@ export class ApiService {
         REMOVE: 'remove-backup',
         BACKUP_FILE: 'backup-file',
         SIZE: 'size',
+      },
+      BANS: {
+        __route: 'bans',
+        LIST: ''
       },
       STATS: {
         __route: 'stats',
@@ -160,6 +165,10 @@ export class ApiService {
   getStatsChat(): Observable<any> {
     return this._http.get(this.URL.STATS.CHAT);
   }
+
+  getBanList(page?: number, limit?: number): Observable<BanRule[]> {
+    return this._http.get<BanRule[]>(this.URL.BANS.LIST, /**{ params: { p: page, lim: limit }}*/);
+  };
 
   createDirectory(path: string): Observable<any> {
     return this._http.post(this.URL.UTILS.MKDIR, { path })

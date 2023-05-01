@@ -1,29 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons';
-
-enum BanType {
-  CHEATING,
-  BUG_ABUSE,
-  ADS,
-  PAUSING,
-  DRIVEBY,
-  REJECTED_NICKNAME,
-  INSULT,
-}
-
-interface BanRule {
-  id: number;
-  rule: string;
-  ban_type: BanType;
-  ip: string;
-  serial_cn?: string;
-  serial_as?: string;
-  serial_ss?: string;
-  user_id?: number;
-  admin_id: number;
-  banned_from: Date;
-  banned_to: Date | null;
-}
+import { ApiService } from '@lars/api.service';
+import { BanRule } from '@lars/interfaces/bans.interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-banhammer',
@@ -32,9 +11,11 @@ interface BanRule {
 })
 export class BanhammerComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _api: ApiService,
+  ) { }
 
-  public bans: BanRule[] = [];
+  public $bans: Observable<BanRule[]> = this._api.getBanList();
 
   public searchTypes = [
     { id: 0, val: 'IP' },
