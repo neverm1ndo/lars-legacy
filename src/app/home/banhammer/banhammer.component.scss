@@ -81,6 +81,7 @@
     }
     td {
       vertical-align: middle;
+      border: 1px solid $underpanel;
       border-top: none;
       border-bottom: none;
       padding-top: 2px;
@@ -88,6 +89,22 @@
       text-align: center;
       &:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.1);
+      }
+      .serial {
+        &.as, &.ss, &.cn {
+          text-align: start;
+          &:before {
+            text-align: center;
+            width: 2.2rem;
+            background-color: $underpanel;
+            content: attr(data-name);
+            text-transform: uppercase;
+            margin: 0 10px 0 0;
+            padding: 0 10px 0 10px;
+            user-select: none;
+            display: inline-block;
+          }
+        }
       }
     }
   }

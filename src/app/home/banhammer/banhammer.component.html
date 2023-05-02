@@ -41,7 +41,11 @@
               <tr *ngFor="let ban of bans">
                 <td>{{ ban.id }}</td>
                 <td><kbd>{{ ban.ban_type }}</kbd></td>
-                <td>{{ ban.serial_cn }}</td>
+                <td>
+                  <div data-name="as" class="serial as" *ngIf="ban.serial_as">{{ ban.serial_as }}</div>
+                  <div data-name="ss" class="serial ss" *ngIf="ban.serial_ss">{{ ban.serial_ss }}</div>
+                  <div data-name="cn" class="serial cn" *ngIf="ban.serial_cn && ban.ban_type === 11111">{{ ban.serial_cn }}</div>
+                </td>
                 <td>{{ ban.rule }}</td>
                 <td>
                   <kbd *ngIf="ban.user_id">{{ ban.user_id }}</kbd>

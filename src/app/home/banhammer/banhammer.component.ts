@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { ApiService } from '@lars/api.service';
 import { BanRule } from '@lars/interfaces/bans.interfaces';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { BanType } from '@lars/enums/bans.enum';
 
 @Component({
   selector: 'app-banhammer',
   templateUrl: './banhammer.component.html',
-  styleUrls: ['./banhammer.component.scss']
+  styleUrls: ['./banhammer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BanhammerComponent implements OnInit {
 
