@@ -14,56 +14,58 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
-            <table *ngIf="admins.length > 0" class="table w-100">
-              <thead class="">
-                <th>ID</th>
-                <th>Никнейм</th>
-                <th>Основная группа</th>
-                <th class="text-muted">Побочная группа</th>
-                <th></th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let admin of admins">
-                  <td class="td-avatar">
-                    <img class="avatar" src="{{admin.user_avatar}}" alt="">
-                    <kbd>{{ admin.user_id }}</kbd>
-                  </td>
-                  <td class="td-username">
-                    <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
-                    <small>{{ admin.user_email }}</small><br>
-                    <small *ngIf="userActivities[admin.username]">
-                      <fa-icon [icon]="adminActivityIcon(userActivities[admin.username])"></fa-icon>
-                      {{ userActivities[admin.username] | userAction }}
-                    </small>
+              <table class="table w-100">
+                <thead>
+                  <th>ID</th>
+                  <th>Никнейм</th>
+                  <th>Основная группа</th>
+                  <th class="text-muted">Побочная группа</th>
+                  <th></th>
+                </thead>
+                <tbody *ngIf="$admins | async as admins">
+                  <tr *ngFor="let admin of admins">
+                    <td class="td-avatar">
+                      <img class="avatar" src="{{admin.user_avatar}}" alt="">
+                      <kbd>{{ admin.user_id }}</kbd>
+                    </td>
+                    <td class="td-username">
+                      <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
+                      <small>{{ admin.user_email }}</small><br>
+                      <!-- <small *ngIf="userActivities[admin.username]">
+                        <fa-icon [icon]="adminActivityIcon(userActivities[admin.username])"></fa-icon>
+                        {{ userActivities[admin.username] | userAction }}
+                      </small> -->
+                    </td>
+                    <td>
+                      <ng-select [items]="roles"
+                      bindLabel="val"
+                      [searchable]="false"
+                      [clearable]="false"
+                      bindValue="id"
+                      class="custom"
+                      [disabled]="userInfo.main_group !== 10"
+                      (change)="changeAdminGroup(admin.username, admin.user_id, admin.main_group)"
+                      [(ngModel)]="admin.main_group">
+                    </ng-select>
                   </td>
                   <td>
-                    <ng-select [items]="roles"
+                    <ng-select [items]="subRoles"
                     bindLabel="val"
                     [searchable]="false"
                     [clearable]="false"
                     bindValue="id"
                     class="custom"
-                    [disabled]="userInfo.main_group !== 10"
-                    (change)="changeAdminGroup(admin.username, admin.user_id, admin.main_group)"
-                    [(ngModel)]="admin.main_group">
+                    [disabled]="userInfo.main_group !== 10 || (admin.main_group == 10 || admin.main_group == 9)"
+                    (change)="changeSecondaryAdminGroup(admin.username, admin.user_id, admin.secondary_group)"
+                    [(ngModel)]="admin.secondary_group">
                   </ng-select>
                 </td>
-                <td>
-                  <ng-select [items]="subRoles"
-                  bindLabel="val"
-                  [searchable]="false"
-                  [clearable]="false"
-                  bindValue="id"
-                  class="custom"
-                  [disabled]="userInfo.main_group !== 10 || (admin.main_group == 10 || admin.main_group == 9)"
-                  (change)="changeSecondaryAdminGroup(admin.username, admin.user_id, admin.secondary_group)"
-                  [(ngModel)]="admin.secondary_group">
-                </ng-select>
-              </td>
-              <td class="td-rm"><button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="left" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button></td>
-            </tr>
-              </tbody>
-            </table>
+                <td class="td-rm">
+                  <!-- <button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="left" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button> -->
+                </td>
+              </tr>
+                </tbody>
+              </table>
           </div>
         </div>
       </div>

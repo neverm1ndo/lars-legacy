@@ -1,8 +1,8 @@
 import { Injectable, Injector } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 import { UserService } from './user.service';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, scan } from 'rxjs/operators';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { AppConfig } from '../environments/environment';
 import { LogLine } from './interfaces/app.interfaces';
@@ -44,9 +44,13 @@ export const socketConfig: AuthSocketIoConfig = {
 })
 export class WebSocketService {
   protected alerts: Subscription = new Subscription();
-  protected activies: Subscription;
+  protected activies: Observable<any> = this.getUserActitvity()
+  .pipe(
+    scan((acc, curr) => Object.assign(acc, curr), {})
+  );
 
-  public usersStates = {};
+  public $usersStates: Subject<{[name: string]: any}> = new Subject();
+  
   constructor(
     private _router: Router,
     private _injector: Injector,
@@ -80,9 +84,6 @@ export class WebSocketService {
       filter((user) => !!user)
     ).subscribe((user) => {
       this.connect();
-    });
-    this.activies = this.getUserActitvity().subscribe((act) => {
-      this.usersStates[act.user] = act.action;
     });
   }
 

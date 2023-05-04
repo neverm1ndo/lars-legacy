@@ -99,10 +99,10 @@ export class ApiService {
     return this._http.get(this.URL.ADMINS.LIST);
   }
   setAdminGroup(id: number, group: number) {
-    return this._http.put(this.URL.ADMINS.CHANGE_MAIN_GROUP, { id, group: group })
+    return this._http.patch(this.URL.ADMINS.CHANGE_MAIN_GROUP, { id, group: group })
   }
   setAdminSecondaryGroup(id: number, group: number) {
-    return this._http.put(this.URL.ADMINS.CHANGE_SECONDARY_GROUP, { id, group: group })
+    return this._http.patch(this.URL.ADMINS.CHANGE_SECONDARY_GROUP, { id, group: group })
   }
   getConfigsDir(): Observable<any> {
     return this._http.get(this.URL.CONFIGS.FILE_TREE);
