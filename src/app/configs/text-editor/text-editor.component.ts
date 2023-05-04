@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
 import { faSave, faSync, faExclamationTriangle, faTrash, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 
-import { BehaviorSubject, iif, of } from 'rxjs';
+import { BehaviorSubject, Subject, iif, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 
 import { ToastService } from '@lars/toast.service';
@@ -15,11 +15,14 @@ import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
 @Component({
   selector: 'text-editor',
   templateUrl: './text-editor.component.html',
-  styleUrls: ['./text-editor.component.scss']
+  styleUrls: ['./text-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public search: boolean = false;
+  public $search: Subject<boolean> = new Subject();
+
+  public $matches: BehaviorSubject<number> = new BehaviorSubject(0);
 
   @ViewChild('editor') editor: CodemirrorComponent;
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
@@ -32,7 +35,7 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             break;
           }
           case 'KeyF' : {
-            this.search = true;
+            this.openSearch();
             break;
           }
           case 'Space' : {
@@ -86,9 +89,21 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private _zone: NgZone,
   ) {}
 
+  closeSearch(): void {
+    this.$search.next(false);
+  } 
+  openSearch(): void {
+    this.$search.next(true);
+  }
+
   searchIn(): void {
     this._zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find);
+      
+      if (!this.query.find) return void(this.$matches.next(0));
+      
+      const regex: RegExp = new RegExp(this.query.find, 'gi');
+      this.$matches.next((this.textplain.match(regex) || []).length);
     });
   }
   replaceIn(): void {
@@ -175,15 +190,14 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.configs.error.next(err);
         this._toast.show('danger', `Конфигурационный файл не был загружен по причине:`, err, faExclamationTriangle);
       },
-      complete: () => {
-      }
     });
   }
   
   ngAfterViewInit(): void {
-    this.configs.saveFrom$.subscribe(() => { 
-      this.saveFile()
-    });
+    this.configs.saveFrom$
+                .subscribe({ 
+                  next: this.saveFile,
+                });
     this._refreshCodeMirror();
     if (!window.localStorage.getItem('codemirror/font-size')) {
       window.localStorage.setItem('codemirror/font-size', '13px');
@@ -198,6 +212,6 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    // this.changed.complete();
+    this.$matches.complete();
   }
 }
