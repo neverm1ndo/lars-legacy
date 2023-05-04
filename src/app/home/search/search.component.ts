@@ -42,7 +42,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   @Output() syncronize = new EventEmitter<boolean>();
   @Input('quick') quick: boolean = false;
   @Input('loading') loading: boolean = true;
-  @Input('lineCounter') lineCounter: number = 0;
 
   public $newLines: Observable<number> = merge(
     this._ws.getNewLogLines()

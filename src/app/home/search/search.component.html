@@ -38,10 +38,6 @@
             <i *ngIf="newLines !== 0" class="bg-danger text-light new-line-counter">{{ newLines }}</i>
           </button>
         </ng-container>
-        <ng-template #tipContent>Количество загруженных строк<br /> <small>Размер чанка: 100</small></ng-template>
-        <div class="counter no-select" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">
-          <kbd><fa-icon [icon]="fa.vsquare"></fa-icon> {{ lineCounter }}</kbd>
-        </div>
       </div>
     </form>
   </div>
