@@ -4,8 +4,8 @@
       <span class="me-3">ПРОВОДНИК</span>
       <div class="d-flex flex-row">
         <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
-        <button title="Создать новую папку" class="btn btn-dark sync" (click)="modals.mkDir = true" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
-        <button *ngIf="canCreate" title="Создать новый файл" class="btn btn-dark sync" (click)="modals.touch = true" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
+        <button title="Создать новую папку" class="btn btn-dark sync" (click)="open(addNewDirModal)" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
+        <button *ngIf="canCreate" title="Создать новый файл" class="btn btn-dark sync" (click)="open(touchFileModal)" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
     <div *ngIf="node; else loader" class="text-left w-100">
       <file-tree-items
         (rmdir)="rmDir($event)"
-        (mvdir)="mvDirEventHandle($event)"
+        (mvdir)="mvDirEventHandle($event); open(moveModal);"
         (rm)="rmFile($event)"
         [isRoot]="true"
         [child-nodes]="node"
@@ -30,78 +30,75 @@
     </ng-template>
   </div>
 </div>
-<form [formGroup]="addNewDir" (ngSubmit)="mkDir()" *ngIf="modals.mkDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
-  <div class="popup-window d-flex flex-column">
-    <div class="popup-window-head">
-      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
-    </div>
-    <div class="popup-window-body">
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group">
-            <label for="newDirInput"><small>Путь директории от корня дерева</small></label>
-            <input type="text"
-                   toFocus
-                   placeholder="Путь директории от корня дерева"
-                   class="form-control"
-                   name="newDirInput"
-                   id="newDirInput"
-                   aria-describedby="nickname"
-                   formControlName="path"
-                   required>
-          </div>
+<ng-template #addNewDirModal let-modal>
+  <div class="modal-header">
+    <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
+    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body sentinel">
+    <form #modalForm [formGroup]="addNewDir" (ngSubmit)="mkDir()" class="d-flex flex-fill flex-row justify-content-center align-items-center">
+      <div class="d-flex flex-column flex-fill">
+        <div class="form-group">
+          <label class="form-label" for="newDirInput"><small>Путь директории от корня дерева</small></label>
+          <input type="text"
+            ngbAutofocus
+            placeholder="Путь директории от корня дерева"
+            class="form-control"
+            name="newDirInput"
+            id="newDirInput"
+            aria-describedby="nickname"
+            formControlName="path"
+            required>
         </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
-<form [formGroup]="mvDirGroup" (ngSubmit)="mvDir()" *ngIf="modals.mvDir" @settings class="popup d-flex flex-row justify-content-center align-items-center">
-  <div class="popup-window d-flex flex-column">
-    <div class="popup-window-head">
-      <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать</h5>
-    </div>
-    <div class="popup-window-body">
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group">
-            <label for="mvDirInput"><small>Путь от корня дерева</small></label>
-            <input type="text"
-                   toFocus
-                   placeholder="Новый путь от корня дерева"
-                   class="form-control"
-                   name="mvDirInput"
-                   id="mvDirInput"
-                   aria-describedby="nickname"
-                   formControlName="dest"
-                   required>
-          </div>
+</ng-template>
+<ng-template #moveModal let-modal>
+  <div class="modal-header">
+    <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать</h5>
+    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body sentinel">
+    <form [formGroup]="mvDirGroup" (ngSubmit)="mvDir()" class="d-flex flex-row justify-content-center align-items-center">
+      <div class="d-flex flex-column flex-fill">
+        <div class="form-group">
+          <label class="form-label" for="mvDirInput"><small>Путь от корня дерева</small></label>
+          <input type="text"
+            ngbAutofocus
+            placeholder="Новый путь от корня дерева"
+            class="form-control"
+            name="mvDirInput"
+            id="mvDirInput"
+            aria-describedby="nickname"
+            formControlName="dest"
+            required>
         </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
-<form [formGroup]="addNewFile" (ngSubmit)="touchFile()" *ngIf="modals.touch && canCreate" @settings class="popup d-flex flex-row justify-content-center align-items-center">
-  <div class="popup-window d-flex flex-column">
-    <div class="popup-window-head">
-      <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>
-    </div>
-    <div class="popup-window-body">
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group">
-            <label for="touchInput"><small>Путь файла от корня дерева</small></label>
-            <input type="text"
-                   toFocus
-                   placeholder="/configs/config.conf"
-                   class="form-control"
-                   name="touchInput"
-                   id="touchInput"
-                   aria-describedby="nickname"
-                   formControlName="path"
-                   required>
-          </div>
+</ng-template>
+<ng-template #touchFileModal let-modal>
+  <div class="modal-header">
+    <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>
+    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body sentinel">
+    <form [formGroup]="addNewFile" (ngSubmit)="touchFile()" class="d-flex flex-row justify-content-center align-items-center">
+      <div class="d-flex flex-column flex-fill">
+        <div class="form-group">
+          <label class="form-label" for="touchInput"><small>Путь файла от корня дерева</small></label>
+          <input type="text"
+            ngbAutofocus
+            placeholder="/configs/config.conf"
+            class="form-control"
+            name="touchInput"
+            id="touchInput"
+            aria-describedby="nickname"
+            formControlName="path"
+            required>
         </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+</ng-template>
