@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, HostListener, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LtyFileTreeService } from '../lty-file-tree.service';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { faSyncAlt, faFile, faFolderPlus, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import { settings } from '@lars/app.animations';
 import { basename, posix } from 'path';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface FilePathName {
   path: string,
@@ -23,18 +24,6 @@ interface FilePathName {
 export class FileTreeComponent implements OnInit, OnDestroy {
 
   public node: ITreeNode;
-
-  public modals = {
-    mkDir: false,
-    mvDir: false,
-    touch: false,
-    closeAll: function() {
-      for (const key in this) {
-        if (typeof this[key] !== 'boolean') return;
-        this[key] = false;
-      }
-    }
-  }
 
   @Input('current') current: string;
   @Input('canCreate') canCreate: boolean;
@@ -55,7 +44,7 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
     switch (event.key) {
-      case 'Escape': this.modals.closeAll(); break;
+      // case 'Escape': this.modals.closeAll(); break;
       default: break;
     }
   }
@@ -90,11 +79,17 @@ export class FileTreeComponent implements OnInit, OnDestroy {
     filePlus: faFileSignature
   };
 
-  constructor(private _fileTree: LtyFileTreeService) { }
+  constructor(
+    private _fileTree: LtyFileTreeService,
+    private _modal: NgbModal,
+  ) { }
 
   mvDirEventHandle(path: string): void {
     this.mvDirGroup.setValue({ path, dest: path });
-    this.modals.mvDir = true;
+  }
+
+  public open(content: TemplateRef<any>): void {
+    this._modal.open(content, { centered: true });
   }
 
   rmDir(path: string) {
@@ -108,12 +103,12 @@ export class FileTreeComponent implements OnInit, OnDestroy {
   mvDir(): void {
     const { path, dest } = this.mvDirGroup.value;
     this.mvdir.emit({ path: posix.normalize(path), dest: posix.normalize(dest) });
-    this.modals.mvDir = false;
+    this._modal.dismissAll();
   }
 
   touchFile(): void {
     this.touch.emit(posix.join(this.node.path, this.addNewFile.value.path));
-    this.modals.touch = false;
+    this._modal.dismissAll();
   }
 
   upload(event: any): void {
@@ -127,17 +122,11 @@ export class FileTreeComponent implements OnInit, OnDestroy {
 
   mkDir(): void {
     if (this.addNewDir.value.path) this.mkdir.emit(posix.join(this.node.path, this.addNewDir.value.path));
-    this.modals.mkDir = false;
+    this._modal.dismissAll();
   }
-
-  closeModals(event: MouseEvent): void {
-    event.stopPropagation();
-    this.modals.closeAll();
-  }
-
 
   ngOnInit(): void {
-    this.modals.closeAll();
+    
     this._fileTreeEvents.add(
       this._fileTree.activeItemPath
       .pipe(filter((path) => !!path))

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef } from '@angular/core';
 import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '@lars/user.service';
 import { ApiService } from '@lars/api.service';
@@ -10,6 +10,7 @@ import { WebSocketService } from '@lars/web-socket.service';
 import { Workgroup, UserActivity } from '@lars/enums';
 import { BehaviorSubject, Observable, filter, from, switchMap, take } from 'rxjs';
 import { MessageBoxOptions, MessageBoxReturnValue } from 'electron';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface AdminUser {
   user_id: number;
@@ -77,7 +78,8 @@ export class AdminsComponent implements OnInit {
     private _userService: UserService,
     private _toast: ToastService,
     private _electron: ElectronService,
-    private _ws: WebSocketService
+    private _ws: WebSocketService,
+    private _modal: NgbModal,
   ) { }
 
   get userActivities() {
@@ -86,6 +88,10 @@ export class AdminsComponent implements OnInit {
 
   get userInfo () {
     return this._userService.getCurrentUserInfo();
+  }
+
+  public open(content: TemplateRef<any>): void {
+    this._modal.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'lg', centered: true });
   }
 
   adminActivityIcon(state: number) {

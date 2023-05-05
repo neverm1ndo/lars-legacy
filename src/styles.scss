@@ -19,6 +19,7 @@
 @import 'scss/cm';
 
 @import 'scss/sentinel/theme';
+@import 'scss/popup';
 
 html, body, app-root {
   margin: 0px;
@@ -35,6 +36,12 @@ body > .dropdown {
   &-menu {
     background-color: black;
     color: white;
+  }
+}
+
+.text {
+  &-small {
+    font-size: small;
   }
 }
 
