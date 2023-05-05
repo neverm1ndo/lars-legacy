@@ -91,27 +91,28 @@
             <div class="col-6">
               <div class="form-group">
                 <input type="text"
-                        placeholder="Никнейм"
-                        class="form-control"
-                        id="nicknameInput"
-                        aria-describedby="nickname"
-                        formControlName="nickname"
-                        required>
+                  ngbAutofocus
+                  placeholder="Никнейм"
+                  class="form-control"
+                  id="nicknameInput"
+                  aria-describedby="nickname"
+                  formControlName="nickname"
+                  required>
                   <ng-select [items]="roles"
-                            bindLabel="val"
-                            [searchable]="false"
-                            [clearable]="false"
-                            bindValue="id"
-                            class="custom mt-2"
-                            formControlName="mainGroup">
+                    bindLabel="val"
+                    [searchable]="false"
+                    [clearable]="false"
+                    bindValue="id"
+                    class="custom mt-2"
+                    formControlName="mainGroup">
                   </ng-select>
                   <ng-select [items]="roles"
-                            bindLabel="val"
-                            [searchable]="false"
-                            [clearable]="false"
-                            bindValue="id"
-                            class="custom mt-2"
-                            formControlName="secondaryGroup">
+                    bindLabel="val"
+                    [searchable]="false"
+                    [clearable]="false"
+                    bindValue="id"
+                    class="custom mt-2"
+                    formControlName="secondaryGroup">
                   </ng-select>
                   <small class="text-muted">Форма изменяет <b>основную</b> группу зарегистрированного пользователя на одну из администраторских групп.</small></div>
                 </div>
