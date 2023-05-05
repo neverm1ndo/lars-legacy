@@ -623,6 +623,11 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       type: 'warn',
       control: 'warnPlayerKilFld'
     },
+    '<editor/click_map>': {
+      translate: 'EDITOR: CLICKMAP',
+      type: 'editor',
+      control: 'editorClickmap'
+    },
 }
 
 export const getProcessTranslation = (processname: keyof typeof Processes): Process => {
