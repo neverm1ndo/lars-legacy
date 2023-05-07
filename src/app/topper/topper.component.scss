@@ -1,4 +1,6 @@
 :host {
+  position: relative;
+  z-index: 100;
   .logo-img {
     width: 24px;
     height: 24px;

@@ -126,6 +126,12 @@ export class UserService {
     this._electron.shell.openExternal(url.toString());
   }
 
+  public openUserForumProfileSettings(): void {
+    const url = new URL('/ucp.php', AppConfig.links.resource);
+          url.searchParams.append('i', '184');
+    this._electron.shell.openExternal(url.toString());
+  }
+
   public openForum(): void {
     const url = new URL('/index.php', AppConfig.links.resource);
     this._electron.shell.openExternal(url.toString());

@@ -1,9 +1,28 @@
-<div class="container-fluid d-flex flex-column h-100 overflow-auto">
+<div class="container-fluid d-flex flex-column h-100">
+  <ng-container *ngLet="$user | async as user">
+    <div class="d-flex flex-column user-container">
+      <h4>Аккаунт</h4>
+      <div class="d-flex flex-row mt-2">
+        <div class="user-avatar">
+          <img [src]="user.avatar" [alt]="user.username">
+        </div>
+        <div class="d-flex flex-fill flex-column">
+          <b>{{ user.username }}</b>
+          <span>{{ user.main_group | role }}</span>
+          <span *ngIf="user.main_group !== user.secondary_group" class="text-muted">
+            <small>{{ user.secondary_group | role }}</small>
+          </span>
+        </div>
+        <button (click)="openAccountSettings()" class="user-profile btn btn-light justify-self-end align-self-start">Настройки профиля</button>
+      </div>
+    </div>
+  </ng-container>
+  <div class="separator"></div>
   <form [formGroup]="settings" (change)="setup()">
     <div class="d-flex justify-content-between align-content-center mt-2 mb-2">
       <div class="">
         <h6>Сворачивать в трей</h6>
-        <small>Прятать LARS в трей при сворачивании приложения</small>
+        <small>Прятать LARS в трей при закрытии приложения</small>
       </div>
       <label class="switch" for="checkbox2">
         <input formControlName="tray" type="checkbox" id="checkbox2" />
@@ -13,7 +32,7 @@
     <div class="d-flex justify-content-between align-content-center mb-2">
       <div class="">
         <h6>Количество подгружаемых строк</h6>
-        <small>Определяет размер загружаемого чанка со строками. По умолчанию: <b>100</b>. Максимум: <b>500</b><br> Чем меньше число, тем чаще подгрузки, но выше производительность листинга.</small>
+        <small>Определяет размер загружаемого чанка со строками</small>
       </div>
       <div class="select">
         <ng-select [items]="chunkSizes"
@@ -27,39 +46,23 @@
       </ng-select>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap align-content-center mb-2">
+    <div class="separator"></div>
+    <div class="d-flex justify-content-between flex-row flex-wrap align-content-center mb-2">
       <div class="">
         <h6>Стиль текстового редактора</h6>
         <small>Стили подсветки синтаксиса текстового редактора</small>
       </div>
-      <div class="styles w-100 d-flex justify-content-stretch">
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio4" value="dracula">
-          <label class="custom-control-label" for="inlineRadio4">dracula</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio5" value="material">
-          <label class="custom-control-label" for="inlineRadio5">material</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio6" value="nord">
-          <label class="custom-control-label" for="inlineRadio6">nord</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio7" value="panda-syntax">
-          <label class="custom-control-label" for="inlineRadio7">panda</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio8" value="cobalt">
-          <label class="custom-control-label" for="inlineRadio8">cobalt</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio9" value="ayu-mirage">
-          <label class="custom-control-label" for="inlineRadio9">ayu</label>
-        </div>
-        <div class="form-check custom-control custom-radio flex-fill justify-content-center d-flex">
-          <input formControlName="textEditorStyle" class="form-check-input custom-control-input" type="radio" name="textEditorStyle" id="inlineRadio10" value="yonce">
-          <label class="custom-control-label" for="inlineRadio10">yonce</label>
+      <div class="styles d-flex flex-fill align-items-end">
+        <div class="d-flex w-100">
+          <ng-select [items]="textHighlight"
+            bindLabel="val"
+            formControlName="textEditorStyle"
+            [searchable]="false"
+            [clearable]="false"
+            bindValue="val"
+            (change)="setup()"
+            class="custom">
+          </ng-select>
         </div>
       </div>
     </div>
@@ -70,18 +73,4 @@
     [options]="codemirrorSettings"
     ></ngx-codemirror>
   </div>
-  <!-- <hr>
-  <div class="credits d-flex w-100">
-    <div class="d-flex flex-row w-100 justify-content-between">
-      <div class="d-flex flex-column">
-        <h6>О программе</h6>
-        <div>
-          <small>Liberty Admin Remote Service v{{ version$ | async }}</small>
-        </div>
-      </div>
-      <div class="d-flex flex-row align-self-center">
-        <img src="lars://assets/images/codemirror.png" alt="">
-      </div>
-    </div>
-  </div> -->
 </div>

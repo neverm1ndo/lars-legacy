@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { IGeoData } from '@lars/interfaces';
+import { IGeoData, IUserData } from '@lars/interfaces';
 import { UserService } from '@lars/user.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-general-settings',
@@ -24,6 +25,10 @@ export class GeneralSettingsComponent implements OnInit {
     ss: '8C5EE8AAFD459854D8F9DDCC5A4E8C',
     org: 'Rostelecom OJSC',
     cli: '0.3.7'
+  }
+
+  get $user(): BehaviorSubject<IUserData> {
+    return this._user.loggedInUser$;
   }
 
   public settings: FormGroup = new FormGroup({
@@ -51,6 +56,16 @@ export class GeneralSettingsComponent implements OnInit {
     { id: 4, val: 500 },
   ];
 
+  public textHighlight: { id: number; val: string }[] = [
+    { id: 0, val: 'dracula' },
+    { id: 1, val: 'material' },
+    { id: 2, val: 'nord' },
+    { id: 3, val: 'panda' },
+    { id: 4, val: 'cobalt' },
+    { id: 5, val: 'ayu' },
+    { id: 6, val: 'yonce' },
+  ];
+
   get listStyle(): string {
     return this.settings.value.listStyle;
   }
@@ -70,6 +85,10 @@ export class GeneralSettingsComponent implements OnInit {
     let newSets = this.settings.getRawValue();
     window.localStorage.setItem('settings', JSON.stringify(newSets));
     this.codemirrorSettings.theme = newSets.textEditorStyle;
+  }
+
+  public openAccountSettings(): void {
+    this._user.openUserForumProfileSettings();
   }
 
   ngOnInit(): void {

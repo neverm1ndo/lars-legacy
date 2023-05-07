@@ -27,6 +27,11 @@
     border: none;
   }
 }
+.separator {
+  margin: 8px 10px;
+  height: 1px;
+  background-color: $scrollbar-thumb;
+}
 .native-dragzone {
   -webkit-app-region: drag;
 }

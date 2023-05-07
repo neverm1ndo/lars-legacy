@@ -15,30 +15,34 @@
     width: 100%;
   }
   .set {
-    &-transitionWrap {
-      flex: 1;
-      height: 100%;
-      box-sizing: border-box;
-    }
     &-main {
       position: relative;
       display: flex;
-      -ms-flex: 1 1 800px;
-      flex: 1 1 800px;
       align-items: flex-start;
+      flex: 1 1 680px;
+      box-sizing: border-box;
+      &-transitionWrap {
+        flex: 1 1 0%;
+        height: 100%;
+        box-sizing: border-box;
+      }
       &-scrollable {
         height: 100%;
         position: static;
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        overflow-x: hidden;
+        overflow: hidden scroll;
+        justify-content: flex-start;
       }
       &-container {
         flex: 1 1 auto;
-        max-width: 740px;
+        padding: 60px 40px 80px;
+        position: relative;
+        max-width: 650px;
         min-width: 460px;
         min-height: 100%;
+        box-sizing: border-box;
       }
     }
   }
@@ -68,11 +72,6 @@
       justify-content: flex-end;
       flex: 1 0 218px;
       overflow: hidden scroll;
-      .separator {
-        margin: 8px 10px;
-        height: 1px;
-        background-color: $scrollbar-thumb;
-      }
       &:hover {
         background: $filetree;
         &::-webkit-scrollbar-thumb {
@@ -100,15 +99,35 @@
         -webkit-box-align: start;
         -ms-flex-align: start;
         align-items: flex-start;
+        &:hover {
+          background: $filetree;
+          &::-webkit-scrollbar-thumb {
+            background: $dropdown;
+          }
+        }
+        &::-webkit-scrollbar {
+          background: $mainbg;
+          width: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: $filetree;
+        }
         &-navs {
           width: 218px;
           display: flex;
           flex-direction: column;
           flex: 1;
         }
+        &-article {
+          margin: 8px 10px;
+          text-transform: uppercase;
+          font-size: 11px;
+          font-weight: 700;
+        }
         button {
           margin-top: 3px;
           width: 100%;
+          font-weight: 500;
           &:hover {
             background-color: #ffffff10!important;
           }
