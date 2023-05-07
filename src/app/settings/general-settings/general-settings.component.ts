@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { IGeoData } from '@lars/interfaces';
-import { ElectronService } from '@lars/core/services';
-import { Observable, from } from 'rxjs';
 import { UserService } from '@lars/user.service';
 
 @Component({
@@ -13,11 +11,8 @@ import { UserService } from '@lars/user.service';
 export class GeneralSettingsComponent implements OnInit {
 
   constructor(
-    private _electron: ElectronService,
     private _user: UserService,
   ) {}
-
-  public version$: Observable<string> = from(this._electron.ipcRenderer.invoke('version'));
 
   public date: Date = new Date();
   

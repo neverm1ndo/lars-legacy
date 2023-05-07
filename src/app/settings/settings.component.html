@@ -1,16 +1,33 @@
 <div class="container-fluid h-100 g-0">
-  <div class="d-flex flex-row h-100 overflow-auto">
-    <div class="d-flex h-100 flex-column sid">
-      <div class="d-flex justify-content-between mb-2">
-        <h4>Настройки</h4>
-      </div>
-      <button routerLink="./general" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Общие</b></button>
-      <button routerLink="./filter" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Фильтр</b></button>
-      <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Оповещения</b></button>
-      <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Лаунчер</b></button>
+  <div class="d-flex h-100 settings">
+    <div class="settings-sid">
+      <nav class="settings-sid-side">
+        <div class="settings-sid-side-navs">
+          <button routerLink="./general" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Общие</b></button>
+          <button routerLink="./filter" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Фильтр</b></button>
+          <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Оповещения</b></button>
+          <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-left" name="button"><b>Лаунчер</b></button>
+          <div class="separator">
+            <div class="d-flex flex-column settings-sid-cred">
+              <div>
+                <span class="text-muted"><img class="logo-img no-select" src="lars://assets/icons/favicon.ico"/>LARS {{ $version | async }}</span>
+              </div>
+              <div>
+                <span class="text-muted">gta-liberty.ru</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     </div>
-    <div class="d-flex flex-column flex-fill overflow-auto h-100">
-      <router-outlet #outlet="outlet"></router-outlet>
+    <div class="set-main">
+      <div class="set-main-transitionWrap">
+        <div class="set-main-scrollable">
+          <div class="set-main-container">
+            <router-outlet #outlet="outlet"></router-outlet>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
