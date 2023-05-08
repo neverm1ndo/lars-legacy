@@ -1,77 +1,79 @@
 @import 'colors';
 @import 'badges';
-@mixin css-checkbox(
-        $size: '16px',
-        $selectedColor: #444,
-        $checkColor: #FFF,
-        $valign: 'middle',
-        $rounded: rounded
-    ) {
-	display: none;
 
-	&:checked + i {
-		background: #{$selectedColor};
-		border-color: #{$selectedColor};
 
-		&:hover:after { opacity: 1; }
+$black: #2D3137;
+$blue: #3785BC;
+$green: #329E78;
+$grey: #D6D6D6;
+$red: #DD3C3A;
+$white: #FFFFFF;
+$dark: #303030;
 
-		&:after {
-			opacity: 1;
-      border-color: #{$checkColor};
-		}
-	}
+$border-radius: 3px;
 
-  + i {
-    box-sizing: border-box;
-    &:before, &:after {
-       box-sizing: border-box;
+@mixin checkbox($color) {
+  margin-right: 1rem;
+  padding-left: 0.75rem;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+
+  input[type="checkbox"] {  
+    position: absolute;
+    opacity: 0;
+
+    &:focus:checked ~ span {
+      border: 2px solid $color;
+    }
+
+    &:checked ~ span {
+      color: $white;
+      background: $color url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+) 50% 40% no-repeat;
+      border: 2px solid $color;
+    }
+    
+  }
+
+  span {
+    border-radius: $border-radius;
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width:  1rem; 
+    height: 1rem;
+    background-color: $topper;
+    border: 2px solid  $filetree;
+    pointer-events: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+  }  
+}
+
+:host {
+  
+  padding-top: 10px;
+  
+  label.checkbox {  
+    @include checkbox($green);
+    
+    &.blue {
+      @include checkbox($blue);
+    }
+  
+    &.red {
+      @include checkbox($red);
+    }
+    
+    &.dark {
+      @include checkbox($dark);
     }
   }
-	+ i {
-		position: absolute;
-		display: inline-block;
-		top: 8px;
-    left: 30px;
-		width: #{$size};
-		height: #{$size};
-		margin: 0;
-    vertical-align: #{$valign};
-		border: 1px solid #707070;
-    transition: background 200ms ease;
-
-    @if $rounded == "circle" {
-      border-radius: 10em;
-    } @else if $rounded == "rounded" {
-      border-radius: .2em;
-    } @else {
-      border-radius: 0;
-    }
-
-		background: #505050;
-		// font-size: #{$size};
-		cursor: pointer;
-
-		&:hover:after { opacity: .2; }
-
-		&:after {
-			content: '';
-			opacity: 0;
-			transform: translateZ(1px) rotate(-45deg);
-      outline: 1px solid transparent; // hack to prevent antialias atrifacts in firefox
-			position: absolute;
-			top: 22%;
-			left: 15%;
-			width: .68em;
-			height: .4em;
-			border: .15em solid #222;
-			border-top: none;
-			border-right: none;
-			background: rgba(0, 0, 0, 0);
-		}
-	}
-}
-:host {
-  padding-top: 10px;
+  
   .separator {
     margin: 20px 0 20px 0;
   }
@@ -80,6 +82,7 @@
       font-size: 14px;
     }
   }
+  
   i {
     width: 10px;
     height: 10px;
@@ -106,23 +109,5 @@
     line-height: 10px;
     position: relative;
     bottom: 3px;
-  }
-  .filter-form {
-    &::-webkit-scrollbar {
-     border-radius: 5px;
-     width: 3px;
-     height: 3px;
-    }
-  }
-  .pseudo {
-    width: 100%;
-    cursor: pointer;
-    .form-check-input {
-      @include css-checkbox(18px, $selectedColor: #202020);
-    }
-    i {
-      position: relative;
-      z-index: 2;
-    }
   }
 }

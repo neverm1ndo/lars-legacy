@@ -15,11 +15,12 @@
     <form [formGroup]="filterForm">
       <div formArrayName="processes">
         <div class="d-flex flex-row" *ngFor="let process of (allProcesses | filterSearch:searchInput); let i = index;">
-          <div class="checkbox me-3">
+          <label class="checkbox dark">
             <input
               type="checkbox"
               [formControlName]="i">
-          </div>
+              <span class='indicator'></span>
+          </label>
           <div class="d-flex flex-column">
             <span>{{ process.translate }}</span>
             <span>
@@ -30,24 +31,4 @@
       </div>
     </form>
   </div>
-  <!-- <div class="col-12 pt-3 pb-3">
-  <h6>Фильтр</h6>
-    <small>Отображает только нужные процессы, остальные выпадают из поиска.</small>
-    <form class="filter-form" [formGroup]="filterForm" (change)="setFilter()">
-      <div class="row">
-        <div *ngFor="let process of processes" class="col-6">
-          <label class="form-check-label pseudo" for="{{process.control}}">
-            <input
-            class="form-check-input"
-            type="checkbox"
-            [id]="process.control"
-            [name]="process.control"
-            [formControlName]="process.control">
-            <i></i>
-            <span class="badge no-select bg-{{process.type}}">{{process.translate}} <br><small>{{process.name}}</small></span>
-          </label>
-        </div>
-      </div>
-    </form>
-  </div> -->
 </div>
