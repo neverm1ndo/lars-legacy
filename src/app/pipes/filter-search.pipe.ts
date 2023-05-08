@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
 import { ProcessWithName } from '@lars/settings/filter/filter.component';
 
 @Pipe({
