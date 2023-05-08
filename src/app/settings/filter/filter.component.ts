@@ -1,53 +1,92 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import Processes, { Process } from '../../shared/components/line-process/log-processes';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import Processes, { Process } from '@lars/shared/components/line-process/log-processes';
+import { Subscription, map } from 'rxjs';
 
-interface ProcessWithName extends Process {
-  name?: keyof typeof Processes | string
+export interface ProcessWithName extends Process {
+  name?: keyof typeof Processes | string;
+  checked?: boolean;
 }
 
 @Component({
   selector: 'filter',
   templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.scss']
+  styleUrls: ['./filter.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent implements OnInit, OnDestroy {
 
-  filterForm = new FormGroup((() => { // FIXME: fix form constructor
-    let controls = {};
-    Object.keys(Processes).forEach((process: string) => {
-      controls[Processes[process].control] = new FormControl(true);
-    });
-    return controls;
-  })());
+  public searchInput: string = '';
+
+  public filterForm: FormGroup = this._formBuilder.group({
+    processes: this._formBuilder.array(this.getFilterFromStorage()),
+  });
+
+  private _filterChangesSubscription: Subscription;
 
   constructor(
+    private _formBuilder: FormBuilder,
   ) {}
 
-  get processes(): ProcessWithName[] {
-    return Object.values(Processes).map((val: ProcessWithName, i: number) => {
-      val.name = Object.keys(Processes)[i];
-      return val;
-    });
+  get processes(): FormArray {
+    return this.filterForm.get('processes') as FormArray;
   }
 
-  setFilter(): void {
-    let changedOpt = this.filterForm.getRawValue();
-    window.localStorage.setItem('filter', JSON.stringify(changedOpt));
+  private get _processes(): ProcessWithName[] {
+    return Object.entries(Processes)
+                 .map(([key, val]: [string, ProcessWithName]) => {
+                    val.name = key;
+                    return val;
+                 });
   }
 
-  getFilterFromStorage(): void {
+  public get allProcesses(): ProcessWithName[] {
+    return this._processes;
+  }
+
+  getFilterFromStorage(): boolean[] {    
+    
+    const processes = this._processes.map((_process) => true);
+    
     try {
-      if (!window.localStorage.getItem('filter')) throw new Error('EMPTY_FILTER');
-      this.filterForm.setValue(JSON.parse(window.localStorage.getItem('filter')))
+      const storedFilter: string | null = window.localStorage.getItem('filter');
+      if (!storedFilter) throw new Error('EMPTY_FILTER');
+      
+      const filtered: [number, ProcessWithName][] = JSON.parse(window.localStorage.getItem('filter'));
+      
+
+      for(let [index, _control] of filtered) {
+        processes[index] = false;
+      }
+
+      this._processes.map((process: ProcessWithName, index: number) => [process, index]);
+
+      return processes;
     } catch(err) {
-      this.setFilter();
       console.warn(err.message, 'Filter reset  to default');
+      return processes;
     }
   }
 
   ngOnInit(): void {
-    this.getFilterFromStorage();
+    this._filterChangesSubscription = this.filterForm.controls.processes.valueChanges.pipe(
+      map((value: any[]) => {
+
+        const processes: ProcessWithName[] = this._processes;
+
+        return value.map((val: boolean, index: number) => [index, val])
+                    .filter(([_index, val]: [number, boolean]) => !val)
+                    .map(([index, _val]: [number, boolean]) => [index, processes[index].control]);
+      })
+    ).subscribe((res) => {
+      window.localStorage.setItem('filter', JSON.stringify(res));
+    });
   }
+
+  ngOnDestroy(): void {
+    this._filterChangesSubscription.unsubscribe();
+  }
+
+
 
 }

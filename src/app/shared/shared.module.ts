@@ -13,11 +13,12 @@ import { RulesPipe } from '@lars/pipes/rules.pipe';
 import { LazyLoadDirective } from './directives/lazy-load.directive';
 import { ProcessPipe } from './process.pipe';
 import { EntriesPipe } from './entries.pipe';
+import { FilterSearchPipe } from '@lars/pipes/filter-search.pipe';
 
 @NgModule({
-  declarations: [PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, LetDirective, LazyLoadDirective, ProcessPipe, EntriesPipe],
+  declarations: [PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, LetDirective, LazyLoadDirective, ProcessPipe, EntriesPipe, FilterSearchPipe],
   imports: [CommonModule, TranslateModule],
-  exports: [ProcessPipe, TranslateModule, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, SimpleLineProcessComponent, LineProcessComponent, LetDirective, LazyLoadDirective, EntriesPipe],
+  exports: [ProcessPipe, TranslateModule, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, SimpleLineProcessComponent, LineProcessComponent, LetDirective, LazyLoadDirective, EntriesPipe, FilterSearchPipe],
   providers: []
 })
 export class SharedModule {}

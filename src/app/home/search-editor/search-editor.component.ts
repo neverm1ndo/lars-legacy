@@ -45,9 +45,11 @@ export class SearchEditorComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _location: Location,
   ) {
-    const $filter = of(window.localStorage.getItem('filter'))
+    const $filter: Observable<string[]> = of(JSON.parse(window.localStorage.getItem('filter')))
                                           .pipe(
-                                             map((filter) => Object.keys(JSON.parse(filter)).filter((key: string) => filter[key])),
+                                             map(
+                                              (filter: [number, string][]) => filter.map(([_index, control]) => control)
+                                             ),
                                           );
     
     this._pageReciever = this._route.queryParams.pipe(

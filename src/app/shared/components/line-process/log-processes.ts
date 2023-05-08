@@ -12,7 +12,7 @@ const UnknownProcess: Process = {
   control: 'UnknownProcess'
 }
 /* istambul ignore next */
-const Processes = { // FIXME: convert all this stuff to enums ???
+const Processes = {
     '<connection/connect>': {
       translate: 'Соединение с сервером',
       type: 'dark',
@@ -126,7 +126,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
     '<cmd/pre_error/value>': {
       translate: 'Команда содержит ошибку значения',
       type: 'danger',
-      control: 'cmdPreerrNotF'
+      control: 'cmdPreerrVal'
     },
     '<cmd/success>': {
       translate: 'Успешное выполнение команды',
@@ -414,7 +414,7 @@ const Processes = { // FIXME: convert all this stuff to enums ???
       control: 'dthDrown'
     },
     '<death/killed>': {
-      translate: 'Cмерть от игрока',
+      translate: 'Смерть от игрока',
       type: 'death',
       control: 'dthKilled'
     },

@@ -72,7 +72,32 @@
 }
 :host {
   padding-top: 10px;
-  h6 {
+  .separator {
+    margin: 20px 0 20px 0;
+  }
+  form {
+    span {
+      font-size: 14px;
+    }
+  }
+  i {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 100%;
+    position: relative;
+    top: -2px;
+    margin-right: 10px;
+  }
+  .muted {
+    opacity: 0.5;
+    font-size: smaller;
+  }
+  .subtext {
+    font-size: 14px;
+    line-height: initial;
+  }
+  h6, h5 {
     margin-bottom: 0em;
     font-weight: 700;
   }
@@ -99,18 +124,5 @@
       position: relative;
       z-index: 2;
     }
-  }
-  .badge {
-    font-size: 12px;
-    font-weight: 400;
-    text-transform: uppercase;
-    padding-left: 45px;
-    width: 100%;
-    padding-top: 8px;
-    // padding-bottom: 10px;
-    padding-right: 10px;
-    margin-bottom: 5px;
-    margin-right: 10px;
-    word-wrap: normal;
   }
 }
