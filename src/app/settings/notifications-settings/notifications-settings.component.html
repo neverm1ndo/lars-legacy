@@ -1,14 +1,14 @@
-<div class="container-fluid overflow-auto">
-  <div class="col-12 pt-3 pb-3">
+<div class="container-fluid">
+  <div class="col-12">
     <div class="d-flex flex-row justify-content-between align-items-center mb-2">
       <div>
-        <h6 class="display-6">Оповещения</h6>
+        <h5>Оповещения</h5>
         <small>Включает или отключает системные оповещения</small>
       </div>
       <button class="btn btn-success" type="button" (click)="testNotification()" name="button">Тест оповещений</button>
     </div>
   
-    <hr>
+    <div class="separator"></div>
     <form [formGroup]="settings" (change)="setup()">
       <div class="d-flex justify-content-between align-content-center mb-2">
         <div class="">
@@ -20,7 +20,7 @@
           <div class="slider round"></div>
         </label>
       </div>
-      <hr>
+      <div class="separator"></div>
       <div class="d-flex justify-content-between align-content-center mb-2">
         <div class="">
           <h6>Оповещения о жалобе на игрока</h6>
@@ -32,7 +32,7 @@
         </label>
       </div>
       <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="">
+        <div>
           <h6>Оповещения об автоматическом бане игрока</h6>
           <small>Срабатывания автоматических банов</small>
         </div>
@@ -42,7 +42,7 @@
         </label>
       </div>
       <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="">
+        <div>
           <h6>Оповещения об автоматической блокировке игрока</h6>
           <small>Срабатывания античита</small>
         </div>
@@ -52,7 +52,7 @@
         </label>
       </div>
       <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="">
+        <div>
           <h6>Оповещения об отключении сервера</h6>
         </div>
         <label class="switch" for="checkbox4">
@@ -61,7 +61,7 @@
         </label>
       </div>
       <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="">
+        <div>
           <h6>Оповещения о перезагрузке сервера</h6>
         </div>
         <label class="switch" for="checkbox5">

@@ -1,50 +1,48 @@
-<div class="container-fluid overflow-auto">
-  <div class="col-12 pt-3 pb-3">
+<div class="container-fluid">
+  <div class="col-12">
     <div class="d-flex justify-content-between align-content-center mb-2">
       <div class="">
-        <h6 class="display-6">Лаунчер SAMP</h6>
+        <h5>Лаунчер SAMP</h5>
         <small>Настройки запуска клиента SAMP</small>
       </div>
     </div>
     <form [formGroup]="settings" (change)="setup()">
-      <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="mr-4">
-          <h6>Путь до клиента SAMP</h6>
-        </div>
-        <div class="col-6 form-group mb-0">
-          <div (click)="setPath()" class="input-group has-validation">
-            <div class="input-group-prepend">
-              <button class="btn btn-light" type="button" name="button">
-                <fa-icon [icon]="fa.folder"></fa-icon>
-              </button>
-            </div>
-            <input class="form-control"
-              aria-label="samp.exe path"
-              aria-describedby="button-path"
-              formControlName="samp"
-              type="text"
-              id="samp"
-              [ngClass]="{
-                'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched) || clientExists === false,
-                'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched) || clientExists === true
-              }"
-              readonly
-              required
-            >
-            <div class="invalid-feedback" *ngIf="settings.controls['samp'].errors">
-              <span *ngIf="settings.controls['samp'].errors.required"> Укажите путь до samp.exe</span>
-            </div>
-            <div class="invalid-feedback" *ngIf="!clientExists && !settings.controls['samp'].errors">
-              <span><fa-icon [icon]="fa.err"></fa-icon> Не обнаружен samp.exe</span>
-            </div>
-            <div class="valid-feedback" *ngIf="clientExists && !settings.controls['samp'].errors">
-              <span><fa-icon [icon]="fa.ok"></fa-icon> samp.exe обнаружен</span>
+        <div class="d-flex justify-content-between align-content-center mb-2">
+          <div class="mr-4">
+            <h6>Путь до клиента SAMP</h6>
+          </div>
+          <div class="col-6 form-group mb-0">
+            <div (click)="setPath()" class="input-group has-validation">
+              <div class="input-group-prepend">
+                <button class="btn btn-light" type="button" name="button">
+                  <fa-icon [icon]="fa.folder"></fa-icon>
+                </button>
+              </div>
+              <input class="form-control"
+                aria-label="samp.exe path"
+                aria-describedby="button-path"
+                formControlName="samp"
+                type="text"
+                id="samp"
+                [ngClass]="{
+                  'is-invalid': settings.controls['samp'].invalid && (settings.dirty || settings.touched) ,
+                  'is-valid': settings.controls['samp'].valid && (settings.dirty || settings.touched)
+                }"
+                readonly
+                required
+              >
+              <div class="invalid-feedback" *ngIf="settings.controls['samp'].errors">
+                <span *ngIf="settings.controls['samp'].errors.required"> Укажите путь до samp.exe</span>
+                <span *ngIf="settings.controls['samp'].errors.fileExistance"><fa-icon [icon]="fa.err"></fa-icon> Не обнаружен {{ settings.controls['samp'].errors.fileExistance.value }} </span>
+              </div>
+              <div class="valid-feedback" *ngIf="!settings.controls['samp'].errors">
+                <span><fa-icon [icon]="fa.ok"></fa-icon> samp.exe обнаружен</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       <div class="d-flex justify-content-between align-content-center mb-2">
-        <div class="">
+        <div>
           <h6>Никнейм</h6>
         </div>
         <div class="col-6 form-group mb-0">
@@ -97,7 +95,7 @@
             class="form-control"
             formControlName="port"
             min="0"
-            type="number"
+            type="text"
             id="port"
             [ngClass]="{
               'is-invalid': settings.controls['port'].invalid && (settings.dirty || settings.touched),
@@ -120,13 +118,14 @@
           <input class="form-control" formControlName="password" type="password" id="password" />
         </div>
       </div>
-      <hr>
-      <div class="d-flex justify-content-between align-content-center mb-2">
+      <div class="separator"></div>
+      <!-- <div class="d-flex justify-content-between align-content-center mb-2">
         <div class="">
           <h6 class="display-6">Лаунчер open.mp</h6>
           <small>Настройки запуска клиента open.mp</small>
+          <small class="text-muted"></small>
         </div>
-      </div>
+      </div> -->
     </form>
   </div>
 </div>
