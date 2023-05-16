@@ -46,10 +46,9 @@ export class ApiService {
       },
       BACKUPS: {
         __route: 'backups',
-        LIST: 'backups-list',
-        RESTORE: 'restore-backup',
-        REMOVE: 'remove-backup',
-        BACKUP_FILE: 'backup-file',
+        LIST: 'list',
+        RESTORE: 'restore',
+        BACKUP: 'backup',
         SIZE: 'size',
       },
       BANS: {
@@ -146,13 +145,13 @@ export class ApiService {
     return this._http.get(this.URL.BACKUPS.LIST)
   }
   getBackupFile(hash: string): Observable<any> {
-    return this._http.get(`${this.URL.BACKUPS.BACKUP_FILE}/${hash}`, { responseType: 'text' })
+    return this._http.get(`${this.URL.BACKUPS.BACKUP}/${hash}`, { responseType: 'text' })
   }
   restoreBackup(hash: string): Observable<any> {
     return this._http.get(`${this.URL.BACKUPS.RESTORE}/${hash}`);
   }
   removeBackup(hash: string): Observable<any> {
-    return this._http.delete(`${this.URL.BACKUPS.REMOVE}/${hash}`);
+    return this._http.delete(`${this.URL.BACKUPS.BACKUP}/${hash}`);
   }
   
   getBackupsSize(): Observable<any> {
