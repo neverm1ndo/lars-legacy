@@ -2,6 +2,9 @@
 :host {
   display: flex;
   flex: 1 1 auto;
+  lty-icon {
+    width: 20px;
+  }
   .progress {
     height: 2px;
     margin-bottom: -2px;
@@ -26,6 +29,14 @@
     }
     table {
       opacity: 0.5;
+      font-size: 14px;
+      font-weight: lighter;
+      tr {
+        td {
+          text-align: start;
+          padding: 0 5px 0 5px;
+        }
+      }
     }
   }
 }

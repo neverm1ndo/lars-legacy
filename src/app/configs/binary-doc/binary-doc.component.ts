@@ -1,53 +1,72 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ConfigsService } from '../configs.service';
-import { UserService } from '../../user.service';
-import { tap, switchMap } from 'rxjs/operators';
-import { faFileSignature, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ConfigsService } from '@lars/configs/configs.service';
+import { UserService } from '@lars/user.service';
+import { faFileSignature, faSave, faTrash,  } from '@fortawesome/free-solid-svg-icons';
 import { Workgroup } from '@lars/enums';
+import { BehaviorSubject, Observable, map, merge, switchMap, of } from 'rxjs';
+import { basename } from 'path';
+
+interface BinaryDocStats {
+  size: number;
+  path: string;
+  name: string;
+  mime: string;
+  lastm: Date;
+}
 
 @Component({
   selector: 'app-binary-doc',
   templateUrl: './binary-doc.component.html',
-  styleUrls: ['./binary-doc.component.scss']
+  styleUrls: ['./binary-doc.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinaryDocComponent implements OnInit {
 
-  binStats: { size: number; mime: string; lastm: Date };
-  path: string;
-  fa = {
+  public $stat: Observable<BinaryDocStats> = this._route.queryParams
+                                                .pipe(
+                                                  switchMap(({ path }: Params) => merge(
+                                                          this._config.getFileInfo(path)
+                                                                      .pipe(
+                                                                        map((info) => ({ ...info, path, name: basename(path) }))
+                                                                      ),
+                                                          of(null)
+                                                        ))
+                                                );
+  
+  public fa = {
     conf: faFileSignature,
     save: faSave,
     del: faTrash
   }
 
   get userMainGroup(): Workgroup {
-    return this.user.loggedInUser$.value.main_group;
+    return this._user.loggedInUser$.value.main_group;
+  }
+
+  get downloadProgress(): BehaviorSubject<number> {
+    return this._config.dprogress$;
   }
 
   constructor(
-    private route: ActivatedRoute,
-    public config: ConfigsService,
-    private user: UserService,
-    private router: Router
+    private _route: ActivatedRoute,
+    private _config: ConfigsService,
+    private _user: UserService,
+    private _router: Router
   ) { }
 
-  downloadFile() {
-    this.config.downloadFile(this.path);
+  downloadFile(path: string) {
+    this._config.downloadFile(path);
   }
 
-  deleteFile() {
-    this.config.deleteFile(this.path);
-    this.router.navigate(['/home/config-editor/empty'])
+  deleteFile(path: string) {
+    this._config.deleteFile(path)
+                .then(() => {
+                  this._router.navigate(['/home/config-editor/empty'])
+                });
   }
 
   ngOnInit(): void {
-    this.route.queryParams
-    .pipe(tap(params => { this.path = params.path; return params}))
-    .pipe(switchMap(params => this.config.getFileInfo(params.path)))
-    .subscribe((stats) => {
-      this.binStats = stats;
-    });
   }
 
 }
