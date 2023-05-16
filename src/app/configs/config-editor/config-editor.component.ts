@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ApiService } from '@lars/api.service';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { switchMap, take, filter } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
@@ -25,7 +25,6 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   public currentFilePath: string;
   public progress: number = 0;
-  public loading: boolean = false;
 
   private _uploadsSubscriptions: Subscription = new Subscription();
 
@@ -48,15 +47,39 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _toast: ToastService,
     private _electron: ElectronService,
     private _ngZone: NgZone,
-    public configs: ConfigsService,
+    private _configs: ConfigsService,
   ) {
-    this.directories$ = this.configs.reloader$.pipe(
+    this.directories$ = this._configs.reloader$.pipe(
       switchMap(() => this._api.getConfigsDir())
     );
   }
 
   public saveFile() {
-    this.configs.saveFile();
+    this._configs.saveFile();
+  }
+
+  get loadProgress(): BehaviorSubject<number> {
+    return this._configs.dprogress$;
+  }
+
+  get stats(): BehaviorSubject<any> {
+    return this._configs.stats$;
+  }
+
+  get error(): Subject<Error> {
+    return this._configs.error;
+  }
+
+  get loading(): Subject<boolean> {
+    return this._configs.loading;
+  }
+
+  get path(): string {
+    return this._configs.path;
+  }
+
+  get isChanged(): BehaviorSubject<boolean> {
+    return this._configs.changed$;
   }
 
   
@@ -97,15 +120,15 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   public deleteFile(path?: string): void {
-    this.configs.deleteFile(path || this.configs.path);
+    this._configs.deleteFile(path || this._configs.path);
   }
 
   public pathToClipboard(): void {
-    this.configs.pathToClipboard(this.configs.path);
+    this._configs.pathToClipboard(this._configs.path);
   }
 
   reloadFileTree(): void {
-    this.configs.reloadFileTree();
+    this._configs.reloadFileTree();
   }
 
   clearProgress(): void {
@@ -140,7 +163,7 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmFile(path: string) {
-    this.configs.deleteFile(path);
+    this._configs.deleteFile(path);
   }
 
   rmdir(path: string) {
@@ -241,13 +264,13 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     
     this._electron.ipcRenderer.on('download-progress', (_event: any, progress: {total: number, loaded: number}) => {
       this._ngZone.run(() => {
-        this.configs.dprogress$.next(Math.round(100 * progress.loaded / progress.total));
+        this._configs.dprogress$.next(Math.round(100 * progress.loaded / progress.total));
       });
     });
     
     this._electron.ipcRenderer.on('download-error', (_event: any, err) => {
       this._ngZone.run(() => {
-        this.configs.dprogress$.next(0);
+        this._configs.dprogress$.next(0);
         this._toast.show('danger', `Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`, err.message, faInfo);
       });
     });
@@ -256,14 +279,14 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
       this._ngZone.run(() => {
         this._toast.show('success', `Файл <b>${ this.currentFilePath }</b> успешно загружен`, null, faInfo);
         setTimeout(() => {
-          this.configs.dprogress$.next(0);
+          this._configs.dprogress$.next(0);
         }, 2000);
       });
     });
   }
   
   ngOnDestroy(): void {
-    this.configs.stats$.next(null);
+    this._configs.stats$.next(null);
     this._uploadsSubscriptions.unsubscribe();
   }
 }

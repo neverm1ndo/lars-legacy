@@ -24,14 +24,14 @@
       <as-split-area [size]="paneStates[1]">
         <div class="d-flex flex-column flex-fill h-100">
           <div class="progress">
-            <div class="progress-bar" [style.width.%]="configs.dprogress$ | async" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar" [style.width.%]="loadProgress | async" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
           <router-outlet></router-outlet>
         </div>
       </as-split-area>
     </as-split>
     <div class="d-flex w-100 underpanel no-select">
-      <div *ngIf="configs.stats$ | async as stats" class="col-12">
+      <div *ngIf="stats | async as stats" class="col-12">
         <div class="row">
           <div class="w-100 d-flex flex-row justify-content-between">
             <div class="panel-left">
@@ -41,15 +41,15 @@
                 </button>
                 <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
                   <fa-icon class="me-2" [icon]="fa.branch"></fa-icon>
-                  {{ configs.path }}{{ (configs.changed$ | async)?'*':'' }}
+                  {{ path }}{{ (isChanged | async)?'*':'' }}
                 </button>
               </div>
             </div>
             <div class="panel-right">
               <div class="w-100 d-flex flex-row justify-content-end">
-                <ng-container *ngLet="configs.error | async as error">
+                <ng-container *ngLet="error | async as error">
                   <button placement="top" [ngbTooltip]="error?.message" class="panel">
-                    <i [class.led-loading]="configs.loading | async" [class.led-error]="error?.message" class="autosave-led"></i>
+                    <i [class.led-loading]="loading | async" [class.led-error]="error?.message" class="autosave-led"></i>
                   </button>
                 </ng-container>
                 <div class="panel flex-grow">
@@ -61,7 +61,7 @@
                 <div class="panel flex-grow">
                   ANSI
                 </div>
-                <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(configs.changed$ | async)">
+                <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(isChanged | async)">
                   <fa-icon [icon]="fa.save"></fa-icon>
                   <ng-template #saveTooltip>
                     <span class="d-sm-none d-md-inline">Сохранить</span>
