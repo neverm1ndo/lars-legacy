@@ -3,6 +3,12 @@
   font-size: 11px;
   width: 100%;
   height: 100%;
+  lty-icon {
+    // svg {
+      width: 20px;
+      height: 20px;
+    // }
+  }
   .playerlog {
     background: $texteditor;
   }
@@ -81,7 +87,6 @@
     }
     td {
       vertical-align: middle;
-      border: 1px solid $underpanel;
       border-top: none;
       border-bottom: none;
       padding-top: 2px;

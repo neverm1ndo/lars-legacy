@@ -53,7 +53,13 @@ export class ApiService {
       },
       BANS: {
         __route: 'bans',
-        LIST: ''
+        LIST: '',
+        CN: 'cn',
+        IP: 'ip',
+        SERIALS: 'serials',
+        BAN: 'ban',
+        ADMIN: 'admin',
+        USER: 'user'
       },
       STATS: {
         __route: 'stats',
@@ -194,6 +200,25 @@ export class ApiService {
       if (date.to) params = params.append('dateTo', new Date(date.to).valueOf());
     }
     return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
+  }
+
+  searchBans({ type, query }: { type: number, query: string }): Observable<BanRule[]> {
+    
+    function _getURLbySearchType(type: number): string {
+      switch (type) {
+        case 0: return this.URL.BANS.IP;
+        case 1: return this.URL.BANS.CN;
+        case 2: return this.URL.BANS.SERIALS;
+        case 3: return this.URL.BANS.USER;
+        case 5: return this.URL.BANS.ADMIN;
+        default: return this.URL.BANS.LIST;
+      };
+    };
+    const url: string = _getURLbySearchType.call(this, type);
+
+    query = query.split(/[\\\/]/)[0]; // query shielding from evil requests
+
+    return this._http.get<BanRule[]>(`${url}/${query}`);
   }
 
 
