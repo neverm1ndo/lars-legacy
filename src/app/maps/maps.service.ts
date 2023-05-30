@@ -86,9 +86,25 @@ export class MapsService {
     });
   }
 
+  private _isMapObjectTagAllowed(tagName: string) {
+    const allowedElements: string[] = [
+      'meta', // ???
+      'object',
+      'pickup',
+      'vehicle',
+      'texture',
+    ];
+
+    for (let allowed of allowedElements) {
+      if (allowed === tagName) return true;
+    }
+    return false;
+  }
+
   mapToObject(xml: string): MapObject[] {
     const parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
+    const xmlNamespaceURI: string = 'http://www.w3.org/1999/xhtml';
     
     let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
     let objects: MapObject[] = [];
@@ -97,19 +113,35 @@ export class MapsService {
       let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
       console.warn(`NOT_XML: ${errormsg}`);
     }
+
+    const mapElement: Element = map.getElementsByTagNameNS(xmlNamespaceURI, 'map')
+                                   .item(0);
     
-    if (!map.getElementsByTagName('map')[0]) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
+    if (!mapElement) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
     
-    const elems = map.getElementsByTagName('map')[0].children;
+    const mapChildElements: HTMLCollection = mapElement.children;
     
-    for (let i = 0; i < elems.length; i++) {
-      const attrs = elems[i].attributes;
-      let obj = { name: elems[i].tagName };
-      for (let i = 0; i < attrs.length; i++) {
-        const float = parseFloat(attrs[i].value);
-        obj[attrs[i].name] = !isNaN(float) ? float : attrs[i].value;
+    for (let i = 0; i < mapChildElements.length; i++) {
+      const element: Element = mapChildElements[i];
+
+      const { attributes, tagName } = element;
+
+      if (!this._isMapObjectTagAllowed(tagName)) continue;
+
+      let obj = { name: tagName };
+      for (let i = 0; i < attributes.length; i++) {
+
+        const attribute: Attr = attributes[i];
+
+        const { name, value } = attribute;
+
+        const float = parseFloat(value);
+        obj[name] = !isNaN(float) ? float : value;
       }
-      if (obj.name !== 'parsererror') objects.push(obj);
+      
+      if (obj.name == 'parsererror') continue;
+
+      objects.push(obj);
     }
     return objects;
   }
