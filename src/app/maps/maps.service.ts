@@ -109,7 +109,7 @@ export class MapsService {
 
     try {
 
-      let map = parser.parseFromString(xml.replace(xmlfyRegex, '') /**xml*/, 'application/xml');
+      let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'application/xml');
       
       if (map.getElementsByTagName('parsererror')[0]) {
         let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
@@ -144,9 +144,6 @@ export class MapsService {
         if (obj.name == 'parsererror') continue;
   
         objects.push(obj);
-
-        console.log(objects);
-
       }
       return objects;
     } catch (err) {
