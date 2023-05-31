@@ -10,6 +10,7 @@ import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { Group, MathUtils } from 'three';
 import { UserService } from '@lars/user.service';
+import { chain } from 'lodash';
 
 @Injectable({
   providedIn: 'any'
@@ -104,46 +105,54 @@ export class MapsService {
   mapToObject(xml: string): MapObject[] {
     const parser = new DOMParser();
     const xmlfyRegex = new RegExp(' (edf:)(.*")');
-    const xmlNamespaceURI: string = 'http://www.w3.org/1999/xhtml';
-    
-    let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'text/xml');
     let objects: MapObject[] = [];
-    
-    if (map.getElementsByTagName('parsererror')[0]) {
-      let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
-      console.warn(`NOT_XML: ${errormsg}`);
-    }
 
-    const mapElement: Element = map.getElementsByTagNameNS(xmlNamespaceURI, 'map')
-                                   .item(0);
-    
-    if (!mapElement) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
-    
-    const mapChildElements: HTMLCollection = mapElement.children;
-    
-    for (let i = 0; i < mapChildElements.length; i++) {
-      const element: Element = mapChildElements[i];
+    try {
 
-      const { attributes, tagName } = element;
-
-      if (!this._isMapObjectTagAllowed(tagName)) continue;
-
-      let obj = { name: tagName };
-      for (let i = 0; i < attributes.length; i++) {
-
-        const attribute: Attr = attributes[i];
-
-        const { name, value } = attribute;
-
-        const float = parseFloat(value);
-        obj[name] = !isNaN(float) ? float : value;
-      }
+      let map = parser.parseFromString(xml.replace(xmlfyRegex, '') /**xml*/, 'application/xml');
       
-      if (obj.name == 'parsererror') continue;
+      if (map.getElementsByTagName('parsererror')[0]) {
+        let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
+        console.warn(`NOT_XML: ${errormsg}`);
+      }
+  
+      const mapElement: Element = map.getElementsByTagName('map')
+                                     .item(0);
+      
+      if (!mapElement) throw new Error('MAP_TAG_IS_MISSING: map tag is not exists in this document');
+      
+      const mapChildElements: HTMLCollection = mapElement.children;
+      
+      for (let i = 0; i < mapChildElements.length; i++) {
+        const element: Element = mapChildElements[i];
+  
+        const { attributes, tagName } = element;
+  
+        if (!this._isMapObjectTagAllowed(tagName)) continue;
+  
+        let obj = { name: tagName };
+        for (let i = 0; i < attributes.length; i++) {
+  
+          const attribute: Attr = attributes[i];
+  
+          const { name, value } = attribute;
+  
+          const float = parseFloat(value);
+          obj[name] = !isNaN(float) ? float : value;
+        }
+        
+        if (obj.name == 'parsererror') continue;
+  
+        objects.push(obj);
 
-      objects.push(obj);
+        console.log(objects);
+
+      }
+      return objects;
+    } catch (err) {
+      console.error(err);
+      return err;
     }
-    return objects;
   }
 
   deleteMapCloud(path: string): Observable<any> {
@@ -197,11 +206,7 @@ export class MapsService {
     return from(this._electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
           .pipe(
             filter(res => res.filePath && !res.canceled),
-            switchMap((res) => from(new Promise((resolve, reject) => {
-              // this._electron.fs.writeFile(res.filePath, this.objectToMap(objects), 'utf8', (err: NodeJS.ErrnoException) => {
-              //   err?reject(err):resolve(res.filePath);
-              // });
-            }))),
+            // switchMap((res) => from(this._electron.fs.promises.writeFile(res.filePath, this.mapGroupToXML())),
             catchError((err) => this.handleError(err)),
             take(1)
           );
