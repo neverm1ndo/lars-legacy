@@ -17,10 +17,14 @@ import { MapCorrectorComponent } from './map-corrector/map-corrector.component';
 import { MapsService } from './maps.service';
 import { MapEditorV2Component } from './map-editor-v2/map-editor-v2.component';
 
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SharedModule } from '@lars/shared/shared.module';
+
 @NgModule({
   declarations: [MapsComponent, MapInspectorComponent, MapEditorComponent, MapCorrectorComponent, MapComponent, MapEditorV2Component],
   imports: [
     CommonModule,
+    ScrollingModule,
     MapsRoutingModule,
     LtyFileTreeModule,
     FontAwesomeModule,
@@ -29,6 +33,7 @@ import { MapEditorV2Component } from './map-editor-v2/map-editor-v2.component';
     AngularSplitModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
   ],
   providers: [MapsService]
 })

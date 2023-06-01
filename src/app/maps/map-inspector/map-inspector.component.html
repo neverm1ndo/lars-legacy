@@ -1,9 +1,50 @@
 <div class="d-flex flex-column inspector h-100">
-  <div class="d-flex text-center map-inspector-top justify-content-center">
-    <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Map inspector</div>
+  <div class="d-flex map-inspector-top justify-content-between align-items-center">
+    <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Инспектор</div>
+    <button class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
   </div>
-  <div class="d-flex flex-fill overflow-auto">
-    <div *ngIf="objects">
+  <div class="d-flex flex-fill overflow-auto viewport">
+    <cdk-virtual-scroll-viewport class="d-flex flex-fill" [attr.data-listlength]="objects.children.length" itemSize="2">
+      {{ objects.uuid | json }}
+      <table class="table table-sm table-borderless table-dark table-striped-columns table-hover w-100">
+        <tr [class.active]="selected.uuid === object.uuid" class="tab" *cdkVirtualFor="let object of objects.children; index as i">
+          <ng-container *ngLet="object.userData as data">
+            <td>{{ i }} {{ object.uuid }}</td>
+            <td><span [ngClass]="{
+              'vehicle': data.name == 'vehicle',
+              'pickup': data.name == 'pickup',
+              'remove': data.name == 'removeworldobject',
+              'spawn': data.name == 'spawnpoint',
+              'racepickup': data.name == 'racepickup',
+              'material': data.name == 'material'
+            }" class="name">{{ data.name }}</span>
+            </td>
+            <td>
+              {{ object.id }}
+            </td>
+            <td>
+              {{ object.model }}
+            </td>
+            <td>
+              X:{{ object.posX }} Y:{{ object.posY }} Z: {{ object.posZ }}
+            </td>
+            <td>
+              {{ object.dimension }}
+            </td>
+            <td>
+              {{ object.interior }}
+            </td>
+            <td>
+              {{ object.color }}
+            </td>
+            <td>
+              {{ object.txd }} {{ object.texture }}
+            </td>
+          </ng-container>
+        </tr>
+      </table>
+    </cdk-virtual-scroll-viewport>
+    <!-- <div *ngIf="objects">
       <div class="col-12 d-flex flex-column tab" *ngFor="let obj of toShow; index as i">
           <div class="d-flex flex-row justify-content-between">
             <div><span [ngClass]="{
@@ -30,6 +71,6 @@
       <div *ngIf="objects.length > toShow.length">
         <button (click)="showOther()" class="btn btn-dark w-100" name="button">Показать еще {{ getCount() }}</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

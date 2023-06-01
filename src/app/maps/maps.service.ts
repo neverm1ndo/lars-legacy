@@ -93,7 +93,8 @@ export class MapsService {
       'object',
       'pickup',
       'vehicle',
-      'texture',
+      'material',
+      'racepickup',
     ];
 
     for (let allowed of allowedElements) {

@@ -56,7 +56,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this.$mapObjects.next(clean);
   };
 
-  private $mapObjects: BehaviorSubject<MapObject[]> = new BehaviorSubject(null);
+  public $mapObjects: BehaviorSubject<MapObject[]> = new BehaviorSubject(null);
 
   public $loading: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
@@ -68,8 +68,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _resizeObserver: ResizeObserver = new ResizeObserver((_entries: ResizeObserverEntry[]) => {
     
-    this.canvas.style.width = this._host.nativeElement.clientWidth + 'px';
-    this.canvas.style.height = this._host.nativeElement.clientHeight - 28 + 'px';
+    this.canvas.style.width = this.canvas.parentElement.parentElement.clientWidth + 'px';
+    this.canvas.style.height = this.canvas.parentElement.parentElement.clientHeight + 'px';
     
     this._camera.aspect = this._getAspectRatio();
     this._camera.updateProjectionMatrix();
@@ -106,8 +106,12 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _cursorRayCaster: THREE.Raycaster = new THREE.Raycaster();
   private _pointer: THREE.Vector2 = new THREE.Vector2();
 
-  private _selectedMapObject: THREE.Mesh = new THREE.Mesh();
-  
+  public selectedMapObject: THREE.Mesh = new THREE.Mesh();
+
+  get mapGroup() {
+    return this._loadedMapGroup;
+  }
+
   private _outlinePass: OutlinePass;
   private _composer: EffectComposer; 
   private _renderPass: RenderPass;
@@ -209,25 +213,25 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     
     let intersected = intersects[0].object;
 
-    if (this._selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
-      this._removeAllObjectChildrens(this._selectedMapObject);
-      (this._selectedMapObject as any).material.color.set(0xffffff);
+    if (this.selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
+      this._removeAllObjectChildrens(this.selectedMapObject);
+      (this.selectedMapObject as any).material.color.set(0xffffff);
       this._focusObject(intersected);
     }
   }
 
   private _focusObject(object: THREE.Object3D) {
-    this._selectedMapObject = object as any;
+    this.selectedMapObject = object as any;
 
     const intersectedObjectDiv = this._createTextLabel(`${object.parent.userData.id}\n(${object.parent.userData.model})`);
 
     const intersectedObjectLabel: CSS2DObject = new CSS2DObject(intersectedObjectDiv);
-          intersectedObjectLabel.position.set(this._selectedMapObject.position.x, this._selectedMapObject.position.y, this._selectedMapObject.position.z);
-          this._selectedMapObject.add(intersectedObjectLabel);
+          intersectedObjectLabel.position.set(this.selectedMapObject.position.x, this.selectedMapObject.position.y, this.selectedMapObject.position.z);
+          this.selectedMapObject.add(intersectedObjectLabel);
     
     intersectedObjectLabel.layers.set(0);
 
-    this._outlinePass.selectedObjects = [this._selectedMapObject];
+    this._outlinePass.selectedObjects = [this.selectedMapObject];
   }
 
   private _createTextLabel(text: string): HTMLDivElement {
@@ -274,10 +278,10 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   };
 
   private _removeSelectionOfSelectedMapObject() {
-    this._removeAllObjectChildrens(this._selectedMapObject);
+    this._removeAllObjectChildrens(this.selectedMapObject);
     this._outlinePass.selectedObjects = [];
-    (this._selectedMapObject as any).material.color.set(0xffffff);
-    this._selectedMapObject = new THREE.Mesh();
+    (this.selectedMapObject as any).material.color.set(0xffffff);
+    this.selectedMapObject = new THREE.Mesh();
   }
 
   /**
@@ -424,7 +428,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private __loadMapObjects(): Observable<THREE.Group> {
     return this.$mapObjects.pipe(
       tap(() => {
-        this._removeAllObjectChildrens(this._selectedMapObject);
+        this._removeAllObjectChildrens(this.selectedMapObject);
         this._loadedMapGroup.clear();
       }),
       switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
@@ -603,7 +607,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._zone.runOutsideAngular(() => {
       this._createScene();
       this._renderingLoop();
-      this._resizeObserver.observe(this._host.nativeElement);
+      this._resizeObserver.observe(this.canvas.parentElement.parentElement);
       this._handleMouseEvents();
     });
   }
