@@ -1,6 +1,6 @@
 <div class="mb-0 h-100 w-100 d-flex flex-column justify-content-stretch">
   <as-split direction="vertical" [gutterSize]="5">
-    <as-split-area [size]="80">
+    <as-split-area [size]="paneStates[1]">
       <div class="d-flex flex-fill w-100">
         <canvas #view style="height: 100%; width: 100%;"></canvas>
         <div *ngIf="!!($loading | async)" class="loading-screen d-flex flex-fill">
@@ -10,9 +10,9 @@
         </div>
       </div>
     </as-split-area>
-    <as-split-area [size]="20">
+    <as-split-area [size]="paneStates[0]">
       <div class="d-flex flex-fill w-100 h-100">
-        <map-inspector [selected]="selectedMapObject" [mapObjects]="_loadedMapGroup"></map-inspector>
+        <map-inspector [selected]="selectedMapObject.uuid" [mapObjects]="mapGroup.children"></map-inspector>
       </div>
     </as-split-area>
   </as-split>

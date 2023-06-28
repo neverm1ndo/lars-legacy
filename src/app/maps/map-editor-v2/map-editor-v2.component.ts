@@ -25,6 +25,8 @@ import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, fa
 import { ElectronService } from '@lars/core/services';
 import * as path from 'path';
 import { MapsService } from '../maps.service';
+import { IOutputAreaSizes } from 'angular-split';
+import { PanesService } from '@lars/shared/panes.service';
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -86,8 +88,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   
   private _scene!: THREE.Scene;
 
-  private _layers = [];
-
   private _loadingManager: THREE.LoadingManager = new THREE.LoadingManager();
   private _objectLoader: OBJLoader = new OBJLoader(this._loadingManager);
   private _mtlLoader: MTLLoader = new MTLLoader(this._loadingManager);
@@ -137,12 +137,23 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     list: faList,
   };
 
+  public paneStates: number[] = this._getPanesState();
+
   constructor(
     private _host: ElementRef,
     private _zone: NgZone,
     private _electron: ElectronService,
     private _maps: MapsService,
+    private _panes: PanesService,
   ) {}
+
+  public savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
+    this._panes.savePanesState(event, 'lars/ui/panes/med');
+  }
+
+  private _getPanesState(): number[] {
+    return this._panes.getPanesState('lars/ui/panes/med');
+  }
 
   private _loadResouresPackSettings(): ResourcesPackSettings {
     const resourcesStorageItem: string = 'lars/maps/resourcesURI';
@@ -171,7 +182,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             fields.forEach((args: any[]) => {
                     folder.add(...args).listen();
                   });
-            folder.open();
+            // folder.open();
       return folder;
     }
 
@@ -579,7 +590,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             
             group.userData.id = object.id;
             group.userData.dimension = object.dimension;
-            group.userData.type = object.name;
+            // group.userData.type = object.name;
+            group.userData.objectType = object.name;
             group.userData.model = object.model;
             group.userData.interior = object.interior;
 

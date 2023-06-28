@@ -18,6 +18,8 @@
     }
   }
   .tools {
+    position: relative;
+    z-index: inherit;
     background-color: $underpanel;
   }
 }

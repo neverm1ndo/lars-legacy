@@ -89,6 +89,7 @@ export class MapsService {
 
   private _isMapObjectTagAllowed(tagName: string) {
     const allowedElements: string[] = [
+      'ped',
       'meta', // ???
       'object',
       'pickup',
@@ -133,7 +134,7 @@ export class MapsService {
         const { attributes, tagName } = element;
   
         if (!this._isMapObjectTagAllowed(tagName)) {
-          console.warn(`NOT_ALLOWED_MAP_TAG: ${tagName} skipped`);
+          console.warn(`NOT_ALLOWED_MAP_TAG: ${tagName} skip.`);
           continue;
         }
   
