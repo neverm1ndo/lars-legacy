@@ -12,7 +12,7 @@
     </as-split-area>
     <as-split-area [size]="paneStates[0]">
       <div class="d-flex flex-fill w-100 h-100">
-        <map-inspector [selected]="selectedMapObject.uuid" [mapObjects]="mapGroup.children"></map-inspector>
+        <map-inspector (onSelect)="focus($event)"></map-inspector>
       </div>
     </as-split-area>
   </as-split>

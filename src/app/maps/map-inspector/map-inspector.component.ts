@@ -1,21 +1,21 @@
-import { Component, OnInit, OnChanges, Input, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
-import { MapObject } from '../map.interfaces';
-import { faMapSigns, faBoxes } from '@fortawesome/free-solid-svg-icons';
-import { BehaviorSubject } from 'rxjs';
-import { Group, Mesh, Object3D } from 'three';
+import { Component, OnInit, OnChanges, Input, ChangeDetectionStrategy, SimpleChanges, Output, EventEmitter } from '@angular/core';
+
+import { faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'map-inspector',
   templateUrl: './map-inspector.component.html',
   styleUrls: ['./map-inspector.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapInspectorComponent implements OnInit, OnChanges {
 
-  // public $objects: BehaviorSubject<MapObject[]> = new BehaviorSubject<MapObject[]>([]);
+  public $objects: Subject<THREE.Group> = new Subject<THREE.Group>();
  
-  @Input('mapObjects') objects: any;
-  @Input('selected') selectedUUID: string = '';
+  public $selectedUUID: Subject<string> = new Subject();
+
+  @Output('onSelect') onSelect: EventEmitter<any> = new EventEmitter();
 
   fa = {
     sign: faBoxes,
@@ -27,13 +27,16 @@ export class MapInspectorComponent implements OnInit, OnChanges {
     return name !== 'material' && name !== 'text';
   }
 
+  select(object: THREE.Object3D): void {
+    this.onSelect.emit(object.children[0]);
+  }
+
   ngOnInit(): void {
-    console.log(this.objects)
+    this.$objects.subscribe(() => console.log);
   }
   
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
-    console.log(this.objects)
   }
 
 }
