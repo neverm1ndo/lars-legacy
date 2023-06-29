@@ -122,7 +122,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly _mapChunksNames: string[] = [
     'countryE', 
-    // 'countryW', 'countrys', 'countryN', 'countN2',
+    'countryW', 'countrys', 'countryN', 'countN2',
     // 'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
     // 'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
     // 'vegasN', 'vegasE', 'vegasS', 'vegasW',
@@ -232,7 +232,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public focus(object: THREE.Object3D) {
+  public focus(object: THREE.Object3D): void {
+    if (this.selectedMapObject.uuid === object.uuid) return;
     this._removeAllObjectChildrens(this.selectedMapObject);
     this._focusObject(object);
   }
@@ -284,16 +285,17 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               return materials;
             }),
             switchMap((materials: MTLLoader.MaterialCreator) => 
-              from(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.obj`))).pipe(
-                map((buffer: Buffer) => this._objectLoader.setMaterials(materials)
-                                                          .parse(buffer.toString()))
-              )
+              from(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.obj`)))
+                                             .pipe(
+                                                map((buffer: Buffer) => this._objectLoader.setMaterials(materials)
+                                                                                          .parse(buffer.toString()))
+                                              )
             ),
             catchError(() => of(this._makeErrorBox())),
             map((group: THREE.Group) => {
               group.name = name;
               return group;
-            })
+            }),
           );
   };
 
@@ -461,9 +463,9 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     const [initialObject] = this.loadedMapGroup.children;
     const { x, y, z } = initialObject.position;
 
-    this._camera.position.set(x + 10, z + 10, -y + 10);
-    this._camera.lookAt(x, z, -y);
-    this._controls.target.set(x, z, -y);
+    this._camera.position.set(x + 10, y + 10, z + 10);
+    this._camera.lookAt(x, y, z);
+    this._controls.target.set(x, y, z);
   }
 
   private __loadMapChunks() {
@@ -601,7 +603,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             
             group.userData.id = object.id;
             group.userData.dimension = object.dimension;
-            // group.userData.type = object.name;
+
             group.userData.objectType = object.name;
             group.userData.model = object.model;
             group.userData.interior = object.interior;
