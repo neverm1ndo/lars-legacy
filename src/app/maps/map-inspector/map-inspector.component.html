@@ -6,9 +6,9 @@
   <div class="container-fluid g-0 h-100">
     <ng-container *ngIf="$objects | async as objects">
       <ng-container *ngLet="$selectedUUID | async as selected">
-        <cdk-virtual-scroll-viewport class="viewport" [attr.data-listlength]="objects.children.length" minBufferPx="200" maxBufferPx="400" itemSize="22">
+        <cdk-virtual-scroll-viewport class="viewport" [attr.data-listlength]="objects.children.length" itemSize="22">
           <table class="table h-100 w-100 table-sm table-borderless table-dark table-striped-columns table-hover">
-            <tr (click)="select(object)" [attr.data-uuid]="object.uuid" [class.active]="selected === object.uuid" class="tab" *ngFor="let object of objects.children; index as i">
+            <tr (click)="select(object)" [attr.data-uuid]="object.uuid" [class.active]="selected === object.uuid" class="tab" *cdkVirtualFor="let object of objects.children; index as i">
               <td>{{ i }}</td>
               <ng-container *ngLet="object.userData as data">
                 <td>{{ object.name }} </td>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ChangeDetectionStrategy, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 import { faBoxes } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./map-inspector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapInspectorComponent implements OnInit, OnChanges {
+export class MapInspectorComponent implements OnInit{
 
   public $objects: Subject<THREE.Group> = new Subject<THREE.Group>();
  
@@ -32,11 +32,6 @@ export class MapInspectorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.$objects.subscribe(() => console.log);
-  }
-  
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 
 }

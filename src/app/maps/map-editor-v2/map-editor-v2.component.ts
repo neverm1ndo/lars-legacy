@@ -122,7 +122,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly _mapChunksNames: string[] = [
     'countryE', 
-    'countryW', 'countrys', 'countryN', 'countN2',
+    'countryW', 'countrys', 'countryN', 
+    /** Not prepared: 'countN2', */
     // 'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
     // 'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
     // 'vegasN', 'vegasE', 'vegasS', 'vegasW',
@@ -252,7 +253,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     
     intersectedObjectLabel.layers.set(0);
 
-    this._outlinePass.selectedObjects = [this.selectedMapObject];
+    // this._outlinePass.selectedObjects = [this.selectedMapObject];
   }
 
   private _createTextLabel(text: string): HTMLDivElement {
@@ -514,7 +515,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     /** Render pass */
     this._renderPass = new RenderPass(this._scene, this._camera);
-    this._composer.addPass(this._renderPass);
     
     /** Outline pass */
     this._outlinePass = new OutlinePass(
@@ -522,20 +522,22 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
       this._scene,
       this._camera
     );
+
+    this._outlinePass.renderToScreen = true;
     
     this._outlinePass.edgeStrength = 10.0;
     this._outlinePass.edgeGlow = 0;
-    this._outlinePass.edgeThickness = 0.3;
+    this._outlinePass.edgeThickness = 1;
     this._outlinePass.pulsePeriod = 0;
+
+    this._outlinePass.oldClearAlpha = 0;
     this._outlinePass.usePatternTexture = false;
     this._outlinePass.visibleEdgeColor.set(COLOR.RED);
     this._outlinePass.hiddenEdgeColor.set(COLOR.BLUE);
 
-    this._composer.addPass(this._outlinePass);
-
     // Shader fxaa
     this._effectFXAA = new ShaderPass(FXAAShader);
-    this._effectFXAA.uniforms["resolution"].value.set(
+    this._effectFXAA.uniforms.resolution.value.set(
       1 / window.innerWidth,
       1 / window.innerHeight
     );
@@ -543,8 +545,14 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     const gammaCorrectionPass: ShaderPass = new ShaderPass(GammaCorrectionShader);
 
+    /** Composer passes */
+
     this._composer.addPass(this._effectFXAA);
-    this._composer.addPass(gammaCorrectionPass);
+    this._composer.addPass(this._renderPass);
+
+    /** Causes perfomance issues */
+    // this._composer.addPass(this._outlinePass);
+    // this._composer.addPass(gammaCorrectionPass);
 
     /** Controls */
 
