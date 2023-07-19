@@ -25,6 +25,10 @@ import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, fa
 import { ElectronService } from '@lars/core/services';
 import * as path from 'path';
 import { MapsService } from '../maps.service';
+import { IOutputAreaSizes } from 'angular-split';
+import { PanesService } from '@lars/shared/panes.service';
+import { MapInspectorComponent } from '../map-inspector/map-inspector.component';
+
 
 enum COLOR {
   RED   = 0xFF0000,
@@ -51,12 +55,15 @@ interface ResourcesPackSettings {
 export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('view', { static: true }) private _canvas: ElementRef<HTMLCanvasElement>;
+  
+  @ViewChild(MapInspectorComponent) private _inspector!: MapInspectorComponent;
+  
   @Input('map') private set _mapObjects(objects: MapObject[]) {
     const clean = objects.filter((object) => object.name == 'object' && object.model);
     this.$mapObjects.next(clean);
   };
 
-  private $mapObjects: BehaviorSubject<MapObject[]> = new BehaviorSubject(null);
+  public $mapObjects: BehaviorSubject<MapObject[]> = new BehaviorSubject(null);
 
   public $loading: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
@@ -68,8 +75,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private _resizeObserver: ResizeObserver = new ResizeObserver((_entries: ResizeObserverEntry[]) => {
     
-    this.canvas.style.width = this._host.nativeElement.clientWidth + 'px';
-    this.canvas.style.height = this._host.nativeElement.clientHeight - 28 + 'px';
+    this.canvas.style.width = this.canvas.parentElement.parentElement.clientWidth + 'px';
+    this.canvas.style.height = this.canvas.parentElement.parentElement.clientHeight + 'px';
     
     this._camera.aspect = this._getAspectRatio();
     this._camera.updateProjectionMatrix();
@@ -86,8 +93,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   
   private _scene!: THREE.Scene;
 
-  private _layers = [];
-
   private _loadingManager: THREE.LoadingManager = new THREE.LoadingManager();
   private _objectLoader: OBJLoader = new OBJLoader(this._loadingManager);
   private _mtlLoader: MTLLoader = new MTLLoader(this._loadingManager);
@@ -101,13 +106,13 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _loadedTerrainChunks: Map<string, THREE.Group> = new Map();
   private _terrainBoundingBoxes: Map<string, THREE.Box3> = new Map();
 
-  private _loadedMapGroup: THREE.Group = new THREE.Group();
+  public loadedMapGroup: THREE.Group = new THREE.Group();
 
   private _cursorRayCaster: THREE.Raycaster = new THREE.Raycaster();
   private _pointer: THREE.Vector2 = new THREE.Vector2();
 
-  private _selectedMapObject: THREE.Mesh = new THREE.Mesh();
-  
+  public selectedMapObject: THREE.Mesh = new THREE.Mesh();
+
   private _outlinePass: OutlinePass;
   private _composer: EffectComposer; 
   private _renderPass: RenderPass;
@@ -117,7 +122,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly _mapChunksNames: string[] = [
     'countryE', 
-    // 'countryW', 'countrys', 'countryN', 'countN2',
+    'countryW', 'countrys', 'countryN', 
+    /** Not prepared: 'countN2', */
     // 'SFs', 'SFse', 'SFe', 'SFw', 'SFn',
     // 'LAhills', 'LAw2', 'LAwn', 'LAw', 'LAe', 'LAe2', 'LAs', 'LAs2', 'LAn', 'LAn2',
     // 'vegasN', 'vegasE', 'vegasS', 'vegasW',
@@ -133,12 +139,23 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     list: faList,
   };
 
+  public paneStates: number[] = this._getPanesState();
+
   constructor(
     private _host: ElementRef,
     private _zone: NgZone,
     private _electron: ElectronService,
     private _maps: MapsService,
+    private _panes: PanesService,
   ) {}
+
+  public savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
+    this._panes.savePanesState(event, 'lars/ui/panes/med');
+  }
+
+  private _getPanesState(): number[] {
+    return this._panes.getPanesState('lars/ui/panes/med');
+  }
 
   private _loadResouresPackSettings(): ResourcesPackSettings {
     const resourcesStorageItem: string = 'lars/maps/resourcesURI';
@@ -167,13 +184,13 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             fields.forEach((args: any[]) => {
                     folder.add(...args).listen();
                   });
-            folder.open();
+            // folder.open();
       return folder;
     }
 
     createFolder('Chunks', [
       [this._loadedTerrainChunks, 'size', 0, this._mapChunksNames.length],
-      [this._loadedMapGroup.children, 'length', 0, this._mapChunksNames.length + 2],
+      [this.loadedMapGroup.children, 'length', 0, this._mapChunksNames.length + 2],
     ]);
     createFolder('Camera',
       ['x', 'y', 'z'].map((axis: string) => [this._camera.position, axis])
@@ -202,32 +219,41 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private _handleRaycasterIntersectMapObjects(): void {
     this._camera.updateMatrixWorld();
     this._cursorRayCaster.setFromCamera(this._pointer, this._camera);
-    const intersects = this._cursorRayCaster.intersectObjects(this._loadedMapGroup.children);
+    const intersects = this._cursorRayCaster.intersectObjects(this.loadedMapGroup.children);
 
     
     if (intersects.length === 0) return;
     
     let intersected = intersects[0].object;
 
-    if (this._selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
-      this._removeAllObjectChildrens(this._selectedMapObject);
-      (this._selectedMapObject as any).material.color.set(0xffffff);
+    if (this.selectedMapObject.uuid !== (intersected as THREE.Object3D).uuid) {
+      this._removeAllObjectChildrens(this.selectedMapObject);
+      (this.selectedMapObject as any).material.color.set(0xffffff);
       this._focusObject(intersected);
     }
   }
 
+  public focus(object: THREE.Object3D): void {
+    if (this.selectedMapObject.uuid === object.uuid) return;
+    this._removeAllObjectChildrens(this.selectedMapObject);
+    this._focusObject(object);
+  }
+
   private _focusObject(object: THREE.Object3D) {
-    this._selectedMapObject = object as any;
+    this.selectedMapObject = object as any;
+    this._zone.run(() => {
+      this._inspector.$selectedUUID.next(this.selectedMapObject.parent.uuid);
+    });
 
     const intersectedObjectDiv = this._createTextLabel(`${object.parent.userData.id}\n(${object.parent.userData.model})`);
 
     const intersectedObjectLabel: CSS2DObject = new CSS2DObject(intersectedObjectDiv);
-          intersectedObjectLabel.position.set(this._selectedMapObject.position.x, this._selectedMapObject.position.y, this._selectedMapObject.position.z);
-          this._selectedMapObject.add(intersectedObjectLabel);
+          intersectedObjectLabel.position.set(this.selectedMapObject.position.x, this.selectedMapObject.position.y, this.selectedMapObject.position.z);
+          this.selectedMapObject.add(intersectedObjectLabel);
     
     intersectedObjectLabel.layers.set(0);
 
-    this._outlinePass.selectedObjects = [this._selectedMapObject];
+    // this._outlinePass.selectedObjects = [this.selectedMapObject];
   }
 
   private _createTextLabel(text: string): HTMLDivElement {
@@ -260,24 +286,25 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
               return materials;
             }),
             switchMap((materials: MTLLoader.MaterialCreator) => 
-              from(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.obj`))).pipe(
-                map((buffer: Buffer) => this._objectLoader.setMaterials(materials)
-                                                          .parse(buffer.toString()))
-              )
+              from(this._electron.ipcRenderer.invoke('model', path.join(host, `${name}.obj`)))
+                                             .pipe(
+                                                map((buffer: Buffer) => this._objectLoader.setMaterials(materials)
+                                                                                          .parse(buffer.toString()))
+                                              )
             ),
             catchError(() => of(this._makeErrorBox())),
             map((group: THREE.Group) => {
               group.name = name;
               return group;
-            })
+            }),
           );
   };
 
   private _removeSelectionOfSelectedMapObject() {
-    this._removeAllObjectChildrens(this._selectedMapObject);
+    this._removeAllObjectChildrens(this.selectedMapObject);
     this._outlinePass.selectedObjects = [];
-    (this._selectedMapObject as any).material.color.set(0xffffff);
-    this._selectedMapObject = new THREE.Mesh();
+    (this.selectedMapObject as any).material.color.set(0xffffff);
+    this.selectedMapObject = new THREE.Mesh();
   }
 
   /**
@@ -390,17 +417,19 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     )
     .subscribe({
       next: (group) => {
-        this._loadedMapGroup.add(group);
+        this.loadedMapGroup.add(group);
 
-        if (this._loadedMapGroup.children.length !== this.$mapObjects.value.length) return; 
-        this._scene.add(this._loadedMapGroup);
+        if (this.loadedMapGroup.children.length !== this.$mapObjects.value.length) return; 
+        this._scene.add(this.loadedMapGroup);
         this.__setCameraLookAtInitialMapObject();
         
+        this._inspector.$objects.next(this.loadedMapGroup);
+
         this._zone.run(() => {
           this.$loading.next(false);
         });
 
-        this._maps.mapGroupToXML(this._loadedMapGroup);
+        this._maps.mapGroupToXML(this.loadedMapGroup);
       
       },
       error: console.error,
@@ -424,20 +453,20 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
   private __loadMapObjects(): Observable<THREE.Group> {
     return this.$mapObjects.pipe(
       tap(() => {
-        this._removeAllObjectChildrens(this._selectedMapObject);
-        this._loadedMapGroup.clear();
+        this._removeAllObjectChildrens(this.selectedMapObject);
+        this.loadedMapGroup.clear();
       }),
       switchMap((objects: MapObject[]) => this._fetchMapObjects(objects)),
     );
   }
 
   private __setCameraLookAtInitialMapObject(): void {
-    const [initialObject] = this._loadedMapGroup.children;
+    const [initialObject] = this.loadedMapGroup.children;
     const { x, y, z } = initialObject.position;
 
-    this._camera.position.set(x + 10, z + 10, -y + 10);
-    this._camera.lookAt(x, z, -y);
-    this._controls.target.set(x, z, -y);
+    this._camera.position.set(x + 10, y + 10, z + 10);
+    this._camera.lookAt(x, y, z);
+    this._controls.target.set(x, y, z);
   }
 
   private __loadMapChunks() {
@@ -486,7 +515,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     /** Render pass */
     this._renderPass = new RenderPass(this._scene, this._camera);
-    this._composer.addPass(this._renderPass);
     
     /** Outline pass */
     this._outlinePass = new OutlinePass(
@@ -494,20 +522,22 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
       this._scene,
       this._camera
     );
+
+    this._outlinePass.renderToScreen = true;
     
     this._outlinePass.edgeStrength = 10.0;
     this._outlinePass.edgeGlow = 0;
-    this._outlinePass.edgeThickness = 0.3;
+    this._outlinePass.edgeThickness = 1;
     this._outlinePass.pulsePeriod = 0;
+
+    this._outlinePass.oldClearAlpha = 0;
     this._outlinePass.usePatternTexture = false;
     this._outlinePass.visibleEdgeColor.set(COLOR.RED);
     this._outlinePass.hiddenEdgeColor.set(COLOR.BLUE);
 
-    this._composer.addPass(this._outlinePass);
-
     // Shader fxaa
     this._effectFXAA = new ShaderPass(FXAAShader);
-    this._effectFXAA.uniforms["resolution"].value.set(
+    this._effectFXAA.uniforms.resolution.value.set(
       1 / window.innerWidth,
       1 / window.innerHeight
     );
@@ -515,8 +545,14 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
 
     const gammaCorrectionPass: ShaderPass = new ShaderPass(GammaCorrectionShader);
 
+    /** Composer passes */
+
     this._composer.addPass(this._effectFXAA);
-    this._composer.addPass(gammaCorrectionPass);
+    this._composer.addPass(this._renderPass);
+
+    /** Causes perfomance issues */
+    // this._composer.addPass(this._outlinePass);
+    // this._composer.addPass(gammaCorrectionPass);
 
     /** Controls */
 
@@ -575,7 +611,8 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
             
             group.userData.id = object.id;
             group.userData.dimension = object.dimension;
-            group.userData.type = object.name;
+
+            group.userData.objectType = object.name;
             group.userData.model = object.model;
             group.userData.interior = object.interior;
 
@@ -589,13 +626,18 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
       take(clean.length),
       tap((group: THREE.Group) => {
         group.userData.initial = true;
-        this._loadedMapGroup.add(group);
+        this.loadedMapGroup.add(group);
       })
     );
   }
 
   public debugMap() {
-    this._maps.mapGroupToXML(this._loadedMapGroup);
+    this._maps.mapGroupToXML(this.loadedMapGroup);
+  }
+
+  private __destroyGUI(): void {
+    if (this._gui) this._gui.destroy();
+    this._stats.end();
   }
 
   ngAfterViewInit(): void {
@@ -603,7 +645,7 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._zone.runOutsideAngular(() => {
       this._createScene();
       this._renderingLoop();
-      this._resizeObserver.observe(this._host.nativeElement);
+      this._resizeObserver.observe(this.canvas.parentElement.parentElement);
       this._handleMouseEvents();
     });
   }
@@ -627,7 +669,6 @@ export class MapEditorV2Component implements OnInit, AfterViewInit, OnDestroy {
     this._renderer.forceContextLoss();
 
     /** Destroy GUI */
-    if (this._gui) this._gui.destroy();
-    this._stats.end();
+    this.__destroyGUI();
   }
 }

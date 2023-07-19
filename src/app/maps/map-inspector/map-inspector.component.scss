@@ -1,81 +1,104 @@
 @import 'colors';
 :host {
   width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+  $tab-gutter: 10px;
   .map-inspector-top {
-    height: 48px;
+    $tab-head-height: 28px;
+    height: $tab-head-height;
     width: 100%;
+    background-color: $filetree;
+    padding: $tab-gutter/2 $tab-gutter $tab-gutter/2 $tab-gutter;
     .text {
       font-size: 13px;
-      line-height: 53px;
+      line-height: $tab-head-height;
+    }
+    fa-icon {
+      margin-right: $tab-gutter;
     }
   }
   .inspector {
-    border-left: 2px solid $topper;
-    background: $filetree;
+    position: relative;
+    z-index: inherit;
   }
-  .tab {
-    padding-top: 3px;
-    padding-bottom: 3px;
-    font-size: 10px;
+  table {
+    margin-bottom: 0px;
+    td {
+      vertical-align: middle;
+    }
+  }
+  .viewport {
+    height: 100%;
     width: 100%;
-    border-bottom: 1px solid $topper;
-    .name {
-      text-transform: uppercase;
-      font-size: 10px;
-      background: #efefef;
-      color: #121212;
-      font-weight: 700;
-      padding-right: 5px;
-      padding-left: 5px;
-    }
-    img {
-      width: 32px;
-      height: auto;
-      transition: .2s ease-in-out;
-      &:hover {
-        z-index: 10;
-        border: 1px solid $text;
-        transform: scale(3) translateX(-8px);
+    background-color: $clr-formcontrol;
+    .tab {
+      &.active {
+        background-color: $scrollbar-thumb;
       }
-    }
-    .model-id {
-      margin-left: 5px;
-    }
-    .id {
-      opacity: 0.8;
-      font-weight: bold;
-    }
-    .vehicle {
-      background: #2791dc;
-      color: #fdfdfd;
-    }
-    .pickup {
-      background: #f3b94f;
-    }
-    .remove {
-      background: #ce3d4a;
-      color: #fdfdfd;
-    }
-    .spawn {
-      background: #6d55cc;
-      color: #fdfdfd;
-    }
-    .racepickup {
-      background: #505050;
-      color: #fdfdfd;
-    }
-    .material {
-      background: #3a84a0;
-      color: #fdfdfd;
-    }
-    .text {
-      background: #3e0f0f;
-      color: #fdfdfd;
-    }
-    .d-inline {
-      overflow: hidden;
-      max-width: 80px;
-      word-wrap: break-word;
+      padding: 2px $tab-gutter 0 $tab-gutter;
+      font-size: 10px;
+      height: 22px;
+      .name {
+        text-transform: uppercase;
+        font-size: 10px;
+        background: #efefef;
+        color: #121212;
+        font-weight: 700;
+        line-height: 12px;
+        box-sizing: border-box;
+        padding: 1px 5px 1px 5px;
+      }
+      img {
+        width: 32px;
+        height: auto;
+        transition: .2s ease-in-out;
+        &:hover {
+          z-index: 10;
+          border: 1px solid $text;
+          transform: scale(3) translateX(-8px);
+        }
+      }
+      .model-id {
+        margin-left: 5px;
+      }
+      .id {
+        opacity: 0.8;
+        font-weight: bold;
+      }
+      .vehicle {
+        background: #2791dc;
+        color: #fdfdfd;
+      }
+      .pickup {
+        background: #f3b94f;
+      }
+      .remove {
+        background: #ce3d4a;
+        color: #fdfdfd;
+      }
+      .spawn {
+        background: #6d55cc;
+        color: #fdfdfd;
+      }
+      .racepickup {
+        background: #505050;
+        color: #fdfdfd;
+      }
+      .material {
+        background: #3a84a0;
+        color: #fdfdfd;
+      }
+      .text {
+        background: #3e0f0f;
+        color: #fdfdfd;
+      }
+      .d-inline {
+        overflow: hidden;
+        max-width: 80px;
+        word-wrap: break-word;
+      }
     }
   }
 }

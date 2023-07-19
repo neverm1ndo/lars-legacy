@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './../api.service';
-import { ToastService } from './../toast.service';
-import { ElectronService } from './../core/services';
+import { ApiService } from '@lars/api.service';
+import { ToastService } from '@lars/toast.service';
+import { ElectronService } from '@lars/core/services';
 import { MapObject } from './map.interfaces';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
@@ -10,7 +10,7 @@ import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { Group, MathUtils } from 'three';
 import { UserService } from '@lars/user.service';
-import { chain } from 'lodash';
+import { MessageBoxReturnValue, SaveDialogReturnValue } from 'electron';
 
 @Injectable({
   providedIn: 'any'
@@ -24,7 +24,7 @@ export class MapsService {
     private _user: UserService,
   ) { }
 
-  private handleError(error: HttpErrorResponse): Observable<any> {
+  private _handleError(error: HttpErrorResponse): Observable<any> {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {
@@ -73,7 +73,7 @@ export class MapsService {
     return resultXML;
   }
 
-  async cancelChanges(path: string): Promise<any> {
+  public async cancelChanges(path: string): Promise<any> {
     const dialogOpts = {
       type: 'warning',
       buttons: ['Да', 'Нет'],
@@ -89,11 +89,13 @@ export class MapsService {
 
   private _isMapObjectTagAllowed(tagName: string) {
     const allowedElements: string[] = [
+      'ped',
       'meta', // ???
       'object',
       'pickup',
       'vehicle',
-      'texture',
+      'material',
+      'racepickup',
     ];
 
     for (let allowed of allowedElements) {
@@ -102,18 +104,21 @@ export class MapsService {
     return false;
   }
 
-  mapToObject(xml: string): MapObject[] {
-    const parser = new DOMParser();
-    const xmlfyRegex = new RegExp(' (edf:)(.*")');
-    let objects: MapObject[] = [];
+  public mapToObject(xml: string): MapObject[] {
+    const parser: DOMParser = new DOMParser();
+    const xmlfyRegex: RegExp = new RegExp(' (edf:)(.*")');
+    const objects: MapObject[] = [];
 
     try {
 
-      let map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'application/xml');
+      const map = parser.parseFromString(xml.replace(xmlfyRegex, ''), 'application/xml');
       
-      if (map.getElementsByTagName('parsererror')[0]) {
-        let errormsg: string = map.getElementsByTagName('parsererror')[0].children[1].textContent;
-        console.warn(`NOT_XML: ${errormsg}`);
+      const parseerror: Element = map.getElementsByTagName('parsererror')
+                                     .item(0);
+      
+      if (parseerror) {
+        const errormsgElement: Element = parseerror.children.item(1);
+        throw new Error(`NOT_XML: ${errormsgElement.textContent}`);
       }
   
       const mapElement: Element = map.getElementsByTagName('map')
@@ -128,7 +133,10 @@ export class MapsService {
   
         const { attributes, tagName } = element;
   
-        if (!this._isMapObjectTagAllowed(tagName)) continue;
+        if (!this._isMapObjectTagAllowed(tagName)) {
+          console.warn(`NOT_ALLOWED_MAP_TAG: ${tagName} skip.`);
+          continue;
+        }
   
         let obj = { name: tagName };
         for (let i = 0; i < attributes.length; i++) {
@@ -140,8 +148,6 @@ export class MapsService {
           const float = parseFloat(value);
           obj[name] = !isNaN(float) ? float : value;
         }
-        
-        if (obj.name == 'parsererror') continue;
   
         objects.push(obj);
       }
@@ -152,45 +158,48 @@ export class MapsService {
     }
   }
 
-  deleteMapCloud(path: string): Observable<any> {
+  public deleteMapCloud(path: string): Observable<unknown> {
     const dialogOpts = {
-        type: 'warning',
-        buttons: ['Удалить', 'Отмена'],
-        title: `Подтверждение удаления`,
-        message: `Вы точно хотите удалить карту ${path}? После подтверждения она будет безвозвратно удалена с сервера.`
-      }
+      type: 'warning',
+      buttons: ['Удалить', 'Отмена'],
+      title: `Подтверждение удаления`,
+      message: `Вы точно хотите удалить карту ${path}? После подтверждения она будет безвозвратно удалена с сервера.`
+    };
     return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-          .pipe(
-            filter(val => val.response === 0),
-            switchMap(() => this._api.deleteMap(path)),
-            catchError((err) => this.handleError(err)),
-            take(1),
-          );
+                                          .pipe(
+                                            filter((val: MessageBoxReturnValue) => val.response === 0),
+                                            switchMap(() => this._api.deleteMap(path)),
+                                            catchError((err) => this._handleError(err)),
+                                            take(1),
+                                          );
   }
 
-  saveMapCloud(path: string, objects: MapObject[]): Observable<any> {
+  public saveMapCloud(path: string, group: Group): Observable<unknown> {
     const dialogOpts = {
-        type: 'info',
-        buttons: ['Сохранить', 'Отмена'],
-        title: `Подтверждение сохранения на сервере`,
-        message: `Вы точно хотите сохранить карту ${path}? После подтверждения она будет перезаписана на сервере.`
-      }
-      return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-      .pipe(
-        filter(val => val.response === 0),
-        map(() => {
-          const form = new FormData();
-          // const blob = new Blob([this.ma(objects)], { type: 'text/plain' })
-          // form.append('file', blob, path);
-          return form;
-        }),
-        switchMap((form) => this._api.uploadFileMap(form)),
-        filter((event) => event instanceof HttpResponse),
-        take(1),
-      );
+      type: 'info',
+      buttons: ['Сохранить', 'Отмена'],
+      title: `Подтверждение сохранения на сервере`,
+      message: `Вы точно хотите сохранить карту ${path}? После подтверждения она будет перезаписана на сервере.`
+    };
+    return from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
+                                          .pipe(
+                                            filter((val: MessageBoxReturnValue) => val.response === 0),
+                                            map(() => {
+                                              const form: FormData = new FormData();
+
+                                              const xmlDocumentAsString: string = this.mapGroupToXML(group).toString();
+
+                                              const blob: Blob = new Blob([xmlDocumentAsString], { type: 'application/xml' });
+                                              form.append('file', blob, path);
+                                              return form;
+                                            }),
+                                            switchMap((form: FormData) => this._api.uploadFileMap(form)),
+                                            filter((event) => event instanceof HttpResponse),
+                                            take(1),
+                                          );
   }
   
-  saveMapLocal(name: string, objects: MapObject[]) {
+  public saveMapLocal(name: string, group: Group): Observable<unknown> {
     const saveDialogOpts: Electron.SaveDialogOptions = {
       title: 'Сохранить карту как',
       buttonLabel: 'Сохранить',
@@ -198,17 +207,18 @@ export class MapsService {
       filters: [
         { name: 'Maps(*.map, *.off)', extensions: ['map', 'off'] },
         { name: 'All Files', extensions: ['*'] }
-      ]
-    }
+      ],
+    };
     return from(this._electron.ipcRenderer.invoke('save-dialog', saveDialogOpts))
           .pipe(
-            filter(res => res.filePath && !res.canceled),
-            // switchMap((res) => from(this._electron.fs.promises.writeFile(res.filePath, this.mapGroupToXML())),
-            catchError((err) => this.handleError(err)),
+            filter((res: SaveDialogReturnValue) => res.filePath && !res.canceled),
+            switchMap((res) => from(this._electron.fs.promises.writeFile(res.filePath, this.mapGroupToXML(group).toString()))),
+            catchError((err) => this._handleError(err)),
             take(1)
           );
   }
-  getMap(path: { path: string, name?: string}): Observable<any> {
+  
+  public getMap(path: { path: string, name?: string}): Observable<any> {
     return this._api.getMap(path.path)
                     .pipe(
                       map((xml: string) => this.mapToObject(xml)),
@@ -216,15 +226,15 @@ export class MapsService {
                     )
   }
 
-  posZChangeSuccess() {
+  public posZChangeSuccess() {
     this._toast.show('success', `Успешное изменение posZ`, null, faInfo);
   }
 
-  mapToast(message: string, path: string, icon: IconDefinition, classname: string) {
+  public mapToast(message: string, path: string, icon: IconDefinition, classname: string) {
     this._toast.show('default', message);
   }
   
-  mapNotLoaded(err: Error) {
+  public mapNotLoaded(err: Error) {
     this._toast.show('danger', `Карта не был загружена по причине:`, err.message, faExclamationTriangle);
   }
 }

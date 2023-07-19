@@ -1,35 +1,54 @@
 <div class="d-flex flex-column inspector h-100">
-  <div class="d-flex text-center map-inspector-top justify-content-center">
-    <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Map inspector</div>
+  <div class="d-flex map-inspector-top justify-content-between align-items-center">
+    <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Инспектор</div>
+    <button class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
   </div>
-  <div class="d-flex flex-fill overflow-auto">
-    <div *ngIf="objects">
-      <div class="col-12 d-flex flex-column tab" *ngFor="let obj of toShow; index as i">
-          <div class="d-flex flex-row justify-content-between">
-            <div><span [ngClass]="{
-              'vehicle': obj.name == 'vehicle',
-              'pickup': obj.name == 'pickup',
-              'remove': obj.name == 'removeworldobject',
-              'spawn': obj.name == 'spawnpoint',
-              'racepickup': obj.name == 'racepickup',
-              'material': obj.name == 'material'
-            }" class="name">{{obj.name}}</span>
-            <span class="model-id" *ngIf="obj.id"> ID: {{obj.id}}</span>
-          </div>
-          <div class="id">#{{i}}</div>
-        </div>
-        <div class="d-flex flex-row justify-content-between">
-          <div class="d-flex" *ngIf="obj.model">MODEL: {{obj.model}}</div>
-          <div class="d-flex" *ngIf="obj.dimension">DIM: {{obj.dimension}}</div>
-          <div class="d-flex" *ngIf="obj.interior">INT: {{obj.interior}}</div>
-          <div class="d-flex" *ngIf="obj.color">CLR: {{obj.color}}</div>
-          <div class="d-inline model-id" *ngIf="obj.txd">{{obj.txd }} {{obj.texture}}</div>
-          <div class="d-flex" *ngIf="obj.txd"><img src="https://textures.xyin.ws/textures/texvol2/{{obj.txd}}/{{obj.texture}}.png" [alt]="obj.texture"></div>
-        </div>
-      </div>
-      <div *ngIf="objects.length > toShow.length">
-        <button (click)="showOther()" class="btn btn-dark w-100" name="button">Показать еще {{ getCount() }}</button>
-      </div>
-    </div>
+  <div class="container-fluid g-0 h-100">
+    <ng-container *ngIf="$objects | async as objects">
+      <ng-container *ngLet="$selectedUUID | async as selected">
+        <cdk-virtual-scroll-viewport class="viewport" [attr.data-listlength]="objects.children.length" itemSize="22">
+          <table class="table h-100 w-100 table-sm table-borderless table-dark table-striped-columns table-hover">
+            <tr (click)="select(object)" [attr.data-uuid]="object.uuid" [class.active]="selected === object.uuid" class="tab" *cdkVirtualFor="let object of objects.children; index as i">
+              <td>{{ i }}</td>
+              <ng-container *ngLet="object.userData as data">
+                <td>{{ object.name }} </td>
+                <td><span [ngClass]="{
+                  'vehicle': data.objectType == 'vehicle',
+                  'pickup': data.objectType == 'pickup',
+                  'remove': data.objectType == 'removeworldobject',
+                  'spawn': data.objectType == 'spawnpoint',
+                  'racepickup': data.objectType == 'racepickup',
+                  'material': data.objectType == 'material'
+                }" class="name">{{ data.objectType }}</span>
+                </td>
+                <td>
+                  {{ data.id }}
+                </td>
+                <td>
+                  {{ data.model }}
+                </td>
+                <td>
+                  <ng-container *ngLet="object.position as position">
+                    X:{{ position.x }} Y:{{ position.y }} Z: {{ position.z }}
+                  </ng-container>
+                </td>
+                <td>
+                  {{ data.dimension }}
+                </td>
+                <td>
+                  {{ data.interior }}
+                </td>
+                <td>
+                  {{ data.color }}
+                </td>
+                <td>
+                  {{ data.txd }} {{ data.texture }}
+                </td>
+              </ng-container>
+            </tr>
+          </table>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+    </ng-container>
   </div>
 </div>

@@ -125,8 +125,7 @@ export class ApiService {
   deleteMap(path: string) {
     return this._http.delete(this.URL.UTILS.DELETE_FILE, { params: { path: path }});
   }
-  getLast(filter?: string[]): Observable<any> {
-    if (!filter) filter = [];
+  getLast(filter: string[] = []): Observable<any> {
     return this._http.get(this.URL.LOGS.LAST, { params: { page: 0, lim: this.getChunkSize(), filter: filter.join(',')}});
   }
   getLogFile(query: string, page: number, limit: number, filter: string[], date?: { from: string, to: string }): Observable<LogLine[]> {
@@ -188,17 +187,22 @@ export class ApiService {
                .pipe(catchError((error) => handleError(error)));
   }
 
-  search(query: any, page: number, limit: number, filter?: string[], date?: { from?: string, to?: string}): Observable<LogLine[]> {
-    let params: HttpParams = new HttpParams().appendAll({
-      search: query,
-      page: page.toString(),
-      lim: limit.toString(),
-      filter: filter ? filter.join(',') : '',
-    });
-    if (date) {
-      if (date.from) params = params.append('dateFrom', new Date(date.from).valueOf());
-      if (date.to) params = params.append('dateTo', new Date(date.to).valueOf());
+  search(query: string, page: number, limit: number, filter?: string[], date?: { from?: string, to?: string}): Observable<LogLine[]> {
+    let params: HttpParams = new HttpParams();
+        params = params.appendAll({
+          q: query,
+          page: page.toString(),
+          lim: limit.toString(),
+        });
+    
+    if (filter) {
+      params = params.append('filter', filter.join(','));
     }
+    if (date) {
+      if (date.from) params = params.append('from', new Date(date.from).valueOf());
+      if (date.to)   params = params.append('to',   new Date(date.to).valueOf());
+    }
+
     return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
   }
 

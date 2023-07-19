@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MapObject } from '../map.interfaces';
-import { faMapSigns } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+
+import { faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'map-inspector',
@@ -8,47 +9,29 @@ import { faMapSigns } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./map-inspector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapInspectorComponent implements OnInit {
+export class MapInspectorComponent implements OnInit{
 
-  private _objects: MapObject[] = [];
-  @Input('mapObjects') set obj (value: MapObject[] ) {
-    this._objects = value;
-    if (this._objects.length > 20) {
-      this.toShow = this.objects.slice(0, 20);
-    } else {
-      this.toShow = this.objects.map(obj => Object.assign({...obj}));
-    }
-  };
-  get objects() {
-    return this._objects;
-  }
-  toShow: any[] = [];
-  page: number = 1;
+  public $objects: Subject<THREE.Group> = new Subject<THREE.Group>();
+ 
+  public $selectedUUID: Subject<string> = new Subject();
+
+  @Output('onSelect') onSelect: EventEmitter<any> = new EventEmitter();
 
   fa = {
-    sign: faMapSigns,
+    sign: faBoxes,
   };
 
   constructor() { }
 
-  getCount() {
-    return (this.page*20) <= (this._objects.length - this.toShow.length)?20:this._objects.length % 20;
-  }
-
   isObject(name: string): boolean {
-    return ((name!=='material') && (name!=='text'))?true:false;
+    return name !== 'material' && name !== 'text';
   }
 
-  showOther() {
-    this.page++;
-    if (this.page*20 < (this.objects.length - this.toShow.length)) {
-      this.toShow = this.objects.slice(0, this.toShow.length+20);
-    } else {
-      this.toShow = this.objects.map(obj => Object.assign({...obj}));
-    }
-
+  select(object: THREE.Object3D): void {
+    this.onSelect.emit(object.children[0]);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
 }
