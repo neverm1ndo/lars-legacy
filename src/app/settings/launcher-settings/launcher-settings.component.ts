@@ -69,6 +69,7 @@ export class LauncherSettingsComponent implements OnInit {
                                 this.setup();
 
                                 const [path]: string[] = res.filePaths;
+                                if (!path) return;
                                 this.settings.controls.samp.setValue(path);
                               })
                               .catch(console.error);
@@ -99,8 +100,8 @@ export class LauncherSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.settings.controls.samp.updateValueAndValidity({ onlySelf: true });
     this._getLauncherSettingsFromStorage();
+    this.settings.controls.samp.updateValueAndValidity({ onlySelf: true });
   }
 
 }
