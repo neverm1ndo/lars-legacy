@@ -67,6 +67,7 @@ export class BinaryDocComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._config.stats$.next(null);
   }
 
 }
