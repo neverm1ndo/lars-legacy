@@ -66,11 +66,11 @@ export class LauncherSettingsComponent implements OnInit {
                                 
                                 if (res.canceled) return;
                                 
-                                this.setup();
-
+                                
                                 const [path]: string[] = res.filePaths;
                                 if (!path) return;
                                 this.settings.controls.samp.setValue(path);
+                                this.setup();
                               })
                               .catch(console.error);
   }
