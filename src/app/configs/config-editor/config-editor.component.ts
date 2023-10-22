@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ApiService } from '@lars/api.service';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { switchMap, take, filter } from 'rxjs/operators';
+import { switchMap, take, filter, tap, takeLast } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { ToastService } from '@lars/toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -202,13 +202,16 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     for (let file of files) {
       formData.append('file', file);
     }
-    
-    const sub = this._api.uploadFileCfg(formData)
-                         .subscribe({ 
-                          next: (event) => {
-                            if (event.type === HttpEventType.UploadProgress) {
-                              this.progress = Math.round(100 * event.loaded / event.total);
-                            } else if (event instanceof HttpResponse) {
+
+    const sub = this._api.saveFile(formData)
+                         .pipe(
+                            tap((event) => {
+                              if (event.type === HttpEventType.UploadProgress) this._configs.dprogress$.next(Math.round(100 * event.loaded / event.total));
+                            }),
+                            filter((event) => event instanceof HttpResponse),
+                            // takeLast(1)
+                          ).subscribe({
+                            next: () => {
                               if (files.length > 1) {
                                 const buildFileList = (files: File[]): string => {
                                   let list = '';
@@ -220,36 +223,35 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
                                   
                                   return list;
                                 }
-                                
                                 this._toast.show('success', `Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`, path, faSave);
                               } else {
                                 this._toast.show('success', `Конфигурационный файл <b>${files[0].name}</b> успешно загружен`, null, faSave);
                               }
-                              
+                            
                               setTimeout(() => { 
                                 this.clearProgress(); 
                               }, 1000);
-                              
+                            
                               this._uploadsSubscriptions.remove(sub);
-                            }
-                          },
-                          error: (err) => {
-                            this.clearProgress();
-                            
-                            if (files.length > 1) {
-                              this._toast.show('warning', `Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`, err.message, faInfo);
-                            } else {
-                              this._toast.show('warning', `Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`, err.message, faInfo);
-                            }
-                            
-                            console.error(err);
-                            this._uploadsSubscriptions.remove(sub)
-                          },
-                          complete: () => {
-                            this.reloadFileTree();
-                          }
-                        });
-                        this._uploadsSubscriptions.add(sub);
+                            },
+                            error: (err) => {
+                              this.clearProgress();
+                              
+                              if (files.length > 1) {
+                                this._toast.show('warning', `Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`, err.message, faInfo);
+                              } else {
+                                this._toast.show('warning', `Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`, err.message, faInfo);
+                              }
+                              
+                              console.error(err);
+                              this._uploadsSubscriptions.remove(sub)
+                            },
+                            complete: () => {
+                              this.reloadFileTree();
+                            }    
+                          });
+
+    this._uploadsSubscriptions.add(sub);
   }
 
   ngOnInit(): void {

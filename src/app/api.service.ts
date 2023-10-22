@@ -29,8 +29,8 @@ export class ApiService {
         FILE_TREE: 'config-files-tree',
         CONFIG_FILE: 'config-file',
         FILE_STATS: 'file-info',
-        UPLOAD: 'upload-file',
-        SAVE_FILE: 'save-config',
+        UPLOAD: 'upload-file', // deprecated
+        SAVE_FILE: 'save-file',
       },
       MAPS: {
         __route: 'maps',
