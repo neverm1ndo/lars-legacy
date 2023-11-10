@@ -14,7 +14,7 @@
     <div *ngIf="content" class="user d-flex flex-row flex-fill align-items-center w-100 bg-{{ process.type }}">
         <ng-container *ngIf="content.auth as user;">
           <div class="d-flex">
-            <img src="{{ user.avatar }}"/>
+            <img [src]="user.avatar" [alt]="user.username"/>
           </div>
           <div class="d-flex align-items-center">
             <a class="text-light" (click)="userLink(user.id)">{{ user.username }}</a>
@@ -53,8 +53,8 @@
         <kbd class="me-1" *ngFor="let number of numbers">{{ number }}</kbd>
       </span>
       <span *ngIf="content.props as props ">
-        <span *ngFor="let prop of props | entries">
-          {{prop[0]}} <kbd>{{prop[1]}}</kbd>
+        <span *ngFor="let prop of props | keyvalue">
+          {{ prop.key }} <kbd>{{ prop.value }}</kbd>
         </span>
       </span>
     </div>
