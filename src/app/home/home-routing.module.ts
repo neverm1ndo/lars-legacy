@@ -7,7 +7,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SearchEditorComponent } from '@lars/home/search-editor/search-editor.component';
 import { BanhammerComponent } from './banhammer/banhammer.component';
 import { AdminsComponent } from './admins/admins.component';
-import { StatisticsComponent } from '../statistics/statistics.component';
 
 import { AuthGuard, CommonGuard, ConfiguratorGuard, BackuperGuard, MapperGuard } from '@lars/guards';
 
@@ -21,7 +20,7 @@ const routes: Routes = [
     { path: 'banhammer', component: BanhammerComponent, canActivate: [CommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [CommonGuard] },
     { path: 'backups', loadChildren: () => import('@lars/home/backups/backups.module').then(m => m.BackupsModule), canActivate: [BackuperGuard] },
-    { path: 'stats', component: StatisticsComponent, canActivate: [CommonGuard] },
+    // { path: 'stats', component: StatisticsComponent, canActivate: [CommonGuard] },
     { path: 'settings', loadChildren: () => import('@lars/settings/settings.module').then(m => m.SettingsModule) },
   ]},
 ];

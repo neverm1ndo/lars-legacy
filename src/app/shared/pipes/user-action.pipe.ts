@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { UserActivity } from '../enums';
+import { UserActivity } from '../../enums';
 
 @Pipe({
   name: 'userAction'

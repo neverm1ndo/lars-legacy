@@ -6,8 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SocketIoModule } from 'ngx-socket-io';
-import { NgChartsModule } from 'ng2-charts';
-import { LtyFileTreeModule } from '../lty-file-tree/lty-file-tree.module';
+import { LtyFileTreeModule } from '../shared/lty-file-tree/lty-file-tree.module';
 
 import { HomeRoutingModule } from './home-routing.module';
 
@@ -34,11 +33,8 @@ import { AdminsComponent } from './admins/admins.component';
 
 import { socketConfig } from '../web-socket.service';
 
-
-import { StatisticsComponent } from '../statistics/statistics.component';
-
 import { NotificationsService } from '../notifications.service';
-import { UserActionPipe } from '../pipes/user-action.pipe';
+import { UserActionPipe } from '../shared/pipes/user-action.pipe';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -59,7 +55,7 @@ const idbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, StatisticsComponent, LoglineContentComponent, UserActionPipe],
+  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, LoglineContentComponent, UserActionPipe],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -73,7 +69,6 @@ const idbConfig: DBConfig  = {
     NgxIndexedDBModule.forRoot(idbConfig),
     SocketIoModule.forRoot(socketConfig),
     NgSelectModule,
-    NgChartsModule,
     LtyFileTreeModule,
     ScrollingModule,
   ],

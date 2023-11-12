@@ -7,13 +7,13 @@ import { PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent
 
 import { WebviewDirective, LetDirective } from './directives/';
 
-import { FileSizePipe } from '@lars/pipes/file-size.pipe';
-import { RolePipe } from '@lars/pipes/role.pipe';
-import { RulesPipe } from '@lars/pipes/rules.pipe';
+import { FileSizePipe } from '@lars/shared/pipes/file-size.pipe';
+import { RolePipe } from '@lars/shared/pipes/role.pipe';
+import { RulesPipe } from '@lars/shared/pipes/rules.pipe';
 import { LazyLoadDirective } from './directives/lazy-load.directive';
 import { ProcessPipe } from './process.pipe';
 import { EntriesPipe } from './entries.pipe';
-import { FilterSearchPipe } from '@lars/pipes/filter-search.pipe';
+import { FilterSearchPipe } from '@lars/shared/pipes/filter-search.pipe';
 
 @NgModule({
   declarations: [PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, LetDirective, LazyLoadDirective, ProcessPipe, EntriesPipe, FilterSearchPipe],

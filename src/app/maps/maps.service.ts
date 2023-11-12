@@ -12,9 +12,7 @@ import { Group, MathUtils } from 'three';
 import { UserService } from '@lars/user.service';
 import { MessageBoxReturnValue, SaveDialogReturnValue } from 'electron';
 
-@Injectable({
-  providedIn: 'any'
-})
+@Injectable()
 export class MapsService {
 
   constructor(

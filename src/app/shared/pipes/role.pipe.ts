@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Workgroup } from '../enums';
+import { Workgroup } from '../../enums';
 
 @Pipe({
   name: 'role'

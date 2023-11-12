@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MapsRoutingModule } from './maps-routing.module';
-import { LtyFileTreeModule } from '../lty-file-tree/lty-file-tree.module';
+import { LtyFileTreeModule } from '@lars/shared/lty-file-tree/lty-file-tree.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
