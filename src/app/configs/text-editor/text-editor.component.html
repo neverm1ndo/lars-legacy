@@ -32,49 +32,6 @@
     </div>
   </div>
 </div>
-<!-- <div class="h-100">
-  <div class="d-flex align-items-start flex-column h-100 w-100">
-    <div class="underpanel no-select align-self-end w-100">
-      <div *ngIf="stats; else loadingTpl" class="col-12">
-        <div class="row">
-          <div class="w-100 d-flex flex-row justify-content-between">
-            <div class="panel-left">
-              <div class="d-flex justify-content-start align-content-center">
-                <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
-                  <fa-icon [icon]="fa.branch"></fa-icon>
-                  {{ path }}{{ (changed | async)?'*':'' }}
-                </button>
-                <div class="panel flex-grow">
-                  {{ stats.mime }}
-                </div>
-                <div class="panel flex-grow">
-                  ANSI
-                </div>
-                <div placement="top" [ngbTooltip]="bufferSize" class="panel flex-grow">
-                  {{ stats.size | FileSize }}
-                </div>
-                <ng-template #bufferSize><strong>{{ stats.size }}</strong> bytes</ng-template>
-              </div>
-            </div>
-            <div class="panel-right">
-              <div class="w-100 d-flex flex-row justify-content-end">
-                <button placement="top" ngbTooltip="{{ (configs.error | async)?.message }}"  class="panel">
-                  <i [class.led-loading]="loading" [class.led-error]="(configs.error | async)?.message" class="autosave-led"></i>
-                </button>
-                <button (click)="saveFile()" class="panel" [disabled]="!(changed | async)">
-                  <fa-icon [icon]="fa.save"></fa-icon> <span class="d-sm-none d-md-inline">Сохранить</span>
-                </button>
-                <button (click)="deleteFile()" class="panel">
-                  <fa-icon [icon]="fa.trash"></fa-icon> <span class="d-sm-none d-md-inline">Удалить</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 <ng-template #loadingTpl>
   <div class="col-12">
     <div class="row">
