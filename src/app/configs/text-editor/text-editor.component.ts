@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
-import { faSave, faSync, faExclamationTriangle, faTrash, faCodeBranch } from '@fortawesome/free-solid-svg-icons';
-import { faCopy } from '@fortawesome/free-regular-svg-icons';
+import { faSave, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import { BehaviorSubject, Subject, iif, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
@@ -121,8 +120,12 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveFile(): void {
     const blob = new Blob([this.textplain], { type: this.configs.stats$.getValue().mime });
-    this.configs.loading.next(true);
     this.configs.saveFileAsBlob(this.configs.path, blob)
+                .pipe(
+                  tap(() => {
+                    this.configs.loading.next(true);
+                  })
+                )
                 .subscribe({
                   next: () => {
                     this._origin = Buffer.from(this.textplain, 'utf8');
