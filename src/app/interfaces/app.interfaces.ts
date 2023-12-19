@@ -40,6 +40,7 @@ export interface IContentData {
   action?: string;
   targetType?: string;
   numbers?: number[];
+  cn?: string;
 }
 export interface LogLine {
   unix: number;
