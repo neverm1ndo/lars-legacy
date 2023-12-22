@@ -34,7 +34,7 @@
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'CN'">
-    <a class="btn btn-small btn-dark text-left cn" [routerLink]="['/home/search']" [queryParams]="{ query: 'cn:' + content.message }">
+    <a class="btn btn-small btn-dark text-left cn" [routerLink]="['/home/search']" [queryParams]="{ query: 'cn:' + content.cn }">
       <fa-icon [icon]="fa.faSearch"></fa-icon>{{ content.cn }}
     </a>
   </ng-container>
