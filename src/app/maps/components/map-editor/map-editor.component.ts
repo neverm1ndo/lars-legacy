@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, HostListener, NgZone } from '@angular/core';
 import { EditorMode } from '@lars/enums/map.editor.enum';
-import { MapObject, Viewport } from '../map.interfaces';
+import { MapObject, Viewport } from '../../domain/entities/map.interfaces';
 
 type Position2 = {
   x: number;

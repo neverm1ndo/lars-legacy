@@ -9,13 +9,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSplitModule } from 'angular-split';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MapsComponent } from './maps.component';
-import { MapInspectorComponent } from './map-inspector/map-inspector.component';
-import { MapEditorComponent } from './map-editor/map-editor.component';
-import { MapComponent } from './map/map.component';
-import { MapCorrectorComponent } from './map-corrector/map-corrector.component';
-import { MapsService } from './maps.service';
-import { MapEditorV2Component } from './map-editor-v2/map-editor-v2.component';
+import { MapsComponent } from './containers/layout/maps.component';
+import { MapInspectorComponent } from './components/map-inspector/map-inspector.component';
+import { MapEditorComponent } from './components/map-editor/map-editor.component';
+import { MapComponent } from './components/map-view/map-view.component';
+import { MapCorrectorComponent } from './components/map-corrector/map-corrector.component';
+import { MapsService } from './domain/infrastructure/maps.service';
+import { MapEditorV2Component } from './components/map-editor-v2/map-editor-v2.component';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from '@lars/shared/shared.module';

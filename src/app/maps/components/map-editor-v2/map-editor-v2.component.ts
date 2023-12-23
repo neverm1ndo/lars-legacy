@@ -9,9 +9,9 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { from, concat, Observable, BehaviorSubject, of, fromEvent } from 'rxjs';
 import { catchError, map, switchMap, take, tap, mergeMap } from 'rxjs/operators';
 import { GUI } from 'dat.gui';
-import { getObjectNameById } from '../sa.objects';
+import { getObjectNameById } from '@lars/maps/domain';
 
-import { MapObject } from '../map.interfaces';
+import { MapObject } from '../../domain/entities/map.interfaces';
 import { MathUtils } from 'three';
 
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
@@ -24,7 +24,7 @@ import { GammaCorrectionShader } from "three/examples/jsm/shaders/GammaCorrectio
 import { faSave, faUndo, faRedo, faMap, faCloudDownloadAlt, faCloudUploadAlt, faList } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
 import * as path from 'path';
-import { MapsService } from '../maps.service';
+import { MapsService } from '../../domain/infrastructure/maps.service';
 import { IOutputAreaSizes } from 'angular-split';
 import { PanesService } from '@lars/shared/panes.service';
 import { MapInspectorComponent } from '../map-inspector/map-inspector.component';

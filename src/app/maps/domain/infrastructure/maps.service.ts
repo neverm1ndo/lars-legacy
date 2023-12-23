@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
-import { MapObject } from './map.interfaces';
+import { MapObject } from '../entities/map.interfaces';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { filter, switchMap, take, catchError, map, tap } from 'rxjs/operators';

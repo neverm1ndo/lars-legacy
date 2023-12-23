@@ -4,9 +4,8 @@ import { faMap, faPlus, faCubes, faDraftingCompass,
   faCheckCircle, faInfo, faSave, faArchway,
   faTimes, faRulerVertical, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { EditorMode } from '@lars/enums/map.editor.enum';
-import { MapObject } from '../map.interfaces';
-import { MapEditorComponent } from '../map-editor/map-editor.component';
-import { MapsService } from '../maps.service';
+
+import { MapObject, MapsService } from '@lars/maps/domain';
 import { ActivatedRoute } from '@angular/router';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { mapload, panelSwitch, extrudeToRight } from '@lars/app.animations';
@@ -19,8 +18,8 @@ interface CurrentMap {
 
 @Component({
   selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  templateUrl: './map-view.component.html',
+  styleUrls: ['./map-view.component.scss'],
   animations: [ mapload, panelSwitch, extrudeToRight ]
 })
 export class MapComponent implements OnInit {
