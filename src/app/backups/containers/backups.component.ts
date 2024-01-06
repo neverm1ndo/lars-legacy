@@ -156,6 +156,7 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   private _getBackupFile(hash: string): Observable<string> {
+    if (this.$currentSubject.value.hash === hash) return;
     return this._api.getBackupFile(hash)
                     .pipe(
                       catchError(error => this.__handleError(error)),
