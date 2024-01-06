@@ -180,7 +180,7 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
                )
                .subscribe((backups: Backup[]) => {
                 this.$backups.next(backups);
-                this.showBackupView(backups[0]);
+                if (backups.length) this.showBackupView(backups[0]);
                });
   }
 
