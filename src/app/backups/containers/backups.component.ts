@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@angular/core';
 import { ApiService } from '@lars/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd, faToolbox } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map, switchMap, filter } from 'rxjs/operators'
-import { from, iif, of, throwError, Observable, BehaviorSubject, Subject, mergeMap, merge, takeWhile, debounceTime } from 'rxjs';
+import { from, iif, of, throwError, Observable, BehaviorSubject, Subject, merge, debounceTime } from 'rxjs';
 import { handleError } from '@lars/utils';
 import { Backup } from '@lars/interfaces';
 import { IOutputAreaSizes } from 'angular-split';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BackupsGraphDirective } from '../components/backups-graph/backups-graph.directive';
 
 @Component({
   selector: 'app-backups',
@@ -16,9 +17,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./backups.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BackupsComponent implements OnInit, OnDestroy {
+export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
+
+
+  @ViewChild('graph') private _graph: BackupsGraphDirective;
   
-  public $backups: Observable<Backup[]> = this._api.getBackupsList();
+  public $backups: BehaviorSubject<Backup[]> = new BehaviorSubject(null);
   private $currentSubject: BehaviorSubject<Backup> = new BehaviorSubject(null);
   public $current: Observable<Backup> = merge(this.$currentSubject, this.$currentSubject.pipe(
                                             filter((backup) => backup !== null),
@@ -49,6 +53,8 @@ export class BackupsComponent implements OnInit, OnDestroy {
     lineWrapping: true,
     readOnly: true
   };
+
+  public $backupsSize: Subject<number> = new Subject();
   
   constructor(
     private _api: ApiService,
@@ -105,12 +111,15 @@ export class BackupsComponent implements OnInit, OnDestroy {
     from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
     .pipe(
       switchMap((val) => iif(() => val.response == 0, this._api.removeBackup(current.hash), throwError(() => new Error('Операция отменена пользователем')))),
+      switchMap(() => this._api.getBackupsList()),
       catchError(error => handleError(error)),
       take(1)
     )
     .subscribe({
-      next: () => {
-        this._toast.show('success', `Бэкап файла ${current.file.name} успешно установлен`, current.file.path, faClipboardCheck);
+      next: (backups: Backup[]) => {
+        this.$backups.next(backups);
+        this._toast.show('success', `Бэкап файла ${current.file.name} успешно удален`, current.file.path, faClipboardCheck);
+        this.closeView();
       },
       error: (err) => {
         console.error(err);
@@ -147,6 +156,7 @@ export class BackupsComponent implements OnInit, OnDestroy {
   }
   
   private _getBackupFile(hash: string): Observable<string> {
+    if (this.$currentSubject.value.hash === hash) return;
     return this._api.getBackupFile(hash)
                     .pipe(
                       catchError(error => this.__handleError(error)),
@@ -157,17 +167,37 @@ export class BackupsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     of(window.localStorage.getItem('settings'))
       .pipe(
-        take(1),
         filter((settings: string | null) => settings !== null),
-        map((settings: string) => JSON.parse(settings))
+        map((settings: string) => JSON.parse(settings)),
+        take(1),
       )
       .subscribe(({ textEditorStyle }) => {
         this.codeMirrorSettings.theme = textEditorStyle;
       });
+      
+      this._api.getBackupsList()
+               .pipe(
+                  take(1),
+               )
+               .subscribe((backups: Backup[]) => {
+                this.$backups.next(backups);
+                if (backups.length) this.showBackupView(backups[0]);
+               });
+  }
+
+  ngAfterViewInit(): void {
+    this.$backups.subscribe((backups: Backup[]) => {
+      if (this._graph) this._graph.redraw();
+      if (!backups) return;
+      
+      const size = backups.reduce((acc, curr) => curr.file.bytes ? acc + curr.file.bytes: acc, 0);
+      this.$backupsSize.next(size);
+    });
   }
 
   ngOnDestroy() {
-
+    this.$backups.unsubscribe();
+    this.$backupsSize.unsubscribe();
   }
 
 }

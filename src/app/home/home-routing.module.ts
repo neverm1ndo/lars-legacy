@@ -19,7 +19,7 @@ const routes: Routes = [
     { path: 'maps', loadChildren: () => import('@lars/maps/maps.module').then(m => m.MapsModule), canActivate: [MapperGuard]},
     { path: 'banhammer', component: BanhammerComponent, canActivate: [CommonGuard] },
     { path: 'admins', component: AdminsComponent, canActivate: [CommonGuard] },
-    { path: 'backups', loadChildren: () => import('@lars/home/backups/backups.module').then(m => m.BackupsModule), canActivate: [BackuperGuard] },
+    { path: 'backups', loadChildren: () => import('@lars/backups/backups.module').then(m => m.BackupsModule), canActivate: [BackuperGuard] },
     // { path: 'stats', component: StatisticsComponent, canActivate: [CommonGuard] },
     { path: 'settings', loadChildren: () => import('@lars/settings/settings.module').then(m => m.SettingsModule) },
   ]},

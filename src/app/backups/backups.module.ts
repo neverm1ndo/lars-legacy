@@ -10,11 +10,11 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SharedModule } from '@lars/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { BackupsComponent } from './backups.component';
-import { BackupItemComponent } from './backup-item/backup-item.component';
-import { BackupsGraphDirective } from './directives/backups-graph.directive';
-import { BackupsGraphItemDirective } from './directives/backups-graph-item.directive';
-import { BackupsService } from './backups.service';
+import { BackupsComponent } from './containers/backups.component';
+import { BackupItemComponent } from './components/backup-item/backup-item.component';
+import { BackupsGraphDirective } from './components/backups-graph/backups-graph.directive';
+import { BackupsGraphItemDirective } from './components/backups-graph/backups-graph-item.directive';
+import { BackupsService } from './domain/inftastructure/backups.service';
 
 @NgModule({
   declarations: [BackupsComponent, BackupItemComponent, BackupsGraphDirective, BackupsGraphItemDirective],

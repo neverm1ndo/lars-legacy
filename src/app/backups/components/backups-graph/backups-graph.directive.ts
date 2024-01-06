@@ -1,9 +1,10 @@
 import { Directive, ElementRef, OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { BackupsService } from '../backups.service';
+import { BackupsService } from '../../domain/inftastructure/backups.service';
 
 @Directive({
-  selector: '[graphContainer]'
+  selector: '[graphContainer]',
+  exportAs: 'graph'
 })
 export class BackupsGraphDirective implements OnDestroy {
 
@@ -12,11 +13,19 @@ export class BackupsGraphDirective implements OnDestroy {
     private _renderer: Renderer2,
     private _backups: BackupsService,
   ) {
-    setTimeout(() => this._drawGraph(), 0);
+    this.redraw();
   }
 
   get host() {
-    return this._host.nativeElement;
+    return this._host.nativeElement as HTMLElement;
+  }
+
+  public redraw() {
+    this._backups.clear();
+    if (this.host?.children) {
+      this.host.childNodes.forEach(elem => {  this._renderer.removeChild(this.host, elem); });
+    }
+    setTimeout(() => this._drawGraph(), 0);
   }
 
   private _applyStylesPx(this: any, styles: { [key: string] : any }) {
@@ -33,7 +42,7 @@ export class BackupsGraphDirective implements OnDestroy {
       height,
       width: 3,
       marginLeft: right,
-      marginRight: 8,
+      marginRight: 16,
       top,
     };
 

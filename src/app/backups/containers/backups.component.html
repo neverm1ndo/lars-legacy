@@ -1,7 +1,17 @@
 <div class="container-fluid d-flex flex-column g-0 h-100">
   <div class="container-fluid head">
-    <div class="col-12">
-      <h6><fa-icon [icon]="fa.box"></fa-icon>Резервные копии</h6>
+    <div class="row">
+      <div class="col-4">
+        <h6><fa-icon [icon]="fa.box"></fa-icon>Резервные копии</h6>
+      </div>
+      <div class="col-8 d-flex align-items-start justify-content-end">
+        <span class="align-self-center">
+          <span class="circle me-2">
+            <fa-icon [icon]="fa.hdd"></fa-icon>
+          </span>
+          <span class="text-muted" *ngIf="$backupsSize | async as size">{{ size | FileSize: 0 }}</span>
+        </span>
+      </div>
     </div>
   </div>
   <ng-container *ngLet="$current | async as current; let i = index;">
@@ -10,7 +20,7 @@
         <div class="d-flex flex-column h-100 bg">
           <ng-container *ngLet="($backups | async) as backups;">
             <div *ngIf="backups; else loading" class="d-flex backups-list h-100 flex-row overflow-auto">
-              <div graphContainer #binds class="binds"></div>
+              <div #graph="graph" graphContainer class="binds"></div>
               <div class="d-flex flex-column w-100">
                 <app-backup-item
                   graphItem
