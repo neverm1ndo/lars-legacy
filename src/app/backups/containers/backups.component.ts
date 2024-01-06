@@ -53,6 +53,8 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
     lineWrapping: true,
     readOnly: true
   };
+
+  public $backupsSize: Subject<number> = new Subject();
   
   constructor(
     private _api: ApiService,
@@ -183,13 +185,18 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.$backups.subscribe(() => {
+    this.$backups.subscribe((backups: Backup[]) => {
       if (this._graph) this._graph.redraw();
+      if (!backups) return;
+      
+      const size = backups.reduce((acc, curr) => curr.file.bytes ? acc + curr.file.bytes: acc, 0);
+      this.$backupsSize.next(size);
     });
   }
 
   ngOnDestroy() {
     this.$backups.unsubscribe();
+    this.$backupsSize.unsubscribe();
   }
 
 }

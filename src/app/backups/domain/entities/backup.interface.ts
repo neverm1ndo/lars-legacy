@@ -17,5 +17,6 @@ export interface Backup {
       mime: string;
       path: string;
       text?: string;
+      bytes?: number;
     }
   };

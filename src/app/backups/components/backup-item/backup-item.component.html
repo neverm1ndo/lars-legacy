@@ -23,6 +23,13 @@
       </div>
     </div>
     <div class="item d-flex flex-column no-select">
+      <div class="d-flex text-muted flex-fill">
+        <span *ngIf="backup.file.bytes as bytes" class="item-elapsed">
+          {{ bytes | FileSize: 0 }}
+        </span>
+      </div>
+    </div>
+    <div class="item d-flex flex-column no-select">
       <div class="d-flex flex-fill">
         <div class="item-elapsed">
           <ng-container *ngLet="backup.date | date:'d MMM yy, HH:mm:ss' as date">
