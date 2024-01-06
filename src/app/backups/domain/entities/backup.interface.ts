@@ -1,4 +1,4 @@
-import { BackupAction } from "@lars/enums/backup.action.enum";
+import { BackupAction } from "@lars/backups/domain/entities/backup.action.enum";
 
 export interface Backup {
     unix: number;

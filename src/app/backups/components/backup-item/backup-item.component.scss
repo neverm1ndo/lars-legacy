@@ -5,6 +5,7 @@
   background: $filetree;
   &.active {
     background: #242427;
+    border: #303033;
     &:hover {
       background: #242427!important;
     }
@@ -52,7 +53,7 @@
     min-width: 45px;
   }
   .marker {
-    width: 3px;
+    width: 9px;
     padding: 35px 0px 35px 0px;
     background: inherit;
     flex: 0 0 8px;
