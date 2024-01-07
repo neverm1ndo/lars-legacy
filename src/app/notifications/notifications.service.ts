@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WebSocketService } from '@lars/web-socket.service';
+import { WebSocketService } from '@lars/ws/web-socket.service';
 import { Subscription, TeardownLogic} from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';

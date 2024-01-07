@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faSignOutAlt, faTerminal, faComments, faPlay, faRedo, faStop, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { ElectronService } from '@lars/core/services';
-import { WebSocketService } from '@lars/web-socket.service';
+import { WebSocketService } from '@lars/ws/web-socket.service';
 import { ExecException } from 'child_process';
 import { join } from 'path';
 import { BehaviorSubject, Subscription, TeardownLogic } from 'rxjs';

@@ -11,7 +11,7 @@ import { LtyFileTreeModule } from '../shared/lty-file-tree/lty-file-tree.module'
 import { HomeRoutingModule } from './home-routing.module';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { JWTInterceptor } from '../interceptors/jwt.interceptor';
+import { JWTInterceptor } from '../api/interceptors/jwt.interceptor';
 
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -31,9 +31,9 @@ import { LoglineContentComponent } from '../logline-content/logline-content.comp
 
 import { AdminsComponent } from './admins/admins.component';
 
-import { socketConfig } from '../web-socket.service';
+import { socketConfig } from '../ws/web-socket.service';
 
-import { NotificationsService } from '../notifications.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { UserActionPipe } from '../shared/pipes/user-action.pipe';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';

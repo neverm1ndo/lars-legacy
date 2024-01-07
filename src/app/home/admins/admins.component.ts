@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef } from '@angular/core';
 import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { UserService } from '@lars/user.service';
-import { ApiService } from '@lars/api.service';
+import { UserService } from '@lars/user/user.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
 import { settings } from '@lars/app.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '@lars/core/services';
-import { WebSocketService } from '@lars/web-socket.service';
+import { WebSocketService } from '@lars/ws/web-socket.service';
 import { Workgroup, UserActivity } from '@lars/enums';
 import { BehaviorSubject, Observable, filter, from, switchMap, take } from 'rxjs';
 import { MessageBoxOptions, MessageBoxReturnValue } from 'electron';

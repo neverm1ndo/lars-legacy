@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { Router } from '@angular/router';

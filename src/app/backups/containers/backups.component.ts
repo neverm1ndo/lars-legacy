@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@angular/core';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { faClipboardCheck, faClipboard, faFileSignature, faExclamationCircle, faTrash, faBoxOpen, faHdd, faToolbox } from '@fortawesome/free-solid-svg-icons';

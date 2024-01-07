@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { switchMap, take, filter, tap, takeLast } from 'rxjs/operators';

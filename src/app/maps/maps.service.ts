@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { MapObject } from './map.interfaces';
@@ -9,7 +9,7 @@ import { filter, switchMap, take, catchError, map, tap } from 'rxjs/operators';
 import { faInfo, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { Group, MathUtils } from 'three';
-import { UserService } from '@lars/user.service';
+import { UserService } from '@lars/user/user.service';
 import { MessageBoxReturnValue, SaveDialogReturnValue } from 'electron';
 
 @Injectable()

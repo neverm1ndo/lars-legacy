@@ -3,12 +3,12 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, BehaviorSubject, Subject, from } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { handleError } from '@lars/utils';
-import { IUserData, IUserLoginData } from './interfaces';
+import { IUserData, IUserLoginData } from '../interfaces';
 import { Router } from '@angular/router';
-import { AppConfig } from '../environments/environment';
+import { AppConfig } from '../../environments/environment';
 import { ElectronService } from '@lars/core/services';
 import { Workgroup } from '@lars/enums';
-import { ToastService } from './toast.service';
+import { ToastService } from '../toast.service';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 export interface IUserSettings {

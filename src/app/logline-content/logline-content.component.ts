@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { UserService } from '@lars/user.service';
+import { UserService } from '@lars/user/user.service';
 import { Process } from '@lars/shared/components/line-process/log-processes';
 import { IContentData, IUserData } from '@lars/interfaces';
 import { faSearch, faUserAlt, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';

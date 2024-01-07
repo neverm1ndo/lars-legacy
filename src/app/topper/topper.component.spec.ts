@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TopperComponent } from './topper.component';
-import { UserService } from '../user.service';
+import { UserService } from '../user/user.service';
 
 describe('TopperComponent', () => {
   let component: TopperComponent;

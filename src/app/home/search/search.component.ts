@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, ChangeDetect
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { faFilter, faSync, faExclamationTriangle, faVectorSquare, faHistory, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
-import { WebSocketService } from '@lars/web-socket.service';
+import { WebSocketService } from '@lars/ws/web-socket.service';
 import { Observable, merge, map, filter, scan } from 'rxjs'
 import { dateValidator } from '@lars/shared/directives';
 import { HistoryListEnum } from '@lars/enums';

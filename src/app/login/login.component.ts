@@ -1,8 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { UserService} from '@lars/user.service';
+import { UserService} from '@lars/user/user.service';
 import { IUserData } from '@lars/interfaces';
-import { WebSocketService } from '../web-socket.service';
+import { WebSocketService } from '../ws/web-socket.service';
 import { Router } from '@angular/router';
 
 @Component({

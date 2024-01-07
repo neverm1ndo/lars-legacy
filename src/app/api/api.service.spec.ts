@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule , HttpTestingController} from '@angular/common/http/testing'
 
 import { ApiService } from './api.service';
-import { UserService } from './user.service';
+import { UserService } from '../user/user.service';
 
 import { of } from 'rxjs';
 

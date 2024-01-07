@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ElectronService } from '../core/services';
-import { UserService } from '../user.service';
+import { UserService } from '../user/user.service';
 import { faSignOutAlt, faComments, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
-import { WebSocketService } from '../web-socket.service';
+import { WebSocketService } from '../ws/web-socket.service';
 import { Subject, Subscription } from 'rxjs';
 import { extrudeToRight } from '../app.animations';
 

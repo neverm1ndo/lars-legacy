@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ConfigsService } from '@lars/configs/configs.service';
-import { UserService } from '@lars/user.service';
+import { UserService } from '@lars/user/user.service';
 import { faFileSignature, faSave, faTrash,  } from '@fortawesome/free-solid-svg-icons';
 import { Workgroup } from '@lars/enums';
 import { BehaviorSubject, Observable, map, merge, switchMap, of } from 'rxjs';

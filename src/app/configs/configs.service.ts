@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
 import { ElectronService } from '@lars/core/services';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { tap, filter, takeLast, switchMap } from 'rxjs/operators';
 import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 
 import { basename, dirname } from 'path';
-import { UserService } from '@lars/user.service';
+import { UserService } from '@lars/user/user.service';
 
 @Injectable({
   providedIn: 'any'

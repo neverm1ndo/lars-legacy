@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons';
-import { ApiService } from '@lars/api.service';
+import { ApiService } from '@lars/api/api.service';
 import { BanRule } from '@lars/interfaces/bans.interfaces';
 import { BehaviorSubject, Subject, Observable, merge, map, switchMap, iif, tap, filter } from 'rxjs';
 import { BanType } from '@lars/enums/bans.enum';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserService } from '@lars/user.service';
+import { UserService } from '@lars/user/user.service';
 import { ToastService } from '@lars/toast.service';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Workgroup } from '@lars/enums/workgroup.enum';
