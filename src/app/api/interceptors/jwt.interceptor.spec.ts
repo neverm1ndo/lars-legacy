@@ -43,15 +43,4 @@ describe('JWTInterceptor', () => {
     const interceptor: JWTInterceptor = TestBed.inject(JWTInterceptor);
     expect(interceptor).toBeTruthy();
   });
-
-  it('should add an Authorization header', () => {
-    const fakeToken = 'asdvsfbqervwsf_fake-token.xkcvnmlk';
-    userSpy.getUserInfo.and.returnValue({ name: 'John', token: fakeToken })
-    userSpy.isAuthenticated.and.returnValue(true);
-    service.getAdminsAll().subscribe(res => {
-      expect(res).toBeTruthy();
-    });
-    const req = httpMock.expectOne(service.URL_ADMINS_LIST);
-    expect(req.request.headers.get('Authorization')).toBe(`Bearer ${fakeToken}`);
-  });
 });

@@ -9,32 +9,43 @@ import Samp, { ServerGameMode } from './samp';
 import { Subscription } from 'rxjs';
 import { PingConfig, PingResponse } from 'ping';
 
-/** Init samp to get server stats later
-* @type {Samp}
-*/
+/**
+ * Init samp to get server stats later
+ *
+ * @type {Samp}
+ */
 const samp: Samp = new Samp(20000);
 const $serverInfo: Subscription = new Subscription();
 
-/** Init main window
-* @type {BrowserWindow}
-*/
+/**
+ * Init main window
+ *
+ * @type {BrowserWindow}
+ */
 export let win: BrowserWindow = null;
-/** Prevents second instnce creating
-* @type {boolean}
-*/
+/**
+ * Prevents second instnce creating
+ *
+ * @type {boolean}
+ */
 const lock: boolean = app.requestSingleInstanceLock();
              app.setAppUserModelId('ru.nmnd.lars');
- /** Init splash window
+/**
+ * Init splash window
+ *
  * @type {BrowserWindow}
  */
 export let splash: BrowserWindow = null;
 
-/** Init system tray
-* @type {Tray}
-*/
+/**
+ * Init system tray
+ *
+ * @type {Tray}
+ */
 let tray: Tray;
-/** Creates splash window
-*/
+/**
+ * Creates splash window
+ */
 function splashWindow() {
   splash = new BrowserWindow({
     width: 450,
@@ -58,19 +69,22 @@ function splashWindow() {
   splash.once('ready-to-show', () => {
     splash.show();
     splash.webContents.send('loading-state', 'Загрузка основного модуля', 30);
-  })
+  });
   splash.on('closed', () => {
     splash = null;
   });
 }
 
-/** Creates main window
-*/
+/**
+ * Creates main window
+ */
 function createWindow(): BrowserWindow {
-  /** Window state manager. Keeps window size, position etc.
-  * @type {winStateKeeper.State}
-  */
-  let state: winStateKeeper.State = winStateKeeper({
+  /**
+   * Window state manager. Keeps window size, position etc.
+   *
+   * @type {winStateKeeper.State}
+   */
+  const state: winStateKeeper.State = winStateKeeper({
     defaultWidth: 1000,
     defaultHeight: 600
   });
@@ -95,7 +109,9 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  /** Main window Ready-To-Show event handler */
+  /**
+   * Main window Ready-To-Show event handler
+   */
   win.once('ready-to-show', () => {
     if (!serve) {
       splash.webContents.send('loading-state', 'Проверка наличия обновлений', 40);
@@ -119,11 +135,11 @@ function createWindow(): BrowserWindow {
     win.loadURL('https://libertyapp.nmnd.ru');
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
-    const url: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets' , url.pathname) });
+    const fsUrl: URL = new URL(request.url);
+    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets' , fsUrl.pathname) });
   });
   win.on('show', (_event: any) => {
-    if (tray) tray.destroy();
+    if (tray) {tray.destroy();}
   });
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -153,39 +169,42 @@ ipcMain.on('minimize', () => win.minimize());
 ipcMain.on('reload', () => win.reload());
 
 ipcMain.on('notification', (_event: Electron.IpcMainEvent, options) => {
-  showNotification(options)
+  showNotification(options);
 });
 
 ipcMain.handle('server-game-mode', (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
-  if (!serve) return samp.getServerInfo(ip, port);
+  if (!serve) {return samp.getServerInfo(ip, port);}
   return samp.testSampServerStats;
 });
-ipcMain.handle('message-box', (_event: Electron.IpcMainInvokeEvent, opts: Electron.MessageBoxOptions): Promise<Electron.MessageBoxReturnValue> => {
-  return dialog.showMessageBox(opts);
-});
-ipcMain.handle('save-dialog', (_event: Electron.IpcMainInvokeEvent, opts: Electron.SaveDialogOptions): Promise<Electron.SaveDialogReturnValue> => {
-  return dialog.showSaveDialog(opts);
-});
-ipcMain.handle('open-dialog', (_event: Electron.IpcMainInvokeEvent, opts: Electron.OpenDialogOptions): Promise<Electron.OpenDialogReturnValue> => {
-  return dialog.showOpenDialog(opts);
-});
+ipcMain.handle('message-box',
+  (
+    _event: Electron.IpcMainInvokeEvent,
+    opts: Electron.MessageBoxOptions
+  ): Promise<Electron.MessageBoxReturnValue> => dialog.showMessageBox(opts));
+ipcMain.handle('save-dialog',
+  (
+    _event: Electron.IpcMainInvokeEvent,
+    opts: Electron.SaveDialogOptions
+  ): Promise<Electron.SaveDialogReturnValue> => dialog.showSaveDialog(opts));
+ipcMain.handle('open-dialog',
+  (
+    _event: Electron.IpcMainInvokeEvent,
+    opts: Electron.OpenDialogOptions
+  ): Promise<Electron.OpenDialogReturnValue> => dialog.showOpenDialog(opts));
 ipcMain.handle('clipboard', (_event: Electron.IpcMainInvokeEvent, str: string): void => {
   clipboard.writeText(str);
 });
-ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => {
-  return app.getVersion();
-});
-ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> => {
-  return loadFromAsar(assetPath);
-});
+ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => app.getVersion());
+ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> => loadFromAsar(assetPath));
 
-ipcMain.handle('ping', (_event: Electron.IpcMainInvokeEvent, host: string, options: PingConfig): Promise<PingResponse> => {
-  return pingHost(host, options);
-});
+ipcMain.handle('ping',
+  (
+    _event: Electron.IpcMainInvokeEvent,
+    host: string,
+    options: PingConfig
+  ): Promise<PingResponse | void> => pingHost(host, options).then((value) => value).catch(console.error));
 
-ipcMain.handle('model', (_event: Electron.IpcMainInvokeEvent, path: string): Promise<Buffer> => {
-  return loadFromFileSystem(path);
-});
+ipcMain.handle('model', (_event: Electron.IpcMainInvokeEvent, filePath: string): Promise<Buffer> => loadFromFileSystem(filePath));
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
@@ -208,7 +227,7 @@ autoUpdater.on('update-downloaded', (event: UpdateDownloadedEvent) => {
 
   dialog.showMessageBox(dialogOpts)
         .then((returnValue) => {
-          if (returnValue.response === 0) autoUpdater.quitAndInstall();
+          if (returnValue.response === 0) {autoUpdater.quitAndInstall();}
         });
 });
 autoUpdater.on('error', message => {
@@ -222,27 +241,28 @@ try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
+  // Added 400 ms to fix the black background issue while using transparent window.
+  // More detais at https://github.com/electron/electron/issues/15947
   if (!lock) {
     app.quit();
   } else {
     app.on('second-instance', (_event: Electron.Event, _commandLine: string[], _workingDirectory: string) => {
       // Someone tried to run a second instance, we should focus our window.
-      if (!win) return;
-      if (win.isMinimized()) win.restore();
-      if (!win.isVisible()) win.show();
+      if (!win) {return;}
+      if (win.isMinimized()) {win.restore();}
+      if (!win.isVisible()) {win.show();}
       win.focus();
     });
 
     app.on('ready', () => {
       setTimeout(() => splashWindow(), 400);
       /**
-      * Load Anguar DevTools on serve
-      */
-      if (serve) session.defaultSession.loadExtension(path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0'))
-                                       .then(({ id }: { id : string}) => {
+       * Load Anguar DevTools on serve
+       */
+      if (serve) {session.defaultSession.loadExtension(path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0'))
+                                       .then(({ id }: { id: string}) => {
                                           console.log('[ADT] DevTools loaded', id);
-                                       });
+                                       });}
       createWindow();
     });
 
@@ -250,16 +270,23 @@ try {
     app.on('window-all-closed', () => {
       // On OS X it is common for applications and their menu bar
       // to stay active until the user quits explicitly with Cmd + Q
-      if (process.platform !== 'darwin') app.quit();
+      if (process.platform !== 'darwin') {app.quit();}
     });
 
     app.on('activate', () => {
       // On OS X it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (win === null) createWindow();
+      if (win === null) {createWindow();}
     });
     if (serve) {
-      app.on('certificate-error', (event: Electron.Event, _webContents: Electron.WebContents, _url: string, _error: string, _certificate: Electron.Certificate, callback: (isTrusted: boolean) => void) => {
+      app.on('certificate-error',
+        (
+          event: Electron.Event,
+          _webContents: Electron.WebContents,
+          _url: string, _error: string,
+          _certificate: Electron.Certificate,
+          callback: (isTrusted: boolean) => void
+        ) => {
         // On certificate error we disable default behaviour (stop loading the page)
         // and we then say "it is all fine - true" to the callback
         event.preventDefault();

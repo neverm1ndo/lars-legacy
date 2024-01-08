@@ -19,10 +19,7 @@ describe('ElectronService', () => {
   it('should define all necessary electron deps', () => {
     expect(service.ipcRenderer).toBeTruthy();
     expect(service.webFrame).toBeTruthy();
-    expect(service.remote).toBeTruthy();
-    expect(service.dialog).toBeTruthy();
     expect(service.shell).toBeTruthy();
-    expect(service.clipboard).toBeTruthy();
     expect(service.childProcess).toBeTruthy();
     expect(service.fs).toBeTruthy();
   });

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IsConfiguratorGuard } from './is-configurator.guard';
+import { ConfiguratorGuard } from './is-configurator.guard';
 
-describe('IsConfiguratorGuard', () => {
-  let guard: IsConfiguratorGuard;
+describe('ConfiguratorGuard', () => {
+  let guard: ConfiguratorGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(IsConfiguratorGuard);
+    guard = TestBed.inject(ConfiguratorGuard);
   });
 
   xit('should be created', () => {

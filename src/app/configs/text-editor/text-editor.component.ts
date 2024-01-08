@@ -11,6 +11,7 @@ import { ToastService } from '@lars/toast.service';
 import { ConfigsService } from '@lars/configs/configs.service';
 
 import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
+import { Editor } from 'codemirror';
 @Component({
   selector: 'text-editor',
   templateUrl: './text-editor.component.html',

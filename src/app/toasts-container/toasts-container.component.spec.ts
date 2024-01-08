@@ -24,6 +24,9 @@ describe('ToastsContainerComponent', () => {
     expect(component).toBeTruthy();
   });
   it('should return false if toast is not templated', () => {
-    expect(component.isTemplate('Toasty')).toBeFalsy();
+    expect(component.isTemplate({
+      type: 'warning',
+      body: 'Toasty!'
+    })).toBeFalsy();
   });
 });
