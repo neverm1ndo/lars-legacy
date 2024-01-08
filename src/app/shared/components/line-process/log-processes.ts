@@ -543,6 +543,11 @@ const Processes = {
       type: 'success',
       control: 'CnResSuccess'
     },
+    '<cn/response/android>': {
+      translate: 'CN не работает:Android',
+      type: 'warning',
+      control: 'сnResNotWorkForMobile'
+    },
     '<cn/response/not_found>': {
       translate: 'CN не найден',
       type: 'danger',
