@@ -47,7 +47,7 @@ export class NotificationsService {
              .pipe(
                 filter(() => !!JSON.parse(window.localStorage.getItem('alerts')).serverShutdown),
              ).subscribe((user: any) => {
-                this.spawnNotification('Сервер остановлен', `${user.name} остановил работу сервера`, user.user_avatar);
+                this.spawnNotification('Сервер остановлен', `${user.username} остановил работу сервера`, user.user_avatar);
              }),
       this._ws.getServerRebootNotification()
       .pipe(
