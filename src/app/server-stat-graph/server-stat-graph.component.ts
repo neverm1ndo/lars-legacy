@@ -46,7 +46,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       timeout: 100,
     }))),
     catchError((err) => err),
-    map((ping: PingResponse) => { console.log(ping); return ping.time !== 'unknown' ? ping.time : 10 })
+    map((ping: PingResponse) => ping.time !== 'unknown' ? ping.time : 900)
   );
 
   public fa: { [iconName: string]: IconDefinition } = {
