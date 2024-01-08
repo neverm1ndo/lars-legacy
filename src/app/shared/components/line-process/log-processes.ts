@@ -104,7 +104,7 @@ const Processes = {
       control: 'cmdPreerrNotF'
     },
     '<cmd/pre_error/player>': {
-      translate: '????',
+      translate: 'Невозможно применить команду',
       type: 'danger',
       control: 'cmdPreerrPlayer'
     },
@@ -194,12 +194,12 @@ const Processes = {
       control: 'rconLogTrue'
     },
     '<data/time_out/save>': {
-      translate: 'Сохраниение состояния',
+      translate: 'Сохраниение данных',
       type: 'info',
       control: 'toBackupSave'
     },
     '<data/time_out/load>': {
-      translate: 'Загрузка бэкапа состояния',
+      translate: 'Загрузка бэкапа данных',
       type: 'info',
       control: 'toBackupLoad'
     },
