@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { UserService } from '../user/user.service';
 import { faSignOutAlt, faComments, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,7 @@ interface LarsWindow {
   animations: [extrudeToRight],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TopperComponent implements OnInit {
+export class TopperComponent implements OnInit, OnDestroy {
 
   fa = {
     signout: faSignOutAlt,
@@ -27,8 +27,9 @@ export class TopperComponent implements OnInit {
     gamepad: faGamepad
   };
 
-  private _mainRoomSubscriptions: Subscription = new Subscription();
-  public $update: Subject<boolean> = new Subject();
+  public $update: Subject<null | true> = new Subject();
+
+  private subscriptions: Subscription = new Subscription();
 
   public window: LarsWindow = {
     close: () => {
@@ -46,6 +47,7 @@ export class TopperComponent implements OnInit {
   constructor(
     private _electron: ElectronService,
     private _userService: UserService,
+    private _ws: WebSocketService
   ) {}
 
   get isLoggedIn() {
@@ -69,6 +71,13 @@ export class TopperComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.subscriptions.add(
+      this._ws.getUpdateMessage().subscribe(() => { console.log('New update is ready!'); this.$update.next(true); })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
 }

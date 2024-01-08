@@ -1,14 +1,23 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { AppConfig } from '@lars/../environments/environment';
 import { ServerGameMode } from '@samp';
-import { Observable, interval, switchMap, from, map, tap } from 'rxjs';
+import { Observable, interval, switchMap, from, map, tap, Subscription, catchError, throwError } from 'rxjs';
 import { PingResponse } from 'ping';
 
 const PRIMARY: string = '#1271d6';
+const WARN: string = '#f5d442';
 const ERRORED: string = '#db2e42';
+
+enum ServerState {
+  ERROR,
+  STOPED,
+  REBOOTING,
+  LIVE,
+  LOADING
+}
 
 @Component({
   selector: 'server-stat-graph',
@@ -16,24 +25,28 @@ const ERRORED: string = '#db2e42';
   styleUrls: ['./server-stat-graph.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerStatGraphComponent implements OnInit {
+export class ServerStatGraphComponent implements OnInit, OnDestroy {
 
   constructor(
     private _electron: ElectronService,
     private _zone: NgZone,
   ) { }
 
+  @Input() status: ServerState;
+
   private _points: number[] = [];
-  private _color: string = PRIMARY;
-  public $stat: Observable<ServerGameMode> = interval(10000).pipe(
+  public $stat: Observable<ServerGameMode> = interval(5000).pipe(
     switchMap(() => from(this.getServerInfo()))
   );
+
+  private subscriptions = new Subscription();
 
   private $ping: Observable<number | unknown> = interval(5000).pipe(
     switchMap(() => from(this._electron.ipcRenderer.invoke('ping', 'svr.gta-liberty.ru', {
       timeout: 100,
     }))),
-    map((ping: PingResponse) => ping.time || 999)
+    catchError((err) => err),
+    map((ping: PingResponse) => { console.log(ping); return ping.time !== 'unknown' ? ping.time : 10 })
   );
 
   public fa: { [iconName: string]: IconDefinition } = {
@@ -49,52 +62,62 @@ export class ServerStatGraphComponent implements OnInit {
     return Math.max.apply(null, this._points);
   }
 
-  private _pingServer(): void {
-      this.$ping.subscribe({
+  private _pingServer(): Subscription {
+      return this.$ping.subscribe({
         next: (ping: number) => {
+          if (this.status == ServerState.REBOOTING || this.status == ServerState.STOPED) ping = 900;
           this._points.push(ping);
           this.drawGraphics();
         },
         error: () => {
-          this._color = ERRORED;
-          this._points.push(999);
+          this._points.push(900);
           this.drawGraphics();
         }
       });
   }
 
+  private _onInterval(value: number) {
+    const intervals = [
+      [512, 999],
+      [128, 512],
+      [64, 128],
+      [32, 64],
+      [0, 32]
+    ];
+
+    for(let [from, to] of intervals) {
+      if (from < value && value <= to) return to;
+    }
+    return 999;
+  }
+
   drawGraphics(): void {
     this._zone.runOutsideAngular(() => {
       const WHITE: string = '#afafaf';
-      const MAX_PLAYERS: number = 64;
+      const MAX_VALUE: number = 64;
       const ctx: CanvasRenderingContext2D = this.graphics.nativeElement.getContext('2d');
-      const height: number = MAX_PLAYERS;
+      const height: number = MAX_VALUE;
+      const width: number = 270;
       let offset: number = 0;
-      let top: number = 0;
-      let maxPoint: number = this._getMaxExistingPoint();
-
-      if (maxPoint <= MAX_PLAYERS) top = MAX_PLAYERS;
-      if (maxPoint <= 32) top = 32;
-      if (maxPoint <= 10) top = 12;
-
       /**
       * Draw graphics grid, max definition depends from max players
       **/
+      let peak: number = this._getMaxExistingPoint();
+      let top = this._onInterval(peak);
+
       const drawGrid = () => {
         const grid = new Path2D();
               ctx.strokeStyle = WHITE;
               ctx.lineWidth = 0.1;
         for (let i = 1; i < 4; i++) {
-            grid.moveTo(15, MAX_PLAYERS/4*i);
-            grid.lineTo(270, MAX_PLAYERS/4*i);
-            grid.closePath();
-            ctx.fillStyle = WHITE;
-            ctx.fillText(String(top/4*(4 - i)), 0, MAX_PLAYERS/4*i + 4);
-        }
-        for (let i = 1; i < 25; i++) { // FIXME
-            grid.moveTo(270/10*i, 0);
-            grid.lineTo(270/10*i, height);
-            grid.closePath();
+          const point = Math.ceil(MAX_VALUE/4*i);
+          grid.moveTo(15, point);
+          grid.lineTo(width, point);
+          grid.moveTo(width/4*i, 0);
+          grid.lineTo(width/4*i, height);
+          grid.closePath();
+          ctx.fillStyle = WHITE;
+          ctx.fillText(String(Math.ceil(top/4*(4 - i))), 0, point + 4);
         }
         ctx.stroke(grid);
       };
@@ -110,9 +133,22 @@ export class ServerStatGraphComponent implements OnInit {
         offset = 10*i;
         area.lineTo(20 + offset, height - this._points[i]*(height/top));
       }
-      ctx.strokeStyle = this._color;
+
+      let color = PRIMARY;
+      if (peak >= 64) color = WARN;
+      if (peak >= 128) color = ERRORED;
+
+      ctx.fillStyle = color;
+
+      if (this.status === ServerState.STOPED) {
+        
+        ctx.fillStyle = ERRORED;
+        ctx.fillText('SERVER IS DEAD', width/2 - 40, height/2 + 5);
+      }
+
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
       ctx.lineWidth = 3;
-      ctx.fillStyle = this._color;
       ctx.stroke(area);
       drawGrid();
     });
@@ -124,6 +160,10 @@ export class ServerStatGraphComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._pingServer();
+    this.subscriptions.add(this._pingServer());
+  }
+
+  ngOnDestroy(): void {
+     this.subscriptions.unsubscribe();
   }
 }

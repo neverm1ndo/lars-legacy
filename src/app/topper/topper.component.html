@@ -6,11 +6,11 @@
       </div>
     </div>
     <div *ngIf="isLoggedIn | async as user" class="d-flex flex-row">
-      <div [@extrudeRight] *ngIf="$update | async" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end btn-group top-btn" role="remote-group">
+      <div [@extrudeRight] *ngIf="$update | async" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end bg-success top-btn h-100" role="remote-group">
           <button
           (click)="reload()"
           type="button"
-          class="btn btn-topnative pl-2 pr-2 top-btn update"
+          class="btn btn-topnative pl-2 pr-2 top-btn update text-light"
           name="profile-button">
             <span><fa-icon [icon]="fa.update"></fa-icon></span>
           </button>
