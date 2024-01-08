@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IsCommonGuard } from './is-common.guard';
+import { CommonGuard } from './is-common.guard';
 
-describe('IsCommonGuard', () => {
-  let guard: IsCommonGuard;
+describe('CommonGuard', () => {
+  let guard: CommonGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(IsCommonGuard);
+    guard = TestBed.inject(CommonGuard);
   });
 
   xit('should be created', () => {

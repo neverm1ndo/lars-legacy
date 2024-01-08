@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IsDevGuard } from './is-dev.guard';
+import { DevGuard } from './is-dev.guard';
 
-describe('IsDevGuard', () => {
-  let guard: IsDevGuard;
+describe('DevGuard', () => {
+  let guard: DevGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(IsDevGuard);
+    guard = TestBed.inject(DevGuard);
   });
 
   xit('should be created', () => {

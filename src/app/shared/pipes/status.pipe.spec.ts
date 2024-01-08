@@ -5,12 +5,13 @@ describe('StatusPipe', () => {
     const pipe = new StatusPipe();
     expect(pipe).toBeTruthy();
   });
+
   it('should transform status into the readable form', () => {
     const pipe = new StatusPipe();
-    expect(pipe.transform('rebooting')).toBe('Перезагружается');
-    expect(pipe.transform('live')).toBe('Запущен');
-    expect(pipe.transform('stoped')).toBe('Остановлен');
-    expect(pipe.transform('loading')).toBe('Загружается');
-    expect(pipe.transform('error')).toBe('Ошибка сервера');
+    expect(pipe.transform(2)).toBe('Перезагружается');
+    expect(pipe.transform(3)).toBe('Запущен');
+    expect(pipe.transform(1)).toBe('Остановлен');
+    expect(pipe.transform(4)).toBe('Загружается');
+    expect(pipe.transform(0)).toBe('Ошибка сервера');
   });
 });

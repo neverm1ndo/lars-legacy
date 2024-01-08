@@ -7,6 +7,9 @@ import { ServerGameMode } from '@samp';
 import { Observable, interval, switchMap, from, map, tap } from 'rxjs';
 import { PingResponse } from 'ping';
 
+const PRIMARY: string = '#1271d6';
+const ERRORED: string = '#db2e42';
+
 @Component({
   selector: 'server-stat-graph',
   templateUrl: './server-stat-graph.component.html',
@@ -21,6 +24,7 @@ export class ServerStatGraphComponent implements OnInit {
   ) { }
 
   private _points: number[] = [];
+  private _color: string = PRIMARY;
   public $stat: Observable<ServerGameMode> = interval(10000).pipe(
     switchMap(() => from(this.getServerInfo()))
   );
@@ -50,6 +54,11 @@ export class ServerStatGraphComponent implements OnInit {
         next: (ping: number) => {
           this._points.push(ping);
           this.drawGraphics();
+        },
+        error: () => {
+          this._color = ERRORED;
+          this._points.push(999);
+          this.drawGraphics();
         }
       });
   }
@@ -57,7 +66,6 @@ export class ServerStatGraphComponent implements OnInit {
   drawGraphics(): void {
     this._zone.runOutsideAngular(() => {
       const WHITE: string = '#afafaf';
-      const PRIMARY: string = '#1271d6';
       const MAX_PLAYERS: number = 64;
       const ctx: CanvasRenderingContext2D = this.graphics.nativeElement.getContext('2d');
       const height: number = MAX_PLAYERS;
@@ -102,9 +110,9 @@ export class ServerStatGraphComponent implements OnInit {
         offset = 10*i;
         area.lineTo(20 + offset, height - this._points[i]*(height/top));
       }
-      ctx.strokeStyle = PRIMARY;
+      ctx.strokeStyle = this._color;
       ctx.lineWidth = 3;
-      ctx.fillStyle = PRIMARY;
+      ctx.fillStyle = this._color;
       ctx.stroke(area);
       drawGrid();
     });

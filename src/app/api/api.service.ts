@@ -16,7 +16,7 @@ import { BanRule } from '../interfaces/bans.interfaces';
 })
 export class ApiService {
  
-  protected URL = (() => {
+  public readonly URL = (() => {
     const main: string = AppConfig.api.main;
     const routes = {
       LOGS: {

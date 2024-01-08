@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IsMapperGuard } from './is-mapper.guard';
+import { MapperGuard } from './is-mapper.guard';
 
-describe('IsMapperGuard', () => {
-  let guard: IsMapperGuard;
+describe('MapperGuard', () => {
+  let guard: MapperGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(IsMapperGuard);
+    guard = TestBed.inject(MapperGuard);
   });
 
   xit('should be created', () => {

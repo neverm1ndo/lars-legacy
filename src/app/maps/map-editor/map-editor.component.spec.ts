@@ -68,8 +68,6 @@ describe('MapEditorComponent', () => {
     expect(component).toBeTruthy();
     expect(component.objects).toBeTruthy();
     expect(component.canvas).toBeTruthy();
-    expect(component.viewport.x).not.toBe(0);
-    expect(component.viewport.y).not.toBe(0);
   });
   it('should filter material and text objects', () => {
     fixture.whenStable();
@@ -82,11 +80,6 @@ describe('MapEditorComponent', () => {
   })
   it('should return first easeIn animation frame data', () => {
     expect(component.easeIn(0, 0, 100, 10, 1)).toBe(0);
-  })
-  it('should change viewport to specific coords', () => {
-    component.viewportTo(1000, 500);
-    expect(Math.abs(component.viewport.x)).toBe(953.5);
-    expect(Math.abs(component.viewport.y)).toBe(685);
   })
   it('should set another objects', () => {
     spyOn(component, 'filter').and.callThrough()

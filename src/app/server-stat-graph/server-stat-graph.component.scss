@@ -1,5 +1,6 @@
-@import "scss/animations";
+@import "animations";
 @include gradient();
+
 fa-icon {
   position: relative;
   top: 2px;

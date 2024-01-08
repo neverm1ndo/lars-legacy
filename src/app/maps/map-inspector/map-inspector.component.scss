@@ -10,7 +10,7 @@
     height: $tab-head-height;
     width: 100%;
     background-color: $filetree;
-    padding: $tab-gutter/2 $tab-gutter $tab-gutter/2 $tab-gutter;
+    padding: calc($tab-gutter/2) $tab-gutter calc($tab-gutter/2) $tab-gutter;
     .text {
       font-size: 13px;
       line-height: $tab-head-height;
