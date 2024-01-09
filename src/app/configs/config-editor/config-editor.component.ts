@@ -11,6 +11,7 @@ import { ElectronService } from '@lars/core/services';
 import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
 import { HistoryListEnum } from '@lars/enums';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-config-editor',
@@ -48,10 +49,12 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _electron: ElectronService,
     private _ngZone: NgZone,
     private _configs: ConfigsService,
+    private translateService: TranslateService
   ) {
     this.directories$ = this._configs.reloader$.pipe(
       switchMap(() => this._api.getConfigsDir())
     );
+    this.translateService.use('ru');
   }
 
   public saveFile() {
