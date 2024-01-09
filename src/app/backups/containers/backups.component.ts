@@ -13,10 +13,10 @@ import { BackupsGraphDirective } from '../components/backups-graph/backups-graph
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-backups',
-  templateUrl: './backups.component.html',
-  styleUrls: ['./backups.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'app-backups',
+	templateUrl: './backups.component.html',
+	styleUrls: ['./backups.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('graph') private _graph: BackupsGraphDirective;
@@ -28,8 +28,8 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
 											debounceTime(500),
 											switchMap((backup: Backup) => this._getBackupFile(backup.hash)
 																				.pipe(map((text: string) => {
-																				backup.file.text = text;
-																				return backup;
+																					backup.file.text = text;
+																					return backup;
 																				})))
 											));
 
@@ -38,31 +38,31 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
 	public paneStates: number[] = [];
 
 	public fa = {
-	sign: faFileSignature,
-	trash: faTrash,
-	exCircle: faExclamationCircle,
-	box: faBoxOpen,
-	hdd: faHdd,
-	toolbox: faToolbox,
+		sign: faFileSignature,
+		trash: faTrash,
+		exCircle: faExclamationCircle,
+		box: faBoxOpen,
+		hdd: faHdd,
+		toolbox: faToolbox,
 	};
 
 	public codeMirrorSettings = {
-	lineNumbers: true,
-	theme: 'dracula',
-	lineWrapping: true,
-	readOnly: true
+		lineNumbers: true,
+		theme: 'dracula',
+		lineWrapping: true,
+		readOnly: true
 	};
 
 	public $backupsSize: Subject<number> = new Subject();
 
 	constructor(
-	private _api: ApiService,
-	private _toast: ToastService,
-	@Optional() private _electron: ElectronService,
-	private translateService: TranslateService
+		private _api: ApiService,
+		private _toast: ToastService,
+		@Optional() private _electron: ElectronService,
+		private translateService: TranslateService
 	) {
-	this.paneStates = this._setPanesState();
-	this.translateService.use('ru');
+		this.paneStates = this._setPanesState();
+		this.translateService.use('ru');
 	}
 
 
