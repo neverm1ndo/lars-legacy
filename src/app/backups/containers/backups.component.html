@@ -2,7 +2,7 @@
   <div class="container-fluid head">
     <div class="row">
       <div class="col-4">
-        <h6><fa-icon [icon]="fa.box"></fa-icon>Резервные копии</h6>
+        <h6><fa-icon [icon]="fa.box"></fa-icon>{{ 'Backups.Title' | translate }}</h6>
       </div>
       <div class="col-8 d-flex align-items-start justify-content-end">
         <span class="align-self-center">
@@ -31,7 +31,7 @@
                   (click)="showBackupView(backup)">
                 </app-backup-item>
                 <div *ngIf="backups.length === 0" class="d-flex flex-fill justify-content-center align-items-center">
-                  <p class="text-muted">Нет живых бэкапов</p>
+                  <p class="text-muted">{{ 'Backups.List.Empty' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -48,7 +48,16 @@
           <div class="d-flex flex-row justify-content-between viewer-head align-items-center">
             <div class="d-flex flex-row align-items-center w-100">
               <div class="d-flex align-items-center">
-                <button (click)="closeView()" class="d-flex btn btn-dark viewer-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+                <button (click)="closeView()" class="d-flex btn btn-dark viewer-hide" type="button" name="button">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30">
+                    <defs>
+                      <path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path>
+                    </defs>
+                    <g>
+                      <use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use>
+                    </g>
+                  </svg>
+                </button>
                 <div class="d-flex viewer-head-elapse flex-column">
                   <span>{{ current.file.name }}</span>
                   <span class="d-flex elapse">
@@ -61,8 +70,19 @@
                   <small class="elapse">{{ current.file.path }}</small>
                 </span>
                 <div class="p-1 d-flex btn-group align-items-center justify-content-between">
-                  <button [disabled]="!current.file.text && !current.file.binary" (click)="restoreBackup()" class="btn btn-success" type="button" name="button"><fa-icon class="me-2" [icon]="fa.toolbox"></fa-icon>Установить</button>
-                  <button [disabled]="!current.file.text && !current.file.binary" (click)="removeBackup()" class="btn btn-danger ml-3" type="button" name="button"><fa-icon [icon]="fa.trash"></fa-icon></button>
+                  <button 
+                    [disabled]="!current.file.text && !current.file.binary" 
+                    (click)="restoreBackup()" class="btn btn-success"
+                    type="button" name="button">
+                      <fa-icon class="me-2" [icon]="fa.toolbox"></fa-icon>{{ 'Backups.File.Install' | translate }}
+                  </button>
+                  <button
+                    [disabled]="!current.file.text && !current.file.binary"
+                    (click)="removeBackup()"
+                    class="btn btn-danger ml-3"
+                    type="button" name="button">
+                      <fa-icon [icon]="fa.trash"></fa-icon>
+                  </button>
                 </div>
               </div>
             </div>
@@ -71,7 +91,7 @@
             <ng-container *ngIf="current.file.binary">
               <div class="d-flex flex-fill justify-content-center align-items-center flex-column">
                 <h3 class="text-muted"><fa-icon [icon]="fa.sign"></fa-icon></h3>
-                <span class="text-muted">Binary File</span>
+                <span class="text-muted">{{ 'Backups.File.Binary' }}</span>
               </div>
             </ng-container>
             <ngx-codemirror
