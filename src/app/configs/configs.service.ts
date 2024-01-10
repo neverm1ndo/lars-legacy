@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { ApiService } from '@lars/api/api.service';
 import { ToastService } from '@lars/toast.service';
@@ -13,17 +13,15 @@ import { faTrash, faCopy, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { basename, dirname } from 'path';
 import { UserService } from '@lars/user/user.service';
 
-@Injectable({
-  providedIn: 'any'
-})
+@Injectable()
 export class ConfigsService {
 
   constructor(
-    private _electron: ElectronService,
+    @Optional() private _electron: ElectronService,
     private _api: ApiService,
     private _toast: ToastService,
     private _router: Router,
-    private _user: UserService,
+    private _user: UserService
   ) { }
 
   public error: Subject<Error | null> = new Subject();

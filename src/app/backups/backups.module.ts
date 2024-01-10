@@ -15,6 +15,13 @@ import { BackupItemComponent } from './components/backup-item/backup-item.compon
 import { BackupsGraphDirective } from './components/backups-graph/backups-graph.directive';
 import { BackupsGraphItemDirective } from './components/backups-graph/backups-graph-item.directive';
 import { BackupsService } from './domain/inftastructure/backups.service';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/backups/', '.json');
+}
 
 @NgModule({
   declarations: [BackupsComponent, BackupItemComponent, BackupsGraphDirective, BackupsGraphItemDirective],
@@ -29,6 +36,14 @@ import { BackupsService } from './domain/inftastructure/backups.service';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule.forChild({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: (createTranslateLoader),
+          deps: [HttpClient]
+      },
+      isolate: true
+    })
   ],
   providers: [BackupsService]
 })

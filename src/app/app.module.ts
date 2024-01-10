@@ -27,6 +27,15 @@ import { DevServerControlsModule } from './dev-server-controls/dev-server-contro
 import { ToastService } from './toast.service';
 import { ToastsContainer } from './toasts-container/toasts-container.component';
 
+// NG Translate
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+import { HttpClient } from '@angular/common/http';
+
+// AoT requires an exported function for factories
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/app', '.json');
+
 @NgModule({
   declarations: [AppComponent, TopperComponent, ToastsContainer],
   imports: [
@@ -50,7 +59,14 @@ import { ToastsContainer } from './toasts-container/toasts-container.component';
     }),
     RouterModule,
     StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: AppConfig.production })
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: AppConfig.production }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [ToastService],
   bootstrap: [AppComponent]
