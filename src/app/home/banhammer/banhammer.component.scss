@@ -96,7 +96,7 @@
         background-color: rgba(0, 0, 0, 0.1);
       }
       .serial {
-        &.as, &.ss, &.cn {
+        &.as, &.ss, &.cn, &.ip {
           text-align: start;
           &:before {
             text-align: center;
