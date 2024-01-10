@@ -69,7 +69,7 @@
                     class="text-center"
                     [class.text-muted]="ban.banned_username"
                   >
-                    <small>aka {{ ban.user_nickname }}</small>
+                    <small><span *ngIf="ban.banned_username">aka&nbsp;</span>{{ ban.user_nickname }}</small>
                   </div>
                 </td>
                 <td>
