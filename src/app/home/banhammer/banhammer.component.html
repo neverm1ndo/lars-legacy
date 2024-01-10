@@ -59,10 +59,18 @@
                 </td>
                 <td>{{ ban.rule }}</td>
                 <td>
-                  <kbd *ngIf="ban.user_id">{{ ban.user_id }}</kbd>
-                  <span>
-                    {{ ban.banned_username || ban.user_nickname }}
-                  </span>
+                  <div *ngIf="ban.user_id" class="text-center">
+                    <kbd>{{ ban.user_id }}</kbd>
+                    <span>
+                      {{ ban.banned_username }}
+                    </span>
+                  </div>
+                  <div 
+                    class="text-center"
+                    [class.text-muted]="ban.banned_username"
+                  >
+                    <small>aka {{ ban.user_nickname }}</small>
+                  </div>
                 </td>
                 <td>
                   <img class="avatar" [src]="ban.admin_avatar" [alt]="ban.admin_username">
