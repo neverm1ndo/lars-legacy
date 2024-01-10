@@ -54,7 +54,7 @@
                 <td>
                   <div data-name="as" class="serial as" *ngIf="ban.serial_as">{{ ban.serial_as }}</div>
                   <div data-name="ss" class="serial ss" *ngIf="ban.serial_ss">{{ ban.serial_ss }}</div>
-                  <div data-name="cn" class="serial cn" *ngIf="ban.serial_cn && ban.ban_type === 11111">{{ ban.serial_cn }}</div>
+                  <div data-name="cn" class="serial cn" *ngIf="ban.serial_cn !== 'NaN'">{{ ban.serial_cn }}</div>
                   <div data-name="ip" class="serial ip" *ngIf="ban.ip">{{ ban.ip }}</div>
                 </td>
                 <td>{{ ban.rule }}</td>
@@ -67,9 +67,10 @@
                   </div>
                   <div 
                     class="text-center"
-                    [class.text-muted]="ban.banned_username"
+                    [class.text-muted.text-small]="ban.banned_username"
                   >
-                    <small><span *ngIf="ban.banned_username">aka&nbsp;</span>{{ ban.user_nickname }}</small>
+                    <span *ngIf="ban.banned_username">aka&nbsp;</span>
+                    {{ ban.user_nickname }}
                   </div>
                 </td>
                 <td>
