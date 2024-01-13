@@ -52,5 +52,11 @@
     "target": [
       "nsis"
     ]
+  },
+  "linux": {
+    "icon": "dist/lars/browser/assets/icons/favicon.ico",
+    "target": [
+      "deb"
+    ]
   }
 }
