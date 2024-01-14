@@ -1,6 +1,6 @@
 {
   "productName": "LARS",
-  "copyright": "MIT © 2023 ${author}",
+  "copyright": "MIT © 2024 ${author}",
   "appId": "ru.nmnd.lars",
   "publish": {
     "provider": "github",
@@ -54,9 +54,14 @@
     ]
   },
   "linux": {
+    "synopsis": "Liberty Admin Remote Service",
+    "description": "GTA-Liberty admins control planel",
+    "maintainer": "neverm1ndo",
+    "vendor": "gta-liberty.ru",
+    "category": "Network",
     "icon": "dist/lars/browser/assets/icons/favicon.ico",
     "target": [
-      "deb"
+      "tar.gz"
     ]
   }
 }
