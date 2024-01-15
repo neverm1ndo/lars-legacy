@@ -49,9 +49,7 @@
   },
   "win": {
     "icon": "dist/lars/browser/assets/icons/favicon.ico",
-    "target": [
-      "nsis"
-    ]
+    "target": ["nsis"]
   },
   "linux": {
     "synopsis": "Liberty Admin Remote Service",
@@ -60,8 +58,6 @@
     "vendor": "gta-liberty.ru",
     "category": "Network",
     "icon": "dist/lars/browser/assets/icons/favicon.ico",
-    "target": [
-      "tar.gz"
-    ]
+    "target": ["tar.gz"]
   }
 }

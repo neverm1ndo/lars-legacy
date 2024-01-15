@@ -1,37 +1,63 @@
 <div class="col-12 d-flex align-items-center h-100 l-bg">
   <div class="col d-flex justify-content-center w-100">
     <div class="d-flex align-self-center justify-content-center col-10 auth">
-      <form [formGroup]="loginForm" class="pt-3 pb-3 text-center col-10 col-sm-8 col-md-8 col-lg-5" (ngSubmit)="logIn()">
-        <img class="logo mb-2" src="lars://assets/icons/favicon.png" alt="LARS-LOGO">
+      <form
+        [formGroup]="loginForm"
+        class="pt-3 pb-3 text-center col-10 col-sm-8 col-md-8 col-lg-5"
+        (ngSubmit)="logIn()"
+      >
+        <img
+          class="logo mb-2"
+          src="lars://assets/icons/favicon.png"
+          alt="LARS-LOGO"
+        />
         <h2>LARS</h2>
         <h6 class="text-muted">Liberty Admin Remote Service</h6>
         <div class="form-group">
-          <input type="email"
-                 formControlName="email"
-                 placeholder="E-Mail"
-                 class="form-control"
-                 aria-describedby="emailHelp"
-                 required>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="E-Mail"
+            class="form-control"
+            aria-describedby="emailHelp"
+            required
+          />
         </div>
         <div class="form-group mt-2">
-          <input type="password"
-                 formControlName="password"
-                 placeholder="Пароль"
-                 class="form-control"
-                 required>
-          <small *ngIf="!error" id="emailHelp" class="form-text text-muted">Используйте свои данные админа для входа</small>
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Пароль"
+            class="form-control"
+            required
+          />
+          <small *ngIf="!error" id="emailHelp" class="form-text text-muted"
+            >Используйте свои данные админа для входа</small
+          >
           <small *ngIf="error" id="wrong" class="form-text text-danger">
-            {{ error.status }} {{ error.statusText }}<br>
+            {{ error.status }} {{ error.statusText }}<br />
             {{ error.error.message }}
           </small>
         </div>
-        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-dark w-100 mt-1 mb-2">
+        <button
+          type="submit"
+          [disabled]="!loginForm.valid"
+          class="btn btn-dark w-100 mt-1 mb-2"
+        >
           <span *ngIf="!loading; else loader">Войти</span>
           <ng-template #loader>
-              <!-- <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg> -->
-              <svg class="spinner" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
-              </svg>
+            <!-- <svg class="spinner-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300" width="300" height="300"><defs><path d="M13.63 27.94L177.5 27.94L177.5 101.07L96.32 101.07L96.32 277.94L13.63 277.94L13.63 27.94Z" id="bh8Xu6F6b"></path><path d="M197.24 204.81L197.24 27.94L279.93 27.94L279.93 277.94L116.05 277.94L116.05 204.81L197.24 204.81Z" id="a3qVZuQh"></path></defs><g><g><g><use xlink:href="#bh8Xu6F6b" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3qVZuQh" opacity="1" fill-opacity="1"></use></g></g></g></svg> -->
+            <svg class="spinner" viewBox="25 25 50 50">
+              <circle
+                class="path"
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                stroke-width="4"
+                stroke-miterlimit="10"
+              />
+            </svg>
           </ng-template>
         </button>
         <small class="text-muted opacity-50"><u>gta-liberty.ru</u></small>

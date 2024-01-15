@@ -9,8 +9,15 @@ fa-icon {
   height: 13px;
   border-radius: 3px;
   margin-right: 0.5rem;
-  background: rgb(255,255,255);
-  background: linear-gradient(97deg, rgba(255,255,255,0.165) 0%, rgba(91,91,91,0.706) 25%, rgba(141,141,141,0) 50%, rgba(91,91,91,0.706) 75%, rgba(255,255,255,0.165) 100%);;
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    97deg,
+    rgba(255, 255, 255, 0.165) 0%,
+    rgba(91, 91, 91, 0.706) 25%,
+    rgba(141, 141, 141, 0) 50%,
+    rgba(91, 91, 91, 0.706) 75%,
+    rgba(255, 255, 255, 0.165) 100%
+  );
   background-size: 400% 400%;
   color: transparent;
   animation: gradient 1s ease infinite;

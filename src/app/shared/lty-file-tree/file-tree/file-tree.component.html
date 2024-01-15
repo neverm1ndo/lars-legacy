@@ -1,11 +1,35 @@
 <div class="d-flex align-items-start flex-column h-100">
   <div class="d-flex top w-100">
-    <div class="col-12 d-flex text-center justify-content-between align-items-center">
+    <div
+      class="col-12 d-flex text-center justify-content-between align-items-center"
+    >
       <span class="me-3">ПРОВОДНИК</span>
       <div class="d-flex flex-row">
-        <button title="Обновить" class="btn btn-dark sync" (click)="sync()" name="sync"><fa-icon [icon]="fa.sync"></fa-icon></button>
-        <button title="Создать новую папку" class="btn btn-dark sync" (click)="open(addNewDirModal)" name="mkdir"><fa-icon [icon]="fa.folderPlus"></fa-icon></button>
-        <button *ngIf="canCreate" title="Создать новый файл" class="btn btn-dark sync" (click)="open(touchFileModal)" name="touch"><fa-icon [icon]="fa.filePlus"></fa-icon></button>
+        <button
+          title="Обновить"
+          class="btn btn-dark sync"
+          (click)="sync()"
+          name="sync"
+        >
+          <fa-icon [icon]="fa.sync"></fa-icon>
+        </button>
+        <button
+          title="Создать новую папку"
+          class="btn btn-dark sync"
+          (click)="open(addNewDirModal)"
+          name="mkdir"
+        >
+          <fa-icon [icon]="fa.folderPlus"></fa-icon>
+        </button>
+        <button
+          *ngIf="canCreate"
+          title="Создать новый файл"
+          class="btn btn-dark sync"
+          (click)="open(touchFileModal)"
+          name="touch"
+        >
+          <fa-icon [icon]="fa.filePlus"></fa-icon>
+        </button>
       </div>
     </div>
   </div>
@@ -13,17 +37,20 @@
     <div *ngIf="node; else loader" class="text-left w-100">
       <file-tree-items
         (rmdir)="rmDir($event)"
-        (mvdir)="mvDirEventHandle($event); open(moveModal);"
+        (mvdir)="mvDirEventHandle($event); open(moveModal)"
         (rm)="rmFile($event)"
         [isRoot]="true"
         [child-nodes]="node"
         (uploadFileList)="upload($event)"
-        [expanded]="true">
+        [expanded]="true"
+      >
       </file-tree-items>
     </div>
     <ng-template #loader>
       <div class="d-flex h-100 flex-fill">
-        <div class="loader w-100 loader-items d-flex align-self-center justify-content-center">
+        <div
+          class="loader w-100 loader-items d-flex align-self-center justify-content-center"
+        >
           <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
         </div>
       </div>
@@ -32,15 +59,30 @@
 </div>
 <ng-template #addNewDirModal let-modal>
   <div class="modal-header">
-    <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория</h5>
-    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+    <h5>
+      <fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Новая директория
+    </h5>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      aria-label="close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
   </div>
   <div class="modal-body sentinel">
-    <form #modalForm [formGroup]="addNewDir" (ngSubmit)="mkDir()" class="d-flex flex-fill flex-row justify-content-center align-items-center">
+    <form
+      #modalForm
+      [formGroup]="addNewDir"
+      (ngSubmit)="mkDir()"
+      class="d-flex flex-fill flex-row justify-content-center align-items-center"
+    >
       <div class="d-flex flex-column flex-fill">
         <div class="form-group">
-          <label class="form-label" for="newDirInput"><small>Путь директории от корня дерева</small></label>
-          <input type="text"
+          <label class="form-label" for="newDirInput"
+            ><small>Путь директории от корня дерева</small></label
+          >
+          <input
+            type="text"
             ngbAutofocus
             placeholder="Путь директории от корня дерева"
             class="form-control"
@@ -48,7 +90,8 @@
             id="newDirInput"
             aria-describedby="nickname"
             formControlName="path"
-            required>
+            required
+          />
         </div>
       </div>
     </form>
@@ -56,15 +99,29 @@
 </ng-template>
 <ng-template #moveModal let-modal>
   <div class="modal-header">
-    <h5><fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать</h5>
-    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+    <h5>
+      <fa-icon class="mr-3" [icon]="fa.folderPlus"></fa-icon> Переименовать
+    </h5>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      aria-label="close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
   </div>
   <div class="modal-body sentinel">
-    <form [formGroup]="mvDirGroup" (ngSubmit)="mvDir()" class="d-flex flex-row justify-content-center align-items-center">
+    <form
+      [formGroup]="mvDirGroup"
+      (ngSubmit)="mvDir()"
+      class="d-flex flex-row justify-content-center align-items-center"
+    >
       <div class="d-flex flex-column flex-fill">
         <div class="form-group">
-          <label class="form-label" for="mvDirInput"><small>Путь от корня дерева</small></label>
-          <input type="text"
+          <label class="form-label" for="mvDirInput"
+            ><small>Путь от корня дерева</small></label
+          >
+          <input
+            type="text"
             ngbAutofocus
             placeholder="Новый путь от корня дерева"
             class="form-control"
@@ -72,7 +129,8 @@
             id="mvDirInput"
             aria-describedby="nickname"
             formControlName="dest"
-            required>
+            required
+          />
         </div>
       </div>
     </form>
@@ -80,15 +138,29 @@
 </ng-template>
 <ng-template #touchFileModal let-modal>
   <div class="modal-header">
-    <h5><fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл</h5>
-    <button type="button" class="btn-close btn-close-white" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+    <h5>
+      <fa-icon class="mr-3" [icon]="fa.filePlus"></fa-icon> Создать новый файл
+    </h5>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      aria-label="close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
   </div>
   <div class="modal-body sentinel">
-    <form [formGroup]="addNewFile" (ngSubmit)="touchFile()" class="d-flex flex-row justify-content-center align-items-center">
+    <form
+      [formGroup]="addNewFile"
+      (ngSubmit)="touchFile()"
+      class="d-flex flex-row justify-content-center align-items-center"
+    >
       <div class="d-flex flex-column flex-fill">
         <div class="form-group">
-          <label class="form-label" for="touchInput"><small>Путь файла от корня дерева</small></label>
-          <input type="text"
+          <label class="form-label" for="touchInput"
+            ><small>Путь файла от корня дерева</small></label
+          >
+          <input
+            type="text"
             ngbAutofocus
             placeholder="/configs/config.conf"
             class="form-control"
@@ -96,7 +168,8 @@
             id="touchInput"
             aria-describedby="nickname"
             formControlName="path"
-            required>
+            required
+          />
         </div>
       </div>
     </form>

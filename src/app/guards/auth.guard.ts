@@ -10,12 +10,12 @@ import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/user.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
   constructor(
     private _user: UserService,
-    private _router: Router
+    private _router: Router,
   ) {}
   canActivate(
     _route: ActivatedRouteSnapshot,
@@ -25,8 +25,8 @@ export class AuthGuard implements CanActivate {
 
     this._router.navigate(['/login'], {
       queryParams: {
-        return: state.url
-      }
+        return: state.url,
+      },
     });
     return false;
   }

@@ -1,13 +1,12 @@
-@import 'colors';
-@import 'badges';
+@import "colors";
+@import "badges";
 
-
-$black: #2D3137;
-$blue: #3785BC;
-$green: #329E78;
-$grey: #D6D6D6;
-$red: #DD3C3A;
-$white: #FFFFFF;
+$black: #2d3137;
+$blue: #3785bc;
+$green: #329e78;
+$grey: #d6d6d6;
+$red: #dd3c3a;
+$white: #ffffff;
 $dark: #303030;
 
 $border-radius: 3px;
@@ -17,11 +16,11 @@ $border-radius: 3px;
   padding-left: 0.75rem;
   position: relative;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
-  input[type="checkbox"] {  
+  input[type="checkbox"] {
     position: absolute;
     opacity: 0;
 
@@ -31,10 +30,11 @@ $border-radius: 3px;
 
     &:checked ~ span {
       color: $white;
-      background: $color url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+) 50% 40% no-repeat;
+      background: $color
+        url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+)
+        50% 40% no-repeat;
       border: 2px solid $color;
     }
-    
   }
 
   span {
@@ -42,38 +42,37 @@ $border-radius: 3px;
     position: absolute;
     left: 0;
     top: 4px;
-    width:  1rem; 
+    width: 1rem;
     height: 1rem;
     background-color: $topper;
-    border: 2px solid  $filetree;
+    border: 2px solid $filetree;
     pointer-events: none;
     -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-  }  
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 :host {
-  
   padding-top: 10px;
-  
-  label.checkbox {  
+
+  label.checkbox {
     @include checkbox($green);
-    
+
     &.blue {
       @include checkbox($blue);
     }
-  
+
     &.red {
       @include checkbox($red);
     }
-    
+
     &.dark {
       @include checkbox($dark);
     }
   }
-  
+
   .separator {
     margin: 20px 0 20px 0;
   }
@@ -82,7 +81,7 @@ $border-radius: 3px;
       font-size: 14px;
     }
   }
-  
+
   i {
     width: 10px;
     height: 10px;
@@ -100,7 +99,8 @@ $border-radius: 3px;
     font-size: 14px;
     line-height: initial;
   }
-  h6, h5 {
+  h6,
+  h5 {
     margin-bottom: 0em;
     font-weight: 700;
   }

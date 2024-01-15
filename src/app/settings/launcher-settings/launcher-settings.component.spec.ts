@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { LauncherSettingsComponent } from './launcher-settings.component';
+import { LauncherSettingsComponent } from "./launcher-settings.component";
 
-describe('LauncherSettingsComponent', () => {
+describe("LauncherSettingsComponent", () => {
   let component: LauncherSettingsComponent;
   let fixture: ComponentFixture<LauncherSettingsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LauncherSettingsComponent ]
-    })
-    .compileComponents();
+      declarations: [LauncherSettingsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('LauncherSettingsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

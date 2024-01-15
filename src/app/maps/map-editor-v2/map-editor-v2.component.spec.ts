@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { MapEditorV2Component } from './map-editor-v2.component';
+import { MapEditorV2Component } from "./map-editor-v2.component";
 
-describe('MapEditorV2Component', () => {
+describe("MapEditorV2Component", () => {
   let component: MapEditorV2Component;
   let fixture: ComponentFixture<MapEditorV2Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MapEditorV2Component ]
-    })
-    .compileComponents();
+      declarations: [MapEditorV2Component],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MapEditorV2Component', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

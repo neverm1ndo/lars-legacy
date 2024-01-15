@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { MapsComponent } from './maps.component';
+import { MapsComponent } from "./maps.component";
 
-describe('MapsComponent', () => {
+describe("MapsComponent", () => {
   let component: MapsComponent;
   let fixture: ComponentFixture<MapsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapsComponent ]
-    })
-    .compileComponents();
+      declarations: [MapsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MapsComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

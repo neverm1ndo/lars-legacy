@@ -11,7 +11,7 @@ const { CFR, Dev } = Workgroup;
 const ALLOWED_GROUPS = [CFR, Dev];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ConfiguratorGuard implements CanActivate {
   constructor(private user: UserService) {}

@@ -1,5 +1,5 @@
-@import 'colors';
-@import 'animations';
+@import "colors";
+@import "animations";
 :host {
   height: 100%;
   .textarea {
@@ -13,7 +13,8 @@
     width: 100%;
     height: 100%;
   }
-  .supertextarea, textarea {
+  .supertextarea,
+  textarea {
     padding-right: 1rem;
     width: 100%;
     // height: 100%;
@@ -25,7 +26,8 @@
     font-family: monospace;
     font-size: 14px;
     caret-color: $text-secondary;
-    &:active, &:focus {
+    &:active,
+    &:focus {
       outline: none;
     }
   }

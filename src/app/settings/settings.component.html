@@ -3,17 +3,54 @@
     <div class="settings-sid">
       <nav class="settings-sid-side">
         <div class="settings-sid-side-navs">
-          <button routerLink="./general" routerLinkActive="active" type="button" class="btn btn-dark text-start" name="button">Общие</button>
+          <button
+            routerLink="./general"
+            routerLinkActive="active"
+            type="button"
+            class="btn btn-dark text-start"
+            name="button"
+          >
+            Общие
+          </button>
           <div class="separator"></div>
           <div class="settings-sid-side-article text-muted">Раздел логов</div>
-          <button routerLink="./filter" routerLinkActive="active" type="button" class="btn btn-dark text-start" name="button">Фильтр строк</button>
+          <button
+            routerLink="./filter"
+            routerLinkActive="active"
+            type="button"
+            class="btn btn-dark text-start"
+            name="button"
+          >
+            Фильтр строк
+          </button>
           <div class="separator"></div>
-          <button routerLink="./alerts" routerLinkActive="active" type="button" class="btn btn-dark text-start" name="button">Оповещения</button>
-          <button routerLink="./launcher" routerLinkActive="active" type="button" class="btn btn-dark text-start" name="button">Лаунчер</button>
+          <button
+            routerLink="./alerts"
+            routerLinkActive="active"
+            type="button"
+            class="btn btn-dark text-start"
+            name="button"
+          >
+            Оповещения
+          </button>
+          <button
+            routerLink="./launcher"
+            routerLinkActive="active"
+            type="button"
+            class="btn btn-dark text-start"
+            name="button"
+          >
+            Лаунчер
+          </button>
           <div class="separator">
             <div class="d-flex flex-column settings-sid-cred">
               <div>
-                <span class="text-muted"><img class="logo-img no-select" src="lars://assets/icons/favicon.ico"/>LARS {{ $version | async }}</span>
+                <span class="text-muted"
+                  ><img
+                    class="logo-img no-select"
+                    src="lars://assets/icons/favicon.ico"
+                  />LARS {{ $version | async }}</span
+                >
               </div>
               <div>
                 <span class="text-muted">gta-liberty.ru</span>
@@ -34,5 +71,3 @@
     </div>
   </div>
 </div>
-
-

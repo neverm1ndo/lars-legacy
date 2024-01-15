@@ -1,25 +1,75 @@
 <div class="d-flex flex-column inspector h-100">
-  <div class="d-flex map-inspector-top justify-content-between align-items-center">
-    <div class="d-flex text"><fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Инспектор</div>
-    <button class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
+  <div
+    class="d-flex map-inspector-top justify-content-between align-items-center"
+  >
+    <div class="d-flex text">
+      <fa-icon class="mr-2" [icon]="fa.sign"></fa-icon>Инспектор
+    </div>
+    <button class="btn btn-dark infile-search-hide" type="button" name="button">
+      <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 30 30"
+        width="30"
+        height="30"
+      >
+        <defs>
+          <path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path>
+        </defs>
+        <g>
+          <g>
+            <g>
+              <g>
+                <use
+                  xlink:href="#a1sXzGPVRt"
+                  opacity="1"
+                  fill-opacity="0"
+                  stroke-width="1"
+                  stroke-opacity="1"
+                ></use>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </button>
   </div>
   <div class="container-fluid g-0 h-100">
     <ng-container *ngIf="$objects | async as objects">
       <ng-container *ngLet="$selectedUUID | async as selected">
-        <cdk-virtual-scroll-viewport class="viewport" [attr.data-listlength]="objects.children.length" itemSize="22">
-          <table class="table h-100 w-100 table-sm table-borderless table-dark table-striped-columns table-hover">
-            <tr (click)="select(object)" [attr.data-uuid]="object.uuid" [class.active]="selected === object.uuid" class="tab" *cdkVirtualFor="let object of objects.children; index as i">
+        <cdk-virtual-scroll-viewport
+          class="viewport"
+          [attr.data-listlength]="objects.children.length"
+          itemSize="22"
+        >
+          <table
+            class="table h-100 w-100 table-sm table-borderless table-dark table-striped-columns table-hover"
+          >
+            <tr
+              (click)="select(object)"
+              [attr.data-uuid]="object.uuid"
+              [class.active]="selected === object.uuid"
+              class="tab"
+              *cdkVirtualFor="let object of objects.children; index as i"
+            >
               <td>{{ i }}</td>
               <ng-container *ngLet="object.userData as data">
-                <td>{{ object.name }} </td>
-                <td><span [ngClass]="{
-                  'vehicle': data.objectType == 'vehicle',
-                  'pickup': data.objectType == 'pickup',
-                  'remove': data.objectType == 'removeworldobject',
-                  'spawn': data.objectType == 'spawnpoint',
-                  'racepickup': data.objectType == 'racepickup',
-                  'material': data.objectType == 'material'
-                }" class="name">{{ data.objectType }}</span>
+                <td>{{ object.name }}</td>
+                <td>
+                  <span
+                    [ngClass]="{
+                      vehicle: data.objectType == 'vehicle',
+                      pickup: data.objectType == 'pickup',
+                      remove: data.objectType == 'removeworldobject',
+                      spawn: data.objectType == 'spawnpoint',
+                      racepickup: data.objectType == 'racepickup',
+                      material: data.objectType == 'material'
+                    }"
+                    class="name"
+                    >{{ data.objectType }}</span
+                  >
                 </td>
                 <td>
                   {{ data.id }}
@@ -41,9 +91,7 @@
                 <td>
                   {{ data.color }}
                 </td>
-                <td>
-                  {{ data.txd }} {{ data.texture }}
-                </td>
+                <td>{{ data.txd }} {{ data.texture }}</td>
               </ng-container>
             </tr>
           </table>

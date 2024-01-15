@@ -1,13 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Routes, RouterModule } from "@angular/router";
 
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SearchEditorComponent } from '@lars/home/search-editor/search-editor.component';
 import { AdminsComponent } from './admins/admins.component';
 
-import { AuthGuard, CommonGuard, ConfiguratorGuard, BackuperGuard, MapperGuard } from '@lars/guards';
+import {
+  AuthGuard,
+  CommonGuard,
+  ConfiguratorGuard,
+  BackuperGuard,
+  MapperGuard,
+} from "@lars/guards";
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard], children: [
@@ -34,6 +40,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [CommonModule, RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class HomeRoutingModule {}

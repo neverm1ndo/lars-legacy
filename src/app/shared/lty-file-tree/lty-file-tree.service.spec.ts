@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { LtyFileTreeService } from './lty-file-tree.service';
+import { LtyFileTreeService } from "./lty-file-tree.service";
 
-describe('LtyFileTreeServiceService', () => {
+describe("LtyFileTreeServiceService", () => {
   let service: LtyFileTreeService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('LtyFileTreeServiceService', () => {
     service = TestBed.inject(LtyFileTreeService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

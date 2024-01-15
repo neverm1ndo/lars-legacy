@@ -8,7 +8,7 @@ import { Workgroup } from '@lars/enums/workgroup.enum';
 const { Dev } = Workgroup;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class DevGuard implements CanActivate {
   constructor(private user: UserService) {}

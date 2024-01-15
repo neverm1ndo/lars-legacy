@@ -2,7 +2,12 @@
   <div class="d-flex flex-row align-items-center justify-content-between">
     <h5>Фильтр строк</h5>
     <div>
-      <input class="form-control" [(ngModel)]="searchInput" placeholder="Поиск" type="text">
+      <input
+        class="form-control"
+        [(ngModel)]="searchInput"
+        placeholder="Поиск"
+        type="text"
+      />
     </div>
   </div>
   <div>
@@ -14,17 +19,22 @@
   <div class="d-flex flex-column">
     <form [formGroup]="filterForm">
       <div formArrayName="processes">
-        <div class="d-flex flex-row" *ngFor="let process of (allProcesses | filterSearch:searchInput); let i = index;">
+        <div
+          class="d-flex flex-row"
+          *ngFor="
+            let process of allProcesses | filterSearch: searchInput;
+            let i = index
+          "
+        >
           <label class="checkbox dark">
-            <input
-              type="checkbox"
-              [formControlName]="i">
-              <span class='indicator'></span>
+            <input type="checkbox" [formControlName]="i" />
+            <span class="indicator"></span>
           </label>
           <div class="d-flex flex-column">
             <span>{{ process.translate }}</span>
             <span>
-              <i [class]="'bg-'+process.type"></i><small class="muted">{{ process.name }}</small>
+              <i [class]="'bg-' + process.type"></i
+              ><small class="muted">{{ process.name }}</small>
             </span>
           </div>
         </div>

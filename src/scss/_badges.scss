@@ -5,8 +5,13 @@
     background-color: #7b4888;
   }
   &-report {
-    background: rgb(72,58,180);
-    background: linear-gradient(90deg, rgba(72,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(72,58,180,1) 100%);
+    background: rgb(72, 58, 180);
+    background: linear-gradient(
+      90deg,
+      rgba(72, 58, 180, 1) 0%,
+      rgba(253, 29, 29, 1) 50%,
+      rgba(72, 58, 180, 1) 100%
+    );
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
   }
@@ -23,8 +28,13 @@
     background-color: #666254;
   }
   &-dm {
-    background: rgb(33,99,110);
-    background: linear-gradient(90deg, rgba(33,99,110,1) 0%, rgba(0,167,129,1) 50%, rgba(33,99,110,1) 100%);
+    background: rgb(33, 99, 110);
+    background: linear-gradient(
+      90deg,
+      rgba(33, 99, 110, 1) 0%,
+      rgba(0, 167, 129, 1) 50%,
+      rgba(33, 99, 110, 1) 100%
+    );
   }
   &-tdm {
     position: relative;
@@ -32,18 +42,30 @@
     $border: 1px;
     border: solid $border transparent;
     &:before {
-      content: '';
+      content: "";
       position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       z-index: -2;
       margin: -$border;
       border-radius: inherit;
-      background: linear-gradient(127deg, rgba(33,99,110,1) 0%, rgba(0,144,167,1) 50%, rgba(193,105,61,1) 50%, rgba(147,0,0,1) 100%)
+      background: linear-gradient(
+        127deg,
+        rgba(33, 99, 110, 1) 0%,
+        rgba(0, 144, 167, 1) 50%,
+        rgba(193, 105, 61, 1) 50%,
+        rgba(147, 0, 0, 1) 100%
+      );
     }
-    &:after{
-      content: '';
+    &:after {
+      content: "";
       position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
       z-index: -1;
       margin: 0px;
       border-radius: inherit;
@@ -54,7 +76,11 @@
     background-color: #a12f63;
   }
   &-clothes {
-    background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(252,176,69,1) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(131, 58, 180, 1) 0%,
+      rgba(252, 176, 69, 1) 100%
+    );
   }
   &-acheat {
     background-color: #001d42;

@@ -10,6 +10,7 @@
     "lars": {
       "root": "",
       "sourceRoot": "src",
+      "prefix": "lars",
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -37,19 +38,12 @@
               "codemirror/addon/hint/show-hint",
               "codemirror/addon/hint/anyword-hint"
             ],
-            "assets": [
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/assets"],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-               "includePaths": [
-                 "src/scss"
-               ]
-             },
-            "scripts": [
-            ],
+              "includePaths": ["src/scss"]
+            },
+            "scripts": [],
             "customWebpackConfig": {
               "path": "./angular.webpack.js",
               "replaceDuplicatePlugins": true
@@ -140,17 +134,11 @@
             "karmaConfig": "src/karma.conf.js",
             "codeCoverage": true,
             "scripts": [],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-                "includePaths": [
-                  "src/scss"
-                ]
-              },
-            "assets": [
-              "src/assets"
-            ],
+              "includePaths": ["src/scss"]
+            },
+            "assets": ["src/assets"],
             "customWebpackConfig": {
               "path": "./angular.webpack.js"
             }
@@ -160,10 +148,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "eslintConfig": ".eslintrc.json",
-            "lintFilePatterns": [
-              "src/**.ts",
-              "main.ts"
-            ]
+            "lintFilePatterns": ["src/**.ts", "main.ts"]
           }
         },
         "server": {
@@ -173,9 +158,7 @@
             "main": "src/main.server.ts",
             "tsConfig": "src/tsconfig.server.json",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/scss"
-              ]
+              "includePaths": ["src/scss"]
             }
           },
           "configurations": {
@@ -249,9 +232,7 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "eslintConfig": ".eslintrc.json",
-            "lintFilePatterns": [
-              "e2e/**.ts"
-            ]
+            "lintFilePatterns": ["e2e/**.ts"]
           }
         }
       }

@@ -3,8 +3,8 @@ import { Renderer2 } from '@angular/core';
 import { BackupsService } from '../../domain/inftastructure/backups.service';
 
 @Directive({
-  selector: '[graphContainer]',
-  exportAs: 'graph'
+  selector: "[graphContainer]",
+  exportAs: "graph",
 })
 export class BackupsGraphDirective implements OnDestroy {
   @Output() startDraw = new EventEmitter();

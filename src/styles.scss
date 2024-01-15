@@ -1,27 +1,29 @@
 /* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 /* You can add global styles to this file, and also import other style files */
 
-@import 'codemirror/lib/codemirror';
-@import 'codemirror/theme/dracula';
-@import 'codemirror/theme/material';
-@import 'codemirror/theme/cobalt';
-@import 'codemirror/theme/ayu-mirage';
-@import 'codemirror/theme/yonce';
-@import 'codemirror/theme/nord';
-@import 'codemirror/theme/panda-syntax';
-@import 'codemirror/addon/dialog/dialog';
+@import "codemirror/lib/codemirror";
+@import "codemirror/theme/dracula";
+@import "codemirror/theme/material";
+@import "codemirror/theme/cobalt";
+@import "codemirror/theme/ayu-mirage";
+@import "codemirror/theme/yonce";
+@import "codemirror/theme/nord";
+@import "codemirror/theme/panda-syntax";
+@import "codemirror/addon/dialog/dialog";
 
 @import "@ng-select/ng-select/themes/default.theme.css";
 
-@import 'colors';
-@import 'scss/native';
-@import 'scss/cm';
+@import "colors";
+@import "scss/native";
+@import "scss/cm";
 
-@import 'scss/sentinel/theme';
-@import 'scss/popup';
+@import "scss/sentinel/theme";
+@import "scss/popup";
 
-html, body, app-root {
+html,
+body,
+app-root {
   margin: 0px;
   left: 0;
   right: 0;
@@ -45,12 +47,14 @@ body > .dropdown {
   }
 }
 
-button:active, button:focus {
-  outline: none!important;
+button:active,
+button:focus {
+  outline: none !important;
 }
 .btn {
-  &:active, &:focus {
-    outline: none!important;
+  &:active,
+  &:focus {
+    outline: none !important;
     box-shadow: none;
   }
 }
@@ -60,12 +64,14 @@ button:active, button:focus {
   transition: 0.1s linear;
   border-radius: 3px;
   &-dark {
-    background-color: transparent!important;
-    &:hover, &:active, &:focus {
-      background-color: rgb(0 0 0 / 30%)!important;
+    background-color: transparent !important;
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: rgb(0 0 0 / 30%) !important;
     }
     &:disabled {
-      background-color: rgb(0 0 0 / 30%)!important;
+      background-color: rgb(0 0 0 / 30%) !important;
       opacity: 0.5;
     }
   }
@@ -124,9 +130,9 @@ app-search {
   border-radius: 3px;
 }
 .form-control {
-  background-color: $clr-formcontrol!important;
-  color: $text!important;
-  border: 1px solid transparent!important;
+  background-color: $clr-formcontrol !important;
+  color: $text !important;
+  border: 1px solid transparent !important;
   border-radius: 3px;
 }
 .btn-primary {
@@ -135,118 +141,141 @@ app-search {
 .bg-danger {
   background: $danger;
 }
-button, input, svg, img, .no-select {
+button,
+input,
+svg,
+img,
+.no-select {
   @include no-select;
 }
 .cursor-through {
   @include cursor-through;
 }
 
-.monospace { font-family: 'Lucida Console', monospace;}
+.monospace {
+  font-family: "Lucida Console", monospace;
+}
 
-kbd { white-space: nowrap; }
+kbd {
+  white-space: nowrap;
+}
 
-div, span, p, u, i, b, a, strong, input, h1, h2, h3, h4, h5, h6 {
+div,
+span,
+p,
+u,
+i,
+b,
+a,
+strong,
+input,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   ::-webkit-selection {
-    background-color: $clr-clack!important;
+    background-color: $clr-clack !important;
     color: white;
   }
   ::selection {
-    background-color: $clr-clack!important;
+    background-color: $clr-clack !important;
     color: white;
   }
 }
 
 .spinner {
-    height: 22px;
-    width: auto;
-    animation: rotate 2s linear infinite;
-    transform-origin: center center;
-    margin: auto;
-    .path {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0;
-      animation: dashDefault 1.5s ease-in-out infinite;
-      stroke-linecap: round;
-      stroke: #7f848a;
-    }
+  height: 22px;
+  width: auto;
+  animation: rotate 2s linear infinite;
+  transform-origin: center center;
+  margin: auto;
+  .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dashDefault 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: #7f848a;
   }
-  @keyframes rotateDef {
-    100% {
-      transform: rotate(360deg);
-    }
+}
+@keyframes rotateDef {
+  100% {
+    transform: rotate(360deg);
   }
-  @keyframes dashDefault {
-    0% {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0;
-    }
-    50% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -35px;
-    }
-    100% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -124px;
-    }
+}
+@keyframes dashDefault {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
   }
-  .spinner-logo {
-    transform-origin: center center;
-    position: relative;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    path, use {
-      stroke-width: 5;
-      stroke: #ffffff;
-      fill: transparent;
-      fill-opacity: 10;
-      stroke-dasharray: 100, 200;
-      stroke-dashoffset: 0;
-      animation: dash-one 2.5s ease-in-out infinite;
-      stroke-linecap: round;
-    }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
   }
-  .blur {
-    filter: blur(10px);
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
   }
-  .backdrop-blur {
-    backdrop-filter: blur(10px);
+}
+.spinner-logo {
+  transform-origin: center center;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  path,
+  use {
+    stroke-width: 5;
+    stroke: #ffffff;
+    fill: transparent;
+    fill-opacity: 10;
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: 0;
+    animation: dash-one 2.5s ease-in-out infinite;
+    stroke-linecap: round;
   }
-  @keyframes dash {
-    0% {
-      stroke-dasharray: 1, 10;
-      stroke-dashoffset: 0;
-    }
-    25% {
-      stroke-dasharray: 1, 60;
-      stroke-dashoffset: -35px;
-    }
-    50% {
-      stroke-dasharray: 1, 60;
-      stroke-dashoffset: -200px;
-    }
-    100% {
-      stroke-dasharray: 1, 10;
-      stroke-dashoffset: 0;
-    }
+}
+.blur {
+  filter: blur(10px);
+}
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 10;
+    stroke-dashoffset: 0;
   }
-  @keyframes dash-one {
-    0% {
-      stroke-dasharray: 50, 100;
-      stroke-dashoffset: 0;
-    }
-    25% {
-      stroke-dasharray: 60, 200;
-      stroke-dashoffset: -35px;
-    }
-    50% {
-      stroke-dasharray: 60, 200;
-      stroke-dashoffset: -135px;
-    }
-    100% {
-      stroke-dasharray: 50, 100;
-      stroke-dashoffset: 0;
-    }
+  25% {
+    stroke-dasharray: 1, 60;
+    stroke-dashoffset: -35px;
   }
+  50% {
+    stroke-dasharray: 1, 60;
+    stroke-dashoffset: -200px;
+  }
+  100% {
+    stroke-dasharray: 1, 10;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dash-one {
+  0% {
+    stroke-dasharray: 50, 100;
+    stroke-dashoffset: 0;
+  }
+  25% {
+    stroke-dasharray: 60, 200;
+    stroke-dashoffset: -35px;
+  }
+  50% {
+    stroke-dasharray: 60, 200;
+    stroke-dashoffset: -135px;
+  }
+  100% {
+    stroke-dasharray: 50, 100;
+    stroke-dashoffset: 0;
+  }
+}

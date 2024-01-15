@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { NotificationsSettingsComponent } from './notifications-settings.component';
+import { NotificationsSettingsComponent } from "./notifications-settings.component";
 
-describe('AlertsSettingsComponent', () => {
+describe("AlertsSettingsComponent", () => {
   let component: NotificationsSettingsComponent;
   let fixture: ComponentFixture<NotificationsSettingsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationsSettingsComponent ]
-    })
-    .compileComponents();
+      declarations: [NotificationsSettingsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('AlertsSettingsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

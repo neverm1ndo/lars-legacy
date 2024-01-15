@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 
 :host {
   margin-bottom: 1px;
@@ -37,7 +37,7 @@
     text-align: center;
     overflow: hidden;
   }
-  &_icon{
+  &_icon {
     padding: 0 15px 0 15px;
   }
   .sub {

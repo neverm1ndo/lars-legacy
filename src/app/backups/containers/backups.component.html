@@ -2,21 +2,29 @@
   <div class="container-fluid head">
     <div class="row">
       <div class="col-4">
-        <h6><fa-icon [icon]="fa.box"></fa-icon>{{ 'Backups.Title' | translate }}</h6>
+        <h6>
+          <fa-icon [icon]="fa.box"></fa-icon>{{ "Backups.Title" | translate }}
+        </h6>
       </div>
       <div class="col-8 d-flex align-items-start justify-content-end">
         <span class="align-self-center">
           <span class="circle me-2">
             <fa-icon [icon]="fa.hdd"></fa-icon>
           </span>
-          <span class="text-muted" *ngIf="$backupsSize | async as size">{{ size | FileSize: 0 }}</span>
+          <span class="text-muted" *ngIf="$backupsSize | async as size">{{
+            size | FileSize: 0
+          }}</span>
         </span>
       </div>
     </div>
   </div>
-  <ng-container *ngLet="$current | async as current; let i = index;">
-    <as-split direction="vertical" [gutterSize]="5" (dragEnd)="savePanesState($event)">
-      <as-split-area [size]="current? paneStates[0]: 100">
+  <ng-container *ngLet="$current | async as current; let i = index">
+    <as-split
+      direction="vertical"
+      [gutterSize]="5"
+      (dragEnd)="savePanesState($event)"
+    >
+      <as-split-area [size]="current ? paneStates[0] : 100">
         <div class="d-flex flex-column h-100 bg">
           <ng-container *ngLet="($backups | async) as backups;">
             <div *ngIf="backups" class="d-flex backups-list h-100 flex-row overflow-auto">
@@ -29,14 +37,20 @@
               <div class="d-flex flex-column w-100">
                 <app-backup-item
                   graphItem
-                  *ngFor="let backup of backups" 
-                  [attr.data-filename]="backup.file.name" 
+                  *ngFor="let backup of backups"
+                  [attr.data-filename]="backup.file.name"
                   [backup-info]="backup"
                   [class.active]="backup.unix === current?.unix"
-                  (click)="showBackupView(backup)">
+                  (click)="showBackupView(backup)"
+                >
                 </app-backup-item>
-                <div *ngIf="backups.length === 0" class="d-flex flex-fill justify-content-center align-items-center">
-                  <p class="text-muted">{{ 'Backups.List.Empty' | translate }}</p>
+                <div
+                  *ngIf="backups.length === 0"
+                  class="d-flex flex-fill justify-content-center align-items-center"
+                >
+                  <p class="text-muted">
+                    {{ "Backups.List.Empty" | translate }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -48,43 +62,79 @@
       </as-split-area>
       <as-split-area [size]="current ? paneStates[1] : 0">
         <div *ngIf="current" class="d-flex flex-column viewer h-100">
-          <div class="d-flex flex-row justify-content-between viewer-head align-items-center">
+          <div
+            class="d-flex flex-row justify-content-between viewer-head align-items-center"
+          >
             <div class="d-flex flex-row align-items-center w-100">
               <div class="d-flex align-items-center">
-                <button (click)="closeView()" class="d-flex btn btn-dark viewer-hide" type="button" name="button">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30">
+                <button
+                  (click)="closeView()"
+                  class="d-flex btn btn-dark viewer-hide"
+                  type="button"
+                  name="button"
+                >
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    preserveAspectRatio="xMidYMid meet"
+                    viewBox="0 0 30 30"
+                    width="30"
+                    height="30"
+                  >
                     <defs>
-                      <path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path>
+                      <path
+                        d="M24.69 9.83L14.66 20.77L4.69 9.83"
+                        id="a1sXzGPVRt"
+                      ></path>
                     </defs>
                     <g>
-                      <use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use>
+                      <use
+                        xlink:href="#a1sXzGPVRt"
+                        opacity="1"
+                        fill-opacity="0"
+                        stroke-width="1"
+                        stroke-opacity="1"
+                      ></use>
                     </g>
                   </svg>
                 </button>
                 <div class="d-flex viewer-head-elapse flex-column">
                   <span>{{ current.file.name }}</span>
                   <span class="d-flex elapse">
-                    <small class="text-muted">{{ current.date | date:'d MMM yy, HH:mm:ss' }}</small>
+                    <small class="text-muted">{{
+                      current.date | date: "d MMM yy, HH:mm:ss"
+                    }}</small>
                   </span>
                 </div>
               </div>
-              <div class="d-flex flex-row flex-fill justify-content-end viewer-bottom align-items-center">
+              <div
+                class="d-flex flex-row flex-fill justify-content-end viewer-bottom align-items-center"
+              >
                 <span class="d-flex elapse me-2">
                   <small class="elapse">{{ current.file.path }}</small>
                 </span>
-                <div class="p-1 d-flex btn-group align-items-center justify-content-between">
-                  <button 
-                    [disabled]="!current.file.text && !current.file.binary" 
-                    (click)="restoreBackup()" class="btn btn-success"
-                    type="button" name="button">
-                      <fa-icon class="me-2" [icon]="fa.toolbox"></fa-icon>{{ 'Backups.File.Install' | translate }}
+                <div
+                  class="p-1 d-flex btn-group align-items-center justify-content-between"
+                >
+                  <button
+                    [disabled]="!current.file.text && !current.file.binary"
+                    (click)="restoreBackup()"
+                    class="btn btn-success"
+                    type="button"
+                    name="button"
+                  >
+                    <fa-icon class="me-2" [icon]="fa.toolbox"></fa-icon
+                    >{{ "Backups.File.Install" | translate }}
                   </button>
                   <button
                     [disabled]="!current.file.text && !current.file.binary"
                     (click)="removeBackup()"
                     class="btn btn-danger ml-3"
-                    type="button" name="button">
-                      <fa-icon [icon]="fa.trash"></fa-icon>
+                    type="button"
+                    name="button"
+                  >
+                    <fa-icon [icon]="fa.trash"></fa-icon>
                   </button>
                 </div>
               </div>
@@ -92,7 +142,9 @@
           </div>
           <div class="d-flex flex-fill viewer-code overflow-auto">
             <ng-container *ngIf="current.file.binary">
-              <div class="d-flex flex-fill justify-content-center align-items-center flex-column">
+              <div
+                class="d-flex flex-fill justify-content-center align-items-center flex-column"
+              >
                 <h3 class="text-muted"><fa-icon [icon]="fa.sign"></fa-icon></h3>
                 <span class="text-muted">{{ 'Backups.File.Binary' | translate }}</span>
               </div>
@@ -101,9 +153,13 @@
               *ngIf="!current.file.binary && current.file.text"
               #editor
               [ngModel]="current.file.text"
-              [options]="codeMirrorSettings">
+              [options]="codeMirrorSettings"
+            >
             </ngx-codemirror>
-            <div *ngIf="!current.file.text && !current.file.binary" class="d-flex flex-fill justify-content-center align-items-center">
+            <div
+              *ngIf="!current.file.text && !current.file.binary"
+              class="d-flex flex-fill justify-content-center align-items-center"
+            >
               <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
             </div>
           </div>

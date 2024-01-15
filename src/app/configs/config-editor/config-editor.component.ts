@@ -1,25 +1,35 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
-import { ApiService } from '@lars/api/api.service';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { switchMap, take, filter, tap, takeLast } from 'rxjs/operators';
-import { ITreeNode } from '@lars/interfaces/app.interfaces';
-import { ToastService } from '@lars/toast.service';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { faWindowRestore, faSave, faInfo, faFileSignature, faTrash, faFolderPlus, faCodeBranch, faCopy, faSync, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { ElectronService } from '@lars/core/services';
-import { ConfigsService } from '@lars/configs/configs.service';
-import { IOutputAreaSizes } from 'angular-split';
-import { HistoryListEnum } from '@lars/enums';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, NgZone, OnDestroy } from "@angular/core";
+import { ApiService } from "@lars/api/api.service";
+import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+import { Router, ActivatedRoute, Params } from "@angular/router";
+import { switchMap, take, filter, tap, takeLast } from "rxjs/operators";
+import { ITreeNode } from "@lars/interfaces/app.interfaces";
+import { ToastService } from "@lars/toast.service";
+import { HttpEventType, HttpResponse } from "@angular/common/http";
+import {
+  faWindowRestore,
+  faSave,
+  faInfo,
+  faFileSignature,
+  faTrash,
+  faFolderPlus,
+  faCodeBranch,
+  faCopy,
+  faSync,
+  faCloudUploadAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import { ElectronService } from "@lars/core/services";
+import { ConfigsService } from "@lars/configs/configs.service";
+import { IOutputAreaSizes } from "angular-split";
+import { HistoryListEnum } from "@lars/enums";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-config-editor',
-  templateUrl: './config-editor.component.html',
-  styleUrls: ['./config-editor.component.scss']
+  selector: "app-config-editor",
+  templateUrl: "./config-editor.component.html",
+  styleUrls: ["./config-editor.component.scss"],
 })
 export class ConfigEditorComponent implements OnInit, OnDestroy {
-
   public files: ITreeNode;
 
   public directories$: Observable<any>;
@@ -49,12 +59,12 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _electron: ElectronService,
     private _ngZone: NgZone,
     private _configs: ConfigsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {
     this.directories$ = this._configs.reloader$.pipe(
-      switchMap(() => this._api.getConfigsDir())
+      switchMap(() => this._api.getConfigsDir()),
     );
-    this.translateService.use('ru');
+    this.translateService.use("ru");
   }
 
   public saveFile() {
@@ -85,41 +95,58 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     return this._configs.changed$;
   }
 
-  
-  public savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }): void {
-    window.localStorage.setItem('lars/ui/panes/configs', JSON.stringify(event.sizes));
+  public savePanesState(event: {
+    gutterNum: number | "*";
+    sizes: IOutputAreaSizes;
+  }): void {
+    window.localStorage.setItem(
+      "lars/ui/panes/configs",
+      JSON.stringify(event.sizes),
+    );
   }
 
   private _setPanesState(): number[] {
     try {
-      const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/configs'));
-      if (!states) throw 'undefined states';
+      const states = JSON.parse(
+        window.localStorage.getItem("lars/ui/panes/configs"),
+      );
+      if (!states) throw "undefined states";
       return states;
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       return [20, 80];
     }
   }
 
   private _isNotBinary(name: string): boolean {
-    const splited = name.split('.');
-    return ['amx', 'so', 'db', 'cadb', 'log'].every((bin: string) => splited[splited.length - 1] !== bin);
+    const splited = name.split(".");
+    return ["amx", "so", "db", "cadb", "log"].every(
+      (bin: string) => splited[splited.length - 1] !== bin,
+    );
   }
 
-  public toConfig({ path, name }: { path: string, name?: string }) {
+  public toConfig({ path, name }: { path: string; name?: string }) {
     this.currentFilePath = path;
     if (name) this._api.addToRecent(HistoryListEnum.CONFIGS, { path, name });
-    if (this._isNotBinary(name)) this._router.navigate(['/home/configs/doc'], { queryParams: { path, name}});
-    else this._router.navigate(['/home/configs/binary'], { queryParams: { path, name }});
+    if (this._isNotBinary(name))
+      this._router.navigate(["/home/configs/doc"], {
+        queryParams: { path, name },
+      });
+    else
+      this._router.navigate(["/home/configs/binary"], {
+        queryParams: { path, name },
+      });
   }
 
   public touchFile(path: string) {
     this.currentFilePath = path;
-    this._router.navigate(['/home/configs/doc'], { queryParams: { path, touch: true }});
+    this._router.navigate(["/home/configs/doc"], {
+      queryParams: { path, touch: true },
+    });
   }
 
   public openRemoteWindow(): void {
-    window.open(location.href + '&remote=1', '_blank')
+    window.open(location.href + "&remote=1", "_blank");
   }
 
   public deleteFile(path?: string): void {
@@ -139,30 +166,48 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   mkdir(path: string) {
-    this._api.createDirectory(path)
-             .subscribe({
-              next: () => {
-                this.reloadFileTree();
-                this._toast.show('success', `Директория ${path} создана`, path, faFolderPlus);
-              },
-              error: (err) => {
-                this._toast.show('danger', `Директория ${path} не создана`, err, faInfo);
-              }
-            });
+    this._api.createDirectory(path).subscribe({
+      next: () => {
+        this.reloadFileTree();
+        this._toast.show(
+          "success",
+          `Директория ${path} создана`,
+          path,
+          faFolderPlus,
+        );
+      },
+      error: (err) => {
+        this._toast.show(
+          "danger",
+          `Директория ${path} не создана`,
+          err,
+          faInfo,
+        );
+      },
+    });
   }
 
   mvdir(path: { path: string; dest: string }) {
-    this._api.moveDirectory(path.path, path.dest)
-             .subscribe({
-                next: () => {
-                  this.reloadFileTree();
-                  this._toast.show('success', `Директория ${path.path} переименована`, path.dest, faFolderPlus);
-                },
-                error: (err) => {
-                  console.error(err);
-                  this._toast.show('danger', `Директория ${path} не переименована`, err, faInfo);
-                }
-          });
+    this._api.moveDirectory(path.path, path.dest).subscribe({
+      next: () => {
+        this.reloadFileTree();
+        this._toast.show(
+          "success",
+          `Директория ${path.path} переименована`,
+          path.dest,
+          faFolderPlus,
+        );
+      },
+      error: (err) => {
+        console.error(err);
+        this._toast.show(
+          "danger",
+          `Директория ${path} не переименована`,
+          err,
+          faInfo,
+        );
+      },
+    });
   }
 
   rmFile(path: string) {
@@ -170,126 +215,182 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
   }
 
   rmdir(path: string) {
-    this._api.removeDirectory(path)
-             .subscribe({
-                next: () => {
-                  this.reloadFileTree();
-                  this._toast.show('success', `Директория ${path} удалена`, path, faFolderPlus);
-                }, 
-                error: (err) => {
-                  this._toast.show('danger', `Директория ${path} не удалена`, err, faInfo);
-                }
-            });
+    this._api.removeDirectory(path).subscribe({
+      next: () => {
+        this.reloadFileTree();
+        this._toast.show(
+          "success",
+          `Директория ${path} удалена`,
+          path,
+          faFolderPlus,
+        );
+      },
+      error: (err) => {
+        this._toast.show(
+          "danger",
+          `Директория ${path} не удалена`,
+          err,
+          faInfo,
+        );
+      },
+    });
   }
 
   addNewFile(event: any): void {
-    
     let files: File[];
-    let path: string = '';
-    
+    let path: string = "";
+
     if (event.filelist) {
       files = event.filelist;
     } else {
       files = event.target.files;
     }
-    
+
     if (files.length <= 0) return;
-     
+
     let formData: FormData = new FormData();
-    
+
     if (event.path) {
       path = event.path;
-      formData.append('path', path)
-    }
-    
-    for (let file of files) {
-      formData.append('file', file);
+      formData.append("path", path);
     }
 
-    const sub = this._api.saveFile(formData)
-                         .pipe(
-                            tap((event) => {
-                              if (event.type === HttpEventType.UploadProgress) this._configs.dprogress$.next(Math.round(100 * event.loaded / event.total));
-                            }),
-                            filter((event) => event instanceof HttpResponse),
-                            // takeLast(1)
-                          ).subscribe({
-                            next: () => {
-                              if (files.length > 1) {
-                                const buildFileList = (files: File[]): string => {
-                                  let list = '';
-                                  
-                                  for (let file of files) {
-                                    list = list + '<br><small class="pl-2"> > '+file.name+'</small>';
-                                    this._api.addToRecent(HistoryListEnum.UPLOADS, { path, name: file.name, type: 'config'})
-                                  };
-                                  
-                                  return list;
-                                }
-                                this._toast.show('success', `Файлы конфигурации (${files.length}) ${buildFileList(files)} <br> успешно загружены в директорию`, path, faSave);
-                              } else {
-                                this._toast.show('success', `Конфигурационный файл <b>${files[0].name}</b> успешно загружен`, null, faSave);
-                              }
-                            
-                              setTimeout(() => { 
-                                this.clearProgress(); 
-                              }, 1000);
-                            
-                              this._uploadsSubscriptions.remove(sub);
-                            },
-                            error: (err) => {
-                              this.clearProgress();
-                              
-                              if (files.length > 1) {
-                                this._toast.show('warning', `Конфигурационныe файлы (${ files.length }) не были загружены, или они загрузились, но сервер вернул ошибку`, err.message, faInfo);
-                              } else {
-                                this._toast.show('warning', `Конфигурационный файл <b>${ files[0].name }</b> не был загружен, или он загрузился, но сервер вернул ошибку`, err.message, faInfo);
-                              }
-                              
-                              console.error(err);
-                              this._uploadsSubscriptions.remove(sub)
-                            },
-                            complete: () => {
-                              this.reloadFileTree();
-                            }    
-                          });
+    for (let file of files) {
+      formData.append("file", file);
+    }
+
+    const sub = this._api
+      .saveFile(formData)
+      .pipe(
+        tap((event) => {
+          if (event.type === HttpEventType.UploadProgress)
+            this._configs.dprogress$.next(
+              Math.round((100 * event.loaded) / event.total),
+            );
+        }),
+        filter((event) => event instanceof HttpResponse),
+        // takeLast(1)
+      )
+      .subscribe({
+        next: () => {
+          if (files.length > 1) {
+            const buildFileList = (files: File[]): string => {
+              let list = "";
+
+              for (let file of files) {
+                list =
+                  list + '<br><small class="pl-2"> > ' + file.name + "</small>";
+                this._api.addToRecent(HistoryListEnum.UPLOADS, {
+                  path,
+                  name: file.name,
+                  type: "config",
+                });
+              }
+
+              return list;
+            };
+            this._toast.show(
+              "success",
+              `Файлы конфигурации (${files.length}) ${buildFileList(
+                files,
+              )} <br> успешно загружены в директорию`,
+              path,
+              faSave,
+            );
+          } else {
+            this._toast.show(
+              "success",
+              `Конфигурационный файл <b>${files[0].name}</b> успешно загружен`,
+              null,
+              faSave,
+            );
+          }
+
+          setTimeout(() => {
+            this.clearProgress();
+          }, 1000);
+
+          this._uploadsSubscriptions.remove(sub);
+        },
+        error: (err) => {
+          this.clearProgress();
+
+          if (files.length > 1) {
+            this._toast.show(
+              "warning",
+              `Конфигурационныe файлы (${files.length}) не были загружены, или они загрузились, но сервер вернул ошибку`,
+              err.message,
+              faInfo,
+            );
+          } else {
+            this._toast.show(
+              "warning",
+              `Конфигурационный файл <b>${files[0].name}</b> не был загружен, или он загрузился, но сервер вернул ошибку`,
+              err.message,
+              faInfo,
+            );
+          }
+
+          console.error(err);
+          this._uploadsSubscriptions.remove(sub);
+        },
+        complete: () => {
+          this.reloadFileTree();
+        },
+      });
 
     this._uploadsSubscriptions.add(sub);
   }
 
   ngOnInit(): void {
     this.paneStates = this._setPanesState();
-    this._route.queryParams.pipe(
-                              take(1),
-                              filter(params => params.path)
-                            )
-                            .subscribe({
-                              next: ({ path, name }: Params) => this.toConfig({ path, name }),
-                            });
-    
-    this._electron.ipcRenderer.on('download-progress', (_event: any, progress: {total: number, loaded: number}) => {
-      this._ngZone.run(() => {
-        this._configs.dprogress$.next(Math.round(100 * progress.loaded / progress.total));
+    this._route.queryParams
+      .pipe(
+        take(1),
+        filter((params) => params.path),
+      )
+      .subscribe({
+        next: ({ path, name }: Params) => this.toConfig({ path, name }),
       });
-    });
-    
-    this._electron.ipcRenderer.on('download-error', (_event: any, err) => {
+
+    this._electron.ipcRenderer.on(
+      "download-progress",
+      (_event: any, progress: { total: number; loaded: number }) => {
+        this._ngZone.run(() => {
+          this._configs.dprogress$.next(
+            Math.round((100 * progress.loaded) / progress.total),
+          );
+        });
+      },
+    );
+
+    this._electron.ipcRenderer.on("download-error", (_event: any, err) => {
       this._ngZone.run(() => {
         this._configs.dprogress$.next(0);
-        this._toast.show('danger', `Произошла ошибка в загрузке файла <b>${ this.currentFilePath }</b>. Сервер вернул ошибку`, err.message, faInfo);
+        this._toast.show(
+          "danger",
+          `Произошла ошибка в загрузке файла <b>${this.currentFilePath}</b>. Сервер вернул ошибку`,
+          err.message,
+          faInfo,
+        );
       });
     });
-    
-    this._electron.ipcRenderer.on('download-end', () => {
+
+    this._electron.ipcRenderer.on("download-end", () => {
       this._ngZone.run(() => {
-        this._toast.show('success', `Файл <b>${ this.currentFilePath }</b> успешно загружен`, null, faInfo);
+        this._toast.show(
+          "success",
+          `Файл <b>${this.currentFilePath}</b> успешно загружен`,
+          null,
+          faInfo,
+        );
         setTimeout(() => {
           this._configs.dprogress$.next(0);
         }, 2000);
       });
     });
   }
-  
+
   ngOnDestroy(): void {
     this._configs.stats$.next(null);
     this._uploadsSubscriptions.unsubscribe();

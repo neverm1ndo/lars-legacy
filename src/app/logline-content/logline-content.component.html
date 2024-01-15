@@ -2,10 +2,14 @@
   <ng-template *ngSwitchCase="'BAN'">
     <div class="bancard w-100 bg-{{ process.type }}">
       <div class="bancard-head">
-        <small>Выдан администратором <u>{{ content.op }}</u> </small><span class="badge bg-dark ml-1">{{ content.oid }}</span><br>
+        <small
+          >Выдан администратором <u>{{ content.op }}</u> </small
+        ><span class="badge bg-dark ml-1">{{ content.oid }}</span
+        ><br />
       </div>
       <div class="bancard-body">
-        <small>{{ content.time }} {{ content.message }}</small><br>
+        <small>{{ content.time }} {{ content.message }}</small
+        ><br />
         <small>{{ content.message | rules }} </small>
       </div>
     </div>
@@ -30,11 +34,18 @@
   </ng-container>
   <ng-container *ngSwitchCase="'DEATH'">
     <div class="message-container">
-      <span><fa-icon class="me-2" [icon]="fa.faSkullCrossbones"></fa-icon> {{ content.op }} <kbd>{{ content.oid }}</kbd> {{ content.message }} </span>
+      <span
+        ><fa-icon class="me-2" [icon]="fa.faSkullCrossbones"></fa-icon>
+        {{ content.op }} <kbd>{{ content.oid }}</kbd> {{ content.message }}
+      </span>
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'CN'">
-    <a class="btn btn-small btn-dark text-left cn" [routerLink]="['/home/search']" [queryParams]="{ query: 'cn:' + content.cn }">
+    <a
+      class="btn btn-small btn-dark text-left cn"
+      [routerLink]="['/home/search']"
+      [queryParams]="{ query: 'cn:' + content.cn }"
+    >
       <fa-icon [icon]="fa.faSearch"></fa-icon>{{ content.cn }}
     </a>
   </ng-container>
@@ -47,21 +58,34 @@
       <span *ngIf="content.target as target">
         <fa-icon class="ms-2 me-2" [icon]="fa.faUserAlt"></fa-icon>
         <span>{{ target.username }}</span>
-        <span><kbd>{{ target.id }}</kbd></span>
+        <span
+          ><kbd>{{ target.id }}</kbd></span
+        >
       </span>
       <span *ngIf="content.numbers as numbers">
         <kbd class="me-1" *ngFor="let number of numbers">{{ number }}</kbd>
       </span>
-      <span *ngIf="content.props as props ">
+      <span *ngIf="content.props as props">
         <span *ngFor="let prop of props | keyvalue">
           {{ prop.key }} <kbd>{{ prop.value }}</kbd>
         </span>
       </span>
       <span *ngIf="content.editor as editor">
-        <span>ID мира: <kbd>{{ editor.editor_id }}</kbd>,&nbsp;</span>
-        <span>Тип игрока: <kbd>{{ editor.g }}</kbd>,&nbsp;</span>
-        <span>Управляющих: <kbd>{{ editor.players }}</kbd>,&nbsp;</span>
-        <span>Посетителей: <kbd>{{ editor.visitors }}</kbd></span>
+        <span
+          >ID мира: <kbd>{{ editor.editor_id }}</kbd
+          >,&nbsp;</span
+        >
+        <span
+          >Тип игрока: <kbd>{{ editor.g }}</kbd
+          >,&nbsp;</span
+        >
+        <span
+          >Управляющих: <kbd>{{ editor.players }}</kbd
+          >,&nbsp;</span
+        >
+        <span
+          >Посетителей: <kbd>{{ editor.visitors }}</kbd></span
+        >
       </span>
     </div>
   </ng-container>

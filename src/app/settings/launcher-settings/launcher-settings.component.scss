@@ -20,20 +20,21 @@ input[type="number"] {
   border-radius: 5px;
   border: 2px solid $topper;
   font-size: 13px;
-  background-color: $topper!important;
+  background-color: $topper !important;
   color: $text;
   text-align: center;
   padding-left: 20px;
   padding-right: 20px;
-  &:active, &:focus {
+  &:active,
+  &:focus {
     outline: none;
   }
   &:read-only {
-    color: $text-secondary!important;
+    color: $text-secondary !important;
   }
 }
 .is-invalid {
-  border: 2px solid red!important;
+  border: 2px solid red !important;
 }
 span {
   width: 100%;

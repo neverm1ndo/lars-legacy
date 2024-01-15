@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { LoglineContentComponent } from './logline-content.component';
+import { LoglineContentComponent } from "./logline-content.component";
 
-describe('LoglineContentComponent', () => {
+describe("LoglineContentComponent", () => {
   let component: LoglineContentComponent;
   let fixture: ComponentFixture<LoglineContentComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoglineContentComponent ]
-    })
-    .compileComponents();
+      declarations: [LoglineContentComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('LoglineContentComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

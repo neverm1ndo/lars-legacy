@@ -1,11 +1,11 @@
-@import 'colors';
+@import "colors";
 :host {
   height: 100%;
   hr {
     margin-top: 0px;
     margin-bottom: 5px;
-    border: 2px!important;
-    border-top: 2px solid red!important;
+    border: 2px !important;
+    border-top: 2px solid red !important;
   }
   h4 {
     margin-top: 0.5rem;
@@ -49,7 +49,7 @@
   .credits {
     margin-bottom: 1.5rem;
     small {
-      line-height: 10px!important;
+      line-height: 10px !important;
     }
     img {
       height: 20px;
@@ -129,7 +129,7 @@
           width: 100%;
           font-weight: 500;
           &:hover {
-            background-color: #ffffff10!important;
+            background-color: #ffffff10 !important;
           }
         }
       }
@@ -155,7 +155,7 @@
     background: #3d3e4a;
   }
   .active {
-    background: #ffffff20!important;
+    background: #ffffff20 !important;
   }
   .styles {
     background: $filetree;
@@ -195,8 +195,8 @@
     }
     .legacy {
       font-family: monospace;
-      font-size: 14px!important;
-      line-height: inherit!important;
+      font-size: 14px !important;
+      line-height: inherit !important;
       border-bottom: 1px solid #0000000f;
       margin-bottom: 0px;
       margin-top: 0px;
@@ -205,7 +205,7 @@
       }
       .legacy-nickname {
         font-weight: 600;
-        color: #76c570
+        color: #76c570;
       }
       .legacy-id {
         color: #92beff;
@@ -234,8 +234,8 @@
       }
     }
     .expanded {
-      font-size: 14px!important;
-      line-height: inherit!important;
+      font-size: 14px !important;
+      line-height: inherit !important;
     }
   }
 }

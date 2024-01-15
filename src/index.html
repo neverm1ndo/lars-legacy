@@ -1,80 +1,90 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>LARS</title>
-    <base href="/">
+    <base href="/" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico" />
     <style media="screen">
-        .app-preloader {
-          width: 140px;
-          height: 140px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-left: -70px;
-          margin-top: -70px;
-          text-align: center;
-          font-family: 'Arial', sans-serif;
-          color: #7f848a;
-          font-size: 10px;
-        }
-        .app-preloader img, .app-preloader svg {
-          width: 64px; height: 64px;
-        }
-        .app-preloader .spinner {
-          height: 100px;
-          width: 100px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-left: -50px;
-          margin-top: -50px;
-          animation: load 3.5s ease-in-out infinite;
-        }
-        .app-preloader .spinner path {
-          stroke-width: 2;
-          stroke: #ffffff;
-          fill: #ffffff;
-          fill-opacity: 10;
-          /* stroke-dasharray: 100, 200;
+      .app-preloader {
+        width: 140px;
+        height: 140px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -70px;
+        margin-top: -70px;
+        text-align: center;
+        font-family: "Arial", sans-serif;
+        color: #7f848a;
+        font-size: 10px;
+      }
+      .app-preloader img,
+      .app-preloader svg {
+        width: 64px;
+        height: 64px;
+      }
+      .app-preloader .spinner {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+        animation: load 3.5s ease-in-out infinite;
+      }
+      .app-preloader .spinner path {
+        stroke-width: 2;
+        stroke: #ffffff;
+        fill: #ffffff;
+        fill-opacity: 10;
+        /* stroke-dasharray: 100, 200;
           stroke-dashoffset: 0; */
-          stroke-linecap: round;
+        stroke-linecap: round;
+      }
+      @keyframes dash-one {
+        0% {
+          stroke-dasharray: 0, 200;
+          stroke-dashoffset: 120px;
         }
-        @keyframes dash-one {
-          0% {
-            stroke-dasharray: 0, 200;
-            stroke-dashoffset: 120px;
-          }
-          25% {
-            stroke-dasharray: 100, 100;
-            stroke-dashoffset: 100px;
-          }
-          50% {
-            stroke-dasharray: 100, 100;
-            stroke-dashoffset: 100px;
-          }
-          100% {
-            stroke-dasharray: 0, 200;
-            stroke-dashoffset: 120px;
-          }
+        25% {
+          stroke-dasharray: 100, 100;
+          stroke-dashoffset: 100px;
         }
-        @keyframes load {
-          0% { transform: scale(1); }
-          5% { transform: scale(1.1); }
-          40% { transform: scale(1); }
-        	45% { transform: scale(1.1); }
-        	100% { transform: scale(1); }
+        50% {
+          stroke-dasharray: 100, 100;
+          stroke-dashoffset: 100px;
         }
+        100% {
+          stroke-dasharray: 0, 200;
+          stroke-dashoffset: 120px;
+        }
+      }
+      @keyframes load {
+        0% {
+          transform: scale(1);
+        }
+        5% {
+          transform: scale(1.1);
+        }
+        40% {
+          transform: scale(1);
+        }
+        45% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
   <body>
     <app-root>
-      <div class="app-preloader">
-
-      </div>
+      <div class="app-preloader"></div>
     </app-root>
   </body>
 </html>

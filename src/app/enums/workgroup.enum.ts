@@ -4,5 +4,5 @@ export enum Workgroup {
   Admin = 11,
   Mapper = 12,
   CFR = 13,
-  Backuper = 14
+  Backuper = 14,
 }

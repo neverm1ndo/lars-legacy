@@ -10,7 +10,7 @@ const { Challenger, Dev, Admin } = Workgroup;
 
 const ALLOWED_GROUPS = [Challenger, Admin, Dev];
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class CommonGuard implements CanActivate {
   constructor(private user: UserService) {}

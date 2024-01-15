@@ -1,4 +1,20 @@
-type ProcessTypeColor = 'dark' | 'danger' | 'success' | 'primary' | 'info' | 'usual' | 'pickup' | 'secondary' | 'warning' | 'light' | 'adm' | 'dev' | 'dm' | 'tdm' | 'derby' | 'clothes';
+type ProcessTypeColor =
+  | "dark"
+  | "danger"
+  | "success"
+  | "primary"
+  | "info"
+  | "usual"
+  | "pickup"
+  | "secondary"
+  | "warning"
+  | "light"
+  | "adm"
+  | "dev"
+  | "dm"
+  | "tdm"
+  | "derby"
+  | "clothes";
 
 export interface Process {
   translate: string;
@@ -7,10 +23,10 @@ export interface Process {
 }
 
 const UnknownProcess: Process = {
-  translate: 'Неизвестная команда',
-  type: 'warning',
-  control: 'UnknownProcess'
-}
+  translate: "Неизвестная команда",
+  type: "warning",
+  control: "UnknownProcess",
+};
 /* istambul ignore next */
 const Processes = {
     '<connection/connect>': {
@@ -665,9 +681,11 @@ const Processes = {
     },
 }
 
-export const getProcessTranslation = (processname: keyof typeof Processes): Process => {
+export const getProcessTranslation = (
+  processname: keyof typeof Processes,
+): Process => {
   if (!Processes[processname as string]) return UnknownProcess;
   return Processes[processname as string];
-}
+};
 
 export default Processes;

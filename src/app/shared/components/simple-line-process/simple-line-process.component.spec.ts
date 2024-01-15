@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SimpleLineProcessComponent } from './simple-line-process.component';
+import { SimpleLineProcessComponent } from "./simple-line-process.component";
 
-describe('SimpleLineProcessComponent', () => {
+describe("SimpleLineProcessComponent", () => {
   let component: SimpleLineProcessComponent;
   let fixture: ComponentFixture<SimpleLineProcessComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleLineProcessComponent ]
-    })
-    .compileComponents();
+      declarations: [SimpleLineProcessComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SimpleLineProcessComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

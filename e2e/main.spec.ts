@@ -1,23 +1,36 @@
-import { BrowserContext, ElectronApplication, Page, _electron as electron } from 'playwright';
-import { test, expect } from '@playwright/test';
-const PATH = require('path');
+import {
+  BrowserContext,
+  ElectronApplication,
+  Page,
+  _electron as electron,
+} from "playwright";
+import { test, expect } from "@playwright/test";
+const PATH = require("path");
 
-test.describe('Check Home Page', async () => {
+test.describe("Check Home Page", async () => {
   let app: ElectronApplication;
   let firstWindow: Page;
   let context: BrowserContext;
 
-  test.beforeAll( async () => {
-    app = await electron.launch({ args: [PATH.join(__dirname, '../app/main.js'), PATH.join(__dirname, '../app/package.json')] });
+  test.beforeAll(async () => {
+    app = await electron.launch({
+      args: [
+        PATH.join(__dirname, "../app/main.js"),
+        PATH.join(__dirname, "../app/package.json"),
+      ],
+    });
     context = app.context();
     await context.tracing.start({ screenshots: true, snapshots: true });
     firstWindow = await app.firstWindow();
-    await firstWindow.waitForLoadState('domcontentloaded');
+    await firstWindow.waitForLoadState("domcontentloaded");
   });
 
-  test('Launch electron app', async () => {
-
-    const windowState: { isVisible: boolean; isDevToolsOpened: boolean; isCrashed: boolean } = await app.evaluate(async (process) => {
+  test("Launch electron app", async () => {
+    const windowState: {
+      isVisible: boolean;
+      isDevToolsOpened: boolean;
+      isCrashed: boolean;
+    } = await app.evaluate(async (process) => {
       const mainWindow = process.BrowserWindow.getAllWindows()[0];
 
       const getState = () => ({
@@ -30,7 +43,9 @@ test.describe('Check Home Page', async () => {
         if (mainWindow.isVisible()) {
           resolve(getState());
         } else {
-          mainWindow.once('ready-to-show', () => setTimeout(() => resolve(getState()), 0));
+          mainWindow.once("ready-to-show", () =>
+            setTimeout(() => resolve(getState()), 0),
+          );
         }
       });
     });
@@ -46,14 +61,14 @@ test.describe('Check Home Page', async () => {
   //   expect(screenshot).toMatchSnapshot(`home-${browserName}.png`);
   // });
 
-  test('Check title', async () => {
-    const elem = await firstWindow.$('app-home h1');
+  test("Check title", async () => {
+    const elem = await firstWindow.$("app-home h1");
     const text = await elem.innerText();
-    expect(text).toBe('App works !');
+    expect(text).toBe("App works !");
   });
 
-  test.afterAll( async () => {
-    await context.tracing.stop({ path: 'e2e/tracing/trace.zip' });
+  test.afterAll(async () => {
+    await context.tracing.stop({ path: "e2e/tracing/trace.zip" });
     await app.close();
   });
 });

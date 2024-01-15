@@ -1,216 +1,257 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>LARS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <style media="screen">
-  html, body {
-    background-color: #383a4a;
-    margin: 0px 0px 0px 0px;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-  }
-  .app-preloader {
-    width: 100px;
-    height: 100px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -50px;
-    margin-top: -50px;
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-    color: #7f848a;
-    font-size: 10px;
-  }
-  .app-preloader img, .app-preloader svg {
-    width: 64px; height: 64px;
-  }
-  .logo-icon {
-    position: fixed;
-    bottom: 40px;
-    left: 15px;
-    width: 32px;
-    height: 32px;
-    animation: dash2 2.5s ease-in-out infinite;
-  }
-  .app-preloader .spinner {
-    height: 120px;
-    width: 120px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -60px;
-    margin-top: -60px;
-  }
-  .app-preloader .spinner path {
-    fill: #fdfdfd;
-    fill-opacity: 1;
-    stroke-width: 0;
-    animation: dash2 2.5s ease-in-out infinite;
-    stroke: #fdfdfd;
-  }
-  @keyframes dash2 {
-    0% {
-      opacity: 0;
-      transform: translateY(-5%);
+    html,
+    body {
+      background-color: #383a4a;
+      margin: 0px 0px 0px 0px;
+      position: fixed;
+      top: 0px;
+      left: 0px;
     }
-    50% {
+    .app-preloader {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -50px;
+      margin-top: -50px;
+      text-align: center;
+      font-family: "Arial", sans-serif;
+      color: #7f848a;
+      font-size: 10px;
+    }
+    .app-preloader img,
+    .app-preloader svg {
+      width: 64px;
+      height: 64px;
+    }
+    .logo-icon {
+      position: fixed;
+      bottom: 40px;
+      left: 15px;
+      width: 32px;
+      height: 32px;
+      animation: dash2 2.5s ease-in-out infinite;
+    }
+    .app-preloader .spinner {
+      height: 120px;
+      width: 120px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -60px;
+      margin-top: -60px;
+    }
+    .app-preloader .spinner path {
+      fill: #fdfdfd;
       fill-opacity: 1;
-      opacity: 0.7;
-      transform: translateY(0%);
+      stroke-width: 0;
+      animation: dash2 2.5s ease-in-out infinite;
+      stroke: #fdfdfd;
     }
-    90% { opacity: 0; }
-    100% {
-      transform: translateY(5%);
-      opacity: 0;
+    @keyframes dash2 {
+      0% {
+        opacity: 0;
+        transform: translateY(-5%);
+      }
+      50% {
+        fill-opacity: 1;
+        opacity: 0.7;
+        transform: translateY(0%);
+      }
+      90% {
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(5%);
+        opacity: 0;
+      }
     }
-  }
-  @keyframes dash3 {
-    0% {
-      opacity: 0;
-      transform: translateY(-5%);
+    @keyframes dash3 {
+      0% {
+        opacity: 0;
+        transform: translateY(-5%);
+      }
+      100% {
+        fill-opacity: 1;
+        opacity: 0.6;
+        transform: translateY(0%);
+      }
     }
-    100% {
-      fill-opacity: 1;
+    @keyframes load {
+      0% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(2.2);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(2.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes splash {
+      0% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(2.2);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(2.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    .status {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      color: #fdfdfd;
+      font-size: 8px;
+      font-family: "Arial", sans-serif;
+      font-weight: 200;
+      text-transform: uppercase;
+    }
+    #statusText {
       opacity: 0.6;
-      transform: translateY(0%);
+      animation: dash3 0.5s ease-in;
+      animation-iteration-count: 1;
     }
-  }
-  @keyframes load {
-  0% { transform: scale(1); }
-  25% { transform: scale(2.2); }
-  50% { transform: scale(1); }
-  75% { transform: scale(2.2); }
-  100% { transform: scale(1); }
-  }
-  @keyframes splash {
-  0% { transform: scale(1); }
-  25% { transform: scale(2.2); }
-  50% { transform: scale(1); }
-  75% { transform: scale(2.2); }
-  100% { transform: scale(1); }
-  }
-  .status {
-  position: fixed;
-  bottom: 15px;
-  left: 15px;
-  color: #fdfdfd;
-  font-size: 8px;
-  font-family: 'Arial', sans-serif;
-  font-weight: 200;
-  text-transform: uppercase;
-  }
-  #statusText {
-  opacity: 0.6;
-  animation: dash3 .5s ease-in;
-  animation-iteration-count: 1;
-  }
-  .led {
-  width: 6px;
-  height: 6px;
-  display: inline-block;
-  line-height: inherit;
-  background: #fdfdfd;
-  border-radius: 100%;
-  margin-right: 8px;
-  position: relative;
-  top: 0px;
-  animation: dash2 1.5s ease-in-out infinite;
-  }
-  .loading {
-  height: 3px;
-  width: 0%;
-  position: fixed;
-  background: #317aff;
-  bottom: 0;
-  left: 0;
-  transition: 0.5s ease;
-  }
+    .led {
+      width: 6px;
+      height: 6px;
+      display: inline-block;
+      line-height: inherit;
+      background: #fdfdfd;
+      border-radius: 100%;
+      margin-right: 8px;
+      position: relative;
+      top: 0px;
+      animation: dash2 1.5s ease-in-out infinite;
+    }
+    .loading {
+      height: 3px;
+      width: 0%;
+      position: fixed;
+      background: #317aff;
+      bottom: 0;
+      left: 0;
+      transition: 0.5s ease;
+    }
   </style>
   <body>
     <canvas id="canvas" width="300" height="300"></canvas>
-      <img class="logo-icon" src="./icons/favicon.png" alt="">
-      <div class="status">
-        <span><i class="led"></i><span id="status"><span id="statusText">Загрузка основного модуля</span></span></span>
-      </div>
-      <div class="loading"></div>
+    <img class="logo-icon" src="./icons/favicon.png" alt="" />
+    <div class="status">
+      <span
+        ><i class="led"></i
+        ><span id="status"
+          ><span id="statusText">Загрузка основного модуля</span></span
+        ></span
+      >
+    </div>
+    <div class="loading"></div>
     <script type="text/javascript">
       (function animate() {
-          const canvas = document.querySelector('#canvas');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-          const ctx = canvas.getContext('2d');
-          const innerH = window.innerHeight;
-          const LIM  = 10000;
-          const STEP = 3;
-          const FPS_LIMIT = 60;
-          const INTERVAL = 1000 / FPS_LIMIT;
+        const canvas = document.querySelector("#canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext("2d");
+        const innerH = window.innerHeight;
+        const LIM = 10000;
+        const STEP = 3;
+        const FPS_LIMIT = 60;
+        const INTERVAL = 1000 / FPS_LIMIT;
 
-          let THEN = Date.now();
-          let DELTA;
+        let THEN = Date.now();
+        let DELTA;
 
-          let fxH = 0;
+        let fxH = 0;
 
-          function expEaseInOut(currentProgress, start, distance, steps) {
-            currentProgress /= steps/2;
-            if (currentProgress < 1) return distance/2 * Math.pow( 2, 10 * (currentProgress - 1) ) + start;
-            currentProgress--;
-            return distance/2 * ( -Math.pow( 2, -10 * currentProgress) + 2 ) + start;
-          };
+        function expEaseInOut(currentProgress, start, distance, steps) {
+          currentProgress /= steps / 2;
+          if (currentProgress < 1)
+            return (
+              (distance / 2) * Math.pow(2, 10 * (currentProgress - 1)) + start
+            );
+          currentProgress--;
+          return (
+            (distance / 2) * (-Math.pow(2, -10 * currentProgress) + 2) + start
+          );
+        }
 
-          function drawLayer(color, pos) {
-            const path = new Path2D();
-                  path.moveTo(0, 0);
-                  path.lineTo(0, innerH);
-            pos(path);
-                  path.closePath();
-            ctx.fillStyle = color;
-            ctx.fill(path);
-          };
+        function drawLayer(color, pos) {
+          const path = new Path2D();
+          path.moveTo(0, 0);
+          path.lineTo(0, innerH);
+          pos(path);
+          path.closePath();
+          ctx.fillStyle = color;
+          ctx.fill(path);
+        }
 
-          function draw() {
-            window.requestAnimationFrame(draw);
+        function draw() {
+          window.requestAnimationFrame(draw);
 
-            const NOW = Date.now();
-            DELTA = NOW - THEN;
+          const NOW = Date.now();
+          DELTA = NOW - THEN;
 
-            if (DELTA <= INTERVAL) return;
+          if (DELTA <= INTERVAL) return;
 
-            THEN = NOW - (DELTA % INTERVAL);
-            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-            fxH += STEP;
-            drawLayer(
-              '#30333e',
-              (path) => {
-                path.lineTo(expEaseInOut(innerH + fxH + 100, 0, 700, 1000), innerH);
-                path.bezierCurveTo(expEaseInOut(fxH, 0, 300, 800), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 500, 1000), 0, expEaseInOut(fxH + 100, 200, 300, 800), 0);
-            });
-            // drawLayer(
-            //   '#8ab9ff',
-            //   (path) => {
-            //     path.lineTo(expEaseInOut(innerH + fxH, 0, 500, 1000), innerH);
-            //     path.bezierCurveTo(expEaseInOut(fxH, 0, 100, 1000), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 300, 1000), 0, expEaseInOut(fxH + 100, 0, 100, 400), 0);
-            //   }
-            // );
-            // drawLayer(
-            //   '#356da9',
-            //   (path) => {
-            //     path.lineTo(expEaseInOut(innerH + fxH + 200, 0, 600, 1000), innerH);
-            //     path.bezierCurveTo(expEaseInOut(fxH + 100, 0, 200, 900), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 400, 1000), 0, expEaseInOut(fxH + 100, 0, 200, 200), 0);
-            //   }
-            // );
-          };
-          draw();
+          THEN = NOW - (DELTA % INTERVAL);
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          fxH += STEP;
+          drawLayer("#30333e", (path) => {
+            path.lineTo(expEaseInOut(innerH + fxH + 100, 0, 700, 1000), innerH);
+            path.bezierCurveTo(
+              expEaseInOut(fxH, 0, 300, 800),
+              expEaseInOut(fxH, 0, 300, 1000),
+              expEaseInOut(fxH, 0, 500, 1000),
+              0,
+              expEaseInOut(fxH + 100, 200, 300, 800),
+              0,
+            );
+          });
+          // drawLayer(
+          //   '#8ab9ff',
+          //   (path) => {
+          //     path.lineTo(expEaseInOut(innerH + fxH, 0, 500, 1000), innerH);
+          //     path.bezierCurveTo(expEaseInOut(fxH, 0, 100, 1000), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 300, 1000), 0, expEaseInOut(fxH + 100, 0, 100, 400), 0);
+          //   }
+          // );
+          // drawLayer(
+          //   '#356da9',
+          //   (path) => {
+          //     path.lineTo(expEaseInOut(innerH + fxH + 200, 0, 600, 1000), innerH);
+          //     path.bezierCurveTo(expEaseInOut(fxH + 100, 0, 200, 900), expEaseInOut(fxH, 0, 300, 1000), expEaseInOut(fxH, 0, 400, 1000), 0, expEaseInOut(fxH + 100, 0, 200, 200), 0);
+          //   }
+          // );
+        }
+        draw();
       })();
-      const ipc = window.require('electron').ipcRenderer;
-            ipc.on('loading-state', (event, message) => {
-              document.querySelector('#status').innrHTML = `<span id="spanText">${message}</span>`;
-              document.querySelector('.loading').style.width = `${percent}%`;
-            });
+      const ipc = window.require("electron").ipcRenderer;
+      ipc.on("loading-state", (event, message) => {
+        document.querySelector("#status").innrHTML =
+          `<span id="spanText">${message}</span>`;
+        document.querySelector(".loading").style.width = `${percent}%`;
+      });
     </script>
   </body>
 </html>

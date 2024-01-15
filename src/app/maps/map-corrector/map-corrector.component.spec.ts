@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { MapCorrectorComponent } from './map-corrector.component';
+import { MapCorrectorComponent } from "./map-corrector.component";
 
-describe('MapCorrectorComponent', () => {
+describe("MapCorrectorComponent", () => {
   let component: MapCorrectorComponent;
   let fixture: ComponentFixture<MapCorrectorComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapCorrectorComponent ]
-    })
-    .compileComponents();
+      declarations: [MapCorrectorComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MapCorrectorComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

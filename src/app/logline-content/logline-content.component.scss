@@ -16,17 +16,17 @@
     width: 100%;
     white-space: nowrap;
     ::-webkit-selection {
-      background-color: var(--bs-light)!important;
+      background-color: var(--bs-light) !important;
       color: var(--bs-dark);
     }
     ::selection {
-      background-color: var(--bs-light)!important;
+      background-color: var(--bs-light) !important;
       color: var(--bs-dark);
     }
     span {
       text-overflow: ellipsis;
       max-height: $height;
-      transition: max-height .1s ease;
+      transition: max-height 0.1s ease;
       padding: 0px 6px 0px 6px;
       box-sizing: border-box;
       overflow: hidden;
@@ -64,13 +64,13 @@
       text-overflow: ellipsis;
     }
     small {
-      line-height: 17px!important;
+      line-height: 17px !important;
     }
     a {
       line-height: $height;
       margin-left: 5px;
       margin-right: 5px;
-      transition: .1s ease;
+      transition: 0.1s ease;
       text-decoration: none;
       border-bottom: 1px solid transparent;
       &:hover {
@@ -100,7 +100,7 @@
     height: 20px;
     .spinner {
       .path {
-        stroke: var(--bs-light)!important;
+        stroke: var(--bs-light) !important;
       }
     }
   }
@@ -113,7 +113,8 @@
     &-body {
       background: #00000030;
     }
-    &-head, &-body {
+    &-head,
+    &-body {
       padding-left: 15px;
       padding-right: 15px;
       padding-top: 5px;

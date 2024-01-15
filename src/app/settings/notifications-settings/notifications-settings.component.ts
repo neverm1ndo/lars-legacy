@@ -1,18 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { IUserData } from '@lars/interfaces';
-import { UserService } from '@lars/user/user.service';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormControl } from "@angular/forms";
+import { IUserData } from "@lars/interfaces";
+import { UserService } from "@lars/user/user.service";
 
 @Component({
-  selector: 'notifications-settings',
-  templateUrl: './notifications-settings.component.html',
-  styleUrls: ['./notifications-settings.component.scss']
+  selector: "notifications-settings",
+  templateUrl: "./notifications-settings.component.html",
+  styleUrls: ["./notifications-settings.component.scss"],
 })
 export class NotificationsSettingsComponent implements OnInit {
-
-  constructor(
-    private _user: UserService,
-  ) {}
+  constructor(private _user: UserService) {}
 
   settings = new FormGroup({
     silent: new FormControl(false),
@@ -28,35 +25,35 @@ export class NotificationsSettingsComponent implements OnInit {
   }
 
   setup() {
-    window.localStorage.setItem('alerts', JSON.stringify(this.sets));
+    window.localStorage.setItem("alerts", JSON.stringify(this.sets));
   }
 
   getNotificationsSettingsFromStorage(): void {
     try {
-      if (!window.localStorage.getItem('alerts')) throw new Error('EMPTY_NOTIFICATIONS_SETTINGS');
-      this.settings.setValue(JSON.parse(window.localStorage.getItem('alerts')));
-    } catch(err) {
+      if (!window.localStorage.getItem("alerts"))
+        throw new Error("EMPTY_NOTIFICATIONS_SETTINGS");
+      this.settings.setValue(JSON.parse(window.localStorage.getItem("alerts")));
+    } catch (err) {
       this.setup();
-      console.warn(err.message, 'Notifications settings reset to default');
+      console.warn(err.message, "Notifications settings reset to default");
     }
   }
 
   testNotification(): void {
     const { avatar }: IUserData = this._user.getCurrentUserInfo();
 
-    new Notification('Это тестовое оповещение!', {
+    new Notification("Это тестовое оповещение!", {
       body: 'Это оповещение вызвано кнопкой "Тест оповещений"',
       timestamp: Date.now(),
-      lang: 'ru-RU',
+      lang: "ru-RU",
       silent: !this.sets.silent,
       icon: avatar,
       requireInteraction: true,
-      image: avatar
+      image: avatar,
     });
   }
 
   ngOnInit(): void {
     this.getNotificationsSettingsFromStorage();
   }
-
 }

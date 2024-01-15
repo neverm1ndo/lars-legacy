@@ -1,6 +1,6 @@
-@import 'colors';
+@import "colors";
 :root {
-  --primary: #2E2F39;
+  --primary: #2e2f39;
   --success: #28a745;
 }
 @mixin no-select {
@@ -20,9 +20,10 @@
   border: none;
   cursor: pointer;
   svg {
-    cursor: pointer!important;
+    cursor: pointer !important;
   }
-  &:active, &:focus {
+  &:active,
+  &:focus {
     outline: none;
     border: none;
   }
@@ -36,67 +37,73 @@
   -webkit-app-region: drag;
 }
 .custom-control {
-  padding-left: 0px!important;
+  padding-left: 0px !important;
   label {
-  	position: relative;
+    position: relative;
     margin-left: 38px;
-  	cursor: pointer;
-  	font-size: inherit;
+    cursor: pointer;
+    font-size: inherit;
     text-align: left;
   }
 
   input[type="checkbox"] {
-  	position: absolute;
-  	right: 9000px;
+    position: absolute;
+    right: 9000px;
   }
 
+  label::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: 2px solid #fdfdfd20;
+    border-radius: 50%;
+    top: 50%;
+    left: -2rem;
+    transform: translateY(-50%);
+    transition: border-color 400ms ease;
+  }
+  input[type="radio"] {
+    width: 0px;
+    height: 0px;
+    display: none;
+  }
+  label::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: $primary;
+    border: 11px solid $primary;
+    border-radius: 100%;
+    top: 50%;
+    left: -33px;
+    transform: translateY(-50%) scale(0);
+    transition: transform 200ms ease;
+  }
 
-label::before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: transparent;
-  border: 2px solid #fdfdfd20;
-  border-radius: 50%;
-  top: 50%;
-  left: -2rem;
-  transform: translateY(-50%);
-  transition: border-color 400ms ease;
-}
-input[type="radio"] {
-  width: 0px;
-  height: 0px;
-  display: none;
-}
-label::after {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background-color: $primary;
-  border: 11px solid $primary;
-  border-radius: 100%;
-  top: 50%;
-  left: -33px;
-  transform: translateY(-50%) scale(0);
-  transition: transform 200ms ease;
-}
+  input[type="radio"]:checked + label::before {
+    border-color: none;
+  }
 
-input[type="radio"]:checked + label::before {
-  border-color: none;
-}
+  input[type="radio"]:checked + label::after {
+    transform: translateY(-50%) scale(0.55);
+  }
 
-input[type="radio"]:checked + label::after {
-  transform: translateY(-50%) scale(0.55);
-}
-
-
-  @keyframes effect{
-  	0%{transform: scale(0);}
-  	25%{transform: scale(1.3);}
-  	75%{transform: scale(1.4);}
-  	100%{transform: scale(1);}
+  @keyframes effect {
+    0% {
+      transform: scale(0);
+    }
+    25% {
+      transform: scale(1.3);
+    }
+    75% {
+      transform: scale(1.4);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 }
 .cdk-virtual-scroll-content-wrapper {
@@ -104,7 +111,7 @@ input[type="radio"]:checked + label::after {
 }
 ngb-datepicker {
   border: none;
-  z-index: 1!important;
+  z-index: 1 !important;
   .btn-light {
     color: #c6c6c9;
   }
@@ -134,12 +141,12 @@ ngb-datepicker {
   }
 }
 .as-split-gutter {
-  background-color: $topper!important;
-  transition: .1s ease;
+  background-color: $topper !important;
+  transition: 0.1s ease;
   &:hover {
-    background-color: $primary!important;
+    background-color: $primary !important;
   }
   &-icon {
-    background-image: none!important;
+    background-image: none !important;
   }
 }

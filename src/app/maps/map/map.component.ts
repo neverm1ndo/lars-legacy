@@ -1,30 +1,42 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { faMap, faPlus, faCubes, faDraftingCompass,
-  faRoute, faCloudDownloadAlt, faCloudUploadAlt, faTrash,
-  faCheckCircle, faInfo, faSave, faArchway,
-  faTimes, faRulerVertical, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { EditorMode } from '@lars/enums/map.editor.enum';
-import { MapObject } from '../map.interfaces';
-import { MapEditorComponent } from '../map-editor/map-editor.component';
-import { MapsService } from '../maps.service';
-import { ActivatedRoute } from '@angular/router';
-import { tap, switchMap, filter } from 'rxjs/operators';
-import { mapload, panelSwitch, extrudeToRight } from '@lars/app.animations';
+import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
+import {
+  faMap,
+  faPlus,
+  faCubes,
+  faDraftingCompass,
+  faRoute,
+  faCloudDownloadAlt,
+  faCloudUploadAlt,
+  faTrash,
+  faCheckCircle,
+  faInfo,
+  faSave,
+  faArchway,
+  faTimes,
+  faRulerVertical,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import { EditorMode } from "@lars/enums/map.editor.enum";
+import { MapObject } from "../map.interfaces";
+import { MapEditorComponent } from "../map-editor/map-editor.component";
+import { MapsService } from "../maps.service";
+import { ActivatedRoute } from "@angular/router";
+import { tap, switchMap, filter } from "rxjs/operators";
+import { mapload, panelSwitch, extrudeToRight } from "@lars/app.animations";
 
 interface CurrentMap {
-  name: string,
-  path: string,
-  objects: MapObject[]
+  name: string;
+  path: string;
+  objects: MapObject[];
 }
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
-  animations: [ mapload, panelSwitch, extrudeToRight ]
+  selector: "app-map",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.scss"],
+  animations: [mapload, panelSwitch, extrudeToRight],
 })
 export class MapComponent implements OnInit {
-
   fa = {
     map: faMap,
     plus: faPlus,
@@ -41,8 +53,8 @@ export class MapComponent implements OnInit {
     cross: faTimes,
     ruler: {
       vert: faRulerVertical,
-    }
-  }
+    },
+  };
 
   public paneStates: number[] = [];
 
@@ -51,30 +63,34 @@ export class MapComponent implements OnInit {
   levelingZ: boolean = false;
 
   current: CurrentMap = {
-    path: '',
-    name: '',
-    objects: []
-  }
+    path: "",
+    name: "",
+    objects: [],
+  };
 
   // @ViewChild(MapEditorComponent) mapEditor: MapEditorComponent;
-  @HostListener('window:keyup', ['$event']) keyEvent(event: KeyboardEvent) {
+  @HostListener("window:keyup", ["$event"]) keyEvent(event: KeyboardEvent) {
     if (this.current) {
       if (event.ctrlKey) {
         switch (event.key) {
-          case 's' : { // Ctrl + S
+          case "s": {
+            // Ctrl + S
             // this.maps.saveMapLocal(this.current.name, this.mapEditor.objects);
             break;
           }
-          default : break;
+          default:
+            break;
         }
       }
       if (event.altKey) {
         switch (event.key) {
-          case 'x' : { // Alt + X
+          case "x": {
+            // Alt + X
             this.maps.deleteMapCloud(this.current.path);
             break;
           }
-          default : break;
+          default:
+            break;
         }
       }
     }
@@ -83,7 +99,7 @@ export class MapComponent implements OnInit {
   constructor(
     private maps: MapsService,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
   isViewMode(): boolean {
     return this.mode === EditorMode.VIEW;
@@ -112,7 +128,7 @@ export class MapComponent implements OnInit {
   //   this.levelingZ = false;
   // }
   levelZ() {
-    this.levelingZ = this.levelingZ? false : true;
+    this.levelingZ = this.levelingZ ? false : true;
   }
   // cancelChanges() {
   //   if (!this.mapEditor.changed) return void (this.toViewMode());
@@ -130,11 +146,11 @@ export class MapComponent implements OnInit {
   public saveMapCloud() {
     // this.maps.saveMapCloud(this.current.path, this.mapEditor.objects)
     //          .subscribe({
-    //             next: () => { 
+    //             next: () => {
     //               this.maps.mapToast(`Карта ${this.current.name} сохранена на сервере`, this.current.path, faCloudUploadAlt, 'bg-success text-light')
     //             },
-    //             error: (err) => { 
-    //               this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') 
+    //             error: (err) => {
+    //               this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light')
     //             }
     //           })
   }
@@ -144,51 +160,59 @@ export class MapComponent implements OnInit {
     //             next: (filePath: string) => {
     //               this.maps.mapToast(`Карта ${this.current.name} сохранена на локальном диске`, filePath, faCloudDownloadAlt, 'bg-success text-light')
     //             },
-    //             error: (err) => { 
-    //               this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light') 
+    //             error: (err) => {
+    //               this.maps.mapToast(`Карта ${this.current.name} не сохранена`, err.message, faExclamationTriangle, 'bg-danger text-light')
     //             }
     //           });
   }
 
   public deleteMapCloud() {
-    this.maps.deleteMapCloud(this.current.path)
-             .subscribe({
-                next: () => {
-                  this.maps.mapToast(`Карта ${this.current.name} была удалена с сервера`, this.current.path, faTrash, 'bg-success text-light')
-                },
-                error: (err) => {
-                  console.log(err);
-                  this.maps.mapToast(`Карта ${this.current.name} не была удалена`, err.message, faExclamationTriangle, 'bg-danger text-light')
-                }
-              });
+    this.maps.deleteMapCloud(this.current.path).subscribe({
+      next: () => {
+        this.maps.mapToast(
+          `Карта ${this.current.name} была удалена с сервера`,
+          this.current.path,
+          faTrash,
+          "bg-success text-light",
+        );
+      },
+      error: (err) => {
+        console.log(err);
+        this.maps.mapToast(
+          `Карта ${this.current.name} не была удалена`,
+          err.message,
+          faExclamationTriangle,
+          "bg-danger text-light",
+        );
+      },
+    });
   }
-
 
   ngOnInit(): void {
     this.route.queryParams
-    .pipe(
-      filter(({ path, name }) => path && name),
-      tap(({ path, name }) => {
-        this.loading = true;
-        this.current = {
-          path,
-          name,
-          objects: []
-        };
-        return { path, name };
-      }),
-      switchMap(({ path, name }) => this.maps.getMap({ path, name }))
-    )
-    .subscribe({
-      next: (file: MapObject[]) => {
-        // this.mapEditor.objects = file;
-        this.current.objects = file;
-        this.loading = false;
-      }, 
-      error: (err) => {
-        console.error(err)
-        this.maps.mapNotLoaded(err);
-      }
-    });
+      .pipe(
+        filter(({ path, name }) => path && name),
+        tap(({ path, name }) => {
+          this.loading = true;
+          this.current = {
+            path,
+            name,
+            objects: [],
+          };
+          return { path, name };
+        }),
+        switchMap(({ path, name }) => this.maps.getMap({ path, name })),
+      )
+      .subscribe({
+        next: (file: MapObject[]) => {
+          // this.mapEditor.objects = file;
+          this.current.objects = file;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.maps.mapNotLoaded(err);
+        },
+      });
   }
 }

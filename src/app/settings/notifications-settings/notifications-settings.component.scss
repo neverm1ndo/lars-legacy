@@ -14,38 +14,39 @@ small {
   height: 34px;
   position: relative;
   width: 60px;
-    input {
-      display:none;
-      &:checked + .slider {
-        background-color: #66bb6a;
-      }
-      &:checked + .slider:before {
-        transform: translateX(26px);
-      }
+  input {
+    display: none;
+    &:checked + .slider {
+      background-color: #66bb6a;
     }
-  }  .slider {
-      background-color: $topper;
-      bottom: 0;
-      cursor: pointer;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transition: .4s;
-      &:before {
-        background-color: $text;
-        bottom: 4px;
-        content: "";
-        height: 26px;
-        left: 4px;
-        position: absolute;
-        transition: .4s;
-        width: 26px;
-      }
-      &.round {
-        border-radius: 5px;
-        &:before {
-          border-radius: 5px;
-        }
-      }
+    &:checked + .slider:before {
+      transform: translateX(26px);
     }
+  }
+}
+.slider {
+  background-color: $topper;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+  &:before {
+    background-color: $text;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: 0.4s;
+    width: 26px;
+  }
+  &.round {
+    border-radius: 5px;
+    &:before {
+      border-radius: 5px;
+    }
+  }
+}

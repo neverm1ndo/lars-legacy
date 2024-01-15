@@ -1,46 +1,88 @@
 <div class="containter-fluid g-0 h-100">
   <div class="h-100 d-flex flex-column w-100 align-items-stretch">
     <div class="container-fluid g-3">
-      <app-search (searchQuery)="search($event)" (syncronize)="sync()" [loading]="$loading | async"></app-search>
+      <app-search
+        (searchQuery)="search($event)"
+        (syncronize)="sync()"
+        [loading]="$loading | async"
+      ></app-search>
     </div>
     <ng-container *ngLet="$list | async as list">
-      <cdk-virtual-scroll-viewport lazyLoad (onBottom)="lazyLoadChunk()" [attr.data-listlength]="list.length" [attr.data-limit]="$limit | async" class="viewport" itemSize="28">
+      <cdk-virtual-scroll-viewport
+        lazyLoad
+        (onBottom)="lazyLoadChunk()"
+        [attr.data-listlength]="list.length"
+        [attr.data-limit]="$limit | async"
+        class="viewport"
+        itemSize="28"
+      >
         <div class="container-fluid g-0 h-100">
-          <div *cdkVirtualFor="let line of list" class="d-flex flex-row logline" [class.banned]="isBanned(line.process)">
+          <div
+            *cdkVirtualFor="let line of list"
+            class="d-flex flex-row logline"
+            [class.banned]="isBanned(line.process)"
+          >
             <ng-container *ngLet="line.process | process as process">
               <div class="col-2">
                 <div class="h-100 d-flex align-items-center">
-                  <span>{{ line.date | date:'d MMM yy, HH:mm:ss' }}</span>
+                  <span>{{ line.date | date: "d MMM yy, HH:mm:ss" }}</span>
                 </div>
               </div>
               <div class="col-4">
                 <div class="h-100 d-flex align-items-center">
-                  <span placement="right" [title]="line.process" class="badge bg-{{ process.type }} process">{{ process.translate }}</span>
+                  <span
+                    placement="right"
+                    [title]="line.process"
+                    class="badge bg-{{ process.type }} process"
+                    >{{ process.translate }}</span
+                  >
                 </div>
               </div>
               <div class="col-2">
                 <div class="h-100 d-flex align-items-center">
-                  <a class="nickname" [routerLink]="['/home/search']" [queryParams]="{ query: 'nn:' + line.nickname, page: 0 }">
+                  <a
+                    class="nickname"
+                    [routerLink]="['/home/search']"
+                    [queryParams]="{ query: 'nn:' + line.nickname, page: 0 }"
+                  >
                     <span>{{ line.nickname }}</span>
-                    <span class="badge bg-dark ms-2">{{ line.id }}</span> 
+                    <span class="badge bg-dark ms-2">{{ line.id }}</span>
                   </a>
-                  <div *ngIf="line.multiplier" class="d-flex align-items-center">
-                    <span class="badge multiplier bg-dark mr-2"> x{{ line.multiplier + 1 }} </span>
+                  <div
+                    *ngIf="line.multiplier"
+                    class="d-flex align-items-center"
+                  >
+                    <span class="badge multiplier bg-dark mr-2">
+                      x{{ line.multiplier + 1 }}
+                    </span>
                   </div>
                 </div>
               </div>
               <div class="col-4">
                 <div class="d-flex flex-row w-100">
-                  <div ngbDropdown [autoClose]="true" container="body" *ngIf="line.geo as geo" class="d-flex me-1 geo-container">
+                  <div
+                    ngbDropdown
+                    [autoClose]="true"
+                    container="body"
+                    *ngIf="line.geo as geo"
+                    class="d-flex me-1 geo-container"
+                  >
                     <button ngbDropdownToggle class="btn btn-sm btn-dark">
-                      <fa-icon [icon]="fa.globe"></fa-icon><u class="d-none d-lg-inline ms-2">Раскрыть гео</u>
+                      <fa-icon [icon]="fa.globe"></fa-icon
+                      ><u class="d-none d-lg-inline ms-2">Раскрыть гео</u>
                     </button>
                     <div ngbDropdownMenu aria-labelledby="geoDropdown">
                       <geo ngbDropdownItem [table]="geo"></geo>
                     </div>
                   </div>
-                  <div *ngIf="line.content" class="flex-fill d-flex align-items-center">
-                    <logline-content [content]="line.content" [type]="process"></logline-content>
+                  <div
+                    *ngIf="line.content"
+                    class="flex-fill d-flex align-items-center"
+                  >
+                    <logline-content
+                      [content]="line.content"
+                      [type]="process"
+                    ></logline-content>
                   </div>
                 </div>
               </div>

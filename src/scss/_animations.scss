@@ -1,46 +1,79 @@
 @mixin blinknscale($from, $to) {
   @keyframes blinknscale {
-    0% { opacity: 1; transform: scale($from);}
-    100% { opacity: 0; transform: scale($to);}
+    0% {
+      opacity: 1;
+      transform: scale($from);
+    }
+    100% {
+      opacity: 0;
+      transform: scale($to);
+    }
   }
 }
 @mixin blink() {
   @keyframes blink {
-    0% { opacity: 1 }
-    50% { opacity: 0 }
-    100% { opacity: 1 }
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 }
 
 @mixin gradient() {
   @keyframes gradient {
-  	0% {
-  		background-position: 0% 50%;
-  	}
-  	50% {
-  		background-position: 100% 50%;
-  	}
-  	100% {
-  		background-position: 0% 50%;
-  	}
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }
 @mixin rolltoleft() {
   @keyframes rolltoleft {
-    from { transform: translateX(300px); width: 0px;}
-    to { transform: translateX(0%); width: 300px;}
+    from {
+      transform: translateX(300px);
+      width: 0px;
+    }
+    to {
+      transform: translateX(0%);
+      width: 300px;
+    }
   }
 }
 @mixin open {
   @keyframes open {
-    0% {  visibility: hidden; opacity: 0; transform: translate(0px, 20%);}
-    100% { visibility: visible; opacity: 1; }
+    0% {
+      visibility: hidden;
+      opacity: 0;
+      transform: translate(0px, 20%);
+    }
+    100% {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 }
 @mixin close {
   @keyframes close {
-    0% { display: block!important; opacity: 1 !important; }
-    99% { opacity: 0; transform: translate(0px, 0%); }
-    100% { display: none!important;}
+    0% {
+      display: block !important;
+      opacity: 1 !important;
+    }
+    99% {
+      opacity: 0;
+      transform: translate(0px, 0%);
+    }
+    100% {
+      display: none !important;
+    }
   }
 }

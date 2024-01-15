@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { CommonGuard } from './is-common.guard';
+import { CommonGuard } from "./is-common.guard";
 
-describe('CommonGuard', () => {
+describe("CommonGuard", () => {
   let guard: CommonGuard;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('CommonGuard', () => {
     guard = TestBed.inject(CommonGuard);
   });
 
-  xit('should be created', () => {
+  xit("should be created", () => {
     expect(guard).toBeTruthy();
   });
 });

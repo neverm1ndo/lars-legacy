@@ -1,29 +1,31 @@
 <ngb-toast
-   *ngFor="let toast of service.toasts"
-   [class]="'bg-'+toast.type"
-   [animation]="true"
-   [autohide]="true"
-   (hidden)="service.remove(toast)"
- >
- <ng-container *ngTemplateOutlet="text"></ng-container>
-   
+  *ngFor="let toast of service.toasts"
+  [class]="'bg-' + toast.type"
+  [animation]="true"
+  [autohide]="true"
+  (hidden)="service.remove(toast)"
+>
+  <ng-container *ngTemplateOutlet="text"></ng-container>
+
   <!-- <ng-template #template></ng-template> -->
-   
-   <ng-template #text>
-     <div class="d-flex flex-row">
-       <div *ngIf="toast.icon" class="d-flex toast-icon">
-         <fa-icon [icon]="toast.icon"></fa-icon>
-       </div>
-       <div class="d-flex flex-fill flex-column toast-text w-100">
-         <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.body"></span>
-         <span *ngIf="isTemplate(toast)">{{ toast.body }}</span>
+
+  <ng-template #text>
+    <div class="d-flex flex-row">
+      <div *ngIf="toast.icon" class="d-flex toast-icon">
+        <fa-icon [icon]="toast.icon"></fa-icon>
+      </div>
+      <div class="d-flex flex-fill flex-column toast-text w-100">
+        <span *ngIf="!isTemplate(toast)" [innerHTML]="toast.body"></span>
+        <span *ngIf="isTemplate(toast)">{{ toast.body }}</span>
         <div>
           <div *ngIf="toast.subtext">
-            <hr>
-            <span><b>{{ toast.subtext }}</b></span>
+            <hr />
+            <span
+              ><b>{{ toast.subtext }}</b></span
+            >
           </div>
         </div>
-       </div>
       </div>
-   </ng-template>
- </ngb-toast>
+    </div>
+  </ng-template>
+</ngb-toast>

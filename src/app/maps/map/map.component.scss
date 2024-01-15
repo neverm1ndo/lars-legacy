@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 :host {
   lty-icon {
     width: 45px;
@@ -11,9 +11,10 @@
     margin-left: -15px;
     margin-right: -15px;
     z-index: 3;
-    .loader, lty-icon {
-      width: 30px!important;
-      height: 30px!important;
+    .loader,
+    lty-icon {
+      width: 30px !important;
+      height: 30px !important;
     }
   }
   .map-inspector-top {
@@ -36,7 +37,7 @@
       margin-bottom: -63px;
       padding: 15px;
     }
-    &-bottom  {
+    &-bottom {
       position: relative;
       z-index: 2;
       height: 90px;
@@ -67,9 +68,9 @@
     height: 2px;
     margin-bottom: -2px;
     border-radius: none;
-    background: none!important;
+    background: none !important;
     .progressbar {
-      background: $primary!important;
+      background: $primary !important;
     }
   }
   .pr {
@@ -101,7 +102,7 @@
     padding: 0px 0px 0px 0px;
     line-height: 30px;
     .ttp-icon {
-      margin-right: 10px!important;
+      margin-right: 10px !important;
     }
     fa-icon {
       margin-left: 10px;
@@ -135,7 +136,8 @@
     }
     white-space: nowrap;
   }
-  .playerlog, .jumbotron {
+  .playerlog,
+  .jumbotron {
     background: #3d3e4a;
   }
   .filetree {

@@ -1,10 +1,10 @@
-@import 'colors';
+@import "colors";
 :host {
   hr {
     margin-top: 0px;
     margin-bottom: 5px;
-    border: 2px!important;
-    border-top: 2px solid red!important;
+    border: 2px !important;
+    border-top: 2px solid red !important;
   }
   h3 {
     font-weight: 300;
@@ -33,7 +33,7 @@
   }
   .credits {
     small {
-      line-height: 10px!important;
+      line-height: 10px !important;
     }
     img {
       height: 20px;
@@ -56,7 +56,7 @@
     width: 100px;
   }
   .active {
-    background: #1d212450!important;
+    background: #1d212450 !important;
   }
   .styles {
     padding: 0 0 0 15px;
@@ -99,8 +99,8 @@
     }
     .legacy {
       font-family: monospace;
-      font-size: 14px!important;
-      line-height: inherit!important;
+      font-size: 14px !important;
+      line-height: inherit !important;
       // border-bottom: 1px dashed #fdfdfd30;
       border-bottom: 1px solid #0000000f;
       margin-bottom: 0px;
@@ -110,7 +110,7 @@
       }
       .legacy-nickname {
         font-weight: 600;
-        color: #76c570
+        color: #76c570;
       }
       .legacy-id {
         color: #92beff;
@@ -139,8 +139,8 @@
       }
     }
     .expanded {
-      font-size: 14px!important;
-      line-height: inherit!important;
+      font-size: 14px !important;
+      line-height: inherit !important;
     }
   }
   hr {
@@ -165,7 +165,7 @@
     position: relative;
     width: 60px;
     input {
-      display:none;
+      display: none;
       &:checked + .slider {
         background-color: #66bb6a;
       }
@@ -184,7 +184,8 @@
     text-align: center;
     padding-left: 20px;
     padding-right: 20px;
-    &:active, &:focus {
+    &:active,
+    &:focus {
       outline: none;
     }
   }
@@ -196,7 +197,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    transition: .4s;
+    transition: 0.4s;
     &:before {
       background-color: $text;
       bottom: 4px;
@@ -204,7 +205,7 @@
       height: 26px;
       left: 4px;
       position: absolute;
-      transition: .4s;
+      transition: 0.4s;
       width: 26px;
     }
     &.round {

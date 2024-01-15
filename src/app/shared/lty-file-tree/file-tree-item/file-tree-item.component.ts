@@ -1,9 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
-  selector: 'file-tree-item',
-  template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "file-tree-item",
+  template: "<ng-content></ng-content>",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeItemComponent {
-}
+export class FileTreeItemComponent {}

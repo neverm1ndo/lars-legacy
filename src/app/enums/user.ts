@@ -6,5 +6,5 @@ export enum UserActivity {
   IN_BANS,
   IN_ADM,
   IN_BACKS,
-  IN_STATS
+  IN_STATS,
 }

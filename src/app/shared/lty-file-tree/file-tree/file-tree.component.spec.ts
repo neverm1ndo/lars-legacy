@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FileTreeComponent } from './file-tree.component';
+import { FileTreeComponent } from "./file-tree.component";
 
-describe('FileTreeComponent', () => {
+describe("FileTreeComponent", () => {
   let component: FileTreeComponent;
   let fixture: ComponentFixture<FileTreeComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileTreeComponent ]
-    })
-    .compileComponents();
+      declarations: [FileTreeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FileTreeComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

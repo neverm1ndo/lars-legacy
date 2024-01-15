@@ -1,5 +1,5 @@
-import Processes from '@lars/shared/components/line-process/log-processes';
-import { Workgroup } from '@lars/enums/workgroup.enum';
+import Processes from "@lars/shared/components/line-process/log-processes";
+import { Workgroup } from "@lars/enums/workgroup.enum";
 
 export interface IUserLoginData {
   email: string;

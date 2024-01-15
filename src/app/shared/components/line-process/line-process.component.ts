@@ -1,17 +1,21 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import Processes, { Process } from './log-processes';
-import { IContentData } from '@lars/interfaces';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import Processes, { Process } from "./log-processes";
+import { IContentData } from "@lars/interfaces";
 
 @Component({
-  selector: 'line-process',
-  templateUrl: './line-process.component.html',
-  styleUrls: ['./line-process.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "line-process",
+  templateUrl: "./line-process.component.html",
+  styleUrls: ["./line-process.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineProcessComponent implements OnInit {
-
-  @Input('process') process: string;
-  @Input('content') content: IContentData;
+  @Input("process") process: string;
+  @Input("content") content: IContentData;
   type: Process;
 
   getProcessTranslation(): Process {

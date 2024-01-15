@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/user.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class LoginGuard implements CanActivate {
   constructor(

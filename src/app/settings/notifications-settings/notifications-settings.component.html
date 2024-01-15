@@ -1,13 +1,22 @@
 <div class="container-fluid">
   <div class="col-12">
-    <div class="d-flex flex-row justify-content-between align-items-center mb-2">
+    <div
+      class="d-flex flex-row justify-content-between align-items-center mb-2"
+    >
       <div>
         <h5>Оповещения</h5>
         <small>Включает или отключает системные оповещения</small>
       </div>
-      <button class="btn btn-success" type="button" (click)="testNotification()" name="button">Тест оповещений</button>
+      <button
+        class="btn btn-success"
+        type="button"
+        (click)="testNotification()"
+        name="button"
+      >
+        Тест оповещений
+      </button>
     </div>
-  
+
     <div class="separator"></div>
     <form [formGroup]="settings" (change)="setup()">
       <div class="d-flex justify-content-between align-content-center mb-2">
@@ -27,7 +36,11 @@
           <small>Жалобы на читеров, мат и т.д</small>
         </div>
         <label class="switch" for="checkbox2">
-          <input formControlName="playerReport" type="checkbox" id="checkbox2" />
+          <input
+            formControlName="playerReport"
+            type="checkbox"
+            id="checkbox2"
+          />
           <div class="slider round"></div>
         </label>
       </div>
@@ -56,7 +69,11 @@
           <h6>Оповещения об отключении сервера</h6>
         </div>
         <label class="switch" for="checkbox4">
-          <input formControlName="serverShutdown" type="checkbox" id="checkbox4" />
+          <input
+            formControlName="serverShutdown"
+            type="checkbox"
+            id="checkbox4"
+          />
           <div class="slider round"></div>
         </label>
       </div>
@@ -65,7 +82,11 @@
           <h6>Оповещения о перезагрузке сервера</h6>
         </div>
         <label class="switch" for="checkbox5">
-          <input formControlName="serverRestart" type="checkbox" id="checkbox5" />
+          <input
+            formControlName="serverRestart"
+            type="checkbox"
+            id="checkbox5"
+          />
           <div class="slider round"></div>
         </label>
       </div>

@@ -1,7 +1,7 @@
-import { RolePipe } from './role.pipe';
+import { RolePipe } from "./role.pipe";
 
-describe('RolePipe', () => {
-  it('create an instance', () => {
+describe("RolePipe", () => {
+  it("create an instance", () => {
     const pipe = new RolePipe();
     expect(pipe).toBeTruthy();
   });

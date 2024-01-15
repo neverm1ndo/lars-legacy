@@ -1,5 +1,5 @@
-@import 'colors';
-@import 'popup';
+@import "colors";
+@import "popup";
 
 :host {
   font-size: 11px;
@@ -56,7 +56,7 @@
   a {
     margin-left: 5px;
     margin-right: 5px;
-    transition: .1s ease;
+    transition: 0.1s ease;
     color: $text;
     border-bottom: 1px solid transparent;
     cursor: pointer;
@@ -87,7 +87,7 @@
       margin-left: 4px;
       margin-top: -17px;
     }
-    &:before{
+    &:before {
       content: "";
       width: 10px;
       height: 2px;

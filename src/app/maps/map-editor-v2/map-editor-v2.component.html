@@ -2,9 +2,14 @@
   <as-split direction="vertical" [gutterSize]="5">
     <as-split-area [size]="paneStates[1]">
       <div class="d-flex flex-fill w-100">
-        <canvas #view style="height: 100%; width: 100%;"></canvas>
-        <div *ngIf="!!($loading | async)" class="loading-screen d-flex flex-fill">
-          <div class="d-flex align-self-center w-100 text-center justify-content-center">
+        <canvas #view style="height: 100%; width: 100%"></canvas>
+        <div
+          *ngIf="!!($loading | async)"
+          class="loading-screen d-flex flex-fill"
+        >
+          <div
+            class="d-flex align-self-center w-100 text-center justify-content-center"
+          >
             <lty-icon name="lty-logo" anim="spinner-logo"></lty-icon>
           </div>
         </div>
@@ -17,12 +22,26 @@
     </as-split-area>
   </as-split>
   <div class="tools">
-    <button (click)="debugMap()" class="btn btn-sm btn-dark"><fa-icon [icon]="fa.save"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.undo"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.redo"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.map"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.download"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.upload"></fa-icon></button>
-    <button class="btn btn-sm btn-dark"><fa-icon [icon]="fa.list"></fa-icon></button>
+    <button (click)="debugMap()" class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.save"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.undo"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.redo"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.map"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.download"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.upload"></fa-icon>
+    </button>
+    <button class="btn btn-sm btn-dark">
+      <fa-icon [icon]="fa.list"></fa-icon>
+    </button>
   </div>
 </div>

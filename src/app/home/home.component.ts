@@ -1,14 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NotificationsService } from '../notifications/notifications.service';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
-  constructor(private _notifications: NotificationsService) { }
+  constructor(private _notifications: NotificationsService) {}
 
   ngOnInit(): void {
     this._notifications.subToNotifications();
@@ -16,5 +15,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._notifications.unsubFromNotifications();
   }
-
 }

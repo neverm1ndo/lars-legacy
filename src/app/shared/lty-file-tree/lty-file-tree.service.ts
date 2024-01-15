@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject } from 'rxjs';
-import { ITreeNode } from '@lars/interfaces/app.interfaces';
-import { sep } from 'path';
+import { Injectable } from "@angular/core";
+import { NgbDropdown } from "@ng-bootstrap/ng-bootstrap";
+import { BehaviorSubject } from "rxjs";
+import { ITreeNode } from "@lars/interfaces/app.interfaces";
+import { sep } from "path";
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: "any",
 })
 export class LtyFileTreeService {
-
   private _currentOpened: NgbDropdown | null;
-  public activeItemPath: BehaviorSubject<string | null> = new BehaviorSubject(null);
+  public activeItemPath: BehaviorSubject<string | null> = new BehaviorSubject(
+    null,
+  );
   public expandedDirs: string[] = [];
 
   public reloader$: BehaviorSubject<null> = new BehaviorSubject(null);
@@ -29,14 +30,14 @@ export class LtyFileTreeService {
     if (!path) return nodes;
     const separatedPath: string[] = path.split(sep);
     for (let item of nodes.items) {
-      if (item.type != 'dir') continue;
+      if (item.type != "dir") continue;
       if (this.expandedDirs.includes(item.path)) item.expanded = true;
       if (!separatedPath.includes(item.name)) continue;
       item.expanded = true;
       this.expandFollowingDirs(item, path);
     }
     return nodes;
-  };
+  }
 
   chooseDir(dir: string) {
     if (this.expandedDirs.includes(dir)) {
@@ -48,12 +49,11 @@ export class LtyFileTreeService {
 
   changeOpened(newTarget: NgbDropdown) {
     if (this._currentOpened == newTarget && !this._currentOpened.isOpen()) {
-       this._currentOpened.open();
-       return;
+      this._currentOpened.open();
+      return;
     }
     if (this._currentOpened) this._currentOpened.close();
     this._currentOpened = newTarget;
     newTarget.open();
   }
-
 }

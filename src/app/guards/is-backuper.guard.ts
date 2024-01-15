@@ -11,7 +11,7 @@ const { Backuper, Dev } = Workgroup;
 
 const ALLOWED_GROUPS = [Backuper, Dev];
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class BackuperGuard implements CanActivate {
   constructor(private user: UserService) {}

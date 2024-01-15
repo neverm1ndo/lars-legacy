@@ -15,7 +15,7 @@ import { HistoryStorage } from '../interfaces';
 import { BanRule } from '../interfaces/bans.interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ApiService {
   public readonly URL = (() => {
@@ -25,8 +25,17 @@ export class ApiService {
         __route: 'logs',
         LAST: 'last',
         SEARCH: 'search'
+        __route: "logs",
+        LAST: "last",
+        SEARCH: "search",
       },
       CONFIGS: {
+        __route: "configs",
+        FILE_TREE: "config-files-tree",
+        CONFIG_FILE: "config-file",
+        FILE_STATS: "file-info",
+        UPLOAD: "upload-file", // deprecated
+        SAVE_FILE: "save-file",
         __route: 'configs',
         FILE_TREE: 'config-files-tree',
         CONFIG_FILE: 'config-file',
@@ -35,10 +44,10 @@ export class ApiService {
         SAVE_FILE: 'save-file'
       },
       MAPS: {
-        __route: 'maps',
-        FILE_TREE: 'maps-files-tree',
-        MAP_FILE: 'map-file',
-        UPLOAD: 'upload-map'
+        __route: "maps",
+        FILE_TREE: "maps-files-tree",
+        MAP_FILE: "map-file",
+        UPLOAD: "upload-map",
       },
       ADMINS: {
         __route: 'admins',
@@ -56,14 +65,14 @@ export class ApiService {
         SIZE: 'size'
       },
       BANS: {
-        __route: 'bans',
-        LIST: '',
-        CN: 'cn',
-        IP: 'ip',
-        SERIALS: 'serials',
-        BAN: 'ban',
-        ADMIN: 'admin',
-        USER: 'user'
+        __route: "bans",
+        LIST: "",
+        CN: "cn",
+        IP: "ip",
+        SERIALS: "serials",
+        BAN: "ban",
+        ADMIN: "admin",
+        USER: "user",
       },
       STATS: {
         __route: 'stats',
@@ -97,7 +106,7 @@ export class ApiService {
 
   constructor(
     private _http: HttpClient,
-    private _user: UserService
+    private _user: UserService,
   ) {}
 
   getChunkSize(): string {
@@ -242,7 +251,7 @@ export class ApiService {
     });
 
     if (filter) {
-      params = params.append('filter', filter.join(','));
+      params = params.append("filter", filter.join(","));
     }
     if (date) {
       if (date.from) params = params.append('from', new Date(date.from).valueOf());

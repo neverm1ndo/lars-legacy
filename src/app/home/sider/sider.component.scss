@@ -1,9 +1,9 @@
-@import 'colors';
+@import "colors";
 
 @mixin active-panel {
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   path {
-    fill: '#'attr(data-color);
+    fill: "#" attr(data-color);
   }
 }
 
@@ -33,7 +33,9 @@
     margin-bottom: 10px;
     label {
       font-size: 24px;
-      &:active, &:target, &:focus {
+      &:active,
+      &:target,
+      &:focus {
         outline: none;
       }
       &::after {
@@ -46,7 +48,9 @@
     // margin-bottom: 10px;
     label {
       font-size: 24px;
-      &:active, &:target, &:focus {
+      &:active,
+      &:target,
+      &:focus {
         outline: none;
       }
       &::after {
@@ -54,7 +58,8 @@
       }
     }
   }
-  button, a {
+  button,
+  a {
     font-size: 10px;
   }
   h4 {
@@ -85,7 +90,8 @@
       opacity: 0.3;
     }
   }
-  label, .side-button {
+  label,
+  .side-button {
     background: none;
     border: none;
     user-select: none;
@@ -103,7 +109,7 @@
       opacity: 0.3;
     }
     &::after {
-      content: attr(data-content)'';
+      content: attr(data-content) "";
       margin-top: -3px;
       overflow: hidden;
       display: none;
@@ -118,7 +124,7 @@
       border-radius: 3px;
     }
     &::before {
-      content: '';
+      content: "";
       width: 0px;
       height: 0px;
       position: absolute;
@@ -155,8 +161,14 @@
       }
     }
     @keyframes labfade {
-      from {opacity: 0; left: 40px;}
-      to {opacity: 1;  left: 45px;}
+      from {
+        opacity: 0;
+        left: 40px;
+      }
+      to {
+        opacity: 1;
+        left: 45px;
+      }
     }
     @keyframes labfade2 {
       from {

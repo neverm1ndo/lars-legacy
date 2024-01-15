@@ -1,7 +1,9 @@
 <div class="containter-fluid g-0 h-100">
   <div class="h-100 d-flex flex-column flex-fill align-items-stretch">
     <div class="container-fluid adm-head">
-      <div class="d-flex align-self-start justify-content-between align-items-center flex-row w-100">
+      <div
+        class="d-flex align-self-start justify-content-between align-items-center flex-row w-100"
+      >
         <div class="d-flex">
           <h6><fa-icon [icon]="fa.agent"></fa-icon>{{ 'Admins.Title' | translate }}</h6>
         </div>
@@ -38,17 +40,25 @@
                         <fa-icon [icon]="adminActivityIcon(userActivities[admin.username])"></fa-icon>
                         {{ userActivities[admin.username] | userAction }}
                       </small> -->
-                    </td>
-                    <td>
-                      <ng-select [items]="roles"
+                  </td>
+                  <td>
+                    <ng-select
+                      [items]="roles"
                       bindLabel="val"
                       [searchable]="false"
                       [clearable]="false"
                       bindValue="id"
                       class="custom"
                       [disabled]="userInfo.main_group !== 10"
-                      (change)="changeAdminGroup(admin.username, admin.user_id, admin.main_group)"
-                      [(ngModel)]="admin.main_group">
+                      (change)="
+                        changeAdminGroup(
+                          admin.username,
+                          admin.user_id,
+                          admin.main_group
+                        )
+                      "
+                      [(ngModel)]="admin.main_group"
+                    >
                     </ng-select>
                   </td>
                   <td class="secondary-groups">

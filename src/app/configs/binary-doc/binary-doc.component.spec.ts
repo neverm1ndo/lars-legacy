@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { BinaryDocComponent } from './binary-doc.component';
+import { BinaryDocComponent } from "./binary-doc.component";
 
-describe('BinaryDocComponent', () => {
+describe("BinaryDocComponent", () => {
   let component: BinaryDocComponent;
   let fixture: ComponentFixture<BinaryDocComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BinaryDocComponent ]
-    })
-    .compileComponents();
+      declarations: [BinaryDocComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('BinaryDocComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

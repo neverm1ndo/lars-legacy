@@ -1,7 +1,8 @@
-@import 'colors';
+@import "colors";
 :host {
   background-color: #383a4a;
-  h2, h6 {
+  h2,
+  h6 {
     font-weight: lighter;
   }
   #bgcanvas {
@@ -24,13 +25,13 @@
     // transform: scaleY(-1);
   }
   .l-bg {
-    background: url('lars://assets/lbg.webp') no-repeat;
+    background: url("lars://assets/lbg.webp") no-repeat;
     background-size: contain;
     z-index: 1;
     position: relative;
   }
   .btn-dark {
-    background-color: $topper!important;
+    background-color: $topper !important;
     &:hover {
       background-color: #353642;
     }

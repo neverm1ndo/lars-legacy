@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { ConfiguratorGuard } from './is-configurator.guard';
+import { ConfiguratorGuard } from "./is-configurator.guard";
 
-describe('ConfiguratorGuard', () => {
+describe("ConfiguratorGuard", () => {
   let guard: ConfiguratorGuard;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('ConfiguratorGuard', () => {
     guard = TestBed.inject(ConfiguratorGuard);
   });
 
-  xit('should be created', () => {
+  xit("should be created", () => {
     expect(guard).toBeTruthy();
   });
 });

@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { IconsService } from './icons.service';
+import { IconsService } from "./icons.service";
 
-describe('IconsService', () => {
+describe("IconsService", () => {
   let service: IconsService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('IconsService', () => {
     service = TestBed.inject(IconsService);
   });
 
-  xit('should be created', () => {
+  xit("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

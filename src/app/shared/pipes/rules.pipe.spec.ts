@@ -1,7 +1,7 @@
-import { RulesPipe } from './rules.pipe';
+import { RulesPipe } from "./rules.pipe";
 
-describe('RulesPipe', () => {
-  it('create an instance', () => {
+describe("RulesPipe", () => {
+  it("create an instance", () => {
     const pipe = new RulesPipe();
     expect(pipe).toBeTruthy();
   });

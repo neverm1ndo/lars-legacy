@@ -1,31 +1,51 @@
 <table class="geotable inline" *ngIf="table">
-    <tr>
-      <td>GEODATA</td>
-      <td class="text-end">
-        <button class="btn btn-sm btn-dark" (click)="copyToClipboard()" name="button" placement="left" tooltipClass="light-tooltip" ngbTooltip="Скопировать в буфер обмена">
-          <fa-icon [icon]="fa.clipboard"></fa-icon>
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td><span (click)="sendQueryIP()" class="text-dashed">IP: {{ table.ip }}</span></td>
-      <td class="text-end">{{ table.country }}</td>
-    </tr>
-    <tr>
-      <td>AS: {{ table.as }}</td>
-      <td class="text-end">
-        <button class="btn btn-sm btn-dark" (click)="sendQuery()" name="button" placement="left" tooltipClass="light-tooltip" [ngbTooltip]="tipContent">
-          <fa-icon [icon]="fa.link"></fa-icon>
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td>SS: {{ table.ss }}</td>
-      <td class="text-end">CC: {{ table.cc }}</td>
-    </tr>
-    <tr>
-      <td>{{ table.org }}</td>
-      <td class="text-end">{{ table.cli }}</td>
-    </tr>
+  <tr>
+    <td>GEODATA</td>
+    <td class="text-end">
+      <button
+        class="btn btn-sm btn-dark"
+        (click)="copyToClipboard()"
+        name="button"
+        placement="left"
+        tooltipClass="light-tooltip"
+        ngbTooltip="Скопировать в буфер обмена"
+      >
+        <fa-icon [icon]="fa.clipboard"></fa-icon>
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span (click)="sendQueryIP()" class="text-dashed"
+        >IP: {{ table.ip }}</span
+      >
+    </td>
+    <td class="text-end">{{ table.country }}</td>
+  </tr>
+  <tr>
+    <td>AS: {{ table.as }}</td>
+    <td class="text-end">
+      <button
+        class="btn btn-sm btn-dark"
+        (click)="sendQuery()"
+        name="button"
+        placement="left"
+        tooltipClass="light-tooltip"
+        [ngbTooltip]="tipContent"
+      >
+        <fa-icon [icon]="fa.link"></fa-icon>
+      </button>
+    </td>
+  </tr>
+  <tr>
+    <td>SS: {{ table.ss }}</td>
+    <td class="text-end">CC: {{ table.cc }}</td>
+  </tr>
+  <tr>
+    <td>{{ table.org }}</td>
+    <td class="text-end">{{ table.cli }}</td>
+  </tr>
 </table>
-<ng-template #tipContent let-greeting="greeting">Поиск по <b>данной связке</b></ng-template>
+<ng-template #tipContent let-greeting="greeting"
+  >Поиск по <b>данной связке</b></ng-template
+>

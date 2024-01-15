@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { BanhammerComponent } from './banhammer.component';
+import { BanhammerComponent } from "./banhammer.component";
 
-describe('BanhammerComponent', () => {
+describe("BanhammerComponent", () => {
   let component: BanhammerComponent;
   let fixture: ComponentFixture<BanhammerComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BanhammerComponent ]
-    })
-    .compileComponents();
+      declarations: [BanhammerComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('BanhammerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

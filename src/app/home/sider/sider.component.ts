@@ -1,13 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { faCog, faFileSignature, faMap, faSearch, faHome, faUserSecret, faBoxOpen, faChartArea, faUserSlash } from '@fortawesome/free-solid-svg-icons'
+import { Component, OnInit } from "@angular/core";
+import {
+  faCog,
+  faFileSignature,
+  faMap,
+  faSearch,
+  faHome,
+  faUserSecret,
+  faBoxOpen,
+  faChartArea,
+  faUserSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-  selector: 'app-sider',
-  templateUrl: './sider.component.html',
-  styleUrls: ['./sider.component.scss']
+  selector: "app-sider",
+  templateUrl: "./sider.component.html",
+  styleUrls: ["./sider.component.scss"],
 })
 export class SiderComponent implements OnInit {
-
   fa = {
     cog: faCog,
     redactor: faFileSignature,
@@ -17,12 +26,10 @@ export class SiderComponent implements OnInit {
     agent: faUserSecret,
     box: faBoxOpen,
     chart: faChartArea,
-    ban: faUserSlash
+    ban: faUserSlash,
   };
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

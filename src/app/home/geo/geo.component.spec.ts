@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { GeoComponent } from './geo.component';
+import { GeoComponent } from "./geo.component";
 
-describe('GeoComponent', () => {
+describe("GeoComponent", () => {
   let component: GeoComponent;
   let fixture: ComponentFixture<GeoComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GeoComponent ]
-    })
-    .compileComponents();
+      declarations: [GeoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('GeoComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

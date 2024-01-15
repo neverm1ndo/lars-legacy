@@ -1,18 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { TopperComponent } from './topper.component';
-import { UserService } from '../user/user.service';
+import { TopperComponent } from "./topper.component";
+import { UserService } from "../user/user.service";
 
-describe('TopperComponent', () => {
+describe("TopperComponent", () => {
   let component: TopperComponent;
   let fixture: ComponentFixture<TopperComponent>;
-  let fakeUserService
+  let fakeUserService;
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TopperComponent ],
-      providers: [UserService]
-    })
-    .compileComponents();
+      declarations: [TopperComponent],
+      providers: [UserService],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -21,10 +20,10 @@ describe('TopperComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
-  xit('opens forum', () => {
+  xit("opens forum", () => {
     expect(true).toBeTruthy();
-  })
+  });
 });

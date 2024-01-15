@@ -1,14 +1,16 @@
-@import 'colors';
+@import "colors";
 
 :host {
   .spin {
     transform-origin: 11.5px 10.5px;
     position: relative;
-    animation: spin .5s ease infinite;
+    animation: spin 0.5s ease infinite;
     display: block;
   }
   @keyframes spin {
-    100% { transform: rotate(360deg);}
+    100% {
+      transform: rotate(360deg);
+    }
   }
   .btn {
     margin-right: 5px;
@@ -42,7 +44,8 @@
   .input-group {
     input {
       border: none;
-      &:active, &:focus {
+      &:active,
+      &:focus {
         box-shadow: none;
       }
     }
@@ -61,7 +64,7 @@
         z-index: 1;
         .input-group {
           input {
-            background-color: $dropdown!important;
+            background-color: $dropdown !important;
           }
         }
         hr {
@@ -90,21 +93,24 @@
       border: 1px solid $clr-formcontrol;
     }
   }
-  .head, input, button {
+  .head,
+  input,
+  button {
     font-size: 13px;
   }
   form {
-    input, button {
+    input,
+    button {
       font-size: 13px;
     }
     input {
-      border-top-right-radius: 3px!important;
-      border-bottom-right-radius: 3px!important;
+      border-top-right-radius: 3px !important;
+      border-bottom-right-radius: 3px !important;
     }
   }
   .btn-dark {
     font-size: 13px;
-    background-color: transparent!important;
+    background-color: transparent !important;
     border: none;
     transition: 0.1s linear;
     text-align: center;
@@ -112,11 +118,13 @@
     fa-icon {
       display: block;
     }
-    &:hover, &:active, &:focus {
-      background-color: rgb(0 0 0 / 30%)!important;
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: rgb(0 0 0 / 30%) !important;
     }
     &:disabled {
-      background-color: rgb(0 0 0 / 30%)!important;
+      background-color: rgb(0 0 0 / 30%) !important;
       opacity: 0.5;
     }
   }
@@ -126,7 +134,7 @@
     max-width: none;
     width: 300px;
     z-index: 1;
-    top: 13px!important;
+    top: 13px !important;
     &::before {
       position: absolute;
       z-index: 1000;
@@ -134,7 +142,7 @@
       right: 7px;
       width: 0px;
       height: 0px;
-      content: '';
+      content: "";
       border-bottom: 10px solid $dropdown;
       border-top: 10px solid transparent;
       border-left: 10px solid transparent;

@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { LineProcessComponent } from './line-process.component';
+import { LineProcessComponent } from "./line-process.component";
 
-describe('LineProcessComponent', () => {
+describe("LineProcessComponent", () => {
   let component: LineProcessComponent;
   let fixture: ComponentFixture<LineProcessComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LineProcessComponent ]
-    })
-    .compileComponents();
+      declarations: [LineProcessComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('LineProcessComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

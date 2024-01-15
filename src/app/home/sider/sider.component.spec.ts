@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SiderComponent } from './sider.component';
+import { SiderComponent } from "./sider.component";
 
-describe('SiderComponent', () => {
+describe("SiderComponent", () => {
   let component: SiderComponent;
   let fixture: ComponentFixture<SiderComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SiderComponent ]
-    })
-    .compileComponents();
+      declarations: [SiderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SiderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

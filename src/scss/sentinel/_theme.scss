@@ -1,165 +1,169 @@
 body > .dropdown {
-    .dropdown-menu {
-      background-color: $underpanel;
-      color: white;
-      .dropdown-item {
-        background-color: inherit;
-        color: inherit;
-        cursor: pointer;
-      }
+  .dropdown-menu {
+    background-color: $underpanel;
+    color: white;
+    .dropdown-item {
+      background-color: inherit;
+      color: inherit;
+      cursor: pointer;
     }
+  }
 }
 .sentinel {
-    @import './dropdown';
-    @import './select';
-    @import './badges';
-    @import 'constants';
-    @import '../animations';
-    ::-webkit-scrollbar {
+  @import "./dropdown";
+  @import "./select";
+  @import "./badges";
+  @import "constants";
+  @import "../animations";
+  ::-webkit-scrollbar {
+    background: $scrollbar;
+    width: 12px;
+    height: 14px;
+  }
+  ::-webkit-scrollbar-corner {
+    background: $topper;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    cursor: default !important;
+    transition: 1s ease;
+    &:hover {
+      background: $scrollbar-hover;
+    }
+  }
+  .main {
+    background-color: $backgroung-main;
+  }
+  .filter-form {
+    &::-webkit-scrollbar {
       background: $scrollbar;
-      width: 12px;
-      height: 14px;
     }
-    ::-webkit-scrollbar-corner {
-      background: $topper;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: $scrollbar-thumb;
-      cursor: default!important;
-      transition: 1s ease;
-      &:hover {
-        background: $scrollbar-hover;
-      }
-    }
-    .main {
-      background-color: $backgroung-main; 
-    }
-    .filter-form {
-      &::-webkit-scrollbar {
-       background: $scrollbar;
-      }
-    }
-    .topbar {
-      height: $topbar-height;
-      background-color: $topper;
-        .btn {
-            &.native {
-                &-close, &-min {
-                    height: $topbar-height;
-                    width: $topbar-height;
-                    @include btn-native;
-                }
-                &-close {
-                    svg {
-                        position: relative;
-                        top: -3px;
-                    }
-                  &:hover {
-                    background: #c71f1f!important;
-                  }
-                  &:active {
-                    background: #831212!important;
-                  }
-                }
-                &-min {
-                  svg {
-                    left: -2px;
-                  }
-                  &:hover {
-                    box-shadow: none!important;
-                    background: $dropdown;
-                  }
-                  &:active { 
-                    background: $dropdown;  
-                  }
-                }
-            }
-            &-native {
-                &-profile {
-                    background: none;
-                    border: none;
-                    font-size: 12px;
-                    color: $text;
-                    transition: .2s ease;
-                    z-index: 1;
-                    position: relative;
-                    height: 100%;
-                    .btn-profile {
-                        min-width: 160px;
-                        background: inherit;
-                        border: inherit;
-                        color: inherit;
-                        height: inherit;
-                        &[aria-expanded = true] {
-                            background: $dropdown;
-                        }
-                        img {
-                            height: 20px;
-                            width: 20px;
-                            position: relative;
-                            cursor: pointer!important;
-                            top: -1px;
-                            border-radius: 100%;
-                            background: $dropdown;
-                            margin-right: 15px;
-                        }
-                        svg {
-                            height: 18px;
-                            width: 18px;
-                            margin-left: 15px;
-                            position: relative;
-                            top: -1px;
-                            cursor: pointer!important;
-                            path {
-                                stroke: $text;
-                            }
-                        }
-                    }
-                    &:hover, &:focus, &:active, &:focus-within {
-                        background: $dropdown!important;
-                        .dropdown-menu {
-                            background: $dropdown;
-                        }
-                    }
-                }
-            }
+  }
+  .topbar {
+    height: $topbar-height;
+    background-color: $topper;
+    .btn {
+      &.native {
+        &-close,
+        &-min {
+          height: $topbar-height;
+          width: $topbar-height;
+          @include btn-native;
         }
-    }
-    .status {
-        pointer-events: none;
-        $size: 6px; 
-        .led {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: #63d87d;
-            border-radius: 100%;
+        &-close {
+          svg {
             position: relative;
-            top: -1px;
-            transition: 0.2s linear;
-            margin-right: 15px;
-            margin-left: 5px;
-            &-loading {
-                background: #ffc107!important;
-                animation-name: blink;
-                animation-duration: .5s;
-                animation-iteration-count: infinite;
-            }
-            &-error {
-                background: #dc3545!important;
-                &:before {
-                    position: absolute;
-                    border-radius: 100%;
-                    content: ' ';
-                    background: #dc3545;
-                    width: $size;
-                    height: $size;
-                    animation-name: blinknscale;
-                    animation-duration: 1s;
-                    animation-iteration-count: infinite;
-                }
-            }
+            top: -3px;
+          }
+          &:hover {
+            background: #c71f1f !important;
+          }
+          &:active {
+            background: #831212 !important;
+          }
         }
+        &-min {
+          svg {
+            left: -2px;
+          }
+          &:hover {
+            box-shadow: none !important;
+            background: $dropdown;
+          }
+          &:active {
+            background: $dropdown;
+          }
+        }
+      }
+      &-native {
+        &-profile {
+          background: none;
+          border: none;
+          font-size: 12px;
+          color: $text;
+          transition: 0.2s ease;
+          z-index: 1;
+          position: relative;
+          height: 100%;
+          .btn-profile {
+            min-width: 160px;
+            background: inherit;
+            border: inherit;
+            color: inherit;
+            height: inherit;
+            &[aria-expanded="true"] {
+              background: $dropdown;
+            }
+            img {
+              height: 20px;
+              width: 20px;
+              position: relative;
+              cursor: pointer !important;
+              top: -1px;
+              border-radius: 100%;
+              background: $dropdown;
+              margin-right: 15px;
+            }
+            svg {
+              height: 18px;
+              width: 18px;
+              margin-left: 15px;
+              position: relative;
+              top: -1px;
+              cursor: pointer !important;
+              path {
+                stroke: $text;
+              }
+            }
+          }
+          &:hover,
+          &:focus,
+          &:active,
+          &:focus-within {
+            background: $dropdown !important;
+            .dropdown-menu {
+              background: $dropdown;
+            }
+          }
+        }
+      }
+    }
+  }
+  .status {
+    pointer-events: none;
+    $size: 6px;
+    .led {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #63d87d;
+      border-radius: 100%;
+      position: relative;
+      top: -1px;
+      transition: 0.2s linear;
+      margin-right: 15px;
+      margin-left: 5px;
+      &-loading {
+        background: #ffc107 !important;
+        animation-name: blink;
+        animation-duration: 0.5s;
+        animation-iteration-count: infinite;
+      }
+      &-error {
+        background: #dc3545 !important;
+        &:before {
+          position: absolute;
+          border-radius: 100%;
+          content: " ";
+          background: #dc3545;
+          width: $size;
+          height: $size;
+          animation-name: blinknscale;
+          animation-duration: 1s;
+          animation-iteration-count: infinite;
+        }
+      }
+    }
   }
   @include blink();
   @include blinknscale(1, 2.5);
@@ -170,7 +174,8 @@ body > .dropdown {
     font-size: 12px;
     line-height: $height;
     color: $text;
-    .panel-left, .panel-right {
+    .panel-left,
+    .panel-right {
       overflow-x: auto;
       overflow-y: hidden;
       .overlap {
@@ -198,13 +203,13 @@ body > .dropdown {
         }
         @include blink();
         .led-loading {
-          background: #ffc107!important;
+          background: #ffc107 !important;
           animation-name: blink;
-          animation-duration: .5s;
+          animation-duration: 0.5s;
           animation-iteration-count: infinite;
         }
         .led-error {
-          background: #dc3545!important;
+          background: #dc3545 !important;
         }
         fa-icon {
           font-size: 12px;
@@ -256,7 +261,7 @@ body > .dropdown {
       border-bottom: 1px solid #00000015;
       box-sizing: border-box;
       span {
-        font-family: 'Consolas';
+        font-family: "Consolas";
       }
       i {
         width: 8px;
@@ -268,12 +273,13 @@ body > .dropdown {
     }
     &-body {
       background: $filetree;
-      button, input {
-        font-size: 13px!important;
-        border: none!important;
+      button,
+      input {
+        font-size: 13px !important;
+        border: none !important;
       }
       input {
-        font-family: 'Consolas';
+        font-family: "Consolas";
       }
       button {
         width: 200px;

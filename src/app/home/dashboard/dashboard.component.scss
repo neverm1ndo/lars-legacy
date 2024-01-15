@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 :host {
   // display: flex;
   // flex: 1 1 auto;
@@ -6,7 +6,12 @@
   .playerlog {
     background: #3d3e4a;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: 300;
   }
   .clip {
@@ -21,9 +26,9 @@
     background: $topper;
     // flex: 1 1 0%;
     // width: 33%;
-    overflow-y: hidden!important;
+    overflow-y: hidden !important;
     ::-webkit-scrollbar {
-       width: 5px;
+      width: 5px;
     }
     h6 {
       padding: 10px 15px 10px 15px;
@@ -43,7 +48,7 @@
     }
   }
   ul {
-  width: 100%;
+    width: 100%;
     li {
       font-size: 14px;
       margin-left: -24px;

@@ -1,17 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ToastsContainer} from './toasts-container.component';
+import { ToastsContainer } from "./toasts-container.component";
 
-
-describe('ToastsContainerComponent', () => {
+describe("ToastsContainerComponent", () => {
   let component: ToastsContainer;
   let fixture: ComponentFixture<ToastsContainer>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToastsContainer ]
-    })
-    .compileComponents();
+      declarations: [ToastsContainer],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -20,13 +18,15 @@ describe('ToastsContainerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
-  it('should return false if toast is not templated', () => {
-    expect(component.isTemplate({
-      type: 'warning',
-      body: 'Toasty!'
-    })).toBeFalsy();
+  it("should return false if toast is not templated", () => {
+    expect(
+      component.isTemplate({
+        type: "warning",
+        body: "Toasty!",
+      }),
+    ).toBeFalsy();
   });
 });

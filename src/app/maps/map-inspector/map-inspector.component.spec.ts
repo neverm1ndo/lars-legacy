@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { MapInspectorComponent } from './map-inspector.component';
+import { MapInspectorComponent } from "./map-inspector.component";
 
-describe('MapInspectorComponent', () => {
+describe("MapInspectorComponent", () => {
   let component: MapInspectorComponent;
   let fixture: ComponentFixture<MapInspectorComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapInspectorComponent ]
-    })
-    .compileComponents();
+      declarations: [MapInspectorComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MapInspectorComponent', () => {
     fixture.detectChanges();
   });
 
-  xit('should create', () => {
+  xit("should create", () => {
     expect(component).toBeTruthy();
   });
 });

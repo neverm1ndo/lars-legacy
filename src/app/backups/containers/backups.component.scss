@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 :host {
   width: 100%;
   height: 100%;
@@ -29,7 +29,11 @@ h4 {
   font-weight: lighter;
   margin: 5px 0px 5px 0px;
 }
-p, a, span, button, div {
+p,
+a,
+span,
+button,
+div {
   font-size: 13px;
 }
 .head {
@@ -91,7 +95,15 @@ p, a, span, button, div {
       font-size: 12px;
       content: attr(data-filename);
       filter: contrast(1);
-      text-shadow: 1px 0 0 #00000030, -1px 0 0 #00000030, 0 1px 0 #00000030, 0 -1px 0 #00000030, 1px 1px #00000030, -1px -1px 0 #00000030, 1px -1px 0 #00000030, -1px 1px 0 #00000030;
+      text-shadow:
+        1px 0 0 #00000030,
+        -1px 0 0 #00000030,
+        0 1px 0 #00000030,
+        0 -1px 0 #00000030,
+        1px 1px #00000030,
+        -1px -1px 0 #00000030,
+        1px -1px 0 #00000030,
+        -1px 1px 0 #00000030;
       z-index: 2;
     }
     &-ribs {
@@ -136,7 +148,7 @@ p, a, span, button, div {
       white-space: nowrap;
     }
     span {
-      font-family: 'Consolas';
+      font-family: "Consolas";
       white-space: nowrap;
       overflow: hidden;
     }

@@ -1,4 +1,4 @@
 export enum BackupAction {
-    DELETE,
-    CHANGE
+  DELETE,
+  CHANGE,
 }

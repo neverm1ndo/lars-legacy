@@ -1,31 +1,95 @@
 <div class="h-100 options d-flex flex-wrap align-content-between text-center">
-    <div class="work-panel">
-      <div class="text-center">
-        <button class="side-button" routerLinkActive="active" routerLink="/home/dash" data-content="Старт"><fa-icon [icon]="fa.home"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button class="side-button" routerLinkActive="active" routerLink="/home/search" data-content="Поиск"><fa-icon [icon]="fa.search"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button class="side-button" routerLinkActive="active" routerLink="/home/configs" data-content="Редактор конфигов"><fa-icon [icon]="fa.redactor"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button class="side-button" routerLink="/home/maps" routerLinkActive="active" data-content="Загрузка карт"><fa-icon [icon]="fa.map"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button routerLinkActive="active" routerLink="/home/banhammer" class="side-button" data-content="Банлист"><fa-icon [icon]="fa.ban"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button routerLinkActive="active" routerLink="/home/admins" class="side-button" data-content="Админы"><fa-icon [icon]="fa.agent"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button routerLinkActive="active" routerLink="/home/backups" class="side-button" data-content="Резервные копии"><fa-icon [icon]="fa.box"></fa-icon></button>
-      </div>
-      <div class="text-center">
-        <button disabled routerLinkActive="active" routerLink="/home/stats" class="side-button" data-content="Статистика"><fa-icon [icon]="fa.chart"></fa-icon></button>
-      </div>
+  <div class="work-panel">
+    <div class="text-center">
+      <button
+        class="side-button"
+        routerLinkActive="active"
+        routerLink="/home/dash"
+        data-content="Старт"
+      >
+        <fa-icon [icon]="fa.home"></fa-icon>
+      </button>
     </div>
-    <div class="panel text-center">
-      <button routerLinkActive="active" routerLink="/home/settings" class="side-button" data-content="Настройки"><fa-icon [icon]="fa.cog"></fa-icon></button>
+    <div class="text-center">
+      <button
+        class="side-button"
+        routerLinkActive="active"
+        routerLink="/home/logs"
+        data-content="Поиск"
+      >
+        <fa-icon [icon]="fa.search"></fa-icon>
+      </button>
     </div>
+    <div class="text-center">
+      <button
+        class="side-button"
+        routerLinkActive="active"
+        routerLink="/home/configs"
+        data-content="Редактор конфигов"
+      >
+        <fa-icon [icon]="fa.redactor"></fa-icon>
+      </button>
+    </div>
+    <div class="text-center">
+      <button
+        class="side-button"
+        routerLink="/home/maps"
+        routerLinkActive="active"
+        data-content="Загрузка карт"
+      >
+        <fa-icon [icon]="fa.map"></fa-icon>
+      </button>
+    </div>
+    <div class="text-center">
+      <button
+        routerLinkActive="active"
+        routerLink="/home/banhammer"
+        class="side-button"
+        data-content="Банлист"
+      >
+        <fa-icon [icon]="fa.ban"></fa-icon>
+      </button>
+    </div>
+    <div class="text-center">
+      <button
+        routerLinkActive="active"
+        routerLink="/home/admins"
+        class="side-button"
+        data-content="Админы"
+      >
+        <fa-icon [icon]="fa.agent"></fa-icon>
+      </button>
+    </div>
+    <div class="text-center">
+      <button
+        routerLinkActive="active"
+        routerLink="/home/backups"
+        class="side-button"
+        data-content="Резервные копии"
+      >
+        <fa-icon [icon]="fa.box"></fa-icon>
+      </button>
+    </div>
+    <div class="text-center">
+      <button
+        disabled
+        routerLinkActive="active"
+        routerLink="/home/stats"
+        class="side-button"
+        data-content="Статистика"
+      >
+        <fa-icon [icon]="fa.chart"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="panel text-center">
+    <button
+      routerLinkActive="active"
+      routerLink="/home/settings"
+      class="side-button"
+      data-content="Настройки"
+    >
+      <fa-icon [icon]="fa.cog"></fa-icon>
+    </button>
+  </div>
 </div>

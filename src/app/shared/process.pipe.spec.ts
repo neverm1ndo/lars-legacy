@@ -1,7 +1,7 @@
-import { ProcessPipe } from './process.pipe';
+import { ProcessPipe } from "./process.pipe";
 
-describe('ProcessPipe', () => {
-  it('create an instance', () => {
+describe("ProcessPipe", () => {
+  it("create an instance", () => {
     const pipe = new ProcessPipe();
     expect(pipe).toBeTruthy();
   });

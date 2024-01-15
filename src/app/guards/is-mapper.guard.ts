@@ -9,7 +9,7 @@ import { intersection } from 'lodash';
 const { Mapper, Backuper, Dev } = Workgroup;
 const ALLOWED_GROUPS = [Mapper, Backuper, Dev];
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MapperGuard implements CanActivate {
   constructor(private user: UserService) {}

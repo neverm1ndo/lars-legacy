@@ -1,26 +1,26 @@
 @import "../animations";
 @import "./colors";
 
-.dropdown { 
+.dropdown {
   @include open();
   &-opened {
-    animation: open .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation: open 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translate(0px, 0%);
   }
-  
+
   @include close();
   &-closed {
-    animation: close .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation: close 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translate(0px, -10%);
   }
-  
+
   &-toggle {
-      &::after {
-          display: none!important;
-      }
+    &::after {
+      display: none !important;
+    }
   }
   &-menu {
-    top: -2px!important;
+    top: -2px !important;
     width: 100%;
     left: 0px;
     border-radius: 0px;
@@ -30,7 +30,7 @@
     max-width: 100%;
     font-size: 12px;
     margin: 0px 0px 0px 0px;
-    transition: .1s ease;
+    transition: 0.1s ease;
     z-index: -1;
     &-helper {
       overflow: hidden;
@@ -48,7 +48,7 @@
       animation-iteration-count: 1;
       animation-delay: 0s;
       z-index: -1;
-      animation-duration: .3s;
+      animation-duration: 0.3s;
       white-space: nowrap;
       fa-icon {
         position: relative;
@@ -62,7 +62,7 @@
   }
   &-item {
     color: inherit;
-    transition: .2s ease;
+    transition: 0.2s ease;
     padding-left: 10px;
     padding-right: 5px;
     span {
@@ -75,12 +75,15 @@
     fa-icon {
       margin-right: 0.7rem;
     }
-    &:hover, &:focus, &:active  {
-      background: #0000002f!important;
+    &:hover,
+    &:focus,
+    &:active {
+      background: #0000002f !important;
       color: inherit;
     }
-    &:disabled, &.disabled {
-      color: #fdfdfd2f!important;
+    &:disabled,
+    &.disabled {
+      color: #fdfdfd2f !important;
       opacity: 0.6;
     }
     fa-icon {
