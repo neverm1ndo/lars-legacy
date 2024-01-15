@@ -41,6 +41,12 @@ export interface IContentData {
   targetType?: string;
   numbers?: number[];
   cn?: string;
+  editor?: {
+    editor_id: number;
+    g: string;
+    players: number;
+    visitors: number;
+  }
 }
 export interface LogLine {
   unix: number;

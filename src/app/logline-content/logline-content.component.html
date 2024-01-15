@@ -57,6 +57,12 @@
           {{ prop.key }} <kbd>{{ prop.value }}</kbd>
         </span>
       </span>
+      <span *ngIf="content.editor as editor">
+        <span>ID мира: <kbd>{{ editor.editor_id }}</kbd>,&nbsp;</span>
+        <span>Тип игрока: <kbd>{{ editor.g }}</kbd>,&nbsp;</span>
+        <span>Управляющих: <kbd>{{ editor.players }}</kbd>,&nbsp;</span>
+        <span>Посетителей: <kbd>{{ editor.visitors }}</kbd></span>
+      </span>
     </div>
   </ng-container>
 </ng-container>
