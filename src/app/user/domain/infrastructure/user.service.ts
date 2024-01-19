@@ -3,12 +3,12 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, BehaviorSubject, Subject, from } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { handleError } from '@lars/utils';
-import { IUserData, IUserLoginData } from '../interfaces';
+import { IUserData, IUserLoginData } from '../../../interfaces';
 import { Router } from '@angular/router';
-import { AppConfig } from '../../environments/environment';
+import { AppConfig } from '../../../../environments/environment';
 import { ElectronService } from '@lars/core/services';
 import { Workgroup } from '@lars/enums';
-import { ToastService } from '../toast.service';
+import { ToastService } from '../../../toast.service';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 export interface IUserSettings {
@@ -77,7 +77,9 @@ export class UserService {
   }
 
   public getUserByUsername(username: string): Observable<IUserData> {
-    return this._http.get<IUserData>(this.URL_USER, { params: { name: username } });
+    return this._http.get<IUserData>(this.URL_USER, {
+      params: { name: username }
+    });
   }
 
   public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {
@@ -94,11 +96,13 @@ export class UserService {
   }
 
   public showAccessError() {
-    const { main_group, permissions } = this.loggedInUser$.getValue();
+    const { main_group, secondary_group } = this.loggedInUser$.getValue();
     this._toast.show(
       'danger',
       'Доступ запрещен для вашей группы пользователей',
-      null,
+      `Ваша роль: ${
+        main_group !== secondary_group ? main_group + ' ' + secondary_group : main_group
+      }`,
       faExclamationTriangle
     );
   }
