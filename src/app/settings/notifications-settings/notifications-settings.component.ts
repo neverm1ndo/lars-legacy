@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { IUserData } from "@lars/interfaces";
-import { UserService } from "@lars/user/user.service";
+import { UserService } from "@lars/user/domain/infrastructure/user.service";
 
 @Component({
   selector: "notifications-settings",

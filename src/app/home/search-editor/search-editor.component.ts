@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { LogLine } from "@lars/interfaces/app.interfaces";
 import { ApiService } from "@lars/api/api.service";
-import { UserService, IUserSettings } from "@lars/user/user.service";
+import { UserService, IUserSettings } from "@lars/user/domain/infrastructure/user.service";
 import { mergeMap, switchMap } from "rxjs/operators";
 import { Location } from "@angular/common";
 import { ActivatedRoute, Router, Params, NavigationEnd } from "@angular/router";

@@ -17,7 +17,7 @@ import { tap, filter, takeLast, switchMap } from "rxjs/operators";
 import { faTrash, faCopy, faInfo } from "@fortawesome/free-solid-svg-icons";
 
 import { basename, dirname } from "path";
-import { UserService } from "@lars/user/user.service";
+import { UserService } from "@lars/user/domain/infrastructure/user.service";
 
 @Injectable()
 export class ConfigsService {

@@ -1,3 +1,5 @@
+import { Processes } from "../configs";
+
 export interface Process {
   translate: string;
   type: ProcessTypeColor;

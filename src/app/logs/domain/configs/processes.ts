@@ -1,21 +1,4 @@
-export const colors = [
-  "dark",
-  "danger",
-  "success",
-  "primary",
-  "info",
-  "usual",
-  "pickup",
-  "secondary",
-  "warning",
-  "light",
-  "adm",
-  "dev",
-  "dm",
-  "tdm",
-  "derby",
-  "clothes",
-];
+import { Process } from "../entities";
 
 const UnknownProcess: Process = {
   translate: "Неизвестная команда",
@@ -645,3 +628,5 @@ const Processes = {
     control: "editorClickmap",
   },
 };
+
+export { Processes, UnknownProcess };

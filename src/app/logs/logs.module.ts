@@ -7,14 +7,41 @@ import { LogsListComponent } from "./containers/logs-list/logs-list.component";
 import { LogsListItemComponent } from "./containers/logs-list-item/logs-list-item.component";
 import { LogsComponent } from "./containers/logs/logs.component";
 import { SearchEditorComponent } from "./components/search-editor/search-editor.component";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { HttpClient } from "@angular/common/http";
+import { LogsDomainModule } from "./domain/logs-domain.module";
+import { UserDomainModule } from "@lars/user/domain/user-domain.module";
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/logs/", ".json");
+}
 
 @NgModule({
   declarations: [
     LogsListComponent,
     LogsListItemComponent,
     LogsComponent,
-    SearchEditorComponent,
+    SearchEditorComponent
   ],
-  imports: [CommonModule, LogsRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    LogsRoutingModule,
+    SharedModule,
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+      isolate: true,
+    }),
+    LogsDomainModule,
+    UserDomainModule
+  ],
 })
 export class LogsModule {}

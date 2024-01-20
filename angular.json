@@ -13,7 +13,7 @@
       "prefix": "lars",
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:application": {
+       "@schematics/angular:application": {
           "strict": true
         }
       },
@@ -241,11 +241,11 @@
   "defaultProject": "lars",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "app",
+      "prefix": "lars",
       "style": "scss"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "lars"
     }
   }
 }

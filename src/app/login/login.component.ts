@@ -6,7 +6,7 @@ import {
   NgZone,
 } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { UserService } from "@lars/user/user.service";
+import { UserService } from "@lars/user/domain/infrastructure/user.service";
 import { IUserData } from "@lars/interfaces";
 import { WebSocketService } from "../ws/web-socket.service";
 import { Router } from "@angular/router";

@@ -9,7 +9,7 @@ import {
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { ApiService } from "../api.service";
-import { UserService } from "../../user/user.service";
+import { UserService } from "../../user/domain/infrastructure/user.service";
 
 describe("JWTInterceptor", () => {
   let httpMock: HttpTestingController;

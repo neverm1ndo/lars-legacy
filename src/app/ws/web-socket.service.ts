@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import { Observable, Subject, Subscription } from "rxjs";
 import { Router, NavigationEnd } from "@angular/router";
-import { UserService } from "../user/user.service";
+import { UserService } from "../user/domain/infrastructure/user.service";
 import { filter, map, scan } from "rxjs/operators";
 import { Socket, SocketIoConfig } from "ngx-socket-io";
 import { AppConfig } from "../../environments/environment";

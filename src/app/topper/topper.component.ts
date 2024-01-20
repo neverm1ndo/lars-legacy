@@ -5,7 +5,7 @@ import {
   OnDestroy,
 } from "@angular/core";
 import { ElectronService } from "../core/services";
-import { UserService } from "../user/user.service";
+import { UserService } from "../user/domain/infrastructure/user.service";
 import {
   faSignOutAlt,
   faComments,

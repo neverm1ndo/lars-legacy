@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable @typescript-eslint/naming-convention */
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { AppConfig } from '../../environments/environment';
-import { UserService } from '../user/user.service';
-import { handleError } from '../utils';
-import { LogLine } from '../interfaces';
-import * as _ from 'lodash';
-import { HistoryListEnum } from '../enums';
-import { HistoryStorage } from '../interfaces';
-import { BanRule } from '../interfaces/bans.interfaces';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { AppConfig } from "../../environments/environment";
+import { UserService } from "../user/domain/infrastructure/user.service";
+import { handleError } from "../utils";
+import { LogLine } from "../interfaces";
+import * as _ from "lodash";
+import { HistoryListEnum } from "../enums";
+import { HistoryStorage } from "../interfaces";
+import { BanRule } from "../interfaces/bans.interfaces";
 
 @Injectable({
   providedIn: "root",

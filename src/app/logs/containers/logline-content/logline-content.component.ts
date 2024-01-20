@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { UserService } from "@lars/user/user.service";
+import { UserService } from "@lars/user/domain/infrastructure/user.service";
 import { Process } from "@lars/shared/components/line-process/log-processes";
 import { IContentData, IUserData } from "@lars/interfaces";
 import {
@@ -18,7 +18,7 @@ enum ContentTemplate {
 @Component({
   selector: "logline-content",
   templateUrl: "./logline-content.component.html",
-  styleUrls: ["./logline-content.component.scss"],
+  // styleUrls: ["./logline-content.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoglineContentComponent {

@@ -1,7 +1,10 @@
-export interface IContentData {
+import { UserData } from "@lars/user/domain";
+import { Processes } from "../configs";
+
+export interface ContentData {
   time?: string;
   oid?: number;
-  auth?: IUserData;
+  auth?: UserData;
   dm_id?: string;
   op?: string;
   weapon?: string;
@@ -31,12 +34,12 @@ export interface LogLine {
   process: keyof typeof Processes;
   nickname?: string;
   id: number;
-  geo?: IGeoData;
-  content?: IContentData;
+  geo?: GeoData;
+  content?: ContentData;
   multiplier?: number;
 }
 
-export interface IGeoData {
+export interface GeoData {
   country?: string;
   cc?: string;
   ip?: string;

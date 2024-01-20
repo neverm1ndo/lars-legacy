@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { LogsFacade } from "@lars/logs/domain";
 
 @Component({
   selector: "lars-logs-list",
@@ -6,7 +7,11 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./logs-list.component.scss"],
 })
 export class LogsListComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private logsFacade: LogsFacade
+  ) {}
+
+  list$ = this.logsFacade.getLogsList();
 
   ngOnInit(): void {}
 }

@@ -1,1 +1,148 @@
-<p>search-editor works!</p>
+<div class="d-flex editor-navigation">
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-dark">
+      <fa-icon [icon]="fa.faArrowLeft" (click)="goBack()"></fa-icon>
+    </button>
+    <button type="button" class="btn btn-dark">
+      <fa-icon [icon]="fa.faArrowRight" (click)="goForward()"></fa-icon>
+    </button>
+  </div>
+  <form
+    class="d-flex flex-row flex-grow-1 input-group"
+    (keyup.enter)="send()"
+    [formGroup]="searchForm"
+    (ngSubmit)="send()"
+    autocomplete="off"
+  >
+    <input
+      toFocus
+      formControlName="query"
+      name="query"
+      type="text"
+      class="form-control shadow-none align-middle input-dark flex-grow-1"
+      [placeholder]="'Logs.SearchEditor.PlaceholderText' | translate"
+    />
+    <!-- Введите ник игрока, IP или связку серийных номеров -->
+  </form>
+  <!-- <ng-container *ngLet="$newLines | async as newLines"> -->
+    <!-- [attr.data-newlines]="newLines" -->
+    <button
+      class="btn btn-dark"
+      (click)="sync()"
+      name="sync"
+      >
+      <!-- [disabled]="loading" -->
+      <fa-icon [class.spin]="loading" [icon]="fa.faSync"></fa-icon>
+      <!-- <i
+        *ngIf="newLines !== 0"
+        class="bg-danger text-light new-line-counter"
+        >{{ newLines }}</i
+      > -->
+    </button>
+  <!-- </ng-container> -->
+</div>
+      <!-- <form
+        (keyup.enter)="sendQuery()"
+        class="d-flex flex-row"
+        [formGroup]="searchForm"
+        (ngSubmit)="sendQuery()"
+        autocomplete="off"
+      >
+        <div class="input-group">
+          <input
+            toFocus
+            formControlName="query"
+            name="query"
+            type="text"
+            class="form-control shadow-none align-middle input-dark"
+            placeholder="Введите ник игрока, IP или связку серийных номеров"
+          />
+          <div *ngIf="!quick" ngbDropdown class="d-inline-block ps-2">
+            <a
+              ngbDropdownToggle
+              class="date btn btn-dark"
+              placeholder="Промежуток времени"
+              ><fa-icon [icon]="fa.calendar"></fa-icon
+            ></a>
+            <div
+              class="big-drop"
+              ngbDropdownMenu
+              aria-labelledby="dropdownBasic1"
+            >
+              <div class="w-100 date-dropdown">
+                <fa-icon [icon]="fa.calendar"></fa-icon
+                ><span> Ограничение по дате</span>
+                <hr />
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">От</span>
+                  </div>
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        searchForm.controls['dateFrom'].invalid &&
+                        (searchForm.dirty || searchForm.touched) &&
+                        searchForm.controls['dateFrom'].value,
+                      'is-valid':
+                        searchForm.controls['dateFrom'].valid &&
+                        (searchForm.dirty || searchForm.touched) &&
+                        searchForm.controls['dateFrom'].value
+                    }"
+                    formControlName="dateFrom"
+                    name="dateFrom"
+                    type="text"
+                    class="form-control"
+                    placeholder="01 Jan 1970 00:00:00"
+                    aria-label="dd.mm.yyyy"
+                    aria-describedby="basic-addon1"
+                  />
+                </div>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">До</span>
+                  </div>
+                  <input
+                    [ngClass]="{
+                      'is-invalid':
+                        searchForm.controls['dateTo'].invalid &&
+                        (searchForm.dirty || searchForm.touched) &&
+                        searchForm.controls['dateTo'].value,
+                      'is-valid':
+                        searchForm.controls['dateTo'].valid &&
+                        (searchForm.dirty || searchForm.touched) &&
+                        searchForm.controls['dateTo'].value
+                    }"
+                    formControlName="dateTo"
+                    name="dateTo"
+                    type="text"
+                    class="form-control"
+                    placeholder="01 Jan 1970 00:00:00"
+                    aria-label="dd.mm.yyyy"
+                    aria-describedby="basic-addon2"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!quick" class="d-flex flex-row pe-2">
+          <ng-container *ngLet="$newLines | async as newLines">
+            <button
+              [attr.data-newlines]="newLines"
+              class="btn btn-dark"
+              (click)="sync()"
+              name="sync"
+              [disabled]="loading"
+            >
+              <fa-icon [class.spin]="loading" [icon]="fa.sync"></fa-icon>
+              <i
+                *ngIf="newLines !== 0"
+                class="bg-danger text-light new-line-counter"
+                >{{ newLines }}</i
+              >
+            </button>
+          </ng-container>
+        </div>
+      </form> -->
+    <!-- </div> -->
+  

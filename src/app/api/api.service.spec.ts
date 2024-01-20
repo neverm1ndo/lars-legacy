@@ -5,7 +5,7 @@ import {
 } from "@angular/common/http/testing";
 
 import { ApiService } from "./api.service";
-import { UserService } from "../user/user.service";
+import { UserService } from "../user/domain/infrastructure/user.service";
 
 import { of } from "rxjs";
 
