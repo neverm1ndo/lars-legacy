@@ -128,6 +128,11 @@ const Processes = {
       type: 'danger',
       control: 'cmdPreerrVal'
     },
+    '<cmd/pre_error/moving>': {
+      translate: 'Запрет использования кмд в движении',
+      type: 'danger',
+      control: 'cmdPreerrMov'
+    },
     '<cmd/success>': {
       translate: 'Успешное выполнение команды',
       type: 'success',
@@ -155,6 +160,11 @@ const Processes = {
     },
     '<health/pickup>': {
       translate: 'Подбор здоровья',
+      type: 'pickup',
+      control: 'armPick'
+    },
+    '<armour/pickup>': {
+      translate: 'Подбор брони',
       type: 'pickup',
       control: 'healthPick'
     },
@@ -217,6 +227,11 @@ const Processes = {
       translate: 'Командный чат',
       type: 'light',
       control: 'chatTeam'
+    },
+    '<chat/group>': {
+      translate: 'Групповой чат',
+      type: 'light',
+      control: 'chatGroup'
     },
     '<chat/pm>': {
       translate: 'ЛС',
@@ -578,6 +593,11 @@ const Processes = {
       type: 'acheat',
       control: 'warnPlayerSpd'
     },
+    '<warn/player/silent_aim>': {
+      translate: 'ACHEAT WARN: SILENT_AIM',
+      type: 'acheat',
+      control: 'warnPlayerSpd'
+    },
     '<warn/player/teleport>': {
       translate: 'ACHEAT WARN: PLAYER_TELEPORT',
       type: 'acheat',
@@ -630,6 +650,11 @@ const Processes = {
     },
     '<editor/click_map>': {
       translate: 'EDITOR: CLICKMAP',
+      type: 'editor',
+      control: 'editorClickmap'
+    },
+	'<editor/enter>': {
+      translate: 'EDITOR: ENTER',
       type: 'editor',
       control: 'editorClickmap'
     },
