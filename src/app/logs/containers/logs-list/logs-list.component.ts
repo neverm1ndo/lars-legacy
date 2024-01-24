@@ -13,5 +13,7 @@ export class LogsListComponent implements OnInit {
 
   list$ = this.logsFacade.getLogsList();
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.logsFacade.getLast();
+  }
 }

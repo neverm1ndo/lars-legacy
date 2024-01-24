@@ -17,5 +17,5 @@ const initialState: LogsState = {
 
 export const logsReducer = createReducer(
   initialState,
-  // on(LogsActions.loadLogsList, (state) => )
+  on(LogsActions.loadLogsList, (state, { listItems }) => ({ ...state, listItems }))
 );

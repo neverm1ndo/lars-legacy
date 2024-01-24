@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { selectors as LogsSelectors } from '../state';
+import { actions as LogsActions } from '../state';
 
 @Injectable()
 export class LogsFacade {
@@ -14,5 +15,9 @@ export class LogsFacade {
 
     getLogsList() {
         return this.store.select(LogsSelectors.selectLogsList);
+    }
+
+    getLast() {
+        this.store.dispatch(LogsActions.fetchLogsList());
     }
 }

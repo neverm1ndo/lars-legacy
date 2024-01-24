@@ -11,7 +11,6 @@ import { dateValidator } from "@lars/shared/directives";
 })
 export class SearchEditorComponent implements OnInit {
   constructor(
-    private readonly logsFacade: LogsFacade
   ) {}
 
   public fa = {
