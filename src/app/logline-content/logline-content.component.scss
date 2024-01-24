@@ -41,8 +41,8 @@
       span {
         // box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.425);
         position: absolute;
-        max-height: $height*6;
-        padding: 6px 6px 6px 6px;
+        max-height: calc($height*6);
+        padding: 6px;
         background-color: $underpanel;
         line-height: inherit;
       }
@@ -77,23 +77,23 @@
         border-bottom: 1px solid #fdfdfd;
       }
     }
-      img {
-        width: $height;
-        height: $height;
-        display: inline-block;
-        margin-right: 5px;
-        border-radius: 100%;
-        position: relative;
-        top: -1px;
-      }
-      .badge {
-        width: 26px;
-        padding: 2px;
-        line-height: 10px;
-        margin-left: 5px;
-        margin-right: 5px;
-        border-radius: 2px;
-      }
+    img {
+      width: $height;
+      height: $height;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius: 100%;
+      position: relative;
+      top: -1px;
+    }
+    .badge {
+      width: 26px;
+      padding: 2px;
+      line-height: 10px;
+      margin-left: 5px;
+      margin-right: 5px;
+      border-radius: 2px;
+    }
   }
   .loader {
     width: 20px;

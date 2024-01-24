@@ -11,7 +11,7 @@ const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'empty'},
     { path: 'empty', component: EmptyDocComponent },
     { path: 'binary', component: BinaryDocComponent },
-    { path: 'doc', component: TextEditorComponent, canDeactivate: [NotChangedDocumentGuard] }
+    { path: 'doc', component: TextEditorComponent }
   ]}
 ];
 
