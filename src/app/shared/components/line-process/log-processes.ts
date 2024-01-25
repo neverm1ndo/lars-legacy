@@ -161,12 +161,12 @@ const Processes = {
     '<health/pickup>': {
       translate: 'Подбор здоровья',
       type: 'pickup',
-      control: 'armPick'
+      control: 'healthPick'
     },
     '<armour/pickup>': {
       translate: 'Подбор брони',
       type: 'pickup',
-      control: 'healthPick'
+      control: 'armPick'
     },
     '<health/buy>': {
       translate: 'Покупка здоровья',
@@ -596,7 +596,7 @@ const Processes = {
     '<warn/player/silent_aim>': {
       translate: 'ACHEAT WARN: SILENT_AIM',
       type: 'acheat',
-      control: 'warnPlayerSpd'
+      control: 'warnPlayerSilentAim'
     },
     '<warn/player/teleport>': {
       translate: 'ACHEAT WARN: PLAYER_TELEPORT',
@@ -656,7 +656,7 @@ const Processes = {
 	'<editor/enter>': {
       translate: 'EDITOR: ENTER',
       type: 'editor',
-      control: 'editorClickmap'
+      control: 'editorEnter'
     },
 }
 
