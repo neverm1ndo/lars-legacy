@@ -3,10 +3,10 @@
     <div class="container-fluid adm-head">
       <div class="d-flex align-self-start justify-content-between align-items-center flex-row w-100">
         <div class="d-flex">
-          <h6><fa-icon [icon]="fa.agent"></fa-icon>Администраторский состав</h6>
+          <h6><fa-icon [icon]="fa.agent"></fa-icon>{{ 'Admins.Title' | translate}}</h6>
         </div>
         <div class="d-flex">
-          <button [disabled]="userInfo.main_group !== 10" (click)="open(addAdminModal)" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> Добавить админа</button>
+          <button [disabled]="userInfo.main_group !== 10" (click)="open(addAdminModal)" class="btn btn-dark add-adm" type="button" name="button"><fa-icon class="mr-2" [icon]="fa.agent"></fa-icon> {{ 'Admins.Func.addAdminBt' | translate }}</button>
         </div>
       </div>
     </div>
@@ -16,10 +16,10 @@
           <div class="row">
               <table class="table w-100">
                 <thead>
-                  <th>ID</th>
-                  <th>Никнейм</th>
-                  <th>Основная группа</th>
-                  <th class="text-muted">Побочная группа</th>
+                  <th>{{ 'Admins.TableColNames.User_id' | translate }}</th>
+                  <th>{{ 'Admins.TableColNames.Nickname' | translate }}</th>
+                  <th>{{ 'Admins.TableColNames.MainGroup' | translate }}</th>
+                  <th class="text-muted">{{ 'Admins.TableColNames.SideGroup' | translate }}</th>
                   <th></th>
                 </thead>
                 <tbody *ngIf="$admins | async as admins">
@@ -80,7 +80,7 @@
 </div>
 <ng-template #addAdminModal let-modal>
   <div class="modal-header">
-    <h5>Добавление админа</h5>
+    <h5>{{ 'Admins.Adding.Title' | translate }}</h5>
     <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body sentinel">
@@ -114,20 +114,20 @@
                     class="custom mt-2"
                     formControlName="secondaryGroup">
                   </ng-select>
-                  <small class="text-muted">Форма изменяет <b>основную</b> группу зарегистрированного пользователя на одну из администраторских групп.</small></div>
+                  <small class="text-muted">{{ Admins.Adding.Explain | translate }}</small></div>
                 </div>
             <div class="col-6">
               <table class="table no-select text-small">
                 <thead>
-                  <th>Группа</th>
-                  <th>Логи</th>
-                  <th>Бан-лист</th>
-                  <th>Ред. карт</th>
-                  <th>Конф. файлов</th>
-                  <th>Адм. состав</th>
+                  <th>{{ Admins.Adding.Group | translate }}</th>
+                  <th>{{ Admins.Adding.Logs | translate }}</th>
+                  <th>{{ Admins.Adding.BanList | translate }}</th>
+                  <th>{{ Admins.Adding.MapEditor | translate }}</th>
+                  <th>{{ Admins.Adding.ConfigFiles | translate }}</th>
+                  <th>{{ Admins.Adding.AdmStaff | translate }}</th>
                 </thead>
                   <tr>
-                    <td>Претендент</td>
+                    <td>{{ Admins.GroupNames.Applicant | translate }}</td>
                     <td>✓</td>
                     <td></td>
                     <td></td>
@@ -135,7 +135,7 @@
                     <td></td>
                   </tr>
                   <tr>
-                    <td>Админ</td>
+                    <td>{{ Admins.GroupNames.Admin | translate }}</td>
                     <td>✓</td>
                     <td>✓</td>
                     <td></td>
@@ -143,7 +143,7 @@
                     <td></td>
                   </tr>
                   <tr>
-                    <td>Маппер</td>
+                    <td>{{ Admins.GroupNames.MapStuart | translate }}</td>
                     <td>✓</td>
                     <td></td>
                     <td>✓</td>
@@ -151,7 +151,7 @@
                     <td></td>
                   </tr>
                   <tr>
-                    <td>Редактор конфигов</td>
+                    <td>{{ Admins.GroupNames.ConfigStuart | translate }}</td>
                     <td>✓</td>
                     <td>✓</td>
                     <td></td>
@@ -159,7 +159,7 @@
                     <td></td>
                   </tr>
                   <tr>
-                    <td>Бэкапер</td>
+                    <td>{{ Admins.GroupNames.BackupStuart | translate }}</td>
                     <td>✓</td>
                     <td></td>
                     <td>✓</td>
@@ -167,7 +167,7 @@
                     <td></td>
                   </tr>
                   <tr>
-                    <td>Разработчик</td>
+                    <td>{{ Admins.GroupNames.Developer | translate }}</td>
                     <td>✓</td>
                     <td>✓</td>
                     <td>✓</td>
@@ -182,10 +182,10 @@
           <div class="col-12">
             <div class="row">
               <div class="col-6 pl-0">
-                <button [disabled]="!addAdminForm.valid" type="submit" class="btn btn-light w-100" name="button">Добавить</button>
+                <button [disabled]="!addAdminForm.valid" type="submit" class="btn btn-light w-100" name="button">{{ Admins.Func.addBt | translate }}</button>
               </div>
               <div class="col-6 pr-0">
-                <button type="button" (click)="modal.dismiss('Cross click')" class="btn btn-danger w-100" name="button">Отмена</button>
+                <button type="button" (click)="modal.dismiss('Cross click')" class="btn btn-danger w-100" name="button">{{ Admins.Func.cancelBt | translate }}</button>
               </div>
             </div>
           </div>
