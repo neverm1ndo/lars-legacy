@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
 import { faUserSecret, faPooStorm, faWind, faMap, faFileSignature, faSearch, faBoxOpen, faUserSlash, faChartPie, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '@lars/user/user.service';
 import { ApiService } from '@lars/api/api.service';
@@ -8,9 +8,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ElectronService } from '@lars/core/services';
 import { WebSocketService } from '@lars/ws/web-socket.service';
 import { Workgroup, UserActivity } from '@lars/enums';
-import { BehaviorSubject, Observable, filter, from, switchMap, take } from 'rxjs';
-import { MessageBoxOptions, MessageBoxReturnValue } from 'electron';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BehaviorSubject, Observable, from, iif, map, switchMap, take, throwError } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 
 interface AdminUser {
   user_id: number;
@@ -22,7 +22,7 @@ interface AdminUser {
 }
 
 @Component({
-  selector: 'app-admins',
+  selector: 'lars-admins',
   templateUrl: './admins.component.html',
   styleUrls: ['./admins.component.scss'],
   animations: [settings],
@@ -45,8 +45,6 @@ export class AdminsComponent implements OnInit {
     conf: faFileSignature,
     box: faBoxOpen
   };
-  
-  popup: boolean = false;
 
   public addAdminForm: FormGroup = new FormGroup({
     nickname: new FormControl('', [
@@ -59,6 +57,8 @@ export class AdminsComponent implements OnInit {
     secondaryGroup: new FormControl(Workgroup.Challenger)
   });
 
+
+  // TODO: Тянуть переводы названия групп из файла локализации
   public roles = [
     { id: Workgroup.Challenger, val: 'Претендент' },
     { id: Workgroup.Dev, val: 'Разработчик' },
@@ -80,6 +80,7 @@ export class AdminsComponent implements OnInit {
     private _electron: ElectronService,
     private _ws: WebSocketService,
     private _modal: NgbModal,
+    private translate: TranslateService
   ) { }
 
   get userActivities() {
@@ -117,7 +118,6 @@ export class AdminsComponent implements OnInit {
   }
 
   addNewAdmin() {
-      this.popup = false;
       this.getFullAdminsList();
   }
 
@@ -126,31 +126,57 @@ export class AdminsComponent implements OnInit {
   }
 
   public removeAdmin(username: string, id: number) {
-    const dialogOpts: MessageBoxOptions = {
-      type: 'question',
-      buttons: ['Исключить', 'Отмена'],
-      title: 'Подтверждение исключения',
-      message: `Вы точно хотите исключть ${username} из администраторского состава?`
-    };
-    from(this._electron.ipcRenderer.invoke('message-box', dialogOpts))
-      .pipe(
-        filter((value: MessageBoxReturnValue) => value.response !== 0),
-        switchMap(() => this._api.setAdminGroup(id, 2)),
-        take(1)
-      ).subscribe({
+    this.translate.get([
+			"Admins.Dialog.RemoveAdmin.Confirm",
+			"Admins.Dialog.RemoveAdmin.Cancel",
+			"Admins.Dialog.RemoveAdmin.Title",
+			"Admins.Dialog.RemoveAdmin.Message",
+		], { username }).pipe(
+			map((translations) => Object.values(translations)),
+			map(([confirm, cancel, title, message]: string[]) => ({
+				type: 'question',
+				buttons: [
+					cancel,
+					confirm, 
+				],
+				title,
+				message
+			})),
+      switchMap((options: Electron.MessageBoxOptions) => from(this._electron.ipcRenderer.invoke('message-box', options))),
+      switchMap(
+				(val) => iif(
+					() => val.response == 1,
+					this._api.setAdminGroup(id, 2),
+					this.translate.get('Admins.Dialog.ClientResponseRejectError').pipe(
+						switchMap((error) => throwError(() => new Error(error)))
+					)
+				)
+			),
+      take(1)
+    ).subscribe({
         next: this._reloadList,
         error: console.error,
-      });
+    });
   }
 
   public changeAdminGroup(username: string, id: number, group: number) {
     this._api.setAdminGroup(id, group)
              .subscribe({
                 next: () => {
-                  this._toast.show('success', `Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, null, faUserSecret);
+                  this._toast.show(
+                    'success',
+                    this.translate.instant('Admins.Toast.ChangeAdminsGroup.Success', { username, group: this._userService.getUserGroupName(group) }),
+                    null,
+                    faUserSecret
+                  );
                 },
                 error: (err) => {
-                  this._toast.show('danger', `Админ <b>${ username }</b> не был перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, err, faExclamationCircle);
+                  this._toast.show(
+                    'danger',
+                    this.translate.instant('Admins.Toast.ChangeAdminsGroup.Error', { username, group: this._userService.getUserGroupName(group) }),
+                    err,
+                    faExclamationCircle
+                  );
                 }
              });
   }
@@ -159,10 +185,20 @@ export class AdminsComponent implements OnInit {
     this._api.setAdminSecondaryGroup(id, group)
              .subscribe({
                 next: () => {
-                  this._toast.show('success', `Админ <b>${ username }</b> перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, null, faUserSecret);
+                  this._toast.show(
+                    'success',
+                    this.translate.instant('Admins.Toast.ChangeAdminsGroup.Success', { username, group: this._userService.getUserGroupName(group) }),
+                    null,
+                    faUserSecret
+                  );
                 },
                 error: (err) => {
-                  this._toast.show('danger', `Админ <b>${ username }</b> не был перемещен в группу <b>${ this._userService.getUserGroupName(group)}</b>`, err, faUserSecret)
+                  this._toast.show(
+                    'success',
+                    this.translate.instant('Admins.Toast.ChangeAdminsGroup.Error', { username, group: this._userService.getUserGroupName(group) }),
+                    err,
+                    faUserSecret
+                  );
                 }
             });
   }

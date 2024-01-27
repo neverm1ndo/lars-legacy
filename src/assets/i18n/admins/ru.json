@@ -1,26 +1,24 @@
 {
   "Admins": {
     "Title": "Администраторский состав",
-    "Func": {
-      "addAdminBt": "Добавить админа",
-      "addBt": "Добавить",
-      "cancelBt": "Отмена"
-    },
-    "TableColNames": {
-      "User_id": "ID",
+    "AddAdminButton": "Добавить админа",
+    "List": {
+      "UserId": "ID",
       "Nickname": "Никнейм",
       "MainGroup": "Основная группа",
       "SideGroup": "Побочная группа"
     },
-    "Adding": {
+    "AddAdminModal": {
       "Title": "Добавление админа",
-      "Explain": "Форма изменяет <b>основную</b> группу зарегистрированного пользователя на одну из администраторских групп.",
+      "Description": "Форма изменяет основную или второстепенную группу зарегистрированного пользователя на одну из администраторских групп.",
       "Group": "Группа",
       "Logs": "Логи",
       "BanList": "Бан-лист",
       "MapEditor": "Ред. карт",
       "ConfigFiles": "Конф. файлов",
-      "AdmStaff": "Адм. состав"
+      "AdmStaff": "Адм. состав",
+      "Confirm": "Добавить",
+      "Cancel": "Отмена"
     },
     "GroupNames": {
       "Applicant": "Претендент",
@@ -29,6 +27,21 @@
       "ConfigStuart": "Редактор конфигов",
       "BackupStuart": "Бэкапер",
       "Developer": "Разработчик"
+    },
+    "Dialog": {
+      "RemoveAdmin": {
+        "Title": "Подтверждение исключения",
+        "Message": "Вы точно хотите исключть {{username}} из администраторского состава?",
+        "Confirm": "Исключить",
+        "Cancel": "Отмена"
+      },
+      "ClientResponseRejectError": "Операция отменена пользователем"
+    },
+    "Toast": {
+      "ChangeAdminsGroup": {
+        "Success": "Админ {{ username }} перемещен в группу {{group}}",
+        "Error": "Админ {{ username }} не был перемещен в группу {{group}}"
+      }
     }
   }
 }
