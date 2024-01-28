@@ -2,7 +2,7 @@
     <div class="container-fluid head">
       <div class="row h-100">
         <div class="col-3">
-          <h6><fa-icon [icon]="fa.ban"></fa-icon>Банлист</h6>
+          <h6><fa-icon [icon]="fa.ban"></fa-icon>{{ Title | translate }}</h6>
         </div>
         <form class="col-9 h-100 form-group" [formGroup]="searchForm" (submit)="search()">
           <div class="row h-100 align-items-center">
@@ -25,7 +25,7 @@
               <input class="form-control"
                 aria-describedby="button-path"
                 formControlName="query"
-                placeholder="Поиск"
+                placeholder="{{ Banhammer.Search | translate }}"
                 type="text"
                 required>
             </div>
@@ -37,14 +37,14 @@
     <div class="d-flex list">
         <table class="table w-100">
           <thead>
-            <th>ID</th>
-            <th>Код бана</th>
-            <th>Параметр</th>
-            <th>Причина</th>
-            <th>Никнейм</th>
-            <th>Кем забанен</th>
-            <th>Время бана</th>
-            <th>Авторазбан</th>
+            <th>{{ Banhammer.ID | translate }}</th>
+            <th>{{ Banhammer.BanCode | translate }}</th>
+            <th>{{ Banhammer.Param | translate }}</th>
+            <th>{{ Banhammer.Reason | translate }}</th>
+            <th>{{ Banhammer.Nickname | translate }}</th>
+            <th>{{ Banhammer.BannedBy | translate }}</th>
+            <th>{{ Banhammer.BanTime | translate }}</th>
+            <th>{{ Banhammer.AutoUnban | translate }}</th>
           </thead>
           <ng-container *ngLet="$bans | async as bans">
             <tbody>
@@ -85,7 +85,7 @@
                     </span>
                   </ng-container>
                   <ng-template #permanent>
-                    <span>Никогда</span>
+                    <span>{{ Banhammer.DateUnbanNever | translate }}</span>
                   </ng-template>
                 </td>
               </tr>
@@ -105,7 +105,7 @@
     </div>
     <ng-template #empty>
       <div class="d-flex flex-fill flex-column justify-content-center align-items-center w-100">
-        <span class="text-muted">Банлист пуст</span>
+        <span class="text-muted">{{ Banhammer.BanlistIsEmpty | translate }}</span>
       </div>
     </ng-template>
 </div>

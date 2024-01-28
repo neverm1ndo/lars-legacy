@@ -1,0 +1,30 @@
+{
+    "BinaryDoc": {
+        "FullWay": "Полный путь",
+        "Mime": "MIME",
+        "LastChng": "Посл. изменение",
+        "Size": "Размер",
+        "Button": {
+            "Download": "Скачать",
+            "Delete": "Удалить"
+        }
+    },
+    "ConfigEditor": {
+        "Func": {
+            "Button": {
+                "RemoteWindow": "Открыть в отдельном окне"
+            },
+            "Save": "Сохранить",
+            "Delete": "Удалить"
+        },
+    },
+    "EmptyDoc": {
+        "ChooseFile": "Выберите файл из списка, чтобы приступить к редактированию или добавьте новый"
+    },
+    "TextEditor": {
+        "Search": "ПОИСК",
+        "FindInBuff": "Найти в текущем буфере",
+        "ReplaseInBuff": "Заменить в текущем буфере",
+        "Finded": "Найдено совпадений"
+    },
+}

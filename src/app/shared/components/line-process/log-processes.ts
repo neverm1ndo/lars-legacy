@@ -248,6 +248,11 @@ const Processes = {
       type: 'info',
       control: 'chatAutoDict'
     },
+    '<mute/evasion/remove/hand>': {
+      translate: 'Восстановление мута после выхода',
+      type: 'info',
+      control: 'chatAutoMuteEvasion'
+    },
     '<chat/block/blocked>': {
       translate: 'Блокировка чата',
       type: 'warning',
