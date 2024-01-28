@@ -3,21 +3,21 @@
     <h3><fa-icon class="me-3" [icon]="fa.conf"></fa-icon>{{ stat.name }}</h3>
     <table class="table table-dark w-100 align-self-center">
       <tr>
-        <td>{{ BinaryDoc.FullWay | translate }}</td><td>{{ stat.path }}</td>
+        <td>{{ 'BinaryDoc.FullWay' | translate }}</td><td>{{ stat.path }}</td>
       </tr>
       <tr>
-        <td>M{{ BinaryDoc.Mime | translate }}</td><td>{{ stat.mime }}</td>
+        <td>M{{ 'BinaryDoc.Mime' | translate }}</td><td>{{ stat.mime }}</td>
       </tr>
       <tr>
-        <td>{{ BinaryDoc.LastChng | translate }}</td><td>{{ stat.lastm | date:'d MMM yy, HH:mm:ss'}}</td>
+        <td>{{ 'BinaryDoc.LastChng' | translate }}</td><td>{{ stat.lastm | date:'d MMM yy, HH:mm:ss'}}</td>
       </tr>
       <tr>
-        <td>{{ BinaryDoc.Size | translate }}</td><td>{{ stat.size | FileSize }}</td>
+        <td>{{ 'BinaryDoc.Size' | translate }}</td><td>{{ stat.size | FileSize }}</td>
       </tr>
     </table>
     <div class="btn-group" role="group" aria-label="File control" *ngIf="userMainGroup === 10">
-      <button [disabled]="(downloadProgress | async) !== 0" (click)="downloadFile(stat.path)" type="button" class="btn btn-light"><fa-icon [icon]="fa.save"></fa-icon> <span class="ms-2">{{ BinaryDoc.Button.Download | translate }}</span></button>
-      <button (click)="deleteFile(stat.path)" type="button" class="btn btn-danger"><fa-icon [icon]="fa.del"></fa-icon> <span class="ms-2">{{ BinaryDoc.Button.Delete | translate }}</span></button>
+      <button [disabled]="(downloadProgress | async) !== 0" (click)="downloadFile(stat.path)" type="button" class="btn btn-light"><fa-icon [icon]="fa.save"></fa-icon> <span class="ms-2">{{ 'BinaryDoc.Button.Download' | translate }}</span></button>
+      <button (click)="deleteFile(stat.path)" type="button" class="btn btn-danger"><fa-icon [icon]="fa.del"></fa-icon> <span class="ms-2">{{ 'BinaryDoc.Button.Delete' | translate }}</span></button>
     </div>
   </div>
 </div>
