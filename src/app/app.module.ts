@@ -14,7 +14,6 @@ import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LibertyIconsModule } from './liberty-icons/liberty-icons.module';
 
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopperComponent } from './topper/topper.component';
 import { LoginModule } from './login/login.module';
@@ -34,7 +33,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 
 // AoT requires an exported function for factories
-const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/app', '.json');
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
+  new TranslateHttpLoader(http, './assets/i18n/app/', '.json');
 
 @NgModule({
   declarations: [AppComponent, TopperComponent, ToastsContainer],

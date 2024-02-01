@@ -1,0 +1,21 @@
+{
+    "Banhammer": {
+        "Search": "Поиск",
+        "Title": "Банлист",
+        "List": {
+            "Column": {
+                "ID": "ID",
+                "BanCode": "Код бана",
+                "Param": "Параметр",
+                "Reason": "Причина",
+                "Nickname": "Никнейм",
+                "BannedBy": "Кем забанен",
+                "BanTime": "Время бана",
+                "AutoUnban": "Авторазбан",
+                "Admin": "Администратор"
+            },
+            "IsEmpty": "Банлист пуст",
+            "DateUnbanNever": "Никогда"
+        }
+    }
+}

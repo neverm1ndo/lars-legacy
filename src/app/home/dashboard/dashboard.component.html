@@ -1,7 +1,7 @@
 <div class="container-fluid w-100 pt-2 pb-2 h-100">
     <div class="d-flex flex-column h-100">
         <div>
-          <small><fa-icon [icon]="fa.search"></fa-icon>{{ 'Dashboard.FastSearch' | translate }}</small>
+          <small><fa-icon [icon]="fa.search"></fa-icon>{{ 'Dashboard.QuickSearch' | translate }}</small>
           <small class="hint">{{ 'Dashboard.Sample' | translate }}: <span class="dashed">srl:12345*BJBKLJBLJBLHVGVYVHBHJKBHBKJHBKHB</span></small>
         </div>
         <div>
@@ -11,7 +11,7 @@
         <div class="container-fluid h-100">          
           <div class="row h-100">
             <div class="d-flex g-0 col-4 flex-column h-100 history-list">
-              <h6><fa-icon [icon]="fa.searchp"></fa-icon>{{ 'Dashboard.SearchQue' | translate }}</h6>
+              <h6><fa-icon [icon]="fa.searchp"></fa-icon>{{ 'Dashboard.SearchQueries' | translate }}</h6>
               <div class="d-flex history-list-item w-100">
                 <ul class="overflow-hidden" *ngIf="history[0].length > 0; else emptylist">
                   <li class="clip" *ngFor="let item of history[0]">
@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="d-flex g-0 col-4 flex-column h-100 history-list">
-              <h6><fa-icon [icon]="fa.up"></fa-icon>{{ 'Dashboard.LastDl' | translate }}</h6>
+              <h6><fa-icon [icon]="fa.up"></fa-icon>{{ 'Dashboard.LastDownloads' | translate }}</h6>
               <div class="d-flex history-list-item">
                 <ul *ngIf="history[2].length > 0; else emptylist">
                   <li *ngFor="let item of history[2]">

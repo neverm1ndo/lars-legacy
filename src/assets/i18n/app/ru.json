@@ -1,0 +1,10 @@
+{
+	"Dashboard": {
+		"QuickSearch": "Быстрый поиск",
+		"Sample": "Например",
+		"SearchQueries": "Поисковые запросы",
+		"LastFiles": "Последние файлы",
+		"LastDownloads": "Последние загрузки",
+		"HistoryIsEmpty": "История пуста"
+	}
+}

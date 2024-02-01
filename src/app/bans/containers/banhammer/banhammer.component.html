@@ -25,7 +25,7 @@
               <input class="form-control"
                 aria-describedby="button-path"
                 formControlName="query"
-                placeholder="{{ 'Banhammer.Search' | translate }}"
+                [placeholder]="'Banhammer.Search' | translate"
                 type="text"
                 required>
             </div>
@@ -37,14 +37,14 @@
     <div class="d-flex list">
         <table class="table w-100">
           <thead>
-            <th>{{ 'Banhammer.ID' | translate }}</th>
-            <th>{{ 'Banhammer.BanCode' | translate }}</th>
-            <th>{{ 'Banhammer.Param' | translate }}</th>
-            <th>{{ 'Banhammer.Reason' | translate }}</th>
-            <th>{{ 'Banhammer.Nickname' | translate }}</th>
-            <th>{{ 'Banhammer.BannedBy' | translate }}</th>
-            <th>{{ 'Banhammer.BanTime' | translate }}</th>
-            <th>{{ 'Banhammer.AutoUnban' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.ID' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.BanCode' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.Param' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.Reason' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.Nickname' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.BannedBy' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.BanTime' | translate }}</th>
+            <th>{{ 'Banhammer.List.Column.AutoUnban' | translate }}</th>
           </thead>
           <ng-container *ngLet="$bans | async as bans">
             <tbody>
@@ -85,7 +85,7 @@
                     </span>
                   </ng-container>
                   <ng-template #permanent>
-                    <span>{{ 'Banhammer.DateUnbanNever' | translate }}</span>
+                    <span>{{ 'Banhammer.List.DateUnbanNever' | translate }}</span>
                   </ng-template>
                 </td>
               </tr>
@@ -105,7 +105,7 @@
     </div>
     <ng-template #empty>
       <div class="d-flex flex-fill flex-column justify-content-center align-items-center w-100">
-        <span class="text-muted">{{ 'Banhammer.BanlistIsEmpty' | translate }}</span>
+        <span class="text-muted">{{ 'Banhammer.List.IsEmpty' | translate }}</span>
       </div>
     </ng-template>
 </div>
