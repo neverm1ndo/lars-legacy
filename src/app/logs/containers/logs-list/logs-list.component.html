@@ -1,1 +1,15 @@
-{{ list$ | async | json }}
+<ng-container *ngLet="list$ | async as list">
+  <!-- lazyLoad
+  (onBottom)="lazyLoadChunk()" -->
+  <!-- [attr.data-limit]="$limit | async" -->
+  <cdk-virtual-scroll-viewport
+    #viewport
+    [attr.data-listlength]="list.length"
+    itemSize="28"
+    class="viewport"
+  >
+    <div *cdkVirtualFor="let line of list">
+      {{ line | json }}
+    </div>
+  </cdk-virtual-scroll-viewport
+></ng-container>

@@ -73,6 +73,7 @@ const idbConfig: DBConfig = {
     AdminsComponent,
     LoglineContentComponent,
     UserActionPipe
+    UserActionPipe
   ],
   imports: [
     CommonModule,
@@ -87,8 +88,7 @@ const idbConfig: DBConfig = {
     NgxIndexedDBModule.forRoot(idbConfig),
     SocketIoModule.forRoot(socketConfig),
     NgSelectModule,
-    LtyFileTreeModule,
-    ScrollingModule
+    LtyFileTreeModule
   ],
   providers: [
     NotificationsService,
