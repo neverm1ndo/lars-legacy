@@ -12,18 +12,18 @@
     <div class="d-flex flex-row justify-content-between align-items-center infile-search-head">
       <div class="d-flex align-items-center">
         <button (click)="closeSearch()" class="btn btn-dark infile-search-hide" type="button" name="button"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 30 30" width="30" height="30"><defs><path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path></defs><g><g><g><g><use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use></g></g></g></g></svg></button>
-        <small>ПОИСК</small>
+        <small>{{ 'TextEditor.Search.Title' | translate }}</small>
       </div>
     </div>
     <div class="d-flex flex-fill flex-column p-1 infile-search-body">
       <div class="d-flex flex-row justify-content-stretch">
-        <input toFocus (keyup.enter)="searchIn()" [(ngModel)]="query.find" name="queryFind" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Найти в текущем буфере"/>
+        <input toFocus (keyup.enter)="searchIn()" [(ngModel)]="query.find" name="queryFind" type="text" class="d-flex form-control shadow-none align-middle input-dark" [placeholder]="'TextEditor.Search.SearchInBuffer' | translate"/>
       </div>
       <div class="d-flex flex-row justify-content-stretch mt-1">
-        <input (keyup.enter)="replaceIn()" [(ngModel)]="query.replace" name="queryReplace" type="text" class="d-flex form-control shadow-none align-middle input-dark" placeholder="Заменить в текущем буфере"/>
+        <input (keyup.enter)="replaceIn()" [(ngModel)]="query.replace" name="queryReplace" type="text" class="d-flex form-control shadow-none align-middle input-dark" [placeholder]="'TextEditor.Search.ReplaceInBuffer' | translate"/>
       </div>
       <div class="d-flex flex-row justify-content-stretch p-2">
-        <small class="text-muted">Найдено совпадений: 
+        <small class="text-muted">{{ 'TextEditor.Search.Matches' | translate }}: 
           <ng-container *ngLet="$matches | async as matches">
             <span [class.text-light]="matches > 0">{{ matches }}</span>
           </ng-container>

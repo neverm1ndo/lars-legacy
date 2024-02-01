@@ -1,47 +1,55 @@
 {
-    "Admins": {
-      "Title": "Администраторский состав",
-      "AddAdminButton": "Добавить админа",
-      "List": {
-        "UserId": "ID",
-        "Nickname": "Никнейм",
-        "MainGroup": "Основная группа",
-        "SideGroup": "Побочная группа"
-      },
-      "AddAdminModal": {
-        "Title": "Добавление админа",
-        "Description": "Форма изменяет основную или второстепенную группу зарегистрированного пользователя на одну из администраторских групп.",
-        "Group": "Группа",
-        "Logs": "Логи",
-        "BanList": "Бан-лист",
-        "MapEditor": "Ред. карт",
-        "ConfigFiles": "Конф. файлов",
-        "AdmStaff": "Адм. состав",
-        "Confirm": "Добавить",
+	"Dashboard": {
+		"QuickSearch": "Быстрый поиск",
+		"Sample": "Например",
+		"SearchQueries": "Поисковые запросы",
+		"LastFiles": "Последние файлы",
+		"LastDownloads": "Последние загрузки",
+		"HistoryIsEmpty": "История пуста"
+	},
+  "Admins": {
+    "Title": "Администраторский состав",
+    "AddAdminButton": "Добавить админа",
+    "List": {
+      "UserId": "ID",
+      "Nickname": "Никнейм",
+      "MainGroup": "Основная группа",
+      "SideGroup": "Побочная группа"
+    },
+    "AddAdminModal": {
+      "Title": "Добавление админа",
+      "Description": "Форма изменяет основную или второстепенную группу зарегистрированного пользователя на одну из администраторских групп.",
+      "Group": "Группа",
+      "Logs": "Логи",
+      "BanList": "Бан-лист",
+      "MapEditor": "Ред. карт",
+      "ConfigFiles": "Конф. файлов",
+      "AdmStaff": "Адм. состав",
+      "Confirm": "Добавить",
+      "Cancel": "Отмена"
+    },
+    "GroupNames": {
+      "Applicant": "Претендент",
+      "Admin": "Администратор",
+      "MapStuart": "Маппер",
+      "ConfigStuart": "Редактор конфигов",
+      "BackupStuart": "Бэкапер",
+      "Developer": "Разработчик"
+    },
+    "Dialog": {
+      "RemoveAdmin": {
+        "Title": "Подтверждение исключения",
+        "Message": "Вы точно хотите исключть {{username}} из администраторского состава?",
+        "Confirm": "Исключить",
         "Cancel": "Отмена"
       },
-      "GroupNames": {
-        "Applicant": "Претендент",
-        "Admin": "Администратор",
-        "MapStuart": "Маппер",
-        "ConfigStuart": "Редактор конфигов",
-        "BackupStuart": "Бэкапер",
-        "Developer": "Разработчик"
-      },
-      "Dialog": {
-        "RemoveAdmin": {
-          "Title": "Подтверждение исключения",
-          "Message": "Вы точно хотите исключть {{username}} из администраторского состава?",
-          "Confirm": "Исключить",
-          "Cancel": "Отмена"
-        },
-        "ClientResponseRejectError": "Операция отменена пользователем"
-      },
-      "Toast": {
-        "ChangeAdminsGroup": {
-          "Success": "Админ {{ username }} перемещен в группу {{group}}",
-          "Error": "Админ {{ username }} не был перемещен в группу {{group}}"
-        }
+      "ClientResponseRejectError": "Операция отменена пользователем"
+    },
+    "Toast": {
+      "ChangeAdminsGroup": {
+        "Success": "Админ {{ username }} перемещен в группу {{group}}",
+        "Error": "Админ {{ username }} не был перемещен в группу {{group}}"
       }
     }
   }
+}

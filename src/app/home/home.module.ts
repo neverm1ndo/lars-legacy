@@ -26,7 +26,7 @@ import { SearchEditorComponent } from './search-editor/search-editor.component';
 import { GeoComponent } from './geo/geo.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BanhammerComponent } from './banhammer/banhammer.component';
+import { BanhammerComponent } from '../bans/containers/banhammer/banhammer.component';
 import { LoglineContentComponent } from '../logline-content/logline-content.component';
 
 import { AdminsComponent } from './admins/admins.component';
@@ -55,7 +55,17 @@ const idbConfig: DBConfig  = {
 };
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, SiderComponent, SearchComponent, SearchEditorComponent, GeoComponent, BanhammerComponent, AdminsComponent, LoglineContentComponent, UserActionPipe],
+  declarations: [
+    HomeComponent,
+    DashboardComponent,
+    SiderComponent,
+    SearchComponent,
+    SearchEditorComponent,
+    GeoComponent,
+    AdminsComponent,
+    LoglineContentComponent,
+    UserActionPipe
+  ],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -80,7 +90,6 @@ const idbConfig: DBConfig  = {
       useClass: JWTInterceptor,
       multi: true
     }
-    // ToastService
   ]
 })
 export class HomeModule {}

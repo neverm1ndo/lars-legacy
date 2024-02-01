@@ -1,0 +1,10 @@
+{
+	"Dashboard": {
+		"FastSearch": "Быстрый поиск",
+		"Sample": "Например",
+		"SearchQue": "Поисковые запросы",
+		"LastFiles": "Последние файлы",
+		"LastDl": "Последние загрузки",
+		"HistoryIsEmpty": "История пуста"
+	}
+}

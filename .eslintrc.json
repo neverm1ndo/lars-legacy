@@ -1,15 +1,9 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "app/**/*",
-    "dist/**/*",
-    "release/**/*"
-  ],
+  "ignorePatterns": ["app/**/*", "dist/**/*", "release/**/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
         "project": [
           "./tsconfig.serve.json",
@@ -22,37 +16,33 @@
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
         "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
       ],
       "rules": {
         "prefer-arrow/prefer-arrow-functions": 0,
         "@angular-eslint/directive-selector": 0,
+        "@typescript-eslint/member-ordering": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
             "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
+            "prefix": "lars"
           }
         ]
       }
     },
+    // {
+    //   "files": ["*.html"],
+    //   "excludedFiles": ["*inline-template-*.component.html"],
+    //   "extends": ["plugin:@angular-eslint/template/recommended"],
+    //   "rules": {
+    //     "prettier/prettier": ["error", { "parser": "angular" }]
+    //   }
+    // },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
-      "rules": {}
-    },
-    {
-      "files": [
-        "*.ts"
-      ],
-      "extends": [
-        "plugin:@ngrx/recommended"
-      ]
+      "files": ["*.ts"],
+      "extends": ["plugin:@ngrx/recommended"]
     }
   ]
 }

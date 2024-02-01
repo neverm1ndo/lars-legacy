@@ -36,7 +36,7 @@
           <div class="w-100 d-flex flex-row justify-content-between">
             <div class="panel-left">
               <div class="d-flex justify-content-start align-content-center">
-                <button disabled (click)="openRemoteWindow()" ngbTooltip="Открыть в отдельном окне" class="panel bg-success overflow-hidden word-wrap">
+                <button disabled (click)="openRemoteWindow()" ngbTooltip="{{ 'ConfigEditor.Func.Button.RemoteWindow' | translate }}" class="panel bg-success overflow-hidden word-wrap">
                   <fa-icon [icon]="fa.window"></fa-icon>
                 </button>
                 <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
@@ -64,13 +64,13 @@
                 <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(isChanged | async)">
                   <fa-icon [icon]="fa.save"></fa-icon>
                   <ng-template #saveTooltip>
-                    <span class="d-sm-none d-md-inline">Сохранить</span>
+                    <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Save' | translate }}</span>
                   </ng-template>
                 </button>
                 <button (click)="deleteFile()" [ngbTooltip]="delTooltip" class="panel">
                   <fa-icon [icon]="fa.trash"></fa-icon>
                   <ng-template #delTooltip>
-                    <span class="d-sm-none d-md-inline">Удалить</span>
+                    <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Delete' | translate }}</span>
                   </ng-template>
                 </button>
                 <ng-template #bufferSize><strong>{{ stats.size }}</strong> bytes</ng-template>
