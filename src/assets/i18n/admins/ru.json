@@ -1,12 +1,4 @@
 {
-	"Dashboard": {
-		"QuickSearch": "Быстрый поиск",
-		"Sample": "Например",
-		"SearchQueries": "Поисковые запросы",
-		"LastFiles": "Последние файлы",
-		"LastDownloads": "Последние загрузки",
-		"HistoryIsEmpty": "История пуста"
-	},
   "Admins": {
     "Title": "Администраторский состав",
     "AddAdminButton": "Добавить админа",
