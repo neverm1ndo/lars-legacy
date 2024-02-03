@@ -1,0 +1,111 @@
+$default-icon-size: 20px;
+
+
+:host {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.viewport {
+    width: 100%;
+    height: 100%;
+}
+
+lty-icon {
+    width: $default-icon-size;
+    height: $default-icon-size;
+}
+
+.logline-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1 1 auto;
+    width: 100%;
+    // flex-direction: row;
+    // flex-grow: 1;
+    // $gutter: 0.5rem;
+    // height: 28px;
+    // border-bottom: 1px solid #0000000f;
+    // font-size: 12px;
+    // line-height: 14px;
+    // padding-left: $gutter;
+    // padding-right: $gutter;
+    // box-sizing: border-box;
+    // transition: 0.05s linear;
+    // width: 100%;
+
+    // .badge {
+    //     border-radius: 1px;
+    //     font-size: 11px;
+    //     font-weight: 500;
+    //     padding-left: 15px;
+    //     padding-top: 3px;
+    //     padding-right: 15px;
+
+    //     &.bg-warning {
+    //         color: var(--bs-dark);
+    //     }
+
+    //     &.process {
+    //         text-transform: uppercase;
+    //     }
+
+    //     &.multiplier {
+    //         @include minibadge();
+    //     }
+    // }
+
+    // .text-dashed {
+    //     transition: none;
+    // }
+
+    // cursor: pointer;
+    // background: $filetree;
+
+    // &:hover {
+    //     background: $underpanel;
+
+    //     .message-shadow {
+    //         box-shadow: 0px -27px 0px 14px rgba(0, 0, 0, 0.93) inset !important;
+    //     }
+    // }
+
+    // .line-id {
+    //     font-size: 10px;
+    //     opacity: 0.7;
+    // }
+
+    // .nickname {
+    //     color: #fff;
+
+    //     &>.badge {
+    //         @include minibadge();
+    //     }
+
+    //     &:hover {
+    //         color: #ffffff90;
+    //     }
+    // }
+
+    // .geo-container {
+    //     position: relative;
+
+    //     button {
+    //         color: #ffffff90;
+
+    //         &.btn-dark {
+
+    //             &:hover,
+    //             &:active,
+    //             &:focus {
+    //                 background-color: transparent !important;
+    //                 color: var(--bs-light);
+    //             }
+    //         }
+    //     }
+
+    //     .dropdown-menu {
+    //         z-index: 1;
+    //     }
+    // }
+}

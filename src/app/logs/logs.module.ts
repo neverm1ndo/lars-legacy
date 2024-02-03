@@ -15,13 +15,26 @@ import { HttpClient } from '@angular/common/http';
 import { LogsDomainModule } from './domain/logs-domain.module';
 import { UserDomainModule } from '@lars/user/domain/user-domain.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { GeoComponent } from './components/content/geo/geo.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoglineContentComponent } from './containers/logline-content/logline-content.component';
+import { LibertyIconsModule } from '@lars/liberty-icons/liberty-icons.module';
+import { LazyLoadDirective } from './lazy-load/lazy-load.directive';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/logs/', '.json');
 }
 
 @NgModule({
-  declarations: [LogsListComponent, LogsListItemComponent, LogsComponent, SearchEditorComponent],
+  declarations: [
+    LogsListComponent,
+    LogsListItemComponent,
+    LogsComponent,
+    LoglineContentComponent,
+    SearchEditorComponent,
+    GeoComponent,
+    LazyLoadDirective
+  ],
   imports: [
     CommonModule,
     LogsRoutingModule,
@@ -29,6 +42,7 @@ export function createTranslateLoader(http: HttpClient) {
     FontAwesomeModule,
     ReactiveFormsModule,
     ScrollingModule,
+    NgbModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -38,7 +52,8 @@ export function createTranslateLoader(http: HttpClient) {
       isolate: true
     }),
     LogsDomainModule,
-    UserDomainModule
+    UserDomainModule,
+    LibertyIconsModule
   ]
 })
 export class LogsModule {}

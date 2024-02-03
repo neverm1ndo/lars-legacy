@@ -1,1 +1,63 @@
-<p>logs-list-item works!</p>
+<div class="row">
+    <div class="col-2 item-column">
+        <span>{{ logline.date | date: "d MMM yy, HH:mm:ss" }}</span>
+    </div>
+    <div class="col-4 item-column">
+        <ng-container *ngLet="logline.process | process as process">
+            <span
+                placement="right"
+                [title]="logline.process"
+                class="badge bg-{{ process.type }} process">
+                {{ process.translate }}
+            </span>
+            <div
+                *ngIf="logline.multiplier"
+                class="d-flex align-items-center"
+            >
+                <span class="badge multiplier bg-dark mr-2">
+                    x{{ logline.multiplier + 1 }}
+                </span>
+            </div>
+        </ng-container>    
+    </div>
+    <div class="col-2 item-column">
+        <div class="d-flex flex-row flex-grow-1 justify-content-between">
+            <a
+                class="nickname"
+                [routerLink]="['/home/search']"
+                [queryParams]="{ query: 'nn:' + logline.nickname, page: 0 }"
+            >
+                <span>{{ logline.nickname }}</span>
+            </a>
+            <span class="badge bg-dark ms-2 multiplier">{{ logline.id }}</span>
+        </div>
+    </div>
+    <div class="col-4 item-column">
+        <div class="d-flex flex-row w-100">
+          <div
+            ngbDropdown
+            [autoClose]="true"
+            container="body"
+            *ngIf="logline.geo as geo"
+            class="d-flex me-1 geo-container"
+          >
+            <button ngbDropdownToggle class="btn btn-sm btn-dark">
+              <fa-icon [icon]="fa.faGlobe"></fa-icon
+              ><u class="d-none d-lg-inline ms-2">Раскрыть гео</u>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="geoDropdown">
+              <geo ngbDropdownItem [table]="geo"></geo>
+            </div>
+          </div>
+          <div
+            *ngIf="logline.content"
+            class="flex-fill d-flex align-items-center"
+          >
+            <logline-content
+              [content]="logline.content"
+              ></logline-content>
+              <!-- [process]="logline.process | process" -->
+          </div>
+        </div>
+      </div>
+</div>

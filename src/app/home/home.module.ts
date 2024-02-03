@@ -21,12 +21,9 @@ import { LibertyIconsModule } from '../liberty-icons/liberty-icons.module';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SearchEditorComponent } from './search-editor/search-editor.component';
-import { GeoComponent } from './geo/geo.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BanhammerComponent } from './banhammer/banhammer.component';
-import { LoglineContentComponent } from '../logs/containers/logline-content/logline-content.component';
 
 import { AdminsComponent } from './admins/admins.component';
 
@@ -34,8 +31,6 @@ import { socketConfig } from '../ws/web-socket.service';
 
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserActionPipe } from '../shared/pipes/user-action.pipe';
-
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const idbConfig: DBConfig = {
   name: 'users',
@@ -68,10 +63,8 @@ const idbConfig: DBConfig = {
     HomeComponent,
     DashboardComponent,
     SiderComponent,
-    SearchEditorComponent,
-    GeoComponent,
+    BanhammerComponent,
     AdminsComponent,
-    LoglineContentComponent,
     UserActionPipe
     UserActionPipe
   ],

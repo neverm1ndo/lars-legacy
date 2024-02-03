@@ -1,18 +1,18 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { AppConfig } from "../../environments/environment";
-import { UserService } from "../user/domain/infrastructure/user.service";
-import { handleError } from "../utils";
-import { LogLine } from "../interfaces";
-import * as _ from "lodash";
-import { HistoryListEnum } from "../enums";
-import { HistoryStorage } from "../interfaces";
-import { BanRule } from "../interfaces/bans.interfaces";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AppConfig } from '../../environments/environment';
+import { UserService } from '../user/domain/infrastructure/user.service';
+import { handleError } from '../utils';
+import { LogLine } from '@lars/logs/domain';
+import * as _ from 'lodash';
+import { HistoryListEnum } from '../enums';
+import { HistoryStorage } from '../interfaces';
+import { BanRule } from '../interfaces/bans.interfaces';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class ApiService {
   public readonly URL = (() => {
@@ -22,17 +22,8 @@ export class ApiService {
         __route: 'logs',
         LAST: 'last',
         SEARCH: 'search'
-        __route: "logs",
-        LAST: "last",
-        SEARCH: "search",
       },
       CONFIGS: {
-        __route: "configs",
-        FILE_TREE: "config-files-tree",
-        CONFIG_FILE: "config-file",
-        FILE_STATS: "file-info",
-        UPLOAD: "upload-file", // deprecated
-        SAVE_FILE: "save-file",
         __route: 'configs',
         FILE_TREE: 'config-files-tree',
         CONFIG_FILE: 'config-file',
@@ -41,12 +32,16 @@ export class ApiService {
         SAVE_FILE: 'save-file'
       },
       MAPS: {
-        __route: "maps",
-        FILE_TREE: "maps-files-tree",
-        MAP_FILE: "map-file",
-        UPLOAD: "upload-map",
+        __route: 'maps',
+        FILE_TREE: 'maps-files-tree',
+        MAP_FILE: 'map-file',
+        UPLOAD: 'upload-map'
       },
       ADMINS: {
+        __route: 'admins',
+        LIST: 'list',
+        CHANGE_MAIN_GROUP: 'change-group',
+        CHANGE_SECONDARY_GROUP: 'change-secondary-group'
         __route: 'admins',
         LIST: 'list',
         CHANGE_MAIN_GROUP: 'change-group',
@@ -60,18 +55,26 @@ export class ApiService {
         RESTORE: 'restore',
         BACKUP: 'backup',
         SIZE: 'size'
+        __route: 'backups',
+        LIST: 'list',
+        RESTORE: 'restore',
+        BACKUP: 'backup',
+        SIZE: 'size'
       },
       BANS: {
-        __route: "bans",
-        LIST: "",
-        CN: "cn",
-        IP: "ip",
-        SERIALS: "serials",
-        BAN: "ban",
-        ADMIN: "admin",
-        USER: "user",
+        __route: 'bans',
+        LIST: '',
+        CN: 'cn',
+        IP: 'ip',
+        SERIALS: 'serials',
+        BAN: 'ban',
+        ADMIN: 'admin',
+        USER: 'user'
       },
       STATS: {
+        __route: 'stats',
+        ONLINE: 'online',
+        CHAT: 'chat'
         __route: 'stats',
         ONLINE: 'online',
         CHAT: 'chat'
@@ -83,9 +86,19 @@ export class ApiService {
         RMDIR: 'rmdir',
         MVDIR: 'mvdir'
       }
+        __route: 'utils',
+        DELETE_FILE: 'delete-file',
+        MKDIR: 'mkdir',
+        RMDIR: 'rmdir',
+        MVDIR: 'mvdir'
+      }
     };
 
     function buildTree(routes: any): typeof routes {
+      const routeName: string = routes.__route + '/';
+      for (const route in routes) {
+        if (typeof routes[route] === 'string') {
+          if (route.startsWith('_')) continue;
       const routeName: string = routes.__route + '/';
       for (const route in routes) {
         if (typeof routes[route] === 'string') {
@@ -103,7 +116,7 @@ export class ApiService {
 
   constructor(
     private _http: HttpClient,
-    private _user: UserService,
+    private _user: UserService
   ) {}
 
   getChunkSize(): string {
@@ -114,9 +127,16 @@ export class ApiService {
     return this._http.get(this.URL.ADMINS.LIST);
   }
   setAdminGroup(id: number, group: number) {
-    return this._http.patch(this.URL.ADMINS.CHANGE_MAIN_GROUP, { id, group });
+    return this._http.patch(this.URL.ADMINS.CHANGE_MAIN_GROUP, {
+      id,
+      group
+    });
   }
   setAdminSecondaryGroup(id: number, group: number) {
+    return this._http.patch(this.URL.ADMINS.CHANGE_SECONDARY_GROUP, {
+      id,
+      group
+    });
     return this._http.patch(this.URL.ADMINS.CHANGE_SECONDARY_GROUP, { id, group });
   }
   addAdminSecondaryGroup(id: number, group: number) {
@@ -135,18 +155,26 @@ export class ApiService {
     return this._http.get(this.URL.CONFIGS.CONFIG_FILE, {
       params: { path },
       responseType: 'text'
+      params: { path },
+      responseType: 'text'
     });
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
+    const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
     return this._http.get(this.URL.MAPS.MAP_FILE, {
+      params: { path },
+      headers,
+      responseType: 'text'
       params: { path },
       headers,
       responseType: 'text'
     });
   }
   deleteMap(path: string) {
-    return this._http.delete(this.URL.UTILS.DELETE_FILE, { params: { path } });
+    return this._http.delete(this.URL.UTILS.DELETE_FILE, {
+      params: { path }
+    });
   }
   getLast(filter: string[] = []): Observable<any> {
     return this._http.get(this.URL.LOGS.LAST, {
@@ -163,12 +191,16 @@ export class ApiService {
     return this.search(query, page, limit, filter, date);
   }
   getFileInfo(path: string): Observable<any> {
-    return this._http.get(this.URL.CONFIGS.FILE_STATS, { params: { path } });
+    return this._http.get(this.URL.CONFIGS.FILE_STATS, {
+      params: { path }
+    });
   }
 
   saveFile(form: FormData): Observable<any> {
     return this._http.post(this.URL.CONFIGS.SAVE_FILE, form, {
       reportProgress: true,
+      observe: 'events',
+      responseType: 'blob'
       observe: 'events',
       responseType: 'blob'
     });
@@ -179,11 +211,15 @@ export class ApiService {
       reportProgress: true,
       observe: 'events',
       responseType: 'blob'
+      observe: 'events',
+      responseType: 'blob'
     });
   }
   uploadFileCfg(form: FormData): Observable<any> {
     return this._http.post(this.URL.CONFIGS.UPLOAD, form, {
       reportProgress: true,
+      observe: 'events',
+      responseType: 'blob'
       observe: 'events',
       responseType: 'blob'
     });
@@ -193,7 +229,9 @@ export class ApiService {
     return this._http.get(this.URL.BACKUPS.LIST);
   }
   getBackupFile(hash: string): Observable<any> {
-    return this._http.get(`${this.URL.BACKUPS.BACKUP}/${hash}`, { responseType: 'text' });
+    return this._http.get(`${this.URL.BACKUPS.BACKUP}/${hash}`, {
+      responseType: 'text'
+    });
   }
   restoreBackup(hash: string): Observable<any> {
     return this._http.get(`${this.URL.BACKUPS.RESTORE}/${hash}`);
@@ -207,13 +245,16 @@ export class ApiService {
   }
 
   getStatsOnline(date: Date): Observable<any> {
-    return this._http.get(this.URL.STATS.ONLINE, { params: { day: date.toISOString() } });
+    return this._http.get(this.URL.STATS.ONLINE, {
+      params: { day: date.toISOString() }
+    });
   }
   getStatsChat(): Observable<any> {
     return this._http.get(this.URL.STATS.CHAT);
   }
 
   getBanList(page?: number, limit?: number): Observable<BanRule[]> {
+    return this._http.get<BanRule[]>(this.URL.BANS.LIST /**{ params: { p: page, lim: limit }}*/);
     return this._http.get<BanRule[]>(this.URL.BANS.LIST /**{ params: { p: page, lim: limit }}*/);
   }
 
@@ -239,18 +280,22 @@ export class ApiService {
     limit: number,
     filter?: string[],
     date?: { from?: string; to?: string }
+    date?: { from?: string; to?: string }
   ): Observable<LogLine[]> {
     let params: HttpParams = new HttpParams();
     params = params.appendAll({
       q: query,
       page: page.toString(),
       lim: limit.toString()
+      lim: limit.toString()
     });
 
     if (filter) {
-      params = params.append("filter", filter.join(","));
+      params = params.append('filter', filter.join(','));
     }
     if (date) {
+      if (date.from) params = params.append('from', new Date(date.from).valueOf());
+      if (date.to) params = params.append('to', new Date(date.to).valueOf());
       if (date.from) params = params.append('from', new Date(date.from).valueOf());
       if (date.to) params = params.append('to', new Date(date.to).valueOf());
     }
@@ -258,6 +303,7 @@ export class ApiService {
     return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
   }
 
+  searchBans({ type, query }: { type: number; query: string }): Observable<BanRule[]> {
   searchBans({ type, query }: { type: number; query: string }): Observable<BanRule[]> {
     function _getURLbySearchType(type: number): string {
       switch (type) {
@@ -289,7 +335,9 @@ export class ApiService {
   addToRecent(entry: HistoryListEnum, val: any): void {
     try {
       const stored = window.localStorage.getItem('history');
+      const stored = window.localStorage.getItem('history');
 
+      if (!stored) throw new Error('History is not configured in localStorage');
       if (!stored) throw new Error('History is not configured in localStorage');
       const packedHistory: HistoryStorage = JSON.parse(stored);
 
@@ -311,6 +359,7 @@ export class ApiService {
 
       packedHistory[entry] = specificHistoryList;
 
+      window.localStorage.setItem('history', JSON.stringify(packedHistory));
       window.localStorage.setItem('history', JSON.stringify(packedHistory));
     } catch (error) {
       console.warn(error);

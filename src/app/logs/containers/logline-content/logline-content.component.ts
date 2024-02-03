@@ -1,25 +1,21 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { UserService } from "@lars/user/domain/infrastructure/user.service";
-import { Process } from "@lars/shared/components/line-process/log-processes";
-import { IContentData, IUserData } from "@lars/interfaces";
-import {
-  faSearch,
-  faUserAlt,
-  faSkullCrossbones,
-} from "@fortawesome/free-solid-svg-icons";
-enum ContentTemplate {
-  BANNED,
-  AUTH,
-  MUTED,
-  DEATH,
-  CN,
-}
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { UserService } from '@lars/user/domain/infrastructure/user.service';
+import { faSearch, faUserAlt, faSkullCrossbones } from '@fortawesome/free-solid-svg-icons';
+import { ContentData, Process } from '@lars/logs/domain';
+
+// enum ContentTemplate {
+//   BANNED,
+//   AUTH,
+//   MUTED,
+//   DEATH,
+//   CN
+// }
 
 @Component({
-  selector: "logline-content",
-  templateUrl: "./logline-content.component.html",
+  selector: 'logline-content',
+  templateUrl: './logline-content.component.html',
   // styleUrls: ["./logline-content.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoglineContentComponent {
   constructor(private _user: UserService) {}
@@ -27,19 +23,19 @@ export class LoglineContentComponent {
   public fa = {
     faSearch,
     faUserAlt,
-    faSkullCrossbones,
+    faSkullCrossbones
   };
 
-  @Input("content") content: IContentData;
-  @Input("type") process: Process;
+  @Input() content: ContentData;
+  @Input() process: Process;
 
   private _isAuth(): boolean {
     switch (this.process.control) {
-      case "authCorrectAdm":
+      case 'authCorrectAdm':
         return true;
-      case "authIncorrect":
+      case 'authIncorrect':
         return true;
-      case "authCorrectUsr":
+      case 'authCorrectUsr':
         return true;
       default: {
         return false;
@@ -48,36 +44,36 @@ export class LoglineContentComponent {
   }
 
   private _isBanned(): boolean {
-    const banned = ["disconnectBan", "disconnectKick"];
+    const banned = ['disconnectBan', 'disconnectKick'];
     return banned.includes(this.process.control);
   }
   private _isMuted(): boolean {
-    const banned = ["chatHandBlock"];
+    const banned = ['chatHandBlock'];
     return banned.includes(this.process.control);
   }
   private _isDeath(): boolean {
-    return this.process.control === "dthKilled";
+    return this.process.control === 'dthKilled';
   }
   private _isCNResponse(): boolean {
-    return this.process.control === "CnResSuccess";
+    return this.process.control === 'CnResSuccess';
   }
 
   userLink(id: number) {
-    this._user.openUserForumProfile(id);
+    // this._user.openUserForumProfile(id);
   }
 
-  setTemplate(): string {
-    switch (true) {
-      case this._isBanned():
-        return ContentTemplate[0];
-      case this._isAuth():
-        return ContentTemplate[1];
-      case this._isMuted():
-        return ContentTemplate[2];
-      case this._isDeath():
-        return ContentTemplate[3];
-      case this._isCNResponse():
-        return ContentTemplate[4];
-    }
+  setTemplate() {
+    // switch (true) {
+    //   case this._isBanned():
+    //     return ContentTemplate[0];
+    //   case this._isAuth():
+    //     return ContentTemplate[1];
+    //   case this._isMuted():
+    //     return ContentTemplate[2];
+    //   case this._isDeath():
+    //     return ContentTemplate[3];
+    //   case this._isCNResponse():
+    //     return ContentTemplate[4];
+    // }
   }
 }

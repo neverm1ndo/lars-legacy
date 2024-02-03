@@ -1,0 +1,83 @@
+@use "sass:list";
+
+$default-font-size: 13px;
+$badge-font-size: 11px;
+$item-container-height: 30px;
+$item-border: 1px solid #0000000f;
+
+@mixin processbadge {
+    border-radius: 1px;
+    font-size: $badge-font-size;
+    font-weight: normal;
+    padding: 3px 15px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    line-height: $default-font-size;
+}
+
+@mixin badges-group-item($side) {
+    @if $side == left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    @if $side == right {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    margin: 0;
+}
+
+:host {
+    height: $item-container-height;
+    font-size: $default-font-size;
+    display: block;
+    border-bottom: $item-border;
+
+    .row {
+        margin: 0;
+        height: 100%;
+    }
+
+}
+
+.item-column {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.process {
+    @include processbadge();
+
+    ~ .multiplier {
+        @include badges-group-item(left);
+    }
+
+    $badge-types: (warning, info);
+
+    @each $type in $badge-types {
+        &.bg-#{$type} {
+            color: var(--bs-dark)!important;
+        }
+    }
+}
+
+.multiplier {
+    @include processbadge();
+    
+    border-radius: 3px;
+
+    ~ .process {
+       @include badges-group-item(right);
+    }
+
+    text-transform: none;
+    padding: 3px 0.5rem;
+}
+
+.nickname {
+    color: var(--bs-light);
+    &:hover {
+        color: #ffffff90;
+    }
+}
