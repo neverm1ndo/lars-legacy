@@ -9,7 +9,7 @@ import {
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
-import { LogsFacade } from '@lars/logs/domain';
+import { LIST_ITEM_HEIGHT, LogsFacade } from '@lars/logs/domain';
 import { takeWhile } from 'lodash';
 import { Observable, debounceTime, filter, fromEvent, tap } from 'rxjs';
 
@@ -22,9 +22,10 @@ export class LogsListComponent implements OnInit, AfterViewInit {
   @ViewChild('spinnerContainer', { static: true, read: ViewContainerRef })
   spinnerContainer: ViewContainerRef;
   @ViewChild('lazyLoaderSpinner') spinnerTemplate: TemplateRef<any>;
-  @ViewChildren('viewport') viewport: ElementRef;
 
   public preloading = false;
+
+  public readonly itemSize = LIST_ITEM_HEIGHT;
 
   public list$: Observable<any> = this.logsFacade.getLogsList();
 
@@ -32,21 +33,12 @@ export class LogsListComponent implements OnInit, AfterViewInit {
 
   loadNewLines() {
     this.spinnerContainer.createEmbeddedView(this.spinnerTemplate);
-
-    // console.log(this.preloading);
-
-    // if (this.preloading) {
     this.logsFacade.nextPage();
-    // }
-
-    // this.preloading = true;
   }
 
   ngAfterViewInit(): void {
     this.logsFacade.loading$.pipe(filter((isLoading) => !isLoading)).subscribe({
-      next: (isLoading) => {
-        // console.log(isLoading);
-        // this.preloading = false;
+      next: () => {
         this.spinnerContainer.clear();
       }
     });

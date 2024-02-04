@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex: 1 1 auto;
+    font-size: inherit;
+}
+
+img {
+    width: 27px;
+    height: 27px;
+}
+
+.cell {
+    align-items: center;
+    padding: 0 8px;
+}

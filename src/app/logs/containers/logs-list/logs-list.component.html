@@ -1,14 +1,12 @@
 <ng-container *ngLet="list$ | async as list">
-  <div 
-    class="viewport" 
+  <div class="viewport" 
     cdkVirtualScrollingElement
     larsLazyLoadList
     (loadItems)="loadNewLines()"
     [attr.data-listlength]="list.length"
     [attr.data-limit]="100">
-    <cdk-virtual-scroll-viewport
-      #viewport
-      itemSize="30">
+    <cdk-virtual-scroll-viewport #viewport
+      [itemSize]="itemSize">
       <lars-logs-list-item 
         *cdkVirtualFor="let line of list" 
         [logline]="line">
@@ -19,8 +17,7 @@
 </ng-container>
 <ng-template #lazyLoaderSpinner>
     <div lazy-load-spinner class="text-center bg-dark p-2 w-100">
-      <lty-icon 
-        name="lty-logo" 
+      <lty-icon name="lty-logo" 
         anim="spinner-logo"
         class="loading"
       ></lty-icon>

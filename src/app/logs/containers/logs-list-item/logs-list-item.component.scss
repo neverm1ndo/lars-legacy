@@ -2,7 +2,7 @@
 
 $default-font-size: 13px;
 $badge-font-size: 11px;
-$item-container-height: 30px;
+$item-container-height: 28px;
 $item-border: 1px solid #0000000f;
 
 @mixin processbadge {
@@ -11,7 +11,6 @@ $item-border: 1px solid #0000000f;
     font-weight: normal;
     padding: 3px 15px;
     text-transform: uppercase;
-    vertical-align: middle;
     line-height: $default-font-size;
 }
 
@@ -43,7 +42,12 @@ $item-border: 1px solid #0000000f;
 .item-column {
     display: flex;
     align-items: center;
+    justify-items: start;
     padding: 0 8px;
+}
+
+.content {
+    line-height: $default-font-size;
 }
 
 .process {

@@ -1,0 +1,55 @@
+$height: 30px;
+$defaultIndent: 6px;
+
+:host {
+    width: 100%;
+    .message {
+        span {
+            padding: 0 $defaultIndent;
+        }
+    }
+    .long {
+        width: 100%;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        
+        &:hover {
+            overflow: visible;
+            max-height: max-content;
+            z-index: 2;
+            white-space: normal;
+            span {
+                $bg-color: var(--bs-dark);
+    
+                position: absolute;
+                max-height: calc($height * 6);
+                padding: $defaultIndent;
+                background-color: var(--bs-dark);
+                line-height: inherit;
+                margin-top: -13px;
+                border-radius: 2px;
+    
+                &:before {
+                    content: ' ';
+                    width: 0;
+                    height: 0;
+                    position: absolute;
+    
+                    $borders: bottom, left, top;
+                    $size: 5px;
+    
+                    @each $border in $borders {
+                        border-#{$border}: $size solid transparent;
+                    }
+    
+                    border-right: $size solid $bg-color;
+                    margin-left: calc($size * 3 * -1);
+                    margin-top: 2px;
+                }
+            }
+        }
+    }
+    
+}

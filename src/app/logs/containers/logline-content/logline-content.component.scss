@@ -1,149 +1,158 @@
 @import "colors";
 :host {
+  display: flex;
+  flex: 1 1 auto;
   width: 100%;
-  $height: auto;
-  .message-container {
-    position: relative;
-    width: 100%;
-    span {
-      line-height: $height;
-    }
-  }
-  .message-content {
-    position: relative;
-    overflow: hidden;
-    max-height: $height;
-    width: 100%;
-    white-space: nowrap;
-    ::-webkit-selection {
-      background-color: var(--bs-light) !important;
-      color: var(--bs-dark);
-    }
-    ::selection {
-      background-color: var(--bs-light) !important;
-      color: var(--bs-dark);
-    }
-    span {
-      text-overflow: ellipsis;
-      max-height: $height;
-      transition: max-height 0.1s ease;
-      padding: 0px 6px 0px 6px;
-      box-sizing: border-box;
-      overflow: hidden;
-      display: block;
-      width: 100%;
-    }
-    &:hover {
-      overflow: visible;
-      max-height: max-content;
-      z-index: 2;
-      white-space: normal;
-      span {
-        // box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.425);
-        position: absolute;
-        max-height: calc($height * 6);
-        padding: 6px 6px 6px 6px;
-        background-color: $underpanel;
-        line-height: inherit;
-      }
-    }
-  }
-  span {
-    word-wrap: break-word;
-  }
-  .user {
-    $height: 16px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    border-radius: 2px;
-    white-space: nowrap;
-    &-group {
-      width: 100%;
-      text-overflow: ellipsis;
-    }
-    small {
-      line-height: 17px !important;
-    }
-    a {
-      line-height: $height;
-      margin-left: 5px;
-      margin-right: 5px;
-      transition: 0.1s ease;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      &:hover {
-        border-bottom: 1px solid #fdfdfd;
-      }
-    }
-    img {
-      width: $height;
-      height: $height;
-      display: inline-block;
-      margin-right: 5px;
-      border-radius: 100%;
-      position: relative;
-      top: -1px;
-    }
-    .badge {
-      width: 26px;
-      padding: 2px;
-      line-height: 10px;
-      margin-left: 5px;
-      margin-right: 5px;
-      border-radius: 2px;
-    }
-  }
-  .loader {
-    width: 20px;
-    height: 20px;
-    .spinner {
-      .path {
-        stroke: var(--bs-light) !important;
-      }
-    }
-  }
-  .bancard {
-    border-radius: 3px;
-    overflow: hidden;
-    &-head {
-      background: #00000060;
-    }
-    &-body {
-      background: #00000030;
-    }
-    &-head,
-    &-body {
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
-  }
-  .bg {
-    &-shade {
-      &-danger {
-        background-color: #9e333d;
-      }
-      &-warning {
-        background-color: #e8c763;
-        color: var(--bs-dark);
-      }
-      &-success {
-        background-color: #449055;
-      }
-    }
-  }
 }
 .cn {
-  background: $secondary;
-  color: $text;
-  margin-top: 2px;
-  padding: 2px;
-  width: 100%;
-  border-radius: 2px;
-  fa-icon {
-    margin-right: 5px;
-  }
+  padding: 2px 8px;
+  white-space: nowrap;
 }
+// :host {
+//   width: 100%;
+//   $height: auto;
+//   .message-container {
+//     position: relative;
+//     width: 100%;
+//     span {
+//       line-height: $height;
+//     }
+//   }
+//   .message-content {
+//     position: relative;
+//     overflow: hidden;
+//     max-height: $height;
+//     width: 100%;
+//     white-space: nowrap;
+//     ::-webkit-selection {
+//       background-color: var(--bs-light) !important;
+//       color: var(--bs-dark);
+//     }
+//     ::selection {
+//       background-color: var(--bs-light) !important;
+//       color: var(--bs-dark);
+//     }
+//     span {
+//       text-overflow: ellipsis;
+//       max-height: $height;
+//       transition: max-height 0.1s ease;
+//       padding: 0px 6px 0px 6px;
+//       box-sizing: border-box;
+//       overflow: hidden;
+//       display: block;
+//       width: 100%;
+//     }
+//     &:hover {
+//       overflow: visible;
+//       max-height: max-content;
+//       z-index: 2;
+//       white-space: normal;
+//       span {
+//         // box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.425);
+//         position: absolute;
+//         max-height: calc($height * 6);
+//         padding: 6px 6px 6px 6px;
+//         background-color: $underpanel;
+//         line-height: inherit;
+//       }
+//     }
+//   }
+//   span {
+//     word-wrap: break-word;
+//   }
+//   .user {
+//     $height: 16px;
+//     padding-left: 15px;
+//     padding-right: 15px;
+//     padding-top: 3px;
+//     padding-bottom: 3px;
+//     border-radius: 2px;
+//     white-space: nowrap;
+//     &-group {
+//       width: 100%;
+//       text-overflow: ellipsis;
+//     }
+//     small {
+//       line-height: 17px !important;
+//     }
+//     a {
+//       line-height: $height;
+//       margin-left: 5px;
+//       margin-right: 5px;
+//       transition: 0.1s ease;
+//       text-decoration: none;
+//       border-bottom: 1px solid transparent;
+//       &:hover {
+//         border-bottom: 1px solid #fdfdfd;
+//       }
+//     }
+//     img {
+//       width: $height;
+//       height: $height;
+//       display: inline-block;
+//       margin-right: 5px;
+//       border-radius: 100%;
+//       position: relative;
+//       top: -1px;
+//     }
+//     .badge {
+//       width: 26px;
+//       padding: 2px;
+//       line-height: 10px;
+//       margin-left: 5px;
+//       margin-right: 5px;
+//       border-radius: 2px;
+//     }
+//   }
+//   .loader {
+//     width: 20px;
+//     height: 20px;
+//     .spinner {
+//       .path {
+//         stroke: var(--bs-light) !important;
+//       }
+//     }
+//   }
+//   .bancard {
+//     border-radius: 3px;
+//     overflow: hidden;
+//     &-head {
+//       background: #00000060;
+//     }
+//     &-body {
+//       background: #00000030;
+//     }
+//     &-head,
+//     &-body {
+//       padding-left: 15px;
+//       padding-right: 15px;
+//       padding-top: 5px;
+//       padding-bottom: 5px;
+//     }
+//   }
+//   .bg {
+//     &-shade {
+//       &-danger {
+//         background-color: #9e333d;
+//       }
+//       &-warning {
+//         background-color: #e8c763;
+//         color: var(--bs-dark);
+//       }
+//       &-success {
+//         background-color: #449055;
+//       }
+//     }
+//   }
+// }
+// .cn {
+//   background: $secondary;
+//   color: $text;
+//   margin-top: 2px;
+//   padding: 2px;
+//   width: 100%;
+//   border-radius: 2px;
+//   fa-icon {
+//     margin-right: 5px;
+//   }
+// }

@@ -1,0 +1,19 @@
+<div *ngIf="content?.auth as user" class="d-flex flex-row flex-fill bg-{{process.type}}">
+    <div class="d-flex">
+        <img [src]="user.avatar" [alt]="user.username" />
+    </div>
+    <div class="d-flex bg-dark cell">
+        <small class="text-light">{{ user.id }}</small>
+    </div>
+    <div class="d-flex align-items-center cell">
+        <small>
+            <a class="text-light cursor-pointer" (click)="userLink(user.id)">
+                {{ user.username }}
+            </a>
+        </small>
+    </div>
+    <div class="d-flex flex-fill cell">
+        <small class="user-group w-100">{{ user.secondary_group | role }}
+        </small>
+    </div>
+</div>

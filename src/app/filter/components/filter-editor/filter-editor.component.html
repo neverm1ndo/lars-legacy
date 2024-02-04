@@ -1,0 +1,32 @@
+<div class="d-flex editor">
+  <button type="button" class="btn btn-dark">
+    <fa-icon [icon]="fa.faArrowLeft" (click)="goBack()"></fa-icon>
+  </button>
+  <button type="button" class="btn btn-dark">
+    <fa-icon [icon]="fa.faArrowRight" (click)="goForward()"></fa-icon>
+  </button>
+  <form
+    class="d-flex flex-row flex-grow-1 input-group"
+    (keyup.enter)="send()"
+    [formGroup]="searchForm"
+    (ngSubmit)="send()"
+    autocomplete="off"
+  >
+    <input
+      toFocus
+      formControlName="query"
+      name="query"
+      type="text"
+      class="form-control shadow-none align-middle input-dark flex-grow-1"
+    />
+  </form>
+  <ng-container *ngLet="loading | async as loading">        
+    <button
+      class="btn btn-dark"
+      (click)="sync()"
+      name="sync"
+      [disabled]="loading">
+        <fa-icon [class.spin]="loading" [icon]="fa.faSync"></fa-icon>
+    </button>
+  </ng-container>
+</div>

@@ -1,5 +1,5 @@
-import { UserData } from "@lars/user/domain";
-import { Processes } from "../configs";
+import { UserData } from '@lars/user/domain';
+import { Processes } from '../configs';
 
 export interface ContentData {
   time?: string;
@@ -9,13 +9,8 @@ export interface ContentData {
   op?: string;
   weapon?: string;
   message?: string;
-  target?: {
-    username: string;
-    id: number;
-  };
-  props?: {
-    [key: string]: any;
-  };
+  target?: ContentDataTarget;
+  props?: ContentDataProps;
   action?: string;
   targetType?: string;
   numbers?: number[];
@@ -27,6 +22,15 @@ export interface ContentData {
     visitors: number;
   };
 }
+
+export type ContentDataTarget = {
+  username: string;
+  id: number;
+};
+
+export type ContentDataProps = {
+  [key: string]: any;
+};
 
 export interface LogLine {
   unix: number;

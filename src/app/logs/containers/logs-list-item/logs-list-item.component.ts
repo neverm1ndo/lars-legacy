@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { faFingerprint, faGlobe, faSadTear } from '@fortawesome/free-solid-svg-icons';
+import { DefaultLogLineContentComponent } from '@lars/logs/components/content/default/default.component';
 import { LogLine } from '@lars/logs/domain';
 
 @Component({
@@ -19,5 +27,7 @@ export class LogsListItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.setContent();
+  }
 }

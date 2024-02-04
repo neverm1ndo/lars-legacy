@@ -1,5 +1,36 @@
-<ng-container [ngSwitch]="setTemplate()">
-  <ng-template *ngSwitchCase="'BAN'">
+<ng-container *ngIf="content" [ngSwitch]="setContentType()">
+  <lars-auth-logline-content
+    *ngSwitchCase="isAuthenticated"
+    [process]="process"
+    [content]="content"
+  ></lars-auth-logline-content>
+  <lars-death-logline-content
+    *ngSwitchCase="isDead"
+    [content]="content"
+  ></lars-death-logline-content>
+  <lars-target-logline-content
+    *ngSwitchCase="isTargeted"
+    [target]="content.target">
+  </lars-target-logline-content>
+  <lars-props-logline-content
+    *ngSwitchCase="isProps"
+    [props]="content.props">
+  </lars-props-logline-content>
+  <ng-container
+    *ngSwitchCase="isCookieNumber">
+    <a
+      class="btn btn-small btn-dark text-left cn"
+      [routerLink]="['/home/search']"
+      [queryParams]="{ query: 'cn:' + content.cn }"
+    >
+      <fa-icon class="me-2" [icon]="fa.faSearch"></fa-icon>{{ content.cn }}
+    </a>
+  </ng-container>
+  <lars-default-logline-content
+    *ngSwitchDefault
+    [content]="content"
+  ></lars-default-logline-content>
+  <!-- <ng-container *ngSwitchCase="'BAN'">
     <div class="bancard w-100 bg-{{ process.type }}">
       <div class="bancard-head">
         <small
@@ -13,7 +44,7 @@
         <small>{{ content.message | rules }} </small>
       </div>
     </div>
-  </ng-template>
+  </ng-container>
   <ng-container *ngSwitchCase="'AUTH'">
     <div *ngIf="content" class="user d-flex flex-row flex-fill align-items-center w-100 bg-{{ process.type }}">
         <ng-container *ngIf="content.auth as user;">
@@ -88,5 +119,5 @@
         >
       </span>
     </div>
-  </ng-container>
+  </ng-container> -->
 </ng-container>

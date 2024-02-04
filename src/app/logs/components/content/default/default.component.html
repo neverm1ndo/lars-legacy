@@ -1,0 +1,7 @@
+<div class="message" *ngIf="content?.message" [class.long]="content.message.length > 40">
+    <span>{{ content.message }}</span>
+</div>
+<span *ngIf="content.numbers.length">
+    <kbd class="me-1" *ngFor="let number of content.numbers">{{ number }}</kbd>
+</span>
+
