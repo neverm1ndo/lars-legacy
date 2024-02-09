@@ -72,11 +72,12 @@ p, a, span, button, div {
       position: sticky;
       background: inherit;
       display: inline-block;
-      transform-origin: 0% 50%;
-      transform: rotate(-90deg);
+      // transform-origin: 0% 50%;
+      // transform: rotate(-90deg);
       width: auto;
-      margin: 40px 2px;
-      top: 50px;
+      // margin: 40px 2px;
+      top: 0px;
+      right: 100px;
       -webkit-font-smoothing: none;
       padding: 0px 5px 2px 5px;
       border-radius: 2px;

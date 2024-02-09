@@ -3,13 +3,11 @@
 :host {
   margin-bottom: 1px;
   background: $filetree;
+  transition: .1s linear;
   &.active {
-    background: #242427;
-    &:hover {
-      background: #242427!important;
-    }
+    background: #212124;
   }
-  &:hover {
+  &:hover:not(.active) {
     background: #303033;
   }
 }
@@ -54,7 +52,7 @@
   .marker {
     width: 9px;
     padding: 35px 0px 35px 0px;
-    background: inherit;
+    background: white;
     flex: 0 0 8px;
   }
   button {
