@@ -203,7 +203,7 @@
   let-admin="admin">
   <ng-container *ngLet="userInfo.main_group === 10 as isDev">
     <div *ngIf="admin.main_group !== 10" class="d-flex flex-row">
-      <div *ngFor="let group of admin.prefrences"
+      <div *ngFor="let group of admin.permissions"
         class="tab group-{{group}}">
         <span class="tab-name">
           {{ group | role }}
@@ -215,7 +215,7 @@
       <div *ngIf="isDev" 
         ngbDropdown
         class="d-inline-block">
-        <button *ngIf="admin.prefrences.length < 3"
+        <button *ngIf="admin.permissions.length < 3"
           type="button"
           ngbDropdownToggle
           [id]="'roles-' + admin.user_id"
@@ -224,7 +224,7 @@
         </button>
         <div ngbDropdownMenu [attr.aria-labelledby]="'roles-' + admin.user_id">
           <button *ngFor="let newGroup of subRoles"
-            [disabled]="admin.prefrences.includes(newGroup.id)"
+            [disabled]="admin.permissions.includes(newGroup.id)"
             (click)="addAdminSecondaryGroup(admin.user_id, newGroup.id)"
             ngbDropdownItem>
             {{ newGroup.val }}

@@ -28,7 +28,14 @@ interface IUserAlertsSettings {
   serverRestart: boolean;
 }
 
-type UserGroupTranslation = 'Претендент' | 'Разработчик' | 'Админ' | 'Маппер' | 'Редктор конфигурационных файлов' | 'Бэкапер' | 'Игрок';
+type UserGroupTranslation =
+  | 'Претендент'
+  | 'Разработчик'
+  | 'Админ'
+  | 'Маппер'
+  | 'Редктор конфигурационных файлов'
+  | 'Бэкапер'
+  | 'Игрок';
 
 interface UserGroupTranslationMap {
   [group: number]: UserGroupTranslation;
@@ -38,11 +45,10 @@ interface UserGroupTranslationMap {
   providedIn: 'root'
 })
 export class UserService {
-
   readonly URL_LOGIN: string = AppConfig.api.auth + 'login';
   readonly URL_LOGOUT: string = AppConfig.api.auth + 'logout';
   readonly URL_USER: string = AppConfig.api.user;
-  
+
   public loggedInUser$: BehaviorSubject<IUserData | null> = new BehaviorSubject(null);
   public error$: Subject<any> = new Subject();
 
@@ -50,28 +56,28 @@ export class UserService {
     private _http: HttpClient,
     private _router: Router,
     private _electron: ElectronService,
-    private _toast: ToastService,
+    private _toast: ToastService
   ) {
     this._checkUserSettings();
   }
 
-
   private _checkUserSettings(): void {
     if (window.localStorage.getItem('settings') !== null) return;
-    const { tray, textEditorStyle, lineChunk, listStyle, alerts }: IUserSettings = this.getUserSettings();
-    
+    const { tray, textEditorStyle, lineChunk, listStyle, alerts }: IUserSettings =
+      this.getUserSettings();
+
     const setup: [string, any][] = [
       ['settings', { tray, textEditorStyle, lineChunk, listStyle }],
-      ['alerts', alerts],
+      ['alerts', alerts]
     ];
-    
-    for (let [key, value] of setup) {
+
+    for (const [key, value] of setup) {
       window.localStorage.setItem(key, JSON.stringify(value));
     }
   }
 
   public getUserByUsername(username: string): Observable<IUserData> {
-    return this._http.get<IUserData>(this.URL_USER, { params: { name: username }});
+    return this._http.get<IUserData>(this.URL_USER, { params: { name: username } });
   }
 
   public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {
@@ -81,26 +87,32 @@ export class UserService {
       [Workgroup.Admin]: 'Админ',
       [Workgroup.Mapper]: 'Маппер',
       [Workgroup.CFR]: 'Редктор конфигурационных файлов',
-      [Workgroup.Backuper]: 'Бэкапер',
+      [Workgroup.Backuper]: 'Бэкапер'
     };
     if (!groupMap[userGroup]) return 'Игрок';
     return groupMap[userGroup];
   }
 
   public showAccessError() {
-    const { main_group, secondary_group } = this.loggedInUser$.getValue();
-    this._toast.show('danger', 'Доступ запрещен для вашей группы пользователей', `Ваша роль: ${main_group !== secondary_group ? main_group + ' ' + secondary_group: main_group}`, faExclamationTriangle);
+    const { main_group, permissions } = this.loggedInUser$.getValue();
+    this._toast.show(
+      'danger',
+      'Доступ запрещен для вашей группы пользователей',
+      null,
+      faExclamationTriangle
+    );
   }
 
   public getUserSettings(): IUserSettings {
-
-    const EMPTY_SETTINGS_ERROR: Error = new Error('Empty user settings. Recovered to default values.');
+    const EMPTY_SETTINGS_ERROR: Error = new Error(
+      'Empty user settings. Recovered to default values.'
+    );
 
     try {
       const settingsAsString: string | null = window.localStorage.getItem('settings');
       if (!settingsAsString) throw EMPTY_SETTINGS_ERROR;
       return JSON.parse(settingsAsString);
-    } catch(err) {
+    } catch (err) {
       console.warn(err);
       return {
         tray: false,
@@ -113,22 +125,22 @@ export class UserService {
           autoBan: true,
           autoBlock: true,
           serverShutdown: true,
-          serverRestart: true,
-        },
+          serverRestart: true
+        }
       };
-    };
+    }
   }
 
   public openUserForumProfile(id: number): void {
     const url = new URL('/memberlist.php', AppConfig.links.resource);
-          url.searchParams.append('mode', 'viewprofile');
-          url.searchParams.append('u', id.toString());
+    url.searchParams.append('mode', 'viewprofile');
+    url.searchParams.append('u', id.toString());
     this._electron.shell.openExternal(url.toString());
   }
 
   public openUserForumProfileSettings(): void {
     const url = new URL('/ucp.php', AppConfig.links.resource);
-          url.searchParams.append('i', '184');
+    url.searchParams.append('i', '184');
     this._electron.shell.openExternal(url.toString());
   }
 
@@ -145,21 +157,21 @@ export class UserService {
   public isAuthenticated(): boolean {
     const userInfo = this.getCurrentUserInfo();
     if (!userInfo) return false;
-    
+
     this.loggedInUser$.next(userInfo);
-    
+
     return true;
   }
 
   public loginUser(loginData: IUserLoginData): Observable<IUserData | HttpErrorResponse> {
-    return this._http.post<IUserData>(this.URL_LOGIN, loginData, 
-                                { 
-                                  withCredentials: true,
-                                  headers: new HttpHeaders ({
-                                    'Content-Type': 'application/json'
-                                  }),
-                                })
-                      .pipe(catchError((error) => handleError(error)));
+    return this._http
+      .post<IUserData>(this.URL_LOGIN, loginData, {
+        withCredentials: true,
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError((error) => handleError(error)));
   }
 
   public logoutUser(): void {
@@ -170,17 +182,17 @@ export class UserService {
       message: 'Вы точно хотите выйти с аккаунта? Подтверждение завершит текущую активную сессию.'
     };
     from(this._electron.ipcRenderer.invoke('message-box', messageBox))
-        .pipe(
-          filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response === 0),
-          switchMap(() => this._http.post(this.URL_LOGOUT, {}, {responseType: 'text'}))
-        )
-        .subscribe({
-          next: () => {
-            this.loggedInUser$.next(null);
-            localStorage.removeItem('user');
-            this._router.navigate(['/login']);
-          },
-          error: console.error
-        });
+      .pipe(
+        filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response === 0),
+        switchMap(() => this._http.post(this.URL_LOGOUT, {}, { responseType: 'text' }))
+      )
+      .subscribe({
+        next: () => {
+          this.loggedInUser$.next(null);
+          localStorage.removeItem('user');
+          this._router.navigate(['/login']);
+        },
+        error: console.error
+      });
   }
 }
