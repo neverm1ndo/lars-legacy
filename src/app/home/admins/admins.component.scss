@@ -109,6 +109,56 @@
   }
 }
 
+.secondary-groups {
+  .tab {
+    padding: 9px;
+    border-radius: 3px;
+    margin-right: 5px;
+  
+    &-name {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  
+    &:has(button) {
+      padding: 2px;
+      .tab-name {
+        margin-left: 20px;
+      }
+    }
+  
+    button {
+      width: 30px;
+      height: 30px;
+      padding: 6px 15px 6px 9px;
+    }
+  
+    lty-icon {
+      width: 12px;
+      ::ng-deep svg {
+        vertical-align: revert;
+      }
+    }
+  }
+  
+  .group {
+    $groups: (12: #3a659e , 13: #910046, 14: #1c1c2e);
+  
+    @each $group, $color in $groups {
+      &-#{$group} {
+        background-color: $color;
+      }
+    }
+  }
+  
+  .dropdown-menu {
+    top: 0!important;
+    z-index: 1;
+    animation: none;
+  }  
+}
+
+
 .modal-description {
   font-size: smaller;
 }
