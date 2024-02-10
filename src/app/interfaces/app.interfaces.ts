@@ -2,16 +2,16 @@ import Processes from '@lars/shared/components/line-process/log-processes';
 import { Workgroup } from '@lars/enums/workgroup.enum';
 
 export interface IUserLoginData {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 export interface IUserData {
-  id?: number,
-  username?: string,
-  avatar?: string
-  main_group?: Workgroup,
-  secondary_group?: Workgroup,
-  token: string,
+  id?: number;
+  username?: string;
+  avatar?: string;
+  main_group?: Workgroup;
+  permissions: Workgroup[];
+  token: string;
 }
 export interface IGeoData {
   country?: string;
@@ -33,10 +33,10 @@ export interface IContentData {
   target?: {
     username: string;
     id: number;
-  },
+  };
   props?: {
     [key: string]: any;
-  },
+  };
   action?: string;
   targetType?: string;
   numbers?: number[];
@@ -46,7 +46,7 @@ export interface IContentData {
     g: string;
     players: number;
     visitors: number;
-  }
+  };
 }
 export interface LogLine {
   unix: number;
@@ -62,8 +62,8 @@ export interface LogLine {
 export interface ISearchQuery {
   nickname?: string[];
   ip?: string[];
-  dateFrom?: string,
-  dateTo?: string
+  dateFrom?: string;
+  dateTo?: string;
   process?: string[];
   as?: string;
   ss?: string;
@@ -85,5 +85,5 @@ export interface HistoryStorageItem {
 }
 
 export interface HistoryStorage {
-  [key: number]: HistoryStorageItem[]
+  [key: number]: HistoryStorageItem[];
 }
