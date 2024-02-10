@@ -22,7 +22,7 @@
                   <th>{{ 'Admins.List.UserId' | translate }}</th>
                   <th>{{ 'Admins.List.Nickname' | translate }}</th>
                   <th>{{ 'Admins.List.MainGroup' | translate }}</th>
-                  <th class="text-muted">{{ 'Admins.List.SideGroup' | translate }}</th>
+                  <th class="text-muted">{{ 'Admins.List.SideGroups' | translate }}</th>
                   <th></th>
                 </thead>
                 <tbody *ngIf="$admins | async as admins">
@@ -33,7 +33,7 @@
                     </td>
                     <td class="td-username">
                       <a (click)="userLink(admin.user_id)">{{ admin.username }}</a><br>
-                      <small>{{ admin.user_email }}</small><br>
+                      <!-- <small>{{ admin.user_email }}</small><br> -->
                       <!-- <small *ngIf="userActivities[admin.username]">
                         <fa-icon [icon]="adminActivityIcon(userActivities[admin.username])"></fa-icon>
                         {{ userActivities[admin.username] | userAction }}
@@ -51,8 +51,9 @@
                       [(ngModel)]="admin.main_group">
                     </ng-select>
                   </td>
-                  <td>
-                    <ng-select [items]="subRoles"
+                  <td class="secondary-groups">
+                    <ng-container *ngTemplateOutlet="tabgroup; context: { admin }"></ng-container>
+                    <!-- <ng-select [items]="subRoles"
                     bindLabel="val"
                     [searchable]="false"
                     [clearable]="false"
@@ -61,7 +62,7 @@
                     [disabled]="userInfo.main_group !== 10 || (admin.main_group == 10 || admin.main_group == 9)"
                     (change)="changeSecondaryAdminGroup(admin.username, admin.user_id, admin.secondary_group)"
                     [(ngModel)]="admin.secondary_group">
-                  </ng-select>
+                  </ng-select> -->
                 </td>
                 <td class="td-rm">
                   <!-- <button (click)="removeAdmin(admin.username, admin.user_id)" [disabled]="userInfo.main_group !== 10" ngbTooltip="Исключить админа" placement="left" class="btn btn-dark rm-adm btn-36" type="button" name="button"><fa-icon [icon]="fa.agent"></fa-icon></button> -->
@@ -197,4 +198,39 @@
       </div>
     </form>
   </div>
+</ng-template>
+<ng-template #tabgroup
+  let-admin="admin">
+  <ng-container *ngLet="userInfo.main_group === 10 as isDev">
+    <div *ngIf="admin.main_group !== 10" class="d-flex flex-row">
+      <div *ngFor="let group of admin.prefrences"
+        class="tab group-{{group}}">
+        <span class="tab-name">
+          {{ group | role }}
+        </span>
+        <button *ngIf="isDev" (click)="deleteAdminSecondaryGroup(admin.user_id, group)" class="btn btn-dark">
+          <lty-icon name="lty-close"></lty-icon>
+        </button>
+      </div>
+      <div *ngIf="isDev" 
+        ngbDropdown
+        class="d-inline-block">
+        <button *ngIf="admin.prefrences.length < 3"
+          type="button"
+          ngbDropdownToggle
+          [id]="'roles-' + admin.user_id"
+          class="btn btn-dark h-100">
+          <fa-icon [icon]="fa.faPlus"></fa-icon>
+        </button>
+        <div ngbDropdownMenu [attr.aria-labelledby]="'roles-' + admin.user_id">
+          <button *ngFor="let newGroup of subRoles"
+            [disabled]="admin.prefrences.includes(newGroup.id)"
+            (click)="addAdminSecondaryGroup(admin.user_id, newGroup.id)"
+            ngbDropdownItem>
+            {{ newGroup.val }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>

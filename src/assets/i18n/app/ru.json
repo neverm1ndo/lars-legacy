@@ -14,7 +14,7 @@
       "UserId": "ID",
       "Nickname": "Никнейм",
       "MainGroup": "Основная группа",
-      "SideGroup": "Побочная группа"
+      "SideGroups": "Побочныe группы"
     },
     "AddAdminModal": {
       "Title": "Добавление админа",
