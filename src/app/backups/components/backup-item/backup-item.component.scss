@@ -31,14 +31,8 @@
       white-space: nowrap;
     }
   }
-  &_avatar {
-    margin-left: 10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 100%;
-  }
   &_nickname {
-    margin-left: 10px;
+    margin-left: 20px;
     margin-right: 10px;
     text-align: center;
     overflow: hidden;
@@ -50,10 +44,24 @@
     min-width: 45px;
   }
   .marker {
-    width: 9px;
-    padding: 35px 0px 35px 0px;
-    background: white;
-    flex: 0 0 8px;
+    $outline-size: 2px solid;
+    $inset: 6px;
+    
+    width: 0;
+    height: 40px;
+    border: $outline-size;
+    img {
+      $avatar-size: 24px;
+
+      margin: $inset 0 0 0;
+      width: $avatar-size;
+      height: $avatar-size;
+      border-radius: 100%;
+      border: $outline-size;
+      border-color: inherit;
+      position: relative;
+      right: calc($inset * 2);
+    }
   }
   button {
     margin-left: 10px;

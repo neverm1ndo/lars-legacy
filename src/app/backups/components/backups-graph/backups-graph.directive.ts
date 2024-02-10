@@ -1,7 +1,6 @@
-import { Directive, ElementRef, OnDestroy, Output } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { BackupsService } from '../../domain/inftastructure/backups.service';
-import { EventEmitter } from 'stream';
 
 @Directive({
   selector: '[graphContainer]',
@@ -24,6 +23,7 @@ export class BackupsGraphDirective implements OnDestroy {
   }
 
   public redraw() {
+    this.startDraw.emit();
     this.backups.clear();
 
     if (this.hostElement?.children) {
@@ -55,8 +55,8 @@ export class BackupsGraphDirective implements OnDestroy {
     const styles = {
       height,
       width: 3,
-      paddingLeft: right,
-      paddingRight: 16,
+      marginLeft: right,
+      marginRight: 16,
       top
     };
 
@@ -69,18 +69,20 @@ export class BackupsGraphDirective implements OnDestroy {
     return line;
   }
 
-  private createBindRib(width: number, color: string, top: number, left: number): HTMLDivElement {
+  private createBindRib(width: number, color?: string): HTMLDivElement {
     const line = this.renderer.createElement('div');
     this.renderer.addClass(line, 'bind-rib');
 
     const styles = {
-      width: width + 3 + 'px',
-      height: 3,
-      top,
-      left
+      width: width + 3,
+      height: 40,
+      marginBottom: 1
     };
 
-    line.style.background = color;
+    if (color) {
+      line.style.background = color + '60';
+    }
+
     line.style.position = 'relative';
 
     this.applyStylesPixels.call(line, styles);
@@ -94,12 +96,11 @@ export class BackupsGraphDirective implements OnDestroy {
     top: number,
     index: number,
     filename: string
-  ): void {
-    this.hostElement.append(this.createBindBackbone(height, color, top, index * 8, filename));
-  }
+  ): HTMLDivElement {
+    const backbone = this.createBindBackbone(height, color, top, index * 8, filename);
+    this.hostElement.append(backbone);
 
-  private drawRib(width: number, color: string, top: number, left: number): void {
-    this.hostElement.append(this.createBindRib(width, color, top, left * 8));
+    return backbone;
   }
 
   private colorGenerator(filenames: any[]): string[] {
@@ -122,13 +123,14 @@ export class BackupsGraphDirective implements OnDestroy {
   }
 
   private drawGraph() {
-    this.startDraw.emit('start');
+    const childs: HTMLElement[] = this.backups.graphItems;
 
-    const childs: Element[] = this.backups.graphItems;
+    const backbones: Record<string, HTMLDivElement> = {};
 
-    const topMarge = this.hostElement.getBoundingClientRect().top - 23;
+    const topMarge = this.hostElement.getBoundingClientRect().top;
     let bb: any;
     let prevHeight = 0;
+
     const drawBackbones = async () => {
       const uniqueFileNames: Set<string> = new Set();
 
@@ -136,11 +138,10 @@ export class BackupsGraphDirective implements OnDestroy {
       for (let i = 0; i < childs.length; i++) {
         const filename = childs[i].getAttribute('data-filename');
 
-        this.renderer.setStyle(
-          childs[i].querySelector('.marker'),
-          'background',
-          this.colorGenerator([filename])[0]
-        );
+        const color = this.colorGenerator([filename])[0];
+        const marker = childs[i].querySelector('.marker');
+
+        this.renderer.setStyle(marker, 'borderColor', color);
 
         uniqueFileNames.add(filename);
       }
@@ -151,10 +152,15 @@ export class BackupsGraphDirective implements OnDestroy {
       );
 
       for (let j = childs.length - 1; j >= 0; j--) {
+        const { top } = childs[j].getBoundingClientRect();
         const filename = childs[j].getAttribute('data-filename');
-        if (bb[filename] && !bb[filename].maxTop)
-          bb[filename].maxTop = childs[j].getBoundingClientRect().top - topMarge;
-        if (bb[filename]) bb[filename].minTop = childs[j].getBoundingClientRect().top - topMarge;
+
+        if (bb[filename] && !bb[filename].maxTop) {
+          bb[filename].maxTop = top - topMarge;
+        }
+        if (bb[filename]) {
+          bb[filename].minTop = top - topMarge;
+        }
       }
 
       let index = 0;
@@ -181,12 +187,14 @@ export class BackupsGraphDirective implements OnDestroy {
 
           const { maxTop, minTop, color } = bb[filename];
 
-          const height = maxTop - minTop;
+          const height = maxTop - minTop + 40;
           const topOffset = minTop - prevHeight;
 
-          this.drawBackbone(height, color, topOffset, index - 1, filename);
+          const backbone = this.drawBackbone(height, color, topOffset, index - 1, filename);
 
-          prevHeight += maxTop - minTop;
+          backbones[filename] = backbone;
+
+          prevHeight += height;
         } while (index % chunkSize !== 0);
       };
 
@@ -196,31 +204,41 @@ export class BackupsGraphDirective implements OnDestroy {
     const drawRibs = () => {
       const bbs = Object.keys(bb);
 
-      let index = 0;
+      const container = this.renderer.createElement('div');
+      this.renderer.addClass(container, 'bind-ribs');
 
+      this.hostElement.appendChild(container);
+
+      let index = 0;
       const chunkSize = 3;
 
       const drawChunk = () => {
-        if (index < bbs.length - chunkSize) {
+        if (index < childs.length - chunkSize) {
           setTimeout(drawChunk);
         }
 
         do {
           index++;
 
-          if (!childs[index - 1]) break;
+          if (!childs[index]) {
+            this.endDraw.emit();
+            break;
+          }
 
           const filename = childs[index - 1].getAttribute('data-filename');
+
           if (!bb[filename]) {
+            const emptyRib = this.createBindRib(bbs.length * 8);
+            container.appendChild(emptyRib);
             continue;
           }
 
           const width = (bbs.length - bbs.indexOf(filename)) * 8;
           const { color } = bb[filename];
-          const topOffset =
-            childs[index - 1].getBoundingClientRect().top - topMarge - prevHeight - index * 3;
 
-          this.drawRib(width, color, topOffset, bbs.indexOf(filename));
+          const rib = this.createBindRib(width, color);
+
+          container.appendChild(rib);
         } while (index % chunkSize !== 0);
       };
 
@@ -228,9 +246,7 @@ export class BackupsGraphDirective implements OnDestroy {
     };
 
     drawBackbones();
-    // drawRibs();
-
-    // this.endDraw.emit('end');
+    drawRibs();
   }
 
   ngOnDestroy(): void {

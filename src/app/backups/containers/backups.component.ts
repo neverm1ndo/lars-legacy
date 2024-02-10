@@ -46,6 +46,9 @@ import { TranslateService } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
+  onGraphStartEnd($event: any) {
+    throw new Error('Method not implemented.');
+  }
   @ViewChild('graph') private _graph: BackupsGraphDirective;
 
   public $backups: BehaviorSubject<Backup[]> = new BehaviorSubject(null);
@@ -87,6 +90,7 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   public $backupsSize: Subject<number> = new Subject();
+  public drawing$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
   constructor(
     private _api: ApiService,
@@ -100,6 +104,14 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public savePanesState(event: { gutterNum: number | '*'; sizes: IOutputAreaSizes }): void {
     window.localStorage.setItem('lars/ui/panes/backups', JSON.stringify(event.sizes));
+  }
+
+  public onGraphDrawEnd() {
+    this.drawing$.next(false);
+  }
+
+  public onGraphDrawStart() {
+    this.drawing$.next(true);
   }
 
   private _setPanesState(): number[] {
@@ -296,7 +308,7 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!backups) return;
 
       const size = backups.reduce(
-        (acc, curr) => (curr.file.bytes ? acc + curr.file.compressed || curr.file.bytes : acc),
+        (acc, curr) => (curr.file.bytes ? acc + (curr.file.compressed || curr.file.bytes) : acc),
         0
       );
       this.$backupsSize.next(size);
@@ -306,5 +318,6 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.$backups.unsubscribe();
     this.$backupsSize.unsubscribe();
+    this.drawing$.unsubscribe();
   }
 }
