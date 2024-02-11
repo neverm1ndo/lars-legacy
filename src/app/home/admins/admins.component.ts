@@ -10,7 +10,8 @@ import {
   faBoxOpen,
   faUserSlash,
   faChartPie,
-  faExclamationCircle
+  faExclamationCircle,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '@lars/user/domain/infrastructure/user.service';
 import { ApiService } from '@lars/api/api.service';
@@ -57,7 +58,7 @@ export class AdminsComponent implements OnInit {
   private $reloadAdminList: BehaviorSubject<null> = new BehaviorSubject(null);
 
   public $admins: Observable<AdminUser[]> = this.$reloadAdminList.pipe(
-    switchMap(() => this.getFullAdminsList())
+    switchMap(() => this.getFullAdminsList()),
   );
 
   public fa = {
@@ -121,7 +122,7 @@ export class AdminsComponent implements OnInit {
       [UserActivity.IN_BANS]: faUserSlash,
       [UserActivity.IN_ADM]: faUserSecret,
       [UserActivity.IN_BACKS]: faBoxOpen,
-      [UserActivity.IN_STATS]: faChartPie
+      [UserActivity.IN_STATS]: faChartPie,
     };
     return icons[state];
   }

@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { BanhammerComponent } from './banhammer/banhammer.component';
 import { AdminsComponent } from './admins/admins.component';
 
 import {
@@ -40,7 +39,7 @@ const routes: Routes = [
       },
       {
         path: 'banhammer',
-        component: BanhammerComponent,
+        loadChildren: () => import('@lars/bans/bans.module').then((m) => m.BansModule),
         canActivate: [CommonGuard]
       },
       {

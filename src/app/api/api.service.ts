@@ -42,19 +42,8 @@ export class ApiService {
         LIST: 'list',
         CHANGE_MAIN_GROUP: 'change-group',
         CHANGE_SECONDARY_GROUP: 'change-secondary-group'
-        __route: 'admins',
-        LIST: 'list',
-        CHANGE_MAIN_GROUP: 'change-group',
-        CHANGE_SECONDARY_GROUP: 'change-secondary-group',
-        ADD_SECONDARY_GROUP: 'add-group',
-        DELETE_SECONDARY_GROUP: 'delete-group'
       },
       BACKUPS: {
-        __route: 'backups',
-        LIST: 'list',
-        RESTORE: 'restore',
-        BACKUP: 'backup',
-        SIZE: 'size'
         __route: 'backups',
         LIST: 'list',
         RESTORE: 'restore',
@@ -75,17 +64,8 @@ export class ApiService {
         __route: 'stats',
         ONLINE: 'online',
         CHAT: 'chat'
-        __route: 'stats',
-        ONLINE: 'online',
-        CHAT: 'chat'
       },
       UTILS: {
-        __route: 'utils',
-        DELETE_FILE: 'delete-file',
-        MKDIR: 'mkdir',
-        RMDIR: 'rmdir',
-        MVDIR: 'mvdir'
-      }
         __route: 'utils',
         DELETE_FILE: 'delete-file',
         MKDIR: 'mkdir',
@@ -95,10 +75,6 @@ export class ApiService {
     };
 
     function buildTree(routes: any): typeof routes {
-      const routeName: string = routes.__route + '/';
-      for (const route in routes) {
-        if (typeof routes[route] === 'string') {
-          if (route.startsWith('_')) continue;
       const routeName: string = routes.__route + '/';
       for (const route in routes) {
         if (typeof routes[route] === 'string') {
@@ -155,17 +131,11 @@ export class ApiService {
     return this._http.get(this.URL.CONFIGS.CONFIG_FILE, {
       params: { path },
       responseType: 'text'
-      params: { path },
-      responseType: 'text'
     });
   }
   getMap(path: string) {
     const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
-    const headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
     return this._http.get(this.URL.MAPS.MAP_FILE, {
-      params: { path },
-      headers,
-      responseType: 'text'
       params: { path },
       headers,
       responseType: 'text'
@@ -201,8 +171,6 @@ export class ApiService {
       reportProgress: true,
       observe: 'events',
       responseType: 'blob'
-      observe: 'events',
-      responseType: 'blob'
     });
   }
 
@@ -211,15 +179,11 @@ export class ApiService {
       reportProgress: true,
       observe: 'events',
       responseType: 'blob'
-      observe: 'events',
-      responseType: 'blob'
     });
   }
   uploadFileCfg(form: FormData): Observable<any> {
     return this._http.post(this.URL.CONFIGS.UPLOAD, form, {
       reportProgress: true,
-      observe: 'events',
-      responseType: 'blob'
       observe: 'events',
       responseType: 'blob'
     });
@@ -255,7 +219,6 @@ export class ApiService {
 
   getBanList(page?: number, limit?: number): Observable<BanRule[]> {
     return this._http.get<BanRule[]>(this.URL.BANS.LIST /**{ params: { p: page, lim: limit }}*/);
-    return this._http.get<BanRule[]>(this.URL.BANS.LIST /**{ params: { p: page, lim: limit }}*/);
   }
 
   createDirectory(path: string): Observable<any> {
@@ -280,13 +243,11 @@ export class ApiService {
     limit: number,
     filter?: string[],
     date?: { from?: string; to?: string }
-    date?: { from?: string; to?: string }
   ): Observable<LogLine[]> {
     let params: HttpParams = new HttpParams();
     params = params.appendAll({
       q: query,
       page: page.toString(),
-      lim: limit.toString()
       lim: limit.toString()
     });
 
@@ -296,14 +257,11 @@ export class ApiService {
     if (date) {
       if (date.from) params = params.append('from', new Date(date.from).valueOf());
       if (date.to) params = params.append('to', new Date(date.to).valueOf());
-      if (date.from) params = params.append('from', new Date(date.from).valueOf());
-      if (date.to) params = params.append('to', new Date(date.to).valueOf());
     }
 
     return this._http.get<LogLine[]>(this.URL.LOGS.SEARCH, { params });
   }
 
-  searchBans({ type, query }: { type: number; query: string }): Observable<BanRule[]> {
   searchBans({ type, query }: { type: number; query: string }): Observable<BanRule[]> {
     function _getURLbySearchType(type: number): string {
       switch (type) {
@@ -335,9 +293,7 @@ export class ApiService {
   addToRecent(entry: HistoryListEnum, val: any): void {
     try {
       const stored = window.localStorage.getItem('history');
-      const stored = window.localStorage.getItem('history');
 
-      if (!stored) throw new Error('History is not configured in localStorage');
       if (!stored) throw new Error('History is not configured in localStorage');
       const packedHistory: HistoryStorage = JSON.parse(stored);
 
@@ -359,7 +315,6 @@ export class ApiService {
 
       packedHistory[entry] = specificHistoryList;
 
-      window.localStorage.setItem('history', JSON.stringify(packedHistory));
       window.localStorage.setItem('history', JSON.stringify(packedHistory));
     } catch (error) {
       console.warn(error);

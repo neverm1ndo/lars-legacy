@@ -23,7 +23,6 @@ import { AuthGuard } from '../guards/auth.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BanhammerComponent } from './banhammer/banhammer.component';
 
 import { AdminsComponent } from './admins/admins.component';
 
@@ -63,9 +62,7 @@ const idbConfig: DBConfig = {
     HomeComponent,
     DashboardComponent,
     SiderComponent,
-    BanhammerComponent,
     AdminsComponent,
-    UserActionPipe
     UserActionPipe
   ],
   imports: [

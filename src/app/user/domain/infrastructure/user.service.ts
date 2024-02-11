@@ -96,13 +96,11 @@ export class UserService {
   }
 
   public showAccessError() {
-    const { main_group, secondary_group } = this.loggedInUser$.getValue();
+    const { main_group, permissions } = this.loggedInUser$.getValue();
     this._toast.show(
       'danger',
       'Доступ запрещен для вашей группы пользователей',
-      `Ваша роль: ${
-        main_group !== secondary_group ? main_group + ' ' + secondary_group : main_group
-      }`,
+      null,
       faExclamationTriangle
     );
   }

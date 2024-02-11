@@ -11,7 +11,6 @@ import {
 import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { AppConfig } from '@lars/../environments/environment';
 import { ServerGameMode } from '@samp';
 import {
   Observable,
@@ -35,14 +34,14 @@ enum ServerState {
   STOPED,
   REBOOTING,
   LIVE,
-  LOADING
+  LOADING,
 }
 
 @Component({
-  selector: 'server-stat-graph',
-  templateUrl: './server-stat-graph.component.html',
-  styleUrls: ['./server-stat-graph.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "server-stat-graph",
+  templateUrl: "./server-stat-graph.component.html",
+  styleUrls: ["./server-stat-graph.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServerStatGraphComponent implements OnInit, OnDestroy {
   constructor(
@@ -54,7 +53,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
 
   private _points: number[] = [];
   public $stat: Observable<ServerGameMode> = interval(5000).pipe(
-    switchMap(() => from(this.getServerInfo()))
+    switchMap(() => from(this.getServerInfo())),
   );
 
   private subscriptions = new Subscription();
@@ -75,10 +74,10 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
     users: faUsers,
     server: faServer,
     locked: faLock,
-    unlocked: faLockOpen
+    unlocked: faLockOpen,
   };
 
-  @ViewChild('graphics') graphics: ElementRef<HTMLCanvasElement>;
+  @ViewChild("graphics") graphics: ElementRef<HTMLCanvasElement>;
 
   private _getMaxExistingPoint(): number {
     return Math.max.apply(null, this._points);
@@ -104,7 +103,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
       [128, 512],
       [64, 128],
       [32, 64],
-      [0, 32]
+      [0, 32],
     ];
 
     for (const [from, to] of intervals) {

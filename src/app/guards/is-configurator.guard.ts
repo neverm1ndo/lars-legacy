@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/domain/infrastructure/user.service';
-import { ToastService } from '@lars/toast.service';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Workgroup } from '@lars/enums/workgroup.enum';
+import { intersection } from 'lodash';
 
 const { CFR, Dev } = Workgroup;
 
 const ALLOWED_GROUPS = [CFR, Dev];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ConfiguratorGuard implements CanActivate {
   constructor(private user: UserService) {}

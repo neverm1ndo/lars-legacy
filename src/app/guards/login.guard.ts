@@ -8,10 +8,9 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/domain/infrastructure/user.service';
-import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class LoginGuard implements CanActivate {
   constructor(
