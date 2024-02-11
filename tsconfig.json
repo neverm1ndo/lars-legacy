@@ -27,7 +27,8 @@
     ],
     "paths": {
       "@lars/*": ["./src/app/*"],
-      "@samp": ["./samp.ts"]
+      "@samp": ["./samp.ts"],
+      "@lib": ["./lib/*"],
     }
   },
   "exclude": [

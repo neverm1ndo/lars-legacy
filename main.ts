@@ -1,11 +1,29 @@
-import { app, BrowserWindow, dialog, ipcMain, Tray, protocol, clipboard, session, MessageBoxOptions } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Tray,
+  protocol,
+  clipboard,
+  session,
+  MessageBoxOptions
+} from 'electron';
 import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { downloadFile, createTray, showNotification, serve, loadFromAsar, pingHost, loadFromFileSystem } from './utils.main';
+import {
+  downloadFile,
+  createTray,
+  showNotification,
+  serve,
+  loadFromAsar,
+  pingHost,
+  loadFromFileSystem
+} from './utils.main';
 
-import Samp, { ServerGameMode } from './samp';
+import Samp, { ServerGameMode, defaultServerInfo } from './samp';
 import { Subscription } from 'rxjs';
 import { PingConfig, PingResponse } from 'ping';
 
@@ -29,7 +47,7 @@ export let win: BrowserWindow = null;
  * @type {boolean}
  */
 const lock: boolean = app.requestSingleInstanceLock();
-             app.setAppUserModelId('ru.nmnd.lars');
+app.setAppUserModelId('ru.nmnd.lars');
 /**
  * Init splash window
  *
@@ -62,10 +80,12 @@ function splashWindow() {
   });
   splash.center();
   splash.setMenu(null);
-  splash.loadURL(url.format({
-    pathname: path.join(__dirname, 'dist/splash.html'),
-    protocol: 'file:'
-  }));
+  splash.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'dist/splash.html'),
+      protocol: 'file:'
+    })
+  );
   splash.once('ready-to-show', () => {
     splash.show();
     splash.webContents.send('loading-state', 'Загрузка основного модуля', 30);
@@ -103,10 +123,10 @@ function createWindow(): BrowserWindow {
     backgroundColor: '#3A3F52',
     webPreferences: {
       nodeIntegration: true,
-      webSecurity: (serve)? false: true,
+      webSecurity: serve ? false : true,
       allowRunningInsecureContent: true,
-      contextIsolation: false,  // false if you want to run 2e2 test with Spectron
-    },
+      contextIsolation: false // false if you want to run 2e2 test with Spectron
+    }
   });
 
   /**
@@ -118,11 +138,11 @@ function createWindow(): BrowserWindow {
       autoUpdater.checkForUpdatesAndNotify();
     }
     splash.webContents.send('loading-state', 'Проверка токена авторизации', 85);
-      setTimeout(() => {
-        splash.close();
-        win.show();
-        state.manage(win);
-      }, 500);
+    setTimeout(() => {
+      splash.close();
+      win.show();
+      state.manage(win);
+    }, 500);
   });
 
   if (serve) {
@@ -136,10 +156,12 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const fsUrl: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets' , fsUrl.pathname) });
+    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets', fsUrl.pathname) });
   });
   win.on('show', (_event: any) => {
-    if (tray) {tray.destroy();}
+    if (tray) {
+      tray.destroy();
+    }
   });
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -172,39 +194,63 @@ ipcMain.on('notification', (_event: Electron.IpcMainEvent, options) => {
   showNotification(options);
 });
 
-ipcMain.handle('server-game-mode', (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
-  if (!serve) {return samp.getServerInfo(ip, port);}
-  return samp.testSampServerStats;
-});
-ipcMain.handle('message-box',
+ipcMain.handle(
+  'server-game-mode',
+  (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
+    if (!serve) {
+      return samp.getGameMode(ip, port);
+    }
+    return Promise.resolve(defaultServerInfo);
+  }
+);
+ipcMain.handle(
+  'message-box',
   (
     _event: Electron.IpcMainInvokeEvent,
     opts: Electron.MessageBoxOptions
-  ): Promise<Electron.MessageBoxReturnValue> => dialog.showMessageBox(opts));
-ipcMain.handle('save-dialog',
+  ): Promise<Electron.MessageBoxReturnValue> => dialog.showMessageBox(opts)
+);
+ipcMain.handle(
+  'save-dialog',
   (
     _event: Electron.IpcMainInvokeEvent,
     opts: Electron.SaveDialogOptions
-  ): Promise<Electron.SaveDialogReturnValue> => dialog.showSaveDialog(opts));
-ipcMain.handle('open-dialog',
+  ): Promise<Electron.SaveDialogReturnValue> => dialog.showSaveDialog(opts)
+);
+ipcMain.handle(
+  'open-dialog',
   (
     _event: Electron.IpcMainInvokeEvent,
     opts: Electron.OpenDialogOptions
-  ): Promise<Electron.OpenDialogReturnValue> => dialog.showOpenDialog(opts));
+  ): Promise<Electron.OpenDialogReturnValue> => dialog.showOpenDialog(opts)
+);
 ipcMain.handle('clipboard', (_event: Electron.IpcMainInvokeEvent, str: string): void => {
   clipboard.writeText(str);
 });
 ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => app.getVersion());
-ipcMain.handle('asar-load', (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> => loadFromAsar(assetPath));
+ipcMain.handle(
+  'asar-load',
+  (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> =>
+    loadFromAsar(assetPath)
+);
 
-ipcMain.handle('ping',
+ipcMain.handle(
+  'ping',
   (
     _event: Electron.IpcMainInvokeEvent,
     host: string,
     options: PingConfig
-  ): Promise<PingResponse | void> => pingHost(host, options).then((value) => value).catch(console.error));
+  ): Promise<PingResponse | void> =>
+    pingHost(host, options)
+      .then((value) => value)
+      .catch(console.error)
+);
 
-ipcMain.handle('model', (_event: Electron.IpcMainInvokeEvent, filePath: string): Promise<Buffer> => loadFromFileSystem(filePath));
+ipcMain.handle(
+  'model',
+  (_event: Electron.IpcMainInvokeEvent, filePath: string): Promise<Buffer> =>
+    loadFromFileSystem(filePath)
+);
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
@@ -225,12 +271,13 @@ autoUpdater.on('update-downloaded', (event: UpdateDownloadedEvent) => {
     detail: 'Новая версия уже загружена. Перезапустите приложение, чтобы принять изменения.'
   };
 
-  dialog.showMessageBox(dialogOpts)
-        .then((returnValue) => {
-          if (returnValue.response === 0) {autoUpdater.quitAndInstall();}
-        });
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
 });
-autoUpdater.on('error', message => {
+autoUpdater.on('error', (message) => {
   console.error('Ошибка при попытке обновить приложение');
   console.error(message);
   dialog.showErrorBox('Ошибка при попытке обновить приложение', message.message);
@@ -246,23 +293,37 @@ try {
   if (!lock) {
     app.quit();
   } else {
-    app.on('second-instance', (_event: Electron.Event, _commandLine: string[], _workingDirectory: string) => {
-      // Someone tried to run a second instance, we should focus our window.
-      if (!win) {return;}
-      if (win.isMinimized()) {win.restore();}
-      if (!win.isVisible()) {win.show();}
-      win.focus();
-    });
+    app.on(
+      'second-instance',
+      (_event: Electron.Event, _commandLine: string[], _workingDirectory: string) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (!win) {
+          return;
+        }
+        if (win.isMinimized()) {
+          win.restore();
+        }
+        if (!win.isVisible()) {
+          win.show();
+        }
+        win.focus();
+      }
+    );
 
     app.on('ready', () => {
       setTimeout(() => splashWindow(), 400);
       /**
        * Load Anguar DevTools on serve
        */
-      if (serve) {session.defaultSession.loadExtension(path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0'))
-                                       .then(({ id }: { id: string}) => {
-                                          console.log('[ADT] DevTools loaded', id);
-                                       });}
+      if (serve) {
+        session.defaultSession
+          .loadExtension(
+            path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')
+          )
+          .then(({ id }: { id: string }) => {
+            console.log('[ADT] DevTools loaded', id);
+          });
+      }
       createWindow();
     });
 
@@ -270,28 +331,35 @@ try {
     app.on('window-all-closed', () => {
       // On OS X it is common for applications and their menu bar
       // to stay active until the user quits explicitly with Cmd + Q
-      if (process.platform !== 'darwin') {app.quit();}
+      if (process.platform !== 'darwin') {
+        app.quit();
+      }
     });
 
     app.on('activate', () => {
       // On OS X it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (win === null) {createWindow();}
+      if (win === null) {
+        createWindow();
+      }
     });
     if (serve) {
-      app.on('certificate-error',
+      app.on(
+        'certificate-error',
         (
           event: Electron.Event,
           _webContents: Electron.WebContents,
-          _url: string, _error: string,
+          _url: string,
+          _error: string,
           _certificate: Electron.Certificate,
           callback: (isTrusted: boolean) => void
         ) => {
-        // On certificate error we disable default behaviour (stop loading the page)
-        // and we then say "it is all fine - true" to the callback
-        event.preventDefault();
-        callback(true);
-      });
+          // On certificate error we disable default behaviour (stop loading the page)
+          // and we then say "it is all fine - true" to the callback
+          event.preventDefault();
+          callback(true);
+        }
+      );
     }
   }
 } catch (err) {
