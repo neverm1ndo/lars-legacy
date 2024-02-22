@@ -1,6 +1,20 @@
 import { Directive, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { BackupsService } from '../../domain/inftastructure/backups.service';
+import { groupBy, uniqBy } from 'lodash';
+
+type DrawableBackbone = {
+  filename: string;
+  color: string;
+  child?: HTMLElement;
+  rect?: {
+    top: number;
+    bottom: number;
+  };
+};
+
+const MARKER_OFFSET = 8;
+const MARKER_HEIGHT = 40;
 
 @Directive({
   selector: '[graphContainer]',
@@ -75,7 +89,7 @@ export class BackupsGraphDirective implements OnDestroy {
 
     const styles = {
       width: width + 3,
-      height: 40,
+      height: MARKER_HEIGHT,
       marginBottom: 1
     };
 
@@ -97,7 +111,7 @@ export class BackupsGraphDirective implements OnDestroy {
     index: number,
     filename: string
   ): HTMLDivElement {
-    const backbone = this.createBindBackbone(height, color, top, index * 8, filename);
+    const backbone = this.createBindBackbone(height, color, top, index * MARKER_OFFSET, filename);
     this.hostElement.append(backbone);
 
     return backbone;
@@ -125,91 +139,87 @@ export class BackupsGraphDirective implements OnDestroy {
   private drawGraph() {
     const childs: HTMLElement[] = this.backups.graphItems;
 
-    const backbones: Record<string, HTMLDivElement> = {};
-
-    const topMarge = this.hostElement.getBoundingClientRect().top;
-    let bb: any;
+    const { top } = this.hostElement.getBoundingClientRect();
     let prevHeight = 0;
 
-    const drawBackbones = async () => {
-      const uniqueFileNames: Set<string> = new Set();
+    const defineDrawableBackbones = () => {
+      const filenames: DrawableBackbone[] = [];
 
-      // eslint-disable-next-line @typescript-eslint/prefer-for-of
-      for (let i = 0; i < childs.length; i++) {
-        const filename = childs[i].getAttribute('data-filename');
-
-        const color = this.colorGenerator([filename])[0];
-        const marker = childs[i].querySelector('.marker');
+      for (const child of childs) {
+        const { filename } = child.dataset;
+        const [color] = this.colorGenerator([filename]);
+        const marker = child.querySelector('.marker');
 
         this.renderer.setStyle(marker, 'borderColor', color);
 
-        uniqueFileNames.add(filename);
+        filenames.push({ filename, color, child });
       }
 
-      bb = Array.from(uniqueFileNames).reduce(
-        (acc, curr) => ({ ...acc, [curr]: { color: this.colorGenerator([curr])[0] } }),
-        {}
-      );
+      const grouped = groupBy(filenames, 'filename');
 
-      for (let j = childs.length - 1; j >= 0; j--) {
-        const { top } = childs[j].getBoundingClientRect();
-        const filename = childs[j].getAttribute('data-filename');
+      return uniqBy(filenames, 'filename')
+        .filter((unique) => grouped[unique.filename].length > 1)
+        .map(({ filename, color }) => ({
+          filename,
+          color,
+          rect: {
+            top: grouped[filename][0].child.getBoundingClientRect().top - top,
+            bottom:
+              grouped[filename][grouped[filename].length - 1].child.getBoundingClientRect().top -
+              top
+          }
+        }))
+        .reduce(
+          (acc, curr) => ({
+            ...acc,
+            [curr.filename]: curr
+          }),
+          {}
+        );
+    };
 
-        if (bb[filename] && !bb[filename].maxTop) {
-          bb[filename].maxTop = top - topMarge;
-        }
-        if (bb[filename]) {
-          bb[filename].minTop = top - topMarge;
-        }
-      }
+    const drawableBackbones: Record<string, DrawableBackbone> = defineDrawableBackbones();
 
-      let index = 0;
+    const uniqueFileNames = Object.keys(drawableBackbones);
+
+    console.log(drawableBackbones);
+
+    const drawBackbones = () => {
+      let index = -1;
 
       const chunkSize = 3;
 
-      const filenames = [...uniqueFileNames];
-
       const drawChunk = () => {
-        if (index < uniqueFileNames.size - chunkSize) {
+        if (index < uniqueFileNames.length - chunkSize) {
           setTimeout(drawChunk);
         }
 
         do {
           index++;
-          const filename = filenames[index - 1];
+          const filename = uniqueFileNames[index];
 
           if (!filename) break;
 
-          if (bb[filename].maxTop === bb[filename].minTop) {
-            delete bb[filename];
-            continue;
-          }
+          const { rect, color } = drawableBackbones[filename];
 
-          const { maxTop, minTop, color } = bb[filename];
+          const height = rect.bottom - rect.top + MARKER_HEIGHT;
+          const topOffset = rect.top - prevHeight;
 
-          const height = maxTop - minTop + 40;
-          const topOffset = minTop - prevHeight;
-
-          const backbone = this.drawBackbone(height, color, topOffset, index - 1, filename);
-
-          backbones[filename] = backbone;
+          this.drawBackbone(height, color, topOffset, index, filename);
 
           prevHeight += height;
         } while (index % chunkSize !== 0);
       };
-
       drawChunk();
     };
 
     const drawRibs = () => {
-      const bbs = Object.keys(bb);
-
       const container = this.renderer.createElement('div');
       this.renderer.addClass(container, 'bind-ribs');
 
       this.hostElement.appendChild(container);
 
-      let index = 0;
+      let index = -1;
       const chunkSize = 3;
 
       const drawChunk = () => {
@@ -225,16 +235,17 @@ export class BackupsGraphDirective implements OnDestroy {
             break;
           }
 
-          const filename = childs[index - 1].getAttribute('data-filename');
+          const { filename } = childs[index].dataset;
 
-          if (!bb[filename]) {
-            const emptyRib = this.createBindRib(bbs.length * 8);
+          if (!drawableBackbones[filename]) {
+            const emptyRib = this.createBindRib(uniqueFileNames.length * MARKER_OFFSET);
             container.appendChild(emptyRib);
             continue;
           }
 
-          const width = (bbs.length - bbs.indexOf(filename)) * 8;
-          const { color } = bb[filename];
+          const width =
+            (uniqueFileNames.length - uniqueFileNames.indexOf(filename) + 1) * MARKER_OFFSET;
+          const { color } = drawableBackbones[filename];
 
           const rib = this.createBindRib(width, color);
 
