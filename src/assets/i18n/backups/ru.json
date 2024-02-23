@@ -6,6 +6,7 @@
         },
         "File": {
             "Binary": "Binary File",
+            "Compressed": "Compressed File",
             "Install": "Установить"
         },
         "Toast": {

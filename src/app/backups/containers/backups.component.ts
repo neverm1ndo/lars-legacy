@@ -18,7 +18,8 @@ import {
   faTrash,
   faBoxOpen,
   faHdd,
-  faToolbox
+  faToolbox,
+  faFileArchive
 } from '@fortawesome/free-solid-svg-icons';
 import { catchError, take, map, switchMap, filter, tap } from 'rxjs/operators';
 import {
@@ -79,7 +80,8 @@ export class BackupsComponent implements OnInit, OnDestroy, AfterViewInit {
     exCircle: faExclamationCircle,
     box: faBoxOpen,
     hdd: faHdd,
-    toolbox: faToolbox
+    toolbox: faToolbox,
+    archive: faFileArchive
   };
 
   public codeMirrorSettings = {
