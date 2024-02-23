@@ -1,6 +1,17 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, Inject, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { faSignOutAlt, faTerminal, faComments, faPlay, faRedo, faStop, faCloudDownloadAlt, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSignOutAlt,
+  faTerminal,
+  faComments,
+  faPlay,
+  faRedo,
+  faStop,
+  faCloudDownloadAlt,
+  faGamepad,
+  faHeartbeat
+} from '@fortawesome/free-solid-svg-icons';
+import { WINDOW } from '@lars/app.module';
 import { ElectronService } from '@lars/core/services';
 import { WebSocketService } from '@lars/ws/web-socket.service';
 import { ExecException } from 'child_process';
@@ -16,10 +27,10 @@ enum ServerState {
 }
 
 interface IServerRemote {
-  state: ServerState,
-  reboot: () => void,
-  launch: () => void,
-  stop: () => void,
+  state: ServerState;
+  reboot: () => void;
+  launch: () => void;
+  stop: () => void;
 }
 
 @Component({
@@ -27,18 +38,19 @@ interface IServerRemote {
   templateUrl: './dev-server-controls.component.html',
   styleUrls: ['./dev-server-controls.component.scss']
 })
-export class DevServerControlsComponent implements OnInit {
+export class DevServerControlsComponent implements OnInit, OnDestroy {
 
   constructor(
-    private _electron: ElectronService,
-    private _zone: NgZone,
-    private _socket: WebSocketService,
-    private _router: Router,
-  ) { }
+    @Inject(WINDOW) private window,
+    private electron: ElectronService,
+    private zone: NgZone,
+    private socket: WebSocketService,
+    private router: Router
+  ) {}
 
   public state$: BehaviorSubject<ServerState> = new BehaviorSubject(ServerState.LOADING);
 
-  private _devRoomSubscriptions: Subscription = new Subscription();
+  private devRoomSubscriptions: Subscription = new Subscription();
 
   public fa = {
     signout: faSignOutAlt,
@@ -48,67 +60,67 @@ export class DevServerControlsComponent implements OnInit {
     redo: faRedo,
     stop: faStop,
     update: faCloudDownloadAlt,
-    gamepad: faGamepad
+    gamepad: faGamepad,
+    heartbeat: faHeartbeat
   };
 
-  players: number = 0;
+  players = 0;
 
   public serverRemote: IServerRemote = {
     state: ServerState.LOADING,
     reboot: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Rebooting samp03svr...');
-      this._socket.send('reboot-server');
+      this.socket.send('reboot-server');
     },
     launch: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Launching samp03svr...');
-      this._socket.send('launch-server');
+      this.socket.send('launch-server');
     },
     stop: () => {
       console.log('\x1b[35m[server]\x1b[0m', 'Killing samp03svr...');
-      this._socket.send('stop-server');
-    },
+      this.socket.send('stop-server');
+    }
   };
 
-  private _subscribeToDevSubscriptions(): void {
+  public openServerLogMonitor() {
+    this.window.open('./home/configs');
+  }
+
+  private subscribeToDevSubscriptions(): void {
     const subscriptions: TeardownLogic[] = [
-      this._socket.getServerState()
-                  .subscribe((state: ServerState) => {
-                    console.log('%c[server]', 'color: magenta', 'status:', state);
-                    this.state$.next(state);
-                  }),
-      this._socket.getServerError()
-                  .subscribe((stderr: string) => {
-                    console.error('%c[server]', 'color: magenta', stderr);
-                    this.state$.next(ServerState.ERROR);
-                  }),
-      this._socket.getServerReboot()
-                  .subscribe(() => {
-                      console.log('%c[server]', 'color: magenta', 'server rebooted');
-                      this.state$.next(ServerState.LIVE);
-                      this.players = 0;
-                  }),
-      this._socket.getServerStop()
-                  .subscribe(() => {
-                      console.log('%c[server]', 'color: magenta', 'server stoped');
-                      this.state$.next(ServerState.STOPED);
-                      this.players = 0;
-                  }),
-      this._socket.getServerLaunch()
-                  .subscribe(() => {
-                      console.log('%c[server]', 'color: magenta', 'server launched');
-                      this.state$.next(ServerState.LIVE);
-                  }),
-      this._socket.getServerOnline()
-                  .subscribe((players: number) => {
-                      this.players = players;
-                  }),
+      this.socket.getServerState().subscribe((state: ServerState) => {
+        console.log('%c[server]', 'color: magenta', 'status:', state);
+        this.state$.next(state);
+      }),
+      this.socket.getServerError().subscribe((stderr: string) => {
+        console.error('%c[server]', 'color: magenta', stderr);
+        this.state$.next(ServerState.ERROR);
+      }),
+      this.socket.getServerReboot().subscribe(() => {
+        console.log('%c[server]', 'color: magenta', 'server rebooted');
+        this.state$.next(ServerState.LIVE);
+        this.players = 0;
+      }),
+      this.socket.getServerStop().subscribe(() => {
+        console.log('%c[server]', 'color: magenta', 'server stoped');
+        this.state$.next(ServerState.STOPED);
+        this.players = 0;
+      }),
+      this.socket.getServerLaunch().subscribe(() => {
+        console.log('%c[server]', 'color: magenta', 'server launched');
+        this.state$.next(ServerState.LIVE);
+      }),
+      this.socket.getServerOnline().subscribe((players: number) => {
+        this.players = players;
+      }),
       this.state$.subscribe((state: ServerState) => {
-                    this.serverRemote.state = state;
-                  }),
+        this.serverRemote.state = state;
+      })
     ];
-    for (let subscription of subscriptions) {
-      this._devRoomSubscriptions.add(subscription);
-    };
+
+    for (const subscription of subscriptions) {
+      this.devRoomSubscriptions.add(subscription);
+    }
   }
 
   public launchSAMP(): void {
@@ -116,37 +128,33 @@ export class DevServerControlsComponent implements OnInit {
       const launchSettings = window.localStorage.getItem('launcher');
       if (!launchSettings) throw new Error('LAUNCHER_ERR: Empty launcher settings');
       const settings = JSON.parse(launchSettings);
-      this._electron.childProcess.execFile(
+      this.electron.childProcess.execFile(
         join(settings.samp, 'samp.exe'),
-        [
-          `-n ${settings.nickname}`,
-          `-h ${settings.ip}`,
-          `-p ${settings.port}`
-        ],
+        [`-n ${settings.nickname}`, `-h ${settings.ip}`, `-p ${settings.port}`],
         (err: ExecException, stdout: string) => {
           if (err) {
-            this._zone.run(() => {
-              this._router.navigate(['/home/settings/launcher']);
+            this.zone.run(() => {
+              this.router.navigate(['/home/settings/launcher']);
             });
             throw err;
           }
           if (stdout) console.log('%c[launcher]', 'color: brown', stdout);
           console.log('%c[launcher]', 'color: brown', 'Launched SAMP client');
-        });
+        }
+      );
     } catch (err) {
       console.error(err);
-      this._router.navigate(['/home/settings/launcher']);
+      this.router.navigate(['/home/settings/launcher']);
     }
   }
 
   ngOnInit(): void {
-    this._subscribeToDevSubscriptions();
-    this._socket.send('get-status');
+    this.subscribeToDevSubscriptions();
+    this.socket.send('get-status');
   }
 
   ngOnDestroy(): void {
-    this._devRoomSubscriptions.unsubscribe();
+    this.devRoomSubscriptions.unsubscribe();
     this.state$.complete();
   }
-
 }

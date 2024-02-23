@@ -173,6 +173,24 @@ function createWindow(): BrowserWindow {
     app.quit();
   });
 
+  win.webContents.setWindowOpenHandler((details: Electron.HandlerDetails) => {
+    return {
+      action: 'allow',
+      url: details.url,
+      icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+      overrideBrowserWindowOptions: {
+        frame: false,
+        fullscreenable: false,
+        webPreferences: {
+          nodeIntegration: true,
+          webSecurity: serve ? false : true,
+          allowRunningInsecureContent: true,
+          contextIsolation: false
+        }
+      }
+    };
+  });
+
   return win;
 }
 

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { InjectionToken, NgModule, inject } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -31,10 +31,23 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/app/', '.json');
+
+export const WINDOW = new InjectionToken<Window>('An abstraction over global window object', {
+  factory: () => {
+    const { defaultView } = inject(DOCUMENT);
+
+    if (!defaultView) {
+      throw new Error('Window is not available');
+    }
+
+    return defaultView;
+  }
+});
 
 @NgModule({
   declarations: [AppComponent, TopperComponent, ToastsContainer],
