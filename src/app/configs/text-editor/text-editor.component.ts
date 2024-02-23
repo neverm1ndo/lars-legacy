@@ -1,4 +1,14 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ElementRef, ViewChild, NgZone, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  NgZone,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
 
@@ -10,16 +20,14 @@ import { tap, switchMap } from 'rxjs/operators';
 import { ToastService } from '@lars/toast.service';
 import { ConfigsService } from '@lars/configs/configs.service';
 
-import { CodemirrorComponent } from '@ctrl/ngx-codemirror'
-import { Editor } from 'codemirror';
+import { CodemirrorComponent } from '@ctrl/ngx-codemirror';
 @Component({
   selector: 'text-editor',
   templateUrl: './text-editor.component.html',
   styleUrls: ['./text-editor.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
-
   public $search: Subject<boolean> = new Subject();
 
   public $matches: BehaviorSubject<number> = new BehaviorSubject(0);
@@ -28,125 +36,159 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorStyle') editorStyle: ElementRef<HTMLDivElement>;
 
   @HostListener('window:keydown', ['$event']) keyEvent(event: KeyboardEvent) {
-      if (event.ctrlKey) {
-        switch (event.code) {
-          case 'KeyS' : {
-            if (this.configs.changed$.getValue()) this.saveFile();
-            break;
-          }
-          case 'KeyF' : {
-            this.openSearch();
-            break;
-          }
-          case 'Space' : {
-            this._zone.runOutsideAngular(() => {
-              this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
-            });
-            break;
-          }
-          default: break;
+    if (event.ctrlKey) {
+      switch (event.code) {
+        case 'KeyS': {
+          if (this.configs.changed$.getValue()) this.saveFile();
+          break;
         }
-      }
-      if (event.shiftKey) {
-        switch (event.code) {
-          case 'Delete' : {
-            this.deleteFile();
-            break;
-          }
-          default : break;
+        case 'KeyF': {
+          this.openSearch();
+          break;
         }
+        case 'Space': {
+          this.zone.runOutsideAngular(() => {
+            this.editor.codeMirrorGlobal.commands.autocomplete(this.editor.codeMirror);
+          });
+          break;
+        }
+        default:
+          break;
       }
+    }
+    if (event.shiftKey) {
+      switch (event.code) {
+        case 'Delete': {
+          this.deleteFile();
+          break;
+        }
+        default:
+          break;
+      }
+    }
   }
-  
+
   @HostListener('mousewheel', ['$event']) wheelEvent(event: WheelEvent) {
     if (event.ctrlKey) {
-      const size = +this.editorStyle.nativeElement.style.fontSize.substring(0, this.editorStyle.nativeElement.style.fontSize.length - 2);
-        this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY/100) + 'px';
-        window.localStorage.setItem('codemirror/font-size', this.editorStyle.nativeElement.style.fontSize);
+      const size = +this.editorStyle.nativeElement.style.fontSize.substring(
+        0,
+        this.editorStyle.nativeElement.style.fontSize.length - 2
+      );
+      this.editorStyle.nativeElement.style.fontSize = String(size + event.deltaY / 100) + 'px';
+      window.localStorage.setItem(
+        'codemirror/font-size',
+        this.editorStyle.nativeElement.style.fontSize
+      );
     }
   }
 
   public textplain: string;
 
-  public codemirrorSettings = { // CodeMirror settings
+  // CodeMirror settings
+  public codemirrorSettings = {
     lineNumbers: true,
     theme: 'dracula',
     lineWrapping: true,
-    mode: 'coffeescript',
+    mode: 'coffeescript'
   };
 
-  private _origin: Buffer;
+  private origin: Buffer;
 
   public query = {
     find: '',
-    replace: '',
+    replace: ''
   };
 
   constructor(
-    private _route: ActivatedRoute,
+    private route: ActivatedRoute,
     public configs: ConfigsService,
-    private _toast: ToastService,
-    private _zone: NgZone,
+    private toast: ToastService,
+    private zone: NgZone
   ) {}
 
   closeSearch(): void {
     this.$search.next(false);
-  } 
+  }
   openSearch(): void {
     this.$search.next(true);
   }
 
   searchIn(): void {
-    this._zone.runOutsideAngular(() => {
+    this.zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.commands.find(this.editor.codeMirror, this.query.find);
-      
-      if (!this.query.find) return void(this.$matches.next(0));
-      
-      const regex: RegExp = new RegExp(this.query.find, 'gi');
+
+      if (!this.query.find) return void this.$matches.next(0);
+
+      let query = this.query.find;
+
+      if (query.startsWith('/') && query.endsWith('/')) {
+        query = query.substring(1, query.length - 1);
+      }
+      const regex = new RegExp(query, 'gi');
+
       this.$matches.next((this.textplain.match(regex) || []).length);
     });
   }
   replaceIn(): void {
-    this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.commands.replace(this.editor.codeMirror, this.query.find, this.query.replace);
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.commands.replace(
+        this.editor.codeMirror,
+        this.query.find,
+        this.query.replace
+      );
     });
     this.checkChanges();
   }
   replaceInAll(): void {
-    this._zone.runOutsideAngular(() => {
-      this.editor.codeMirrorGlobal.commands.replaceAll(this.editor.codeMirror, this.query.find, this.query.replace);
+    this.zone.runOutsideAngular(() => {
+      this.editor.codeMirrorGlobal.commands.replaceAll(
+        this.editor.codeMirror,
+        this.query.find,
+        this.query.replace
+      );
     });
     this.checkChanges();
   }
 
   saveFile(): void {
     const blob = new Blob([this.textplain], { type: this.configs.stats$.getValue().mime });
-    this.configs.saveFileAsBlob(this.configs.path, blob)
-                .pipe(
-                  tap(() => {
-                    this.configs.loading.next(true);
-                  })
-                )
-                .subscribe({
-                  next: () => {
-                    this._origin = Buffer.from(this.textplain, 'utf8');
-                    this.configs.stats$.getValue().size = Buffer.byteLength(this._origin);
-                    this.configs.changed$.next(false);
-                    this.configs.error.next(null);
-                    this._toast.show('success', `Конфигурационный файл успешно сохранен`, this.configs.path, faSave);
-                  },
-                  error: (err) => {
-                    console.error(err);
-                    this.configs.error.next(err);
-                    this._toast.show('danger', `Конфигурационный файл не был сохранен по причине:`, err.message, faExclamationTriangle);
-                  }, 
-                  complete: () => {
-                    this.configs.loading.next(false);
-                    setTimeout(() => {
-                      this.configs.dprogress$.next(0);
-                    }, 2000);
-                  }
-                });
+    this.configs
+      .saveFileAsBlob(this.configs.path, blob)
+      .pipe(
+        tap(() => {
+          this.configs.loading.next(true);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.origin = Buffer.from(this.textplain, 'utf8');
+          this.configs.stats$.getValue().size = Buffer.byteLength(this.origin);
+          this.configs.changed$.next(false);
+          this.configs.error.next(null);
+          this.toast.show(
+            'success',
+            `Конфигурационный файл успешно сохранен`,
+            this.configs.path,
+            faSave
+          );
+        },
+        error: (err) => {
+          console.error(err);
+          this.configs.error.next(err);
+          this.toast.show(
+            'danger',
+            `Конфигурационный файл не был сохранен по причине:`,
+            err.message,
+            faExclamationTriangle
+          );
+        },
+        complete: () => {
+          this.configs.loading.next(false);
+          setTimeout(() => {
+            this.configs.dprogress$.next(0);
+          }, 2000);
+        }
+      });
   }
 
   deleteFile(): void {
@@ -159,60 +201,82 @@ export class TextEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkChanges(): void {
-    if (isEqual(this._origin, Buffer.from(this.textplain, 'utf8'))) {
-      return void (this.configs.changed$.next(false));
+    if (isEqual(this.origin, Buffer.from(this.textplain, 'utf8'))) {
+      return void this.configs.changed$.next(false);
     }
     this.configs.changed$.next(true);
   }
 
   ngOnInit(): void {
     if (window.localStorage.getItem('settings')) {
-      this.codemirrorSettings.theme = JSON.parse(window.localStorage.getItem('settings')).textEditorStyle;
+      this.codemirrorSettings.theme = JSON.parse(
+        window.localStorage.getItem('settings')
+      ).textEditorStyle;
     }
-    this._route.queryParams
-    .pipe(
-      tap(params => { this.configs.loading.next(true); this.configs.path = params.path; }),
-      switchMap((params) =>
-      iif(() => !params.touch,
-                this.configs.getConfig(params.path),
-                of(['', { mime: 'text/plain', path: params.path, size: 0 }])))
-    )
-    .subscribe({
-      next: ([file, info]) => {
-        this.configs.stats$.next(info);
-        switch (info.mime) {
-          case 'text/xml': this.codemirrorSettings.mode = 'xml'; break;
-          case 'application/x-sh': this.codemirrorSettings.mode = 'shell'; break;
-          default: this.codemirrorSettings.mode = 'coffeescript'; break;
+    this.route.queryParams
+      .pipe(
+        tap((params) => {
+          this.configs.loading.next(true);
+          this.configs.path = params.path;
+        }),
+        switchMap((params) =>
+          iif(
+            () => !params.touch,
+            this.configs.getConfig(params.path),
+            of(['', { mime: 'text/plain', path: params.path, size: 0 }])
+          )
+        )
+      )
+      .subscribe({
+        next: ([file, info]) => {
+          this.configs.stats$.next(info);
+          switch (info.mime) {
+            case 'text/xml':
+              this.codemirrorSettings.mode = 'xml';
+              break;
+            case 'application/x-sh':
+              this.codemirrorSettings.mode = 'shell';
+              break;
+            default:
+              this.codemirrorSettings.mode = 'coffeescript';
+              break;
+          }
+          this.configs.changed$.next(false);
+          this.textplain = file;
+          this.origin = Buffer.from(file, 'utf-8');
+          this.configs.loading.next(false);
+        },
+        error: (err) => {
+          this.configs.error.next(err);
+          this.toast.show(
+            'danger',
+            `Конфигурационный файл не был загружен по причине:`,
+            err,
+            faExclamationTriangle
+          );
         }
-        this.configs.changed$.next(false);
-        this.textplain = file;
-        this._origin = Buffer.from(file, 'utf-8');
-        this.configs.loading.next(false);
-      }, 
-      error: (err) => {
-        this.configs.error.next(err);
-        this._toast.show('danger', `Конфигурационный файл не был загружен по причине:`, err, faExclamationTriangle);
-      },
-    });
+      });
   }
-  
+
   ngAfterViewInit(): void {
-    this.configs.saveFrom$
-                .subscribe({ 
-                  next: () => this.saveFile(),
-                });
+    this.configs.saveFrom$.subscribe({
+      next: () => this.saveFile()
+    });
+    // eslint-disable-next-line no-underscore-dangle
     this._refreshCodeMirror();
+
     if (!window.localStorage.getItem('codemirror/font-size')) {
       window.localStorage.setItem('codemirror/font-size', '13px');
       this.editorStyle.nativeElement.style.fontSize = '13px';
     } else {
-      this.editorStyle.nativeElement.style.fontSize = window.localStorage.getItem('codemirror/font-size');
+      this.editorStyle.nativeElement.style.fontSize =
+        window.localStorage.getItem('codemirror/font-size');
     }
-    this._zone.runOutsideAngular(() => {
+
+    this.zone.runOutsideAngular(() => {
       this.editor.codeMirrorGlobal.autocomplete = (_cm: any) => {
         this.editor.codeMirror.showHint({ hint: this.editor.codeMirrorGlobal.hint.anyword });
-      }
+      };
     });
   }
   ngOnDestroy(): void {
