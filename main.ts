@@ -122,6 +122,7 @@ function createWindow(): BrowserWindow {
     icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
+      devTools: true,
       nodeIntegration: true,
       webSecurity: serve ? false : true,
       allowRunningInsecureContent: true,

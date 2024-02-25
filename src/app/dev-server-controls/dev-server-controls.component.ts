@@ -11,7 +11,7 @@ import {
   faGamepad,
   faHeartbeat
 } from '@fortawesome/free-solid-svg-icons';
-import { WINDOW } from '@lars/app.module';
+// import { WINDOW } from '@lars/app.module';
 import { ElectronService } from '@lars/core/services';
 import { WebSocketService } from '@lars/ws/web-socket.service';
 import { ExecException } from 'child_process';
@@ -41,7 +41,7 @@ interface IServerRemote {
 export class DevServerControlsComponent implements OnInit, OnDestroy {
 
   constructor(
-    @Inject(WINDOW) private window,
+    // @Inject(WINDOW) private window,
     private electron: ElectronService,
     private zone: NgZone,
     private socket: WebSocketService,
@@ -66,6 +66,8 @@ export class DevServerControlsComponent implements OnInit, OnDestroy {
 
   players = 0;
 
+  isMonitor = window.location.pathname.includes('monitor');
+
   public serverRemote: IServerRemote = {
     state: ServerState.LOADING,
     reboot: () => {
@@ -83,7 +85,8 @@ export class DevServerControlsComponent implements OnInit, OnDestroy {
   };
 
   public openServerLogMonitor() {
-    this.window.open('./home/configs');
+    const monitorWindow: Window = window.open('/monitor?frame=1', 'monitor');
+    console.log(monitorWindow.location.href);
   }
 
   private subscribeToDevSubscriptions(): void {

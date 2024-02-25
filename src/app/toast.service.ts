@@ -11,9 +11,7 @@ export interface IToast {
   lifetime?: number,
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ToastService {
 
   public toasts: IToast[] = [];
@@ -32,7 +30,6 @@ export class ToastService {
         icon,
         lifetime
       });
-      console.log(this.toasts)
   }
 
   public remove(toast: IToast) {

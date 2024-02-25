@@ -1,23 +1,33 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule} from '@angular/router';
 
-import { HomeRoutingModule } from './home/home-routing.module';
+import { AuthGuard } from './guards';
 
 const routes: Routes = [
-  { path: '**', redirectTo: 'login'},
-  { path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
-  { path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then((m) => m.LoginModule)
+  },
+  {
+    path: 'monitor',
+    loadChildren: () =>
+      import('./serverlog-monitor/serverlog-monitor.module').then((m) => m.ServerlogMonitorModule),
+    canActivate: [AuthGuard]
   }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
-    HomeRoutingModule,
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

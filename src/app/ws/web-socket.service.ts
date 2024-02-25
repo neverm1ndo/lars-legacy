@@ -39,9 +39,7 @@ export const socketConfig: AuthSocketIoConfig = {
   },
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WebSocketService {
   protected alerts: Subscription = new Subscription();
   protected activies: Observable<any> = this.getUserActitvity()
@@ -80,11 +78,11 @@ export class WebSocketService {
     _socket.on('disconnect', (reason: string) => {
       console.log('%c[socket-service]', 'color: tomato', 'Disconnected with reason: ' + reason);
     });
-    this._injector.get(UserService).loggedInUser$.pipe(
-      filter((user) => !!user)
-    ).subscribe((user) => {
-      this.connect();
-    });
+    // this._injector.get(UserService).loggedInUser$.pipe(
+    //   filter((user) => !!user)
+    // ).subscribe((user) => {
+    //   this.connect();
+    // });
   }
 
   onDisconnect(): Observable<any> {
@@ -147,9 +145,13 @@ export class WebSocketService {
     return this._socket.fromEvent('server-online');
   }
   clearUserData() {
-    const user = this._injector.get(UserService).loggedInUser$;
-          user.next(undefined);
+    // const user = this._injector.get(UserService).loggedInUser$;
+    //       user.next(undefined);
     window.localStorage.removeItem('user');
+  }
+
+  getServerLog(): Observable<string> {
+    return this._socket.fromEvent('server_log');
   }
   disconnect() {
     if (this._socket) this._socket.disconnect();

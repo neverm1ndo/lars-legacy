@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, Subject, from } from 'rxjs';
@@ -41,9 +42,7 @@ interface UserGroupTranslationMap {
   [group: number]: UserGroupTranslation;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UserService {
   readonly URL_LOGIN: string = AppConfig.api.auth + 'login';
   readonly URL_LOGOUT: string = AppConfig.api.auth + 'logout';
@@ -53,15 +52,17 @@ export class UserService {
   public error$: Subject<any> = new Subject();
 
   constructor(
-    private _http: HttpClient,
-    private _router: Router,
-    private _electron: ElectronService,
-    private _toast: ToastService
+    private http: HttpClient,
+    private router: Router,
+    private electron: ElectronService,
+    private toast: ToastService
   ) {
-    this._checkUserSettings();
+    this.checkUserSettings();
+    // this.loggedInUser$.subscribe(console.log);
+    this.loggedInUser$.next(this.getCurrentUserInfo());
   }
 
-  private _checkUserSettings(): void {
+  private checkUserSettings(): void {
     if (window.localStorage.getItem('settings') !== null) return;
     const { tray, textEditorStyle, lineChunk, listStyle, alerts }: IUserSettings =
       this.getUserSettings();
@@ -77,7 +78,7 @@ export class UserService {
   }
 
   public getUserByUsername(username: string): Observable<IUserData> {
-    return this._http.get<IUserData>(this.URL_USER, { params: { name: username } });
+    return this.http.get<IUserData>(this.URL_USER, { params: { name: username } });
   }
 
   public getUserGroupName(userGroup: Workgroup | number): UserGroupTranslation {
@@ -95,7 +96,7 @@ export class UserService {
 
   public showAccessError() {
     const { main_group, permissions } = this.loggedInUser$.getValue();
-    this._toast.show(
+    this.toast.show(
       'danger',
       'Доступ запрещен для вашей группы пользователей',
       null,
@@ -135,18 +136,18 @@ export class UserService {
     const url = new URL('/memberlist.php', AppConfig.links.resource);
     url.searchParams.append('mode', 'viewprofile');
     url.searchParams.append('u', id.toString());
-    this._electron.shell.openExternal(url.toString());
+    this.electron.shell.openExternal(url.toString());
   }
 
   public openUserForumProfileSettings(): void {
     const url = new URL('/ucp.php', AppConfig.links.resource);
     url.searchParams.append('i', '184');
-    this._electron.shell.openExternal(url.toString());
+    this.electron.shell.openExternal(url.toString());
   }
 
   public openForum(): void {
     const url = new URL('/index.php', AppConfig.links.resource);
-    this._electron.shell.openExternal(url.toString());
+    this.electron.shell.openExternal(url.toString());
   }
 
   public getCurrentUserInfo(): IUserData | null {
@@ -158,16 +159,15 @@ export class UserService {
     const userInfo = this.getCurrentUserInfo();
     if (!userInfo) return false;
 
-    this.loggedInUser$.next(userInfo);
-
     return true;
   }
 
   public loginUser(loginData: IUserLoginData): Observable<IUserData | HttpErrorResponse> {
-    return this._http
+    return this.http
       .post<IUserData>(this.URL_LOGIN, loginData, {
         withCredentials: true,
         headers: new HttpHeaders({
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'application/json'
         })
       })
@@ -181,16 +181,16 @@ export class UserService {
       title: 'Подтверждение выхода',
       message: 'Вы точно хотите выйти с аккаунта? Подтверждение завершит текущую активную сессию.'
     };
-    from(this._electron.ipcRenderer.invoke('message-box', messageBox))
+    from(this.electron.ipcRenderer.invoke('message-box', messageBox))
       .pipe(
         filter((returnValue: Electron.MessageBoxReturnValue) => returnValue.response === 0),
-        switchMap(() => this._http.post(this.URL_LOGOUT, {}, { responseType: 'text' }))
+        switchMap(() => this.http.post(this.URL_LOGOUT, {}, { responseType: 'text' }))
       )
       .subscribe({
         next: () => {
           this.loggedInUser$.next(null);
           localStorage.removeItem('user');
-          this._router.navigate(['/login']);
+          this.router.navigate(['/login']);
         },
         error: console.error
       });
