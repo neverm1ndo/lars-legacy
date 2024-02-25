@@ -22,11 +22,7 @@ export class LoginGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (!this.user.isAuthenticated()) return true;
-    this.router.navigate(['/home'], {
-      queryParams: {
-        return: state.url
-      }
-    });
+    this.router.navigate(['/home']);
     return false;
   }
 }

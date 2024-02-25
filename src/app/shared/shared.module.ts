@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import { PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent } from './components/';
+import {
+  PageNotFoundComponent,
+  SimpleLineProcessComponent,
+  LineProcessComponent
+} from './components/';
 
 import { WebviewDirective, LetDirective } from './directives/';
 
@@ -16,9 +20,35 @@ import { EntriesPipe } from './entries.pipe';
 import { FilterSearchPipe } from '@lars/shared/pipes/filter-search.pipe';
 
 @NgModule({
-  declarations: [PageNotFoundComponent, SimpleLineProcessComponent, LineProcessComponent, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, LetDirective, LazyLoadDirective, ProcessPipe, EntriesPipe, FilterSearchPipe],
+  declarations: [
+    PageNotFoundComponent,
+    SimpleLineProcessComponent,
+    LineProcessComponent,
+    WebviewDirective,
+    FileSizePipe,
+    RolePipe,
+    RulesPipe,
+    LetDirective,
+    LazyLoadDirective,
+    ProcessPipe,
+    EntriesPipe,
+    FilterSearchPipe
+  ],
   imports: [CommonModule, TranslateModule],
-  exports: [ProcessPipe, TranslateModule, WebviewDirective, FileSizePipe, RolePipe, RulesPipe, SimpleLineProcessComponent, LineProcessComponent, LetDirective, LazyLoadDirective, EntriesPipe, FilterSearchPipe],
+  exports: [
+    ProcessPipe,
+    TranslateModule,
+    WebviewDirective,
+    FileSizePipe,
+    RolePipe,
+    RulesPipe,
+    SimpleLineProcessComponent,
+    LineProcessComponent,
+    LetDirective,
+    LazyLoadDirective,
+    EntriesPipe,
+    FilterSearchPipe
+  ],
   providers: []
 })
 export class SharedModule {}

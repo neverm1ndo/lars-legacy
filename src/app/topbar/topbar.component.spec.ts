@@ -1,22 +1,21 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { TopperComponent } from './topper.component';
+import { TopbarComponent } from './topbar.component';
 import { UserService } from '../user/user.service';
 
-describe('TopperComponent', () => {
-  let component: TopperComponent;
-  let fixture: ComponentFixture<TopperComponent>;
+describe('TopbarComponent', () => {
+  let component: TopbarComponent;
+  let fixture: ComponentFixture<TopbarComponent>;
   let fakeUserService
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TopperComponent ],
+      declarations: [ TopbarComponent ],
       providers: [UserService]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TopperComponent);
+    fixture = TestBed.createComponent(TopbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

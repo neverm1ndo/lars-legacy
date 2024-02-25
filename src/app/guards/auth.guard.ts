@@ -14,16 +14,15 @@ import { UserService } from '@lars/user/user.service';
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    private _user: UserService,
-    private _router: Router
+    private user: UserService,
+    private router: Router
   ) {}
   canActivate(
     _route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this._user.isAuthenticated()) return true;
-
-    this._router.navigate(['/login'], {
+    if (this.user.isAuthenticated()) return true;
+    this.router.navigate(['/login'], {
       queryParams: {
         return: state.url
       }

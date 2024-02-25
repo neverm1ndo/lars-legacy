@@ -122,6 +122,7 @@ function createWindow(): BrowserWindow {
     icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
+      devTools: true,
       nodeIntegration: true,
       webSecurity: serve ? false : true,
       allowRunningInsecureContent: true,
@@ -171,6 +172,24 @@ function createWindow(): BrowserWindow {
     win = null;
     $serverInfo.unsubscribe();
     app.quit();
+  });
+
+  win.webContents.setWindowOpenHandler((details: Electron.HandlerDetails) => {
+    return {
+      action: 'allow',
+      url: details.url,
+      icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+      overrideBrowserWindowOptions: {
+        frame: false,
+        fullscreenable: false,
+        webPreferences: {
+          nodeIntegration: true,
+          webSecurity: serve ? false : true,
+          allowRunningInsecureContent: true,
+          contextIsolation: false
+        }
+      }
+    };
   });
 
   return win;

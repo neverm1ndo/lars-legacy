@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationsService } from '../notifications/notifications.service';
+import { WebSocketService } from '@lars/ws/web-socket.service';
 
 @Component({
   selector: 'app-home',
@@ -8,13 +9,18 @@ import { NotificationsService } from '../notifications/notifications.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  constructor(private _notifications: NotificationsService) { }
+  constructor(
+    private notifications: NotificationsService,
+    private ws: WebSocketService
+  ) {}
 
   ngOnInit(): void {
-    this._notifications.subToNotifications();
-  }
-  ngOnDestroy(): void {
-    this._notifications.unsubFromNotifications();
+    this.ws.connect();
+    this.notifications.subToNotifications();
   }
 
+  ngOnDestroy(): void {
+    this.notifications.unsubFromNotifications();
+    this.ws.disconnect();
+  }
 }
