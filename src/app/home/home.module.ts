@@ -94,8 +94,6 @@ export function createTranslateLoader(http: HttpClient) {
       }
     })
   ],
-  providers: [
-    /*NotificationsService,*/
-  ]
+  providers: [NotificationsService]
 })
 export class HomeModule {}

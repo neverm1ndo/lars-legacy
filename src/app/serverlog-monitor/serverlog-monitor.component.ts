@@ -68,7 +68,11 @@ export class ServerlogMonitorComponent implements OnInit {
               break;
             }
 
-            if (line.length === 0) continue;
+            if (line.length === 0) {
+              index++;
+
+              continue;
+            }
 
             const color = colorizeWarnings(line);
 

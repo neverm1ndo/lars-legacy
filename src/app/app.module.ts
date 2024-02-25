@@ -7,23 +7,8 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { HomeModule } from './home/home.module';
-
 import { AppComponent } from './app.component';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LibertyIconsModule } from './liberty-icons/liberty-icons.module';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LoginModule } from './login/login.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { AppConfig } from '../environments/environment';
-import { PreloadAllModules, RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { DevServerControlsModule } from './dev-server-controls/dev-server-controls.module';
-import { ToastService } from './toast.service';
-import { ToastsContainer } from './toasts-container/toasts-container.component';
 
 import { WebSocketService, socketConfig } from './ws/web-socket.service';
 
@@ -32,13 +17,11 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { HttpClient } from '@angular/common/http';
-import { DOCUMENT } from '@angular/common';
-import { ServerlogMonitorModule } from './serverlog-monitor/serverlog-monitor.module';
 import { JWTInterceptor } from './api/interceptors/jwt.interceptor';
-import { UserService } from './user/user.service';
 import { SocketIoModule } from 'ngx-socket-io';
 import { TopbarModule } from './topbar/topbar.module';
 import { UserModule } from './user/user.module';
+import { ToastsModule } from './toasts/toasts.module';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -57,19 +40,19 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
 // });
 
 @NgModule({
-  declarations: [AppComponent, ToastsContainer],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     CoreModule,
-    // HomeModule,
+    BrowserAnimationsModule,
     SharedModule,
     // NgbModule,
+    ToastsModule,
     // FontAwesomeModule,
     // LibertyIconsModule,
     UserModule,
-    BrowserAnimationsModule,
     TopbarModule,
     // LoginModule,
     // ServerlogMonitorModule,
@@ -93,7 +76,6 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     })
   ],
   providers: [
-    ToastService,
     WebSocketService,
     {
       provide: HTTP_INTERCEPTORS,
