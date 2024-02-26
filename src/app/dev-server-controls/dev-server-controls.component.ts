@@ -85,8 +85,7 @@ export class DevServerControlsComponent implements OnInit, OnDestroy {
   };
 
   public openServerLogMonitor() {
-    const monitorWindow: Window = window.open('/monitor?frame=1', 'monitor');
-    console.log(monitorWindow.location.href);
+    const monitorWindow: Window = window.open('/monitor?frame=1', 'monitor', 'minWidth=950');
   }
 
   private subscribeToDevSubscriptions(): void {
