@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
   NgZone,
   OnInit,
   Renderer2,
@@ -15,11 +16,25 @@ import { isUndefined } from 'lodash';
   templateUrl: './serverlog-monitor.component.html',
   styleUrls: ['./serverlog-monitor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-  // providers: [WebSocketService]
 })
 export class ServerlogMonitorComponent implements OnInit {
   @ViewChild('log', { static: true })
   logContainer: ElementRef<HTMLDivElement>;
+
+  @HostListener('mousewheel', ['$event']) onMouseWheel(event: WheelEvent) {
+    if (!event.ctrlKey && !event.shiftKey) return;
+
+    const { fontSize } = this.logContainer.nativeElement.style;
+
+    const size = Number(fontSize.substring(0, fontSize.length - 2));
+    
+    this.setFontSize(size + event.deltaY / 100);
+
+    localStorage.setItem(
+      'lars/monitor/font-size',
+      this.logContainer.nativeElement.style.fontSize
+    );
+  }
 
   constructor(
     private ws: WebSocketService,
@@ -29,10 +44,18 @@ export class ServerlogMonitorComponent implements OnInit {
 
   lines$ = this.ws.getServerLog();
 
+  private setFontSize(size: number) {
+    this.logContainer.nativeElement.style.fontSize = `${size}px`; 
+    this.logContainer.nativeElement.style.lineHeight = `${size + 2}px`;
+  }
+  
   ngOnInit(): void {
     this.ws.connect();
     this.ws.send('join:monitor');
     this.zone.runOutsideAngular(() => {
+      const currentFontSize = localStorage.getItem('lars/monitor/font-size') || 13;
+      this.setFontSize(Number(currentFontSize));
+
       const showServerLog = (chunk: string | undefined): void => {
         if (!chunk) return;
 
