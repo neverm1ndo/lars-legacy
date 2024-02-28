@@ -4,9 +4,7 @@ import { Subscription, TeardownLogic} from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { getProcessTranslation } from '@lars/shared/components/line-process/log-processes';
 
-@Injectable({
-  providedIn: 'any'
-})
+@Injectable()
 export class NotificationsService {
 
   private _notifications: Subscription = new Subscription();

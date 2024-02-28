@@ -8,9 +8,7 @@ import {
 import { ConfigsService } from '@lars/configs/configs.service';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class NotChangedDocumentGuard implements CanDeactivate<unknown> {
   constructor(@Inject(ConfigsService) private __configs: ConfigsService) {}
 

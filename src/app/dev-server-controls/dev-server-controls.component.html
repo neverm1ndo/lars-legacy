@@ -21,6 +21,8 @@
     <button [disabled]="serverState == 4 || serverState == 2 || serverState == 3" (click)="serverRemote.launch()" ngbDropdownItem><fa-icon [icon]="fa.play"></fa-icon> <span>Запуск</span></button>
     <button [disabled]="serverState == 4 || serverState == 2 || serverState == 1" (click)="serverRemote.stop()" ngbDropdownItem><fa-icon [icon]="fa.stop"></fa-icon> <span>Выключение</span></button>
     <div class="dropdown-divider"></div>
+    <button (click)="openServerLogMonitor()" ngbDropdownItem><fa-icon [icon]="fa.heartbeat"></fa-icon> <span>Серверный лог</span></button>
+    <div class="dropdown-divider"></div>
     <button (click)="launchSAMP()" ngbDropdownItem><fa-icon [icon]="fa.gamepad"></fa-icon> <span>Войти на сервер</span></button>
     <div class="dropdown-menu-helper">
       <server-stat-graph [status]="serverState"></server-stat-graph>

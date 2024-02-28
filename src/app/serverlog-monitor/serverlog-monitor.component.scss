@@ -1,0 +1,55 @@
+@import 'colors';
+
+:host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: #161616;
+    font-family: 'Lucida Console', monospace;
+    font-size: 11px;
+    line-height: 13px;
+    color: $text;
+    .monitor {
+        padding: 0.1rem 0.5rem;
+        div {
+            display: block;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            color: brown;
+            font-weight: bold;
+        }
+        .warn {
+            color: darkgoldenrod;
+        }
+        .debug {
+            color: tomato;
+        }
+        .green {
+            color: green;
+        }
+        .purple {
+            color: purple;
+        }
+        .red {
+            color: red;
+        }
+
+        $colors:
+            'error' brown,
+            'warn' darkgoldenrod,
+            'debug' tomato,
+            'green' green,
+            'purple' purple,
+            'red' red;
+        
+        .text {
+            @each $name, $color in $colors {
+                &-#{$name} {
+                    color: $color;
+                }
+            }
+        }
+    }
+}

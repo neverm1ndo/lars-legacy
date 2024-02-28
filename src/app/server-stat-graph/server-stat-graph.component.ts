@@ -177,7 +177,7 @@ export class ServerStatGraphComponent implements OnInit, OnDestroy {
 
   async getServerInfo(): Promise<ServerGameMode> {
     const PORT = 7777;
-    return this._electron.ipcRenderer.invoke('server-game-mode', '37.143.15.28', PORT);
+    return this._electron.ipcRenderer.invoke('server-game-mode', '2.56.89.75', PORT);
   }
 
   ngOnInit(): void {
