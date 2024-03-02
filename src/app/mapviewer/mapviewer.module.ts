@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { MapViewerRoutingModule } from './mapviewer-routing.module';
 import { ShellComponent } from './shell/shell.component';
+import { LtyFileTreeModule } from '@lars/shared/lty-file-tree/lty-file-tree.module';
+import { MapViewerDomainModule } from './domain/mapviewer-domain.module';
 
 
 @NgModule({
@@ -11,7 +13,9 @@ import { ShellComponent } from './shell/shell.component';
   ],
   imports: [
     CommonModule,
-    MapViewerRoutingModule
+    MapViewerRoutingModule,
+    MapViewerDomainModule,
+    LtyFileTreeModule
   ]
 })
 export class MapViewerModule { }
