@@ -3,7 +3,7 @@ import { Flat2dmapService } from '../domain/infrastructure/flat2dmap.service';
 import { MAP_IMAGE_URL } from '../domain/configs/map.resources.config';
 import { MapObject, ViewerColntrolMode, Viewport } from '../domain/entities';
 import { Colors } from '../domain/configs';
-import { BehaviorSubject, Subscription, filter, fromEvent, withLatestFrom, takeWhile, switchMap, of, debounceTime, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, filter, fromEvent, withLatestFrom, takeWhile, switchMap, of, debounceTime, tap, merge, map } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 
 const USE_CONTEXT = '2d';
@@ -141,7 +141,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
         drawVisiblePoints(this.mapObjects);
         drawFps();
-        drawDebugCursor();
+        // drawDebugCursor();
       };
 
       const drawObjectPoint = (
@@ -367,13 +367,22 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.resizeObserver.observe(this.host.nativeElement);
     this.loadResources();
-    this.mapViewerFacade.getCurrentMapObjects().subscribe((objects) => {
-      this.mapObjects = objects;
 
-      const { posX = 0, posY = 0 } = objects.find(({ posX, posY }) => posX && posY);
+    this.controlsSubscriptions.push(
+      merge(
+        this.mapViewerFacade.getCurrentMapObjects().pipe(
+          tap((objects) => { this.mapObjects = objects }),
+          map((objects) => objects.findIndex(
+              ({ posX, posY }) => posX && posY)
+          ),
+        ),
+        this.mapViewerFacade.getSelectedObjectIndex()
+      ).subscribe((index) => {
+        const { posX, posY } = this.mapObjects[index];
 
-      this.setViewportTo(posX, posY);
-    });
+        this.setViewportTo(posX, posY);
+      })
+    );
   }
 
   ngOnDestroy(): void {

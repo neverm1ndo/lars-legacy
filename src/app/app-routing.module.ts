@@ -23,13 +23,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./serverlog-monitor/serverlog-monitor.module').then((m) => m.ServerlogMonitorModule),
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'editor',
-    loadChildren: () =>
-      import('./configs/configs.module').then((m) => m.ConfigsModule),
-    canActivate: [AuthGuard, ConfiguratorGuard]
-  },
+  }
 ];
 
 @NgModule({

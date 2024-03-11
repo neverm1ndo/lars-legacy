@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { faBoxes } from '@fortawesome/free-solid-svg-icons';
+import { faBoxes, faCube } from '@fortawesome/free-solid-svg-icons';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
-import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs';
 
 @Component({
@@ -13,9 +12,12 @@ import { take } from 'rxjs';
 export class MapViewerInspectorComponent implements OnInit {
   fa = {
     faBoxes,
+    faCube
   };
 
   objects$ = this.mapViewerFacade.getCurrentMapObjects();
+
+  selectedObjectIndex$ = this.mapViewerFacade.getSelectedObjectIndex();
 
   constructor(
     private readonly mapViewerFacade: MapViewerFacade,
@@ -25,11 +27,19 @@ export class MapViewerInspectorComponent implements OnInit {
     return name !== 'material' && name !== 'text';
   }
 
+  hide() {
+    //TODO: implement pane hide
+  }
+
+  selectObject(index: number) {
+    this.mapViewerFacade.setSelectedObjectIndex(index);
+  } 
+
   openInTextEditor() {
       this.mapViewerFacade.getCurrentFilePathName()
       .pipe(take(1))
       .subscribe(({ path, name }) => {
-        window.open(`/home/maps/xmleditor?frame=1&path=${path}&name=${name}`, 'monitor', 'minWidth=950');
+        window.open(`/home/configs/doc?frame=1&path=${path}&name=${name}`, 'monitor', 'minWidth=950');
       });
   }
 

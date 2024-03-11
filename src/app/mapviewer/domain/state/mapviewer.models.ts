@@ -8,3 +8,7 @@ export interface MapViewerFileTreeProp {
 export interface MapObjectsProp {
   mapObjects: MapObject[];
 }
+
+export interface SelectedMapObjectIndexProp {
+  index: number;
+}

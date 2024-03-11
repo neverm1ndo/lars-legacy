@@ -17,49 +17,34 @@
     .text {
       font-size: 13px;
       line-height: $tab-head-height;
+      
+      fa-icon {
+        margin-right: $tab-gutter;
+      }
     }
     
-    fa-icon {
-      margin-right: $tab-gutter;
-    }
   }
   .inspector {
     position: relative;
     z-index: inherit;
-  }
-  table {
-    margin-bottom: 0px;
 
-    $columns:
-     1 8%,
-     2 10%,
-     3 15%,
-     4 12%,
-     5 20%,
-     6 5%,
-     7 5%,
-     8 5%,
-     9 20%;
+    &-hide {
+      $size: 24px;
+      width: $size;
+      height: $size;
+      padding: 0px;
 
-     td {
-         vertical-align: middle;
-         border-bottom: 1px solid $filetree;
-         table-layout: fixed;
-         overflow: hidden;
-         word-wrap: break-word;
-         
-         @each $index, $width in $columns {
-            &:nth-child(#{$index}) {
-                width: $width;
-                max-width: $width;
-            }
-         } 
+      svg {
+        width: 16px;
+        position: relative;
+        top: -2px
+      }
     }
   }
   .viewport {
     height: 100%;
     width: 100%;
-    background-color: $underpanel;
+    background-color: $filetree;
     
     .tab {
       &.active {
@@ -67,6 +52,8 @@
       }
       font-size: 10px;
       height: 22px;
+      border-bottom: 1px solid $topper;
+      cursor: pointer;
       
       .name {
         text-transform: uppercase;
@@ -77,6 +64,15 @@
         line-height: 12px;
         box-sizing: border-box;
         padding: 1px 5px 1px 5px;
+      }
+
+      div {
+        display: flex;
+        padding: 0 0.2rem;
+      }
+
+      span {
+        align-self: center;
       }
       
       img {
@@ -130,8 +126,18 @@
     text-overflow: ellipsis;
 }
 
-.xml-button {
-  align-self: center;
-  height: 24px;
-  font-family: monospace;
+.kbd-button {
+  opacity: 0.6;
+  transition: .1s linear;
+  font-size: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.remotes {
+  gap: 8px;
 }

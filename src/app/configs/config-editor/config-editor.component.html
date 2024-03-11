@@ -1,12 +1,24 @@
 <div class="container-fluid g-0 h-100">
   <div class="d-flex flex-column h-100">
-    <as-split direction="horizontal" [gutterSize]="5" (dragEnd)="savePanesState($event)">
+    <as-split 
+      *ngIf="!(isFrameWindow$ | async); else editorContainer"
+      direction="horizontal"
+      [gutterSize]="5"
+      (dragEnd)="savePanesState($event)">
       <as-split-area [size]="paneStates[0]">
         <div class="d-flex flex-column flex-fill h-100 filetree">
           <div class="progress">
-            <div class="progress-bar" [style.width.%]="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            <div
+              class="progress-bar"
+              [style.width.%]="progress"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100">
+            </div>
           </div>
           <file-tree
+            *ngIf="!(isFrameWindow$ | async)"
             (fileSelect)="toConfig($event)"
             (mkdir)="mkdir($event)"
             (rmdir)="rmdir($event)"
@@ -22,64 +34,77 @@
         </div>
       </as-split-area>
       <as-split-area [size]="paneStates[1]">
-        <div class="d-flex flex-column flex-fill h-100">
-          <div class="progress">
-            <div class="progress-bar" [style.width.%]="loadProgress | async" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <router-outlet></router-outlet>
-        </div>
+        <ng-container *ngTemplateOutlet="editorContainer"></ng-container>
       </as-split-area>
     </as-split>
-    <div class="d-flex w-100 underpanel no-select">
-      <div *ngIf="stats | async as stats" class="col-12">
-        <div class="row">
-          <div class="w-100 d-flex flex-row justify-content-between">
-            <div class="panel-left">
-              <div class="d-flex justify-content-start align-content-center">
-                <button disabled (click)="openRemoteWindow()" ngbTooltip="{{ 'ConfigEditor.Func.Button.RemoteWindow' | translate }}" class="panel bg-success overflow-hidden word-wrap">
-                  <fa-icon [icon]="fa.window"></fa-icon>
-                </button>
-                <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
-                  <fa-icon class="me-2" [icon]="fa.branch"></fa-icon>
-                  {{ path }}{{ (isChanged | async)?'*':'' }}
-                </button>
-              </div>
+    <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+  </div>
+</div>
+
+<ng-template #editorContainer>
+  <div class="d-flex flex-column flex-fill overflow-auto h-100">
+    <div class="progress">
+      <div class="progress-bar"
+        [style.width.%]="loadProgress | async"
+        role="progressbar"
+        aria-valuenow="0"
+        aria-valuemin="0"
+        aria-valuemax="100">
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
+<ng-template #toolbar>
+  <div class="d-flex w-100 underpanel no-select">
+    <div *ngIf="stats | async as stats" class="col-12">
+      <div class="row">
+        <div class="w-100 d-flex flex-row justify-content-between">
+          <div class="panel-left">
+            <div class="d-flex justify-content-start align-content-center">
+              <button disabled (click)="openRemoteWindow()" ngbTooltip="{{ 'ConfigEditor.Func.Button.RemoteWindow' | translate }}" class="panel bg-success overflow-hidden word-wrap">
+                <fa-icon [icon]="fa.window"></fa-icon>
+              </button>
+              <button (click)="pathToClipboard()" class="panel overflow-hidden word-wrap">
+                <fa-icon class="me-2" [icon]="fa.branch"></fa-icon>
+                {{ path }}{{ (isChanged | async)?'*':'' }}
+              </button>
             </div>
-            <div class="panel-right">
-              <div class="w-100 d-flex flex-row justify-content-end">
-                <ng-container *ngLet="error | async as error">
-                  <button placement="top" [ngbTooltip]="error?.message" class="panel">
-                    <i [class.led-loading]="loading | async" [class.led-error]="error?.message" class="autosave-led"></i>
-                  </button>
-                </ng-container>
-                <div class="panel flex-grow">
-                  {{ stats.mime }}
-                </div>
-                <div placement="top" [ngbTooltip]="bufferSize" class="panel flex-grow">
-                  {{ stats.size | FileSize }}
-                </div>
-                <div class="panel flex-grow">
-                  ANSI
-                </div>
-                <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(isChanged | async)">
-                  <fa-icon [icon]="fa.save"></fa-icon>
-                  <ng-template #saveTooltip>
-                    <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Save' | translate }}</span>
-                  </ng-template>
+          </div>
+          <div class="panel-right">
+            <div class="w-100 d-flex flex-row justify-content-end">
+              <ng-container *ngLet="error | async as error">
+                <button placement="top" [ngbTooltip]="error?.message" class="panel">
+                  <i [class.led-loading]="loading | async" [class.led-error]="error?.message" class="autosave-led"></i>
                 </button>
-                <button (click)="deleteFile()" [ngbTooltip]="delTooltip" class="panel">
-                  <fa-icon [icon]="fa.trash"></fa-icon>
-                  <ng-template #delTooltip>
-                    <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Delete' | translate }}</span>
-                  </ng-template>
-                </button>
-                <ng-template #bufferSize><strong>{{ stats.size }}</strong> bytes</ng-template>
+              </ng-container>
+              <div class="panel flex-grow">
+                {{ stats.mime }}
               </div>
+              <div placement="top" [ngbTooltip]="bufferSize" class="panel flex-grow">
+                {{ stats.size | FileSize }}
+              </div>
+              <div class="panel flex-grow">
+                ANSI
+              </div>
+              <button (click)="saveFile()" [ngbTooltip]="saveTooltip" class="panel" [disabled]="!(isChanged | async)">
+                <fa-icon [icon]="fa.save"></fa-icon>
+                <ng-template #saveTooltip>
+                  <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Save' | translate }}</span>
+                </ng-template>
+              </button>
+              <button (click)="deleteFile()" [ngbTooltip]="delTooltip" class="panel">
+                <fa-icon [icon]="fa.trash"></fa-icon>
+                <ng-template #delTooltip>
+                  <span class="d-sm-none d-md-inline">{{ 'ConfigEditor.Func.Delete' | translate }}</span>
+                </ng-template>
+              </button>
+              <ng-template #bufferSize><strong>{{ stats.size }}</strong> bytes</ng-template>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</ng-template>
 

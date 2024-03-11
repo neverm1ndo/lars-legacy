@@ -1,4 +1,4 @@
-<app-sider></app-sider>
+<app-sider *ngIf="!(isFrameWindow$ | async)"></app-sider>
 <div class="home-base">
   <router-outlet></router-outlet>
 </div>

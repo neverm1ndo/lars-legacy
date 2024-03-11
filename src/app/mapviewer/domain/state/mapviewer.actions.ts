@@ -1,6 +1,7 @@
 import { ITreeNode } from '@lars/interfaces';
 import { createAction, props } from '@ngrx/store';
-import { MapObjectsProp, MapViewerFileTreeProp } from './mapviewer.models';
+import { MapObjectsProp, MapViewerFileTreeProp, SelectedMapObjectIndexProp } from './mapviewer.models';
+import { MapObject } from '../entities';
 // import { LoadLogLineProps } from './logs.models';
 
 // const fetchLogsList = createAction('[Logs] Fetch logs list');
@@ -30,6 +31,8 @@ const fetchMapXMLDocumentError = createAction('[MapViewer] Fetch map XML documen
 
 // const getMapObjects = createAction('[MapViewer')
 
+const changeSelectedObject = createAction('[MapViewer] Change selected object', props<SelectedMapObjectIndexProp>())
+
 export const actions = {
     fetchFileTree,
     fetchFileTreeSuccess,
@@ -37,6 +40,7 @@ export const actions = {
     fetchMapXMLDocument,
     fetchMapXMLDocumentSuccess,
     fetchMapXMLDocumentError,
+    changeSelectedObject
 //   fetchLogsList,
 //   loadLogsList,
 //   loadLogsListSuccess,

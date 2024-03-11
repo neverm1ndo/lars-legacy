@@ -23,24 +23,29 @@ import { TopbarModule } from './topbar/topbar.module';
 import { UserModule } from './user/user.module';
 import { ToastsModule } from './toasts/toasts.module';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
+import { DOCUMENT } from '@angular/common';
+import { selectQueryParam } from './state';
+import { map } from 'rxjs';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/app/', '.json');
 
-// export const WINDOW = new InjectionToken<Window>('An abstraction over global window object', {
-//   factory: () => {
-//     const { defaultView } = inject(DOCUMENT);
+export const WINDOW = new InjectionToken<Window>('An abstraction over global window object', {
+  factory: () => {
+    const { defaultView } = inject(DOCUMENT);
 
-//     if (!defaultView) {
-//       throw new Error('Window is not available');
-//     }
+    if (!defaultView) {
+      throw new Error('Window is not available');
+    }
 
-//     return defaultView;
-//   }
-// });
+    return defaultView;
+  }
+});
+
+export const IS_FRAME_WINDOW = new InjectionToken<boolean>('Is frame window');
 
 @NgModule({
   declarations: [AppComponent],
@@ -88,6 +93,13 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
       provide: HTTP_INTERCEPTORS,
       useClass: JWTInterceptor,
       multi: true
+    },
+    {
+      provide: IS_FRAME_WINDOW,
+      useFactory: () => {
+        const store = inject(Store);
+        return store.select(selectQueryParam('frame')).pipe(map((frame) => Boolean(frame)));
+      }
     }
   ],
   bootstrap: [AppComponent]

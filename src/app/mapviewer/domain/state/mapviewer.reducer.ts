@@ -9,9 +9,10 @@ interface MapViewerCurrentFile {
     path: string;
 }
 export interface MapViewerState {
-    currentFile: MapViewerCurrentFile | null,
-    mapObjects: MapObject[],
+    currentFile: MapViewerCurrentFile | null;
+    mapObjects: MapObject[];
     fileTree: ITreeNode | null;
+    selectedObject?: number;
 }
 
 export const featureKey = 'MapViewer';
@@ -23,8 +24,8 @@ const initialState: MapViewerState = {
 };
 
 export const logsReducer = createReducer(
-  initialState,
-  on(mapViewerActions.fetchFileTreeSuccess, (state, { fileTree }) => ({ ...state, fileTree })),
-  on(mapViewerActions.fetchMapXMLDocumentSuccess, (state, { mapObjects }) => ({ ...state, mapObjects })),
-//   on(mapViewerActions., (state, { fileTree }) => ({ ...state, fileTree })),
+    initialState,
+    on(mapViewerActions.fetchFileTreeSuccess, (state, { fileTree }) => ({ ...state, fileTree })),
+    on(mapViewerActions.fetchMapXMLDocumentSuccess, (state, { mapObjects }) => ({ ...state, mapObjects })),
+    on(mapViewerActions.changeSelectedObject, (state, { index }) => ({ ...state, selectedObject: index })),
 );
