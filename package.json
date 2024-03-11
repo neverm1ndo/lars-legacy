@@ -73,6 +73,8 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-bootstrap/ng-bootstrap": "13.1.0",
     "@ng-select/ng-select": "9.0.2",
+    "@ngrx/effects": "14.3.2",
+    "@ngrx/router-store": "14.3.2",
     "@ngrx/store": "14.3.2",
     "@ngrx/store-devtools": "14.3.2",
     "@popperjs/core": "^2.10.2",

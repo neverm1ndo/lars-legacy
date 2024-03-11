@@ -1,0 +1,1 @@
+export const MAP_IMAGE_URL = 'lars://assets/images/sa_map4k.webp'; 

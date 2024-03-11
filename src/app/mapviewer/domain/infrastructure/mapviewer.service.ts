@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { Group, MathUtils } from 'three';
 import { allowedMapElements } from '../configs';
 import { MapObject } from '../entities';
+import { UserService } from '@lars/user/user.service';
 
 @Injectable()
 export class MapViewerService {
 
-  constructor() { }
+  constructor(
+    private readonly user: UserService
+  ) { }
 
   public mapGroupToXML(mapGroup: Group): XMLDocument {
     const xmlNamespaceURI: string = 'http://www.w3.org/1999/xhtml';
@@ -39,10 +42,11 @@ export class MapViewerService {
       map.appendChild(objectElement);
     }
 
-    // const date = new Date().toISOString();
-    // const postComment: Comment = resultXML.createComment(`\n\tLARS gta-liberty.ru\n\tLast edited by ${this._user.loggedInUser$.value.username}\n\t${date}\n`);
+    const date = new Date().toISOString();
+    const { username: author } = this.user.loggedInUser$.value; 
+    const postComment: Comment = resultXML.createComment(`\n\tLARS gta-liberty.ru\n\tLast edited by ${author}\n\t${date}\n`);
     
-    // resultXML.append(postComment);
+    resultXML.append(postComment);
 
     return resultXML;
   }

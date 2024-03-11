@@ -22,6 +22,9 @@ import { SocketIoModule } from 'ngx-socket-io';
 import { TopbarModule } from './topbar/topbar.module';
 import { UserModule } from './user/user.module';
 import { ToastsModule } from './toasts/toasts.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -65,7 +68,9 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     // }),
     SocketIoModule.forRoot(socketConfig),
     // RouterModule,
-    // StoreModule.forRoot({}, {}),
+    StoreModule.forRoot({
+      router: routerReducer
+    }, {}),
     // StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: AppConfig.production }),
     TranslateModule.forRoot({
       loader: {
@@ -73,7 +78,9 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
         useFactory: httpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    EffectsModule.forRoot([]),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [
     WebSocketService,

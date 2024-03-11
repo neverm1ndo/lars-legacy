@@ -1,1 +1,41 @@
-<router-outlet></router-outlet>
+<div class="container-fluid g-0 h-100">
+    <div class="d-flex flex-column h-100">
+        <as-split direction="horizontal" [gutterSize]="5" (dragEnd)="savePanesState($event, 'horizontal')">
+            <as-split-area [size]="panes[0][0]">
+                <div class="progress">
+                    <div class="progress-bar" [style.width.%]="progress$ | async" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="filetree h-100">
+                    <file-tree
+                        [canCreate]="false"
+                        [items]="fileTree$ | async"
+                        (fileSelect)="openMapFile($event)"
+                    ></file-tree>
+                </div>
+            </as-split-area>
+            <as-split-area [size]="panes[0][1]">
+                <as-split direction="vertical" [gutterSize]="5" (dragEnd)="savePanesState($event, 'vertical')">
+                    <as-split-area [size]="panes[1][0]">
+                        <router-outlet></router-outlet>
+                    </as-split-area>
+                    <as-split-area [size]="panes[1][1]">
+                        <lars-mapviewer-inspector></lars-mapviewer-inspector>
+                    </as-split-area>
+                </as-split>
+            </as-split-area>
+        </as-split>
+    </div>
+</div>
+<!-- 
+<file-tree
+    (fileSelect)="toMap($event)"
+    (dirSelect)="chooseDir($event)"
+    (mkdir)="mkdir($event)"
+    (rmdir)="rmdir($event)"
+    (mvdir)="mvdir($event)"
+    [items]="files"
+    [current]="currentFilePath"
+    (addNew)="addNewMap($event)"
+    (resync)="reloadFileTree()">
+</file-tree> -->
+

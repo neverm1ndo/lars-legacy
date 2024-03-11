@@ -18,4 +18,23 @@ export interface MapObject {
     dimension?: number;
     interior?: number;
 }
+
+export type Position2 = {
+    x: number;
+    y: number;
+}
+  
+export interface RectangleVertices {
+    left: MapObject;
+    top: MapObject;
+    right: MapObject;
+    bottom: MapObject;
+}
+
+export enum ViewerColntrolMode {
+    NONE,
+    DRAG,
+    MOVE,
+    ROTATE
+}
   

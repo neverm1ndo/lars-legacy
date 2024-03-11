@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  width: 100%;
+  background: #6f8aa8;
+  // background: #000000;
+}
+
+.loader {
+  position: absolute;
+  z-index: 100;
+  background: black;
+  
+  lty-icon {
+    width: 20px;
+  }
+}

@@ -50,6 +50,7 @@ export function createTranslateLoader(http: HttpClient) {
       isolate: true
     })
   ],
-  providers: [ConfigsService]
+  providers: [ConfigsService],
+  exports: [TextEditorComponent]
 })
 export class ConfigsModule { }

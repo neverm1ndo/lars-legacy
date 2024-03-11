@@ -1,0 +1,71 @@
+<div class="d-flex flex-column inspector h-100">
+    <div class="d-flex map-inspector-top justify-content-between align-items-center">
+        <div class="d-flex text">
+            <fa-icon class="mr-2" [icon]="fa.faBoxes"></fa-icon>
+            Инспектор объектов
+
+            <button (click)="openInTextEditor()" class="btn btn-dark btn-sm xml-button">xml</button>
+        </div>
+        <button class="btn btn-dark infile-search-hide" type="button" name="button">
+            <svg 
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                preserveAspectRatio="xMidYMid meet"
+                viewBox="0 0 30 30"
+                width="30"
+                height="30">
+                <defs>
+                    <path d="M24.69 9.83L14.66 20.77L4.69 9.83" id="a1sXzGPVRt"></path>
+                </defs>
+                <use xlink:href="#a1sXzGPVRt" opacity="1" fill-opacity="0" stroke-width="1" stroke-opacity="1"></use>
+            </svg>
+        </button>
+    </div>
+    <div class="container-fluid g-0 h-100">
+      <ng-container *ngIf="objects$ | async as objects">
+            <cdk-virtual-scroll-viewport class="viewport" itemSize="22">
+                <div class="d-flex flex-row tab" *cdkVirtualFor="let object of objects; let index = index">      
+                    <div class="col-1">{{ index }}</div>
+                    <div class="col-2">
+                        <span 
+                            [ngClass]="{
+                                'vehicle': object.name === 'vehicle',
+                                'pickup': object.name === 'pickup',
+                                'remove': object.name === 'removeworldobject',
+                                'spawn': object.name === 'spawnpoint',
+                                'racepickup': object.name === 'racepickup',
+                                'material': object.name === 'material'
+                            }"
+                            class="name">
+                            {{ object.name }}
+                        </span>
+                    </div>
+                    <div class="col-1">
+                        {{ object.id }}
+                    </div>
+                    <div class="col-1">
+                        {{ object.model }}
+                    </div>
+                    <div class="col-2">
+                        <kbd *ngIf="object.posX">X: {{ object.posX }}</kbd>
+                        <kbd *ngIf="object.posY">Y: {{ object.posY }}</kbd>
+                        <kbd *ngIf="object.posZ">Z: {{ object.posZ }}</kbd>
+                    </div>
+                    <div class="col-1">
+                        {{ object.dimension }}
+                    </div>
+                    <div class="col-1">
+                        {{ object.interior }}
+                    </div>
+                    <div class="col-1">
+                        {{ object.color }}
+                    </div>
+                    <div class="text-ellipsis col-2">
+                        {{ object.txd }} {{ object.texture }}
+                    </div>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </ng-container>
+    </div>
+  </div>
