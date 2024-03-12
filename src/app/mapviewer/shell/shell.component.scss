@@ -23,3 +23,14 @@
     font-size: 13px;
     background: $filetree;
 }
+
+as-split ::ng-deep {
+    .inspector-pane {
+        .as-split-gutter {
+            background-color: $dropdown!important;
+            &:hover {
+                background-color: $primary!important;
+            }
+        }
+    }
+}

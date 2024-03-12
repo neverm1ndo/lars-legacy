@@ -1,23 +1,5 @@
-import { ITreeNode } from '@lars/interfaces';
 import { createAction, props } from '@ngrx/store';
 import { MapObjectsProp, MapViewerFileTreeProp, SelectedMapObjectIndexProp } from './mapviewer.models';
-import { MapObject } from '../entities';
-// import { LoadLogLineProps } from './logs.models';
-
-// const fetchLogsList = createAction('[Logs] Fetch logs list');
-
-// const loadLogsList = createAction('[Logs] Load logs list', props<LoadLogLineProps>());
-
-// const loadLogsListSuccess = createAction(
-//   '[Logs] Load logs list success',
-//   props<LoadLogLineProps>()
-// );
-
-// const loadLogsListError = createAction('[Logs] Load logs list error', props<any>());
-
-// const getLogsFilter = createAction('[Logs] Get logs filter');
-
-// const loadNextPage = createAction('[Logs] Load next page');
 
 // file tree actions
 const fetchFileTree = createAction('[MapViewer] Fetch file tree');
@@ -29,9 +11,15 @@ const fetchMapXMLDocument = createAction('[MapViewer] Fetch map XML document');
 const fetchMapXMLDocumentSuccess = createAction('[MapViewer] Fetch map XML document success', props<MapObjectsProp>());
 const fetchMapXMLDocumentError = createAction('[MapViewer] Fetch map XML document error');
 
-// const getMapObjects = createAction('[MapViewer')
+// control actions
+const changeSelectedObject = createAction('[MapViewer] Change selected object', props<SelectedMapObjectIndexProp>());
 
-const changeSelectedObject = createAction('[MapViewer] Change selected object', props<SelectedMapObjectIndexProp>())
+// file actions
+const saveAsXMLMapFileLocally = createAction('[MapViewer] Save map file locally');
+const saveAsXMLMapFileLocallySuccess = createAction('[MapViewer] Save map file locally success');
+const saveAsXMLMapFileLocallyError = createAction('[MapViewer] Save map file locally error', props<any>());
+const saveAsXMLMapOnServer = createAction('[MapViewer] Save map on server', props<MapObjectsProp>());
+const deleteMapFileFromServer = createAction('[MapViewer] Delete map file from server', props<{ path: string }>());
 
 export const actions = {
     fetchFileTree,
@@ -40,11 +28,10 @@ export const actions = {
     fetchMapXMLDocument,
     fetchMapXMLDocumentSuccess,
     fetchMapXMLDocumentError,
-    changeSelectedObject
-//   fetchLogsList,
-//   loadLogsList,
-//   loadLogsListSuccess,
-//   loadLogsListError,
-//   getLogsFilter,
-//   loadNextPage
+    changeSelectedObject,
+    saveAsXMLMapFileLocally,
+    saveAsXMLMapFileLocallySuccess,
+    saveAsXMLMapFileLocallyError,
+    saveAsXMLMapOnServer,
+    deleteMapFileFromServer
 };

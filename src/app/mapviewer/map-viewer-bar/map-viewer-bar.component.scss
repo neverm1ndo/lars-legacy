@@ -1,0 +1,26 @@
+@import 'colors';
+
+.bar {
+    height: 30px;
+    align-items: center;
+    padding: 2px 1rem 0;
+    background-color: $dropdown;
+
+    fa-icon {
+        font-size: smaller;
+    }
+
+    button {
+        height: 24px;
+        padding: 0 0.5rem;
+        border-radius: 2px;
+        position: relative;
+        z-index: 16;
+    }
+
+    .dropdown-menu {
+        z-index: 1;
+        top: unset!important;
+        bottom: 3px!important;
+    }
+}

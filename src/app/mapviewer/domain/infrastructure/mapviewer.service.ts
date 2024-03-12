@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Group, MathUtils } from 'three';
 import { allowedMapElements } from '../configs';
 import { MapObject } from '../entities';
 import { UserService } from '@lars/user/user.service';
@@ -11,32 +10,21 @@ export class MapViewerService {
     private readonly user: UserService
   ) { }
 
-  public mapGroupToXML(mapGroup: Group): XMLDocument {
+  public mapObjectsToXML(mapObjects: MapObject[]): XMLDocument {
     const xmlNamespaceURI: string = 'http://www.w3.org/1999/xhtml';
     const resultXML: XMLDocument = document.implementation.createDocument(xmlNamespaceURI, 'map', null);
 
     const map: Element = resultXML.querySelector('map');
           map.setAttribute('edf:definitions', 'editor_main');
     
-    for (let object of mapGroup.children) {
-      const objectElement: Element = resultXML.createElementNS(xmlNamespaceURI, object.userData.type);
-
-      delete object.userData.type;
-      delete object.userData.initial;
+    for (let object of mapObjects) {
+      const objectElement: Element = resultXML.createElementNS(xmlNamespaceURI, object.name);
       
-      for (let attribute in object.userData) {
-        objectElement.setAttribute(attribute, object.userData[attribute]);
-      }
-      
-      let { x: posX, y: posY, z: posZ } = object.position;
-      let { x: rotX, y: rotY, z: rotZ } = object.rotation;
-
-      [rotX, rotY, rotZ] = [rotX, rotY, rotZ].map((rad: number) => MathUtils.radToDeg(rad));
-
-      const objectPositioning = { posX, posY, posZ, rotX, rotY, rotZ };
-      
-      for (let attribute in objectPositioning) {
-        objectElement.setAttribute(attribute, objectPositioning[attribute]);
+      for (let attribute in object) {
+        if (attribute === 'name') { 
+          continue;
+        }
+        objectElement.setAttribute(attribute, object[attribute]);
       }
 
       map.appendChild(objectElement);
@@ -47,6 +35,8 @@ export class MapViewerService {
     const postComment: Comment = resultXML.createComment(`\n\tLARS gta-liberty.ru\n\tLast edited by ${author}\n\t${date}\n`);
     
     resultXML.append(postComment);
+
+    console.log(resultXML);
 
     return resultXML;
   }

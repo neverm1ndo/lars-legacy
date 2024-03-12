@@ -13,13 +13,15 @@ import { MapViewerInspectorComponent } from './mapviewer-inspector/mapviewer-ins
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConfigsModule } from '@lars/configs/configs.module';
+import { MapViewerBarComponent } from './map-viewer-bar/map-viewer-bar.component';
 
 
 @NgModule({
   declarations: [
     ShellComponent,
     Flat2dmapComponent,
-    MapViewerInspectorComponent
+    MapViewerInspectorComponent,
+    MapViewerBarComponent
   ],
   imports: [
     CommonModule,
