@@ -15,7 +15,6 @@ export class MapViewerService {
     const resultXML: XMLDocument = document.implementation.createDocument(xmlNamespaceURI, 'map', null);
 
     const map: Element = resultXML.querySelector('map');
-          map.setAttribute('edf:definitions', 'editor_main');
     
     for (let object of mapObjects) {
       const objectElement: Element = resultXML.createElementNS(xmlNamespaceURI, object.name);
@@ -34,9 +33,7 @@ export class MapViewerService {
     const { username: author } = this.user.loggedInUser$.value; 
     const postComment: Comment = resultXML.createComment(`\n\tLARS gta-liberty.ru\n\tLast edited by ${author}\n\t${date}\n`);
     
-    resultXML.append(postComment);
-
-    console.log(resultXML);
+    map.append(postComment);
 
     return resultXML;
   }
@@ -100,5 +97,37 @@ export class MapViewerService {
       if (allowed === tagName) return true;
     }
     return false;
+  }
+
+  public serializePrettyXML(xmlDocument: XMLDocument) {
+    const xsltProcessor = new XSLTProcessor();
+    const xmlSerializer = new XMLSerializer();
+    const domParser = new DOMParser();
+
+    const xsltDocument = domParser.parseFromString(
+      `<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+        <xsl:strip-space elements="*"/>
+        <xsl:template match="para[content-style][not(text())]">
+          <xsl:value-of select="normalize-space(.)"/>
+        </xsl:template>
+        <xsl:template match="node()|@*">
+          <xsl:copy>
+            <xsl:apply-templates select="node()|@*"/>
+          </xsl:copy>
+        </xsl:template>
+        <xsl:output indent="yes"/>
+      </xsl:stylesheet>`, 'application/xml');
+
+    xsltProcessor.importStylesheet(xsltDocument);
+
+    console.log(
+      xmlSerializer.serializeToString(
+        xsltProcessor.transformToDocument(xmlDocument)
+      )
+    );
+    
+    return xmlSerializer.serializeToString(
+      xsltProcessor.transformToDocument(xmlDocument)
+    );
   }
 }

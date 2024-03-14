@@ -27,11 +27,11 @@ export class MapViewerBarComponent implements OnInit {
   }
 
   saveInCloud(): void {
-
+    this.mapViewerFacade.saveFileOnServer();
   }
 
   deleteFile(): void {
-
+    this.mapViewerFacade.deleteMapFromServer();
   }
 
   ngOnInit(): void {

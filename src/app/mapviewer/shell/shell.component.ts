@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IOutputAreaSizes } from 'angular-split';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'lars-mapviewer-shell',
@@ -13,6 +13,7 @@ export class ShellComponent implements OnInit {
 
   constructor(
     private readonly mapViewerFacade: MapViewerFacade,
+    private route: ActivatedRoute,
     private router: Router
   ) { }
 
@@ -21,6 +22,8 @@ export class ShellComponent implements OnInit {
   public progress$ = new BehaviorSubject<number>(0);
 
   public fileTree$ = this.mapViewerFacade.getFileTree();
+
+  public isFileOpened$ = this.route.queryParams.pipe(map(({ path }) => Boolean(path)));
 
   // TODO: перенести управление панелями в отдельный сервис
   private setPanesState(direction: string): number[] {

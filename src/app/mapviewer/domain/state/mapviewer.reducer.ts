@@ -28,4 +28,12 @@ export const logsReducer = createReducer(
     on(mapViewerActions.fetchFileTreeSuccess, (state, { fileTree }) => ({ ...state, fileTree })),
     on(mapViewerActions.fetchMapXMLDocumentSuccess, (state, { mapObjects }) => ({ ...state, mapObjects })),
     on(mapViewerActions.changeSelectedObject, (state, { index }) => ({ ...state, selectedObject: index })),
+    on(mapViewerActions.removeSelectedObject, (state) => {
+        const mapObjects = [...state.mapObjects];
+
+        mapObjects.splice(state.selectedObject, 1);
+        
+        return { ...state, mapObjects, selectedObject: undefined };
+    }),
+    on(mapViewerActions.clearObjectsList, (state) => ({ ...state, mapObjects: [], currentFile: null }))
 );

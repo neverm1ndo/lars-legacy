@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { selectors as mapViewerSelectors } from "../state/mapviewer.selectors";
 import { actions as mapViewerActions } from "../state/mapviewer.actions";
 import { Store } from "@ngrx/store";
-import { Observable, take } from "rxjs";
+import { Observable, map, take } from "rxjs";
 import { ITreeNode } from "@lars/interfaces";
 import { selectQueryParams } from "@lars/state";
 import { MapObject } from "../entities";
+import { isUndefined } from "lodash";
 
 @Injectable()
 export class MapViewerFacade {
@@ -34,6 +35,24 @@ export class MapViewerFacade {
         return this.store.select(mapViewerSelectors.selectSelectedObjectIndex);
     }
 
+    clearObjects() {
+        this.store.dispatch(mapViewerActions.clearObjectsList());
+    }
+
+    isSomeObjectSelected() {
+        return this.getSelectedObjectIndex().pipe(
+            map((index) => !isUndefined(index))
+        )
+    }
+
+    removeObject() {
+        this.store.dispatch(mapViewerActions.removeSelectedObject());
+    }
+
+    commentObject() {
+        /** not implemented */
+    }
+
     openInTextEditor(): void {
         this.getCurrentFilePathName()
             .pipe(take(1))
@@ -44,5 +63,13 @@ export class MapViewerFacade {
 
     saveFileLocally() {
         this.store.dispatch(mapViewerActions.saveAsXMLMapFileLocally());
+    }
+
+    saveFileOnServer() {
+        this.store.dispatch(mapViewerActions.saveAsXMLMapOnServer());
+    }
+
+    deleteMapFromServer() {
+        this.store.dispatch(mapViewerActions.deleteMapFileFromServer())
     }
 }

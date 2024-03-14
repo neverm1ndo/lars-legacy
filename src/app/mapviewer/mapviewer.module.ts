@@ -12,8 +12,8 @@ import { LibertyIconsModule } from '@lars/liberty-icons/liberty-icons.module';
 import { MapViewerInspectorComponent } from './mapviewer-inspector/mapviewer-inspector.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ConfigsModule } from '@lars/configs/configs.module';
 import { MapViewerBarComponent } from './map-viewer-bar/map-viewer-bar.component';
+import { DocumentTipsComponent } from '@lars/shared/components/document-tips/document-tips.component';
 
 
 @NgModule({
@@ -33,7 +33,7 @@ import { MapViewerBarComponent } from './map-viewer-bar/map-viewer-bar.component
     NgbModule,
     AngularSplitModule,
     ScrollingModule,
-    ConfigsModule
+    DocumentTipsComponent
   ]
 })
 export class MapViewerModule { }

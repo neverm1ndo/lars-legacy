@@ -5,6 +5,7 @@ import { MapObject, ViewerColntrolMode, Viewport } from '../domain/entities';
 import { Colors } from '../domain/configs';
 import { BehaviorSubject, Subscription, filter, fromEvent, withLatestFrom, takeWhile, switchMap, of, debounceTime, tap, merge, map } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
+import { isUndefined } from 'lodash';
 
 const USE_CONTEXT = '2d';
 const FPS_LIMIT = 60;
@@ -265,6 +266,14 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
   private initControls(): void {
     this.controlsSubscriptions.push( 
+      fromEvent(window, 'keydown').pipe(
+        filter((event: KeyboardEvent) => event.key === 'Delete'),
+        withLatestFrom(this.mapViewerFacade.isSomeObjectSelected()),
+        filter(([, isSelected]) => isSelected)
+      )
+      .subscribe(() => {
+        this.mapViewerFacade.removeObject();
+      }),
       fromEvent(this.canvasElement, 'mousemove')
       .pipe(
         tap((event: MouseEvent) => {
@@ -376,9 +385,11 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
               ({ posX, posY }) => posX && posY)
           ),
         ),
-        this.mapViewerFacade.getSelectedObjectIndex()
+        this.mapViewerFacade.getSelectedObjectIndex().pipe(
+          filter((index) => !isUndefined(index))
+        )
       ).subscribe((index) => {
-        const { posX, posY } = this.mapObjects[index];
+        const { posX = 0, posY = 0 } = this.mapObjects[index];
 
         this.setViewportTo(posX, posY);
       })
@@ -387,5 +398,6 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.controlsSubscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.mapViewerFacade.clearObjects();
   }
 }

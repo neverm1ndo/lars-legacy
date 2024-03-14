@@ -13,11 +13,11 @@
                     ></file-tree>
                 </div>
             </as-split-area>
-            <as-split-area class="inspector-pane" [size]="panes[0][1]">
+            <as-split-area class="inspector-pane" [class.with-topbar]="isFileOpened$ | async" [size]="panes[0][1]">
                 <as-split direction="vertical" [gutterSize]="5" (dragEnd)="savePanesState($event, 'vertical')">
                     <as-split-area [size]="panes[1][0]">
                         <router-outlet></router-outlet>
-                        <lars-mapviewer-bar></lars-mapviewer-bar>
+                        <lars-mapviewer-bar *ngIf="isFileOpened$ | async"></lars-mapviewer-bar>
                     </as-split-area>
                     <as-split-area [size]="panes[1][1]">
                         <div class="d-flex flex-column h-100">
