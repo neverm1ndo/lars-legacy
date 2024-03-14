@@ -17,7 +17,7 @@
                     class="d-flex flex-row tab">      
                     <div class="col-1">
                         <span>{{ index }}</span></div>
-                    <div class="col-1">
+                    <div class="column col-2">
                         <span 
                             [ngClass]="{
                                 'vehicle': object.name === 'vehicle',
@@ -31,41 +31,42 @@
                             {{ object.name }}
                         </span>
                     </div>
-                    <div class="col-2">
+                    <div class="text-ellipsis column col-3">
                         <span>
                             {{ object.id }}
                         </span>
                     </div>
-                    <div class="col-1">
+                    <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.model }}
                         </span>
                     </div>
-                    <div class="col-2">
+                    <!-- <div class="text-ellipsis column col-2">
                         <span>
                             <kbd class="me-1" *ngIf="object.posX || object.posX === 0">X: {{ object.posX }}</kbd>
                             <kbd class="me-1" *ngIf="object.posY || object.posY === 0">Y: {{ object.posY }}</kbd>
                             <kbd class="me-1" *ngIf="object.posZ || object.posZ === 0">Z: {{ object.posZ }}</kbd>
                         </span>
-                    </div>
-                    <div class="col-1">
+                    </div> -->
+                    <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.dimension }}
                         </span>
                     </div>
-                    <div class="col-1">
+                    <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.interior }}
                         </span>
                     </div>
-                    <div class="col-1">
+                    <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.color }}
                         </span>
                     </div>
-                    <div class="text-ellipsis col-2">
+                    <div class="column col-2 d-flex align-items-center">
+                        <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
                         <span>
-                            {{ object.txd }} {{ object.texture }}
+                            {{ object.texture }}
                         </span>
                     </div>
                 </div>
