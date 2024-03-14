@@ -48,15 +48,15 @@
                             <kbd class="me-1" *ngIf="object.posZ || object.posZ === 0">Z: {{ object.posZ }}</kbd>
                         </span>
                     </div>
-                    <div *ngIf="object.name === 'material'" class="text-ellipsis column col-1">
-                        <span>
-                            {{ object.color }}
-                        </span>
-                    </div>
                     <div *ngIf="object.name === 'material'" class="column col-2 d-flex align-items-center">
                         <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
                         <span>
                             {{ object.texture }}
+                        </span>
+                    </div>
+                    <div *ngIf="object.name === 'material'" class="text-ellipsis column col-1">
+                        <span>
+                            {{ object.color }}
                         </span>
                     </div>
                     <div class="text-ellipsis column col-1">
