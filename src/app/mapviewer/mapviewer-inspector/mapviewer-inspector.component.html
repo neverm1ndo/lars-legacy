@@ -41,13 +41,24 @@
                             {{ object.model }}
                         </span>
                     </div>
-                    <!-- <div class="text-ellipsis column col-2">
+                    <div *ngIf="object.name !== 'material'" class="text-ellipsis column col-3">
                         <span>
                             <kbd class="me-1" *ngIf="object.posX || object.posX === 0">X: {{ object.posX }}</kbd>
                             <kbd class="me-1" *ngIf="object.posY || object.posY === 0">Y: {{ object.posY }}</kbd>
                             <kbd class="me-1" *ngIf="object.posZ || object.posZ === 0">Z: {{ object.posZ }}</kbd>
                         </span>
-                    </div> -->
+                    </div>
+                    <div *ngIf="object.name === 'material'" class="text-ellipsis column col-1">
+                        <span>
+                            {{ object.color }}
+                        </span>
+                    </div>
+                    <div *ngIf="object.name === 'material'" class="column col-2 d-flex align-items-center">
+                        <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
+                        <span>
+                            {{ object.texture }}
+                        </span>
+                    </div>
                     <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.dimension }}
@@ -56,17 +67,6 @@
                     <div class="text-ellipsis column col-1">
                         <span>
                             {{ object.interior }}
-                        </span>
-                    </div>
-                    <div class="text-ellipsis column col-1">
-                        <span>
-                            {{ object.color }}
-                        </span>
-                    </div>
-                    <div class="column col-2 d-flex align-items-center">
-                        <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
-                        <span>
-                            {{ object.texture }}
                         </span>
                     </div>
                 </div>

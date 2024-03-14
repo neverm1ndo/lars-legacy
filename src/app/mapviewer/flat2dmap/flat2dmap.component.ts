@@ -142,7 +142,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
         drawVisiblePoints(this.mapObjects);
         drawFps();
-        // drawDebugCursor();
+        drawDebugCursor();
       };
 
       const drawObjectPoint = (

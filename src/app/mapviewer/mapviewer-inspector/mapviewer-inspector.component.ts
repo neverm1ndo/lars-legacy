@@ -28,5 +28,5 @@ export class MapViewerInspectorComponent {
 
   selectObject(index: number) {
     this.mapViewerFacade.setSelectedObjectIndex(index);
-  } 
+  }
 }
