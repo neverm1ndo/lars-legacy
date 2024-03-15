@@ -9,7 +9,7 @@
     </div>
     <div class="container-fluid g-0 h-100">
       <ng-container *ngIf="objects$ | async as objects">
-            <cdk-virtual-scroll-viewport class="viewport" itemSize="22">
+            <cdk-virtual-scroll-viewport #viewport class="viewport" itemSize="22">
                 <div
                     *cdkVirtualFor="let object of objects; let index = index"
                     (click)="selectObject(index)"

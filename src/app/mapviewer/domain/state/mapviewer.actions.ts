@@ -16,6 +16,8 @@ const clearObjectsList = createAction('[MapViewer] Clear objects list')
 
 // control actions
 const changeSelectedObject = createAction('[MapViewer] Change selected object', props<SelectedMapObjectIndexProp>());
+const selectNextObject = createAction('[MapViewer] Select next object');
+const selectPreviousObject = createAction('[MapViewer] Select previous object');
 
 // file actions
 const saveAsXMLMapFileLocally = createAction('[MapViewer] Save map file locally');
@@ -39,6 +41,8 @@ export const actions = {
     fetchMapXMLDocumentError,
     removeSelectedObject,
     changeSelectedObject,
+    selectNextObject,
+    selectPreviousObject,
     clearObjectsList,
     saveAsXMLMapFileLocally,
     saveAsXMLMapFileLocallySuccess,

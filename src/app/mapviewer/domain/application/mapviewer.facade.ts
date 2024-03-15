@@ -35,6 +35,13 @@ export class MapViewerFacade {
         return this.store.select(mapViewerSelectors.selectSelectedObjectIndex);
     }
 
+    selectNext() {
+        this.store.dispatch(mapViewerActions.selectNextObject());
+    }
+    selectPrevious() {
+        this.store.dispatch(mapViewerActions.selectPreviousObject());
+    }
+
     clearObjects() {
         this.store.dispatch(mapViewerActions.clearObjectsList());
     }
