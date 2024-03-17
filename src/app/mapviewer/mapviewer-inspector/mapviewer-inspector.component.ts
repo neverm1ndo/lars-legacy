@@ -43,13 +43,16 @@ export class MapViewerInspectorComponent implements OnInit, OnDestroy {
       fromEvent<KeyboardEvent>(window, 'keydown').pipe(
         withLatestFrom(this.selectedObjectIndex$, this.objects$),
         map(([event, index, objects]: [KeyboardEvent, number, MapObject[]]) => {
-          event.preventDefault();
           if (event.key === 'ArrowUp' && index > 0) {
             this.mapViewerFacade.selectPrevious();
+            event.preventDefault();
+
             return index - 1;
           }
           if (event.key === 'ArrowDown' && index < objects.length - 1) {
-            this.mapViewerFacade.selectNext()
+            this.mapViewerFacade.selectNext();
+            event.preventDefault();
+
             return index + 1;
           }
 
