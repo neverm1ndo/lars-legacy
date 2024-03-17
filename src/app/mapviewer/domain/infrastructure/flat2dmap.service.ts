@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MapObject, RectangleVertices, Viewport } from '../entities';
+import { MapObject, NumericMapObjectAttributeName, RectangleVertices, Viewport } from '../entities';
 
 @Injectable()
 export class Flat2dmapService {
@@ -74,7 +74,7 @@ export class Flat2dmapService {
     return new Float32Array(arr);
   }
 
-  getAverage(objects: MapObject[], key: keyof Omit<MapObject, 'id' | 'name' | 'dimension' | 'model' | 'interior'>): number {
+  getAverage(objects: MapObject[], key: NumericMapObjectAttributeName): number {
     let count = 0;
     const res = objects.reduce((acc, obj) => {
       if (obj[key]) {

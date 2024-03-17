@@ -1,7 +1,7 @@
 <div class="d-flex flex-column inspector h-100">
     <div class="d-flex map-inspector-top justify-content-between align-items-center">
         <div class="d-flex flex-row align-items-center">
-            <div class="d-flex text">
+            <div class="d-flex text no-select">
                 <fa-icon class="mr-2" [icon]="fa.faBoxes"></fa-icon>
                 Инспектор объектов
             </div>
@@ -19,14 +19,7 @@
                         <span>{{ index }}</span></div>
                     <div class="column col-2">
                         <span 
-                            [ngClass]="{
-                                'vehicle': object.name === 'vehicle',
-                                'pickup': object.name === 'pickup',
-                                'remove': object.name === 'removeworldobject',
-                                'spawn': object.name === 'spawnpoint',
-                                'racepickup': object.name === 'racepickup',
-                                'material': object.name === 'material'
-                            }"
+                            [ngClass]="object.name"
                             class="name">
                             {{ object.name }}
                         </span>
@@ -48,15 +41,10 @@
                             <kbd class="me-1" *ngIf="object.posZ || object.posZ === 0">Z: {{ object.posZ }}</kbd>
                         </span>
                     </div>
-                    <div *ngIf="object.name === 'material'" class="column col-2 d-flex align-items-center">
+                    <div *ngIf="object.name === 'material'" class="column col-3 d-flex align-items-center">
                         <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
                         <span>
                             {{ object.texture }}
-                        </span>
-                    </div>
-                    <div *ngIf="object.name === 'material'" class="text-ellipsis column col-1">
-                        <span>
-                            {{ object.color }}
                         </span>
                     </div>
                     <div class="text-ellipsis column col-1">

@@ -14,9 +14,16 @@ export interface MapObject {
     rotX?: number;
     rotY?: number;
     rotZ?: number;
+    alpha?: number;
+    scale?: number;
     model?: number;
+    collisions?: boolean;
+    doublesided?: boolean;
     dimension?: number;
     interior?: number;
+    color?: number;
+    txd?: string;
+    texture?: string;
 }
 
 export type Position2 = {
@@ -37,4 +44,17 @@ export enum ViewerColntrolMode {
     MOVE,
     ROTATE
 }
+
+
+export type NumericMapObjectAttributeName = keyof Omit<MapObject,
+'id'
+| 'name'
+| 'dimension'
+| 'model'
+| 'interior'
+| 'color'
+| 'txd'
+| 'texture'
+| 'collisions'
+| 'doublesided'>;
   

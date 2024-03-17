@@ -102,13 +102,13 @@
       }
 
       $objects: 
-        "vehicle" #2791dc,
-        "pickup" #f3b94f,
-        "remove" #ce3d4a,
-        "spawn" #6d55cc,
-        "racepickup" #505050,
-        "material" #3a84a0,
-        "text" #3e0f0f;
+        vehicle #2791dc,
+        pickup #f3b94f,
+        remove #ce3d4a,
+        spawnpoint #6d55cc,
+        removeworldobject #505050,
+        material #3a84a0,
+        text #3e0f0f;
 
     @each $name, $color in $objects {
         .#{$name} {
