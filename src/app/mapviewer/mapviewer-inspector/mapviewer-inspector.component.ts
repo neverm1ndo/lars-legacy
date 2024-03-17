@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { faBoxes, faCube } from '@fortawesome/free-solid-svg-icons';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
-import { Subscription, filter, fromEvent, map, tap, withLatestFrom } from 'rxjs';
+import { Subscription, filter, fromEvent, map, withLatestFrom } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { isNil, isUndefined } from 'lodash';
+import { isNil } from 'lodash';
 import { MapObject } from '../domain/entities';
 
 @Component({

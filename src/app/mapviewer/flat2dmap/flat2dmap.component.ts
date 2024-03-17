@@ -122,13 +122,13 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
         context.drawImage(mapImage, this.viewport.x, this.viewport.y, this.mapSize, this.mapSize);
 
         if (this.animation.progress < ANIMATIONS_FRAMES) {
-            this.zoom = Math.abs(this.flat2dmapService.getEase(
+            this.zoom = this.flat2dmapService.getEase(
               this.animation.progress,
               this.zoom,
-              0.01*this.animation.direction,
+              this.animation.direction,
               ANIMATIONS_FRAMES,
               2
-            ));
+            );
   
             this.mapSize = MAP_IMAGE_SIZE * this.zoom;
 
@@ -137,8 +137,6 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
             this.animation.progress++;
         }
-        // drawDots();
-
 
         drawVisiblePoints(this.mapObjects);
         drawFps();
@@ -214,11 +212,25 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
         context.strokeStyle = Colors.WHITE + '40';
         context.stroke(path);
 
-        context.fillText(`game: ${gX}, ${gY}`, x, y - 15);
-        context.fillText(`ac: ${x}, ${y}`, x, y - 25);
-        context.fillText(`viewport: ${viewportX}, ${viewportY}`, x, y - 35);
-        context.fillText(`zoom: x${this.zoomStep}, ${this.zoom}`, x, y - 45);
-        context.fillText(`max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`, x, y - 55);
+        const debugInfo = [
+          `game: ${gX}, ${gY}`,
+          `ac: ${x}, ${y}`,
+          `viewport: ${viewportX}, ${viewportY}`,
+          `zoom: x${this.zoomStep}, ${this.zoom}`,
+          `max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`
+        ];
+
+        const lineHeight = 10;
+
+        for (let i = 0; i < debugInfo.length; i++) {
+          context.fillText(debugInfo[i], x, y - 15 + lineHeight*i);
+        }
+
+        // context.fillText(`game: ${gX}, ${gY}`, x, y - 15);
+        // context.fillText(`ac: ${x}, ${y}`, x, y - 25);
+        // context.fillText(`viewport: ${viewportX}, ${viewportY}`, x, y - 35);
+        // context.fillText(`zoom: x${this.zoomStep}, ${this.zoom}`, x, y - 45);
+        // context.fillText(`max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`, x, y - 55);
 
       };
 
