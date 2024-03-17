@@ -11,7 +11,7 @@ const USE_CONTEXT = '2d';
 const FPS_LIMIT = 60;
 const CIRCLE = 2*Math.PI;
 const CIRCLE_SIZE = 5;
-const MAX_ZOOM_STEP = 5;
+const MAX_ZOOM_STEP = 10;
 const MIN_ZOOM_STEP = 3;
 const ANIMATIONS_FRAMES = 20;
 const MAP_IMAGE_SIZE = 6000;
@@ -125,7 +125,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
             this.zoom = this.flat2dmapService.getEase(
               this.animation.progress,
               this.zoom,
-              this.animation.direction,
+              this.animation.direction*0.05,
               ANIMATIONS_FRAMES,
               2
             );
@@ -367,7 +367,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
      * -1 mousewheel up
      */
     if (
-      (this.zoomStep <= MAX_ZOOM_STEP && direction === 1) || 
+      (this.zoomStep < MAX_ZOOM_STEP && direction === 1) || 
       (this.zoomStep > MIN_ZOOM_STEP && direction === -1)
     ) {
       this.zoomStep += direction;
