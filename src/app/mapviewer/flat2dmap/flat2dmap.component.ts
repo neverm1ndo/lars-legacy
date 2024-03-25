@@ -35,6 +35,8 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
     this.fitCanvas();
   });
 
+  DEBUG_MODE = true;
+
   loading$ = new BehaviorSubject<boolean>(true);
 
   private mode = new BehaviorSubject<ViewerColntrolMode>(ViewerColntrolMode.NONE);
@@ -140,6 +142,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
         drawVisiblePoints(this.mapObjects);
         drawFps();
+        
         drawDebugCursor();
       };
 
@@ -191,14 +194,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
         const { x: viewportX, y: viewportY } = this.viewport;
         const { width, height } = this.canvasElement;
 
-        path.arc(
-          x,
-          y,
-          3,
-          0,
-          CIRCLE,
-          false
-        );
+        path.arc(x, y, 3, 0, CIRCLE, false);
 
         context.fillStyle = Colors.WHITE;
         context.fill(path);
@@ -212,26 +208,21 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
         context.strokeStyle = Colors.WHITE + '40';
         context.stroke(path);
 
-        const debugInfo = [
-          `game: ${gX}, ${gY}`,
-          `ac: ${x}, ${y}`,
-          `viewport: ${viewportX}, ${viewportY}`,
-          `zoom: x${this.zoomStep}, ${this.zoom}`,
-          `max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`
-        ];
-
-        const lineHeight = 10;
-
-        for (let i = 0; i < debugInfo.length; i++) {
-          context.fillText(debugInfo[i], x, y - 15 + lineHeight*i);
+        if (this.DEBUG_MODE) {
+          const debugInfo = [
+            `game: ${gX}, ${gY}`,
+            `ac: ${x}, ${y}`,
+            `viewport: ${viewportX}, ${viewportY}`,
+            `zoom: x${this.zoomStep}, ${this.zoom}`,
+            `max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`
+          ];
+  
+          const lineHeight = 10;
+  
+          for (let i = 0; i < debugInfo.length; i++) {
+            context.fillText(debugInfo[i], x, y - 15 - lineHeight*i);
+          }
         }
-
-        // context.fillText(`game: ${gX}, ${gY}`, x, y - 15);
-        // context.fillText(`ac: ${x}, ${y}`, x, y - 25);
-        // context.fillText(`viewport: ${viewportX}, ${viewportY}`, x, y - 35);
-        // context.fillText(`zoom: x${this.zoomStep}, ${this.zoom}`, x, y - 45);
-        // context.fillText(`max: ${MAX_ZOOM_STEP}, min: ${MIN_ZOOM_STEP}`, x, y - 55);
-
       };
 
       draw();
