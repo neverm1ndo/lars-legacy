@@ -139,6 +139,8 @@ export class BackupsGraphDirective implements OnDestroy {
   private drawGraph() {
     const childs: HTMLElement[] = this.backups.graphItems;
 
+    if (!Boolean(childs.length)) return void this.endDraw.emit();
+
     const { top } = this.hostElement.getBoundingClientRect();
     let prevHeight = 0;
 
@@ -181,8 +183,6 @@ export class BackupsGraphDirective implements OnDestroy {
     const drawableBackbones: Record<string, DrawableBackbone> = defineDrawableBackbones();
 
     const uniqueFileNames = Object.keys(drawableBackbones);
-
-    console.log(drawableBackbones);
 
     const drawBackbones = () => {
       let index = -1;
