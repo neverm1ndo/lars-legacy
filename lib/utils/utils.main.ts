@@ -3,7 +3,7 @@ import * as path from 'path';
 import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage } from 'electron';
 import axios, { AxiosRequestConfig, AxiosResponse} from 'axios';
 import { Agent } from 'https';
-import { win } from './main';
+import { win } from '@main';
 import * as ping from 'ping';
 
 /** Define HTTPS agent for axios (Insecure HACK (TLS/CA))
@@ -111,34 +111,6 @@ const sign = async (): Promise<any> => {
                         });
 };
 
-/** Creates tray icon
-* @returns {Tray} Returns tray icon with context menu
-*/
-const createTray = (): Tray => {
-  let appIcon = new Tray(nativeImage.createEmpty());
-      appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico')));
-  
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Развернуть LARS', click: function () {
-        win.show();
-      }
-    },
-    {
-      label: 'Закрыть', click: function () {
-        app.quit();
-      }
-    }
-  ]);
-
-  appIcon.on('double-click', function (_event: Electron.KeyboardEvent) {
-    win.show();
-  });
-  appIcon.setToolTip('LARS');
-  appIcon.setContextMenu(contextMenu);
-  return appIcon;
-};
-
 /** Show currently running operating system's native notification
   @param {NotificationConstructorOptions} options Notification options
 */
@@ -150,4 +122,4 @@ const pingHost = (host: string, options: ping.PingConfig): Promise<ping.PingResp
   return ping.promise.probe(host, options);
 }
 
-export { downloadFile, sign, createTray, showNotification, args, serve, loadFromAsar, pingHost, loadFromFileSystem };
+export { downloadFile, sign, showNotification, args, serve, loadFromAsar, pingHost, loadFromFileSystem };

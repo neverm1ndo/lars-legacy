@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-bitwise */
 import { SocketType, Socket, createSocket, RemoteInfo } from 'dgram';
-import { DeferredPromise } from './lib';
+import { DeferredPromise } from '@lib/utils';
 import { decode } from 'iconv-lite';
 
 export interface ServerGameMode {
