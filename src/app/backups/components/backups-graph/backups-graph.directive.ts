@@ -251,6 +251,8 @@ export class BackupsGraphDirective implements OnDestroy {
 
           container.appendChild(rib);
         } while (index % chunkSize !== 0);
+
+        this.endDraw.emit();
       };
 
       drawChunk();
