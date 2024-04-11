@@ -10,12 +10,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./shell.component.scss']
 })
 export class ShellComponent implements OnInit {
-
   constructor(
     private readonly mapViewerFacade: MapViewerFacade,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   public panes = ['horizontal', 'vertical'].map((direction) => this.setPanesState(direction));
 
@@ -29,26 +28,27 @@ export class ShellComponent implements OnInit {
   private setPanesState(direction: string): number[] {
     try {
       const states = JSON.parse(window.localStorage.getItem('lars/ui/panes/maps/' + direction));
-      if (!states) throw 'undefined panes state';
+      if (!states) throw new Error('undefined panes state');
+
       return states;
-    } catch(err) {
+    } catch (err) {
       console.error(err);
+
       return [20, 80];
     }
   }
-  
+
   // TODO: перенести управление панелями в отдельный сервис
-  savePanesState(event: { gutterNum: number | '*', sizes: IOutputAreaSizes }, direction: string): void {
+  savePanesState(
+    event: { gutterNum: number | '*'; sizes: IOutputAreaSizes },
+    direction: string
+  ): void {
     window.localStorage.setItem('lars/ui/panes/maps/' + direction, JSON.stringify(event.sizes));
   }
 
-
   openMapFile({ path, name }: { path: string; name?: string }) {
-    this.router.navigate(['/home/maps/flat'], { queryParams: { path, name }});
+    this.router.navigate(['/home/maps/flat'], { queryParams: { path, name } });
   }
 
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
