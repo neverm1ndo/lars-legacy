@@ -3,6 +3,8 @@ import { MapObject, NumericMapObjectAttributeName, RectangleVertices, Viewport }
 
 @Injectable()
 export class Flat2dmapService {
+  constructor() {}
+
   /* istambul ignore next */
   /** Jarvis algorithm https://ru.algorithmica.org/cs/convex-hulls/jarvis/
    *

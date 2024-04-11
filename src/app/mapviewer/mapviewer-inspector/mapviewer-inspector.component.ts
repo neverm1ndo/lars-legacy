@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { faBoxes, faCube } from '@fortawesome/free-solid-svg-icons';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 import { Subscription, distinctUntilChanged, filter, fromEvent, map, withLatestFrom } from 'rxjs';
@@ -12,7 +19,7 @@ import { MapObject } from '../domain/entities';
   styleUrls: ['./mapviewer-inspector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapViewerInspectorComponent implements OnInit, OnDestroy {
+export class MapViewerInspectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
 
   fa = {
@@ -90,7 +97,9 @@ export class MapViewerInspectorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initKeyboardNavigation();
+  }
 
+  ngAfterViewInit(): void {
     this.changesSubsription.add(
       this.objects$.pipe(distinctUntilChanged()).subscribe(() => {
         this.viewport.scrollToIndex(0);

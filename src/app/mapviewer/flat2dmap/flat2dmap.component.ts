@@ -17,13 +17,10 @@ import {
   filter,
   fromEvent,
   withLatestFrom,
-  takeWhile,
-  switchMap,
-  of,
-  debounceTime,
   tap,
   merge,
-  map
+  map,
+  distinctUntilChanged
 } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 import { isUndefined } from 'lodash';
@@ -394,6 +391,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
     this.controlsSubscriptions.push(
       merge(
         this.mapViewerFacade.getCurrentMapObjects().pipe(
+          filter((objects) => Boolean(objects.length)),
           tap((objects) => {
             this.mapObjects = objects;
           }),
