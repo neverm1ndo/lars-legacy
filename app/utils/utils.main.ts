@@ -1,9 +1,9 @@
 import { createWriteStream, readFile, WriteStream } from 'fs';
 import * as path from 'path';
-import { app, Menu, Tray, Notification, NotificationConstructorOptions, nativeImage } from 'electron';
-import axios, { AxiosRequestConfig, AxiosResponse} from 'axios';
+import { app, Notification, NotificationConstructorOptions } from 'electron';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Agent } from 'https';
-import { win } from '@main';
+import { win } from '../main';
 import * as ping from 'ping';
 
 /** Define HTTPS agent for axios (Insecure HACK (TLS/CA))

@@ -24,7 +24,7 @@
     "webpack": "^5.0.0"
   },
   "keywords": [],
-  "main": "main.js",
+  "main": "app/main.js",
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -41,7 +41,7 @@
     "build:prod": "npm run build -- -c production",
     "ng:serve": "ng serve -c dev",
     "electron": "electron",
-    "electron:serve-tsc": "tsc --sourceMap true -p tsconfig.serve.json",
+    "electron:serve-tsc": "tsc -p tsconfig.serve.json",
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build:portable": "npm run build:prod && electron-builder build -c ./electron-builder.portable.json",

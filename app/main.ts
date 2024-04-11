@@ -10,10 +10,10 @@ import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import { serve } from '@lib/utils';
+import { serve } from './utils';
 
-import { tray } from '@lib/tray';
-import { serverInfo } from '@samp/lars.samp';
+import { tray } from './tray';
+import { serverInfo } from './samp/lars.samp';
 
 /**
  * Init main window
@@ -43,7 +43,7 @@ function splashWindow() {
     height: 300,
     backgroundColor: '#3A3F52',
     resizable: false,
-    icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, '../src/assets/icons/favicon.ico'),
     frame: false,
     show: false,
     webPreferences: {
@@ -55,7 +55,7 @@ function splashWindow() {
   splash.setMenu(null);
   splash.loadURL(
     url.format({
-      pathname: path.join(__dirname, 'dist/splash.html'),
+      pathname: path.join(__dirname, '../dist/splash.html'),
       protocol: 'file:'
     })
   );
@@ -92,7 +92,7 @@ function createWindow(): BrowserWindow {
     title: 'LARS',
     show: false,
     frame: false,
-    icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, '../dist/lars/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
       devTools: true,
@@ -130,7 +130,7 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const fsUrl: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets', fsUrl.pathname) });
+    callback({ path: path.join(__dirname, '../dist', 'lars', 'browser', 'assets', fsUrl.pathname) });
   });
   win.on('show', (_event: any) => {
     if (tray) {
@@ -151,7 +151,7 @@ function createWindow(): BrowserWindow {
     return {
       action: 'allow',
       url: details.url,
-      icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+      icon: path.join(__dirname, '../dist/lars/browser/assets/icons/favicon.ico'),
       overrideBrowserWindowOptions: {
         frame: false,
         fullscreenable: false,
@@ -231,15 +231,15 @@ try {
       /**
        * Load Anguar DevTools on serve
        */
-      if (serve) {
-        session.defaultSession
-          .loadExtension(
-            path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')
-          )
-          .then(({ id }: { id: string }) => {
-            console.log('[ADT] DevTools loaded', id);
-          });
-      }
+      // if (serve) {
+      //   session.defaultSession
+      //     .loadExtension(
+      //       path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')
+      //     )
+      //     .then(({ id }: { id: string }) => {
+      //       console.log('[ADT] DevTools loaded', id);
+      //     });
+      // }
       createWindow();
     });
 

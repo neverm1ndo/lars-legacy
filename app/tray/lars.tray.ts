@@ -1,4 +1,4 @@
-import { win } from "@main";
+import { win } from "../main";
 import { app, Menu, nativeImage, Tray } from "electron";
 import * as path from "path";
 
@@ -14,7 +14,7 @@ export let tray: Tray;
 */
 export const createTray = (): Tray => {
     let appIcon = new Tray(nativeImage.createEmpty());
-        appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico')));
+        appIcon.setImage(nativeImage.createFromPath(path.join(__dirname, '../dist/lars/browser/assets/icons/favicon.ico')));
     
     const contextMenu = Menu.buildFromTemplate([
       {

@@ -1,11 +1,11 @@
 import { app, clipboard, dialog, ipcMain } from "electron";
 
-import { setNewTray } from "@lib/tray";
-import { downloadFile, loadFromAsar, loadFromFileSystem, pingHost, serve, showNotification } from "@lib/utils";
-import { win } from "@main";
+import { setNewTray } from "../tray";
+import { downloadFile, loadFromAsar, loadFromFileSystem, pingHost, serve, showNotification } from "../utils";
+import { win } from "../main";
 import { PingConfig, PingResponse } from "ping";
-import { defaultServerInfo, ServerGameMode } from "@samp/samp";
-import { samp, serverInfo } from "@samp/lars.samp";
+import { defaultServerInfo, ServerGameMode } from "../samp/samp";
+import { samp, serverInfo } from "../samp/lars.samp";
 
 ipcMain.on('download-file', (_event: Electron.IpcMainEvent, conf) => {
     downloadFile(conf);
