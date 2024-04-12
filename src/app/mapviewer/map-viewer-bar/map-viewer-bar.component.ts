@@ -9,14 +9,11 @@ import { MapViewerFacade } from '../domain/application/mapviewer.facade';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapViewerBarComponent implements OnInit {
-
   fa = {
     faMap
-  }
+  };
 
-  constructor(
-    private readonly mapViewerFacade: MapViewerFacade
-  ) { }
+  constructor(private readonly mapViewerFacade: MapViewerFacade) {}
 
   openInTextEditor(): void {
     this.mapViewerFacade.openInTextEditor();
@@ -34,7 +31,5 @@ export class MapViewerBarComponent implements OnInit {
     this.mapViewerFacade.deleteMapFromServer();
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

@@ -1,82 +1,98 @@
-import { Injectable } from "@angular/core";
-import { selectors as mapViewerSelectors } from "../state/mapviewer.selectors";
-import { actions as mapViewerActions } from "../state/mapviewer.actions";
-import { Store } from "@ngrx/store";
-import { Observable, map, take } from "rxjs";
-import { ITreeNode } from "@lars/interfaces";
-import { selectQueryParams } from "@lars/state";
-import { MapObject } from "../entities";
-import { isUndefined } from "lodash";
+import { Injectable } from '@angular/core';
+import { selectors as mapViewerSelectors } from '../state/mapviewer.selectors';
+import { actions as mapViewerActions } from '../state/mapviewer.actions';
+import { Store } from '@ngrx/store';
+import { Observable, map, take } from 'rxjs';
+import { ITreeNode } from '@lars/interfaces';
+import { selectQueryParams } from '@lars/state';
+import { isUndefined } from 'lodash';
 
 @Injectable()
 export class MapViewerFacade {
+  constructor(private readonly store: Store) {}
 
-    constructor(
-        private readonly store: Store
-    ) {}
+  getFileTree(): Observable<ITreeNode | null> {
+    return this.store.select(mapViewerSelectors.selectFileTree);
+  }
 
-    getFileTree(): Observable<ITreeNode | null> {
-        return this.store.select(mapViewerSelectors.selectFileTree);
-    }
+  getCurrentMapObjects() {
+    return this.store.select(mapViewerSelectors.selectMapObjects);
+  }
 
-    getCurrentMapObjects() {
-        return this.store.select(mapViewerSelectors.selectMapObjects);
-    }
+  getCurrentFilePathName() {
+    return this.store.select(selectQueryParams);
+  }
 
-    getCurrentFilePathName() {
-        return this.store.select(selectQueryParams);
-    }
+  setObjectSelected(index: number) {
+    this.store.dispatch(mapViewerActions.selectObject({ index }));
+  }
 
-    setSelectedObjectIndex(index: number) {
-        this.store.dispatch(mapViewerActions.changeSelectedObject({ index }));
-    }
+  unselectObject(index: number) {
+    this.store.dispatch(mapViewerActions.unselectObject({ index }));
+  }
 
-    getSelectedObjectIndex() {
-        return this.store.select(mapViewerSelectors.selectSelectedObjectIndex);
-    }
+  changeSelectedObjectIndex(index: number) {
+    this.store.dispatch(mapViewerActions.changeSelectedObject({ index }));
+  }
 
-    selectNext() {
-        this.store.dispatch(mapViewerActions.selectNextObject());
-    }
-    selectPrevious() {
-        this.store.dispatch(mapViewerActions.selectPreviousObject());
-    }
+  getSelectedObjectIndex() {
+    return this.store.select(mapViewerSelectors.selectSelectedObjectIndex);
+  }
 
-    clearObjects() {
-        this.store.dispatch(mapViewerActions.clearObjectsList());
-    }
+  getSelectedObjectIndexes() {
+    return this.store.select(mapViewerSelectors.selectSelectedObjectIndexes);
+  }
 
-    isSomeObjectSelected() {
-        return this.getSelectedObjectIndex().pipe(
-            map((index) => !isUndefined(index))
-        )
-    }
+  selectNext() {
+    this.store.dispatch(mapViewerActions.selectNextObject());
+  }
 
-    removeObject() {
-        this.store.dispatch(mapViewerActions.removeSelectedObject());
-    }
+  selectPrevious() {
+    this.store.dispatch(mapViewerActions.selectPreviousObject());
+  }
 
-    commentObject() {
-        /** not implemented */
-    }
+  selectMultiple(indexes: number[]) {
+    this.store.dispatch(mapViewerActions.selectMultiple({ indexes }));
+  }
 
-    openInTextEditor(): void {
-        this.getCurrentFilePathName()
-            .pipe(take(1))
-            .subscribe(({ path, name }) => {
-                window.open(`/home/configs/doc?frame=1&path=${path}&name=${name}`, 'monitor', 'minWidth=950');
-            });
-    }
+  clearObjects() {
+    this.store.dispatch(mapViewerActions.clearObjectsList());
+  }
 
-    saveFileLocally() {
-        this.store.dispatch(mapViewerActions.saveAsXMLMapFileLocally());
-    }
+  isSomeObjectSelected() {
+    return this.getSelectedObjectIndex().pipe(map((index) => !isUndefined(index)));
+  }
 
-    saveFileOnServer() {
-        this.store.dispatch(mapViewerActions.saveAsXMLMapOnServer());
-    }
+  removeObjects() {
+    this.store.dispatch(mapViewerActions.removeSelectedObjects());
+  }
 
-    deleteMapFromServer() {
-        this.store.dispatch(mapViewerActions.deleteMapFileFromServer())
-    }
+  commentObject() {
+    /** not implemented */
+  }
+
+  openInTextEditor(): void {
+    this.getCurrentFilePathName()
+      .pipe(take(1))
+      .subscribe(({ path, name }) => {
+        // TODO: Вынести в сервис
+        window.open(
+          `/home/configs/doc?frame=1&path=${path}&name=${name}`,
+          'monitor',
+          'minWidth=950'
+        );
+      });
+  }
+
+  saveFileLocally() {
+    this.store.dispatch(mapViewerActions.saveAsXMLMapFileLocally());
+  }
+
+  saveFileOnServer() {
+    this.store.dispatch(mapViewerActions.saveAsXMLMapOnServer());
+  }
+
+  deleteMapFromServer() {
+    this.store.dispatch(mapViewerActions.deleteMapFileFromServer());
+  }
 }

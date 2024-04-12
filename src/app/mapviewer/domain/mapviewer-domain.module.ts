@@ -7,8 +7,6 @@ import { MapViewerEffects } from './state/mapviewer.effects';
 import * as fromMapViewer from './state/mapviewer.reducer';
 import { MapViewerFacade } from './application/mapviewer.facade';
 
-
-
 @NgModule({
   declarations: [],
   imports: [
@@ -16,9 +14,6 @@ import { MapViewerFacade } from './application/mapviewer.facade';
     StoreModule.forFeature(fromMapViewer.featureKey, fromMapViewer.logsReducer),
     EffectsModule.forFeature([MapViewerEffects])
   ],
-  providers: [
-    MapViewerService,
-    MapViewerFacade
-  ]
+  providers: [MapViewerService, MapViewerFacade]
 })
-export class MapViewerDomainModule { }
+export class MapViewerDomainModule {}

@@ -14,6 +14,7 @@ import { serve } from './utils';
 
 import { tray } from './tray';
 import { serverInfo } from './samp/lars.samp';
+import { IpcHandler } from './ipc/lars.ipc';
 
 /**
  * Init main window
@@ -167,6 +168,9 @@ function createWindow(): BrowserWindow {
 
   return win;
 }
+
+/** IPC Handlers */
+new IpcHandler();
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
