@@ -8,12 +8,17 @@ const selectCurrentFile = createSelector(userSelectFeature, (state) => state.cur
 const selectMapObjects = createSelector(userSelectFeature, (state) => state.mapObjects);
 const selectSelectedObjectIndex = createSelector(
   userSelectFeature,
-  (state) => state.selectedObject
+  (state) => state.selectedObjects[0]
+);
+const selectSelectedObjectIndexes = createSelector(
+  userSelectFeature,
+  (state) => state.selectedObjects
 );
 
 export const selectors = {
   selectFileTree,
   selectCurrentFile,
   selectMapObjects,
-  selectSelectedObjectIndex
+  selectSelectedObjectIndex,
+  selectSelectedObjectIndexes
 };

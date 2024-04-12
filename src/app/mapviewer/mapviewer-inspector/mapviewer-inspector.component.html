@@ -12,8 +12,8 @@
             <cdk-virtual-scroll-viewport #viewport class="viewport" itemSize="22">
                 <div
                     *cdkVirtualFor="let object of objects; let index = index"
-                    (click)="selectObject(index)"
-                    [class.active]="(selectedObjectIndex$ | async) === index"
+                    (click)="selectObject($event, index)"
+                    [class.active]="(selectedObjectIndexes$ | async).includes(index)"
                     class="d-flex flex-row tab">      
                     <div class="col-1">
                         <span>{{ index }}</span></div>

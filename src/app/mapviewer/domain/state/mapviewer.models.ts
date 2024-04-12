@@ -12,3 +12,7 @@ export interface MapObjectsProp {
 export interface SelectedMapObjectIndexProp {
   index: number;
 }
+
+export interface MultiSelectedMapObjectIndexesProp {
+  indexes: number[];
+}

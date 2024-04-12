@@ -19,8 +19,7 @@ import {
   withLatestFrom,
   tap,
   merge,
-  map,
-  distinctUntilChanged
+  map
 } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 import { isUndefined } from 'lodash';
@@ -288,7 +287,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
           filter(([, isSelected]) => isSelected)
         )
         .subscribe(() => {
-          this.mapViewerFacade.removeObject();
+          this.mapViewerFacade.removeObjects();
         }),
       fromEvent(this.canvasElement, 'mousemove')
         .pipe(

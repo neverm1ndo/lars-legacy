@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import {
   MapObjectsProp,
   MapViewerFileTreeProp,
+  MultiSelectedMapObjectIndexesProp,
   SelectedMapObjectIndexProp
 } from './mapviewer.models';
 
@@ -21,16 +22,25 @@ const fetchMapXMLDocumentSuccess = createAction(
 );
 const fetchMapXMLDocumentError = createAction('[MapViewer] Fetch map XML document error');
 
-const removeSelectedObject = createAction('[MapViewer] Remove selected object from map');
+const removeSelectedObjects = createAction('[MapViewer] Remove selected objects from map');
 const clearObjectsList = createAction('[MapViewer] Clear objects list');
 
 // control actions
+const selectObject = createAction('[MapViewer] Select object', props<SelectedMapObjectIndexProp>());
+const unselectObject = createAction(
+  '[MapViewer] Unselect object',
+  props<SelectedMapObjectIndexProp>()
+);
 const changeSelectedObject = createAction(
   '[MapViewer] Change selected object',
   props<SelectedMapObjectIndexProp>()
 );
 const selectNextObject = createAction('[MapViewer] Select next object');
 const selectPreviousObject = createAction('[MapViewer] Select previous object');
+const selectMultiple = createAction(
+  '[MapViewer] Select multiple objects',
+  props<MultiSelectedMapObjectIndexesProp>()
+);
 
 // file actions
 const saveAsXMLMapFileLocally = createAction('[MapViewer] Save map file locally');
@@ -67,10 +77,13 @@ export const actions = {
   fetchMapXMLDocument,
   fetchMapXMLDocumentSuccess,
   fetchMapXMLDocumentError,
-  removeSelectedObject,
+  removeSelectedObjects,
   changeSelectedObject,
+  selectObject,
+  unselectObject,
   selectNextObject,
   selectPreviousObject,
+  selectMultiple,
   clearObjectsList,
   saveAsXMLMapFileLocally,
   saveAsXMLMapFileLocallySuccess,

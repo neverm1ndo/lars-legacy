@@ -1,4 +1,4 @@
-import { State, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { MapObject } from '../entities';
 import { ITreeNode } from '@lars/interfaces';
 import { actions as mapViewerActions } from './mapviewer.actions';
@@ -11,7 +11,7 @@ export interface MapViewerState {
   currentFile: MapViewerCurrentFile | null;
   mapObjects: MapObject[];
   fileTree: ITreeNode | null;
-  selectedObject?: number;
+  selectedObjects?: number[];
 }
 
 export const featureKey = 'MapViewer';
@@ -19,7 +19,8 @@ export const featureKey = 'MapViewer';
 const initialState: MapViewerState = {
   currentFile: null,
   mapObjects: [],
-  fileTree: null
+  fileTree: null,
+  selectedObjects: []
 };
 
 export const logsReducer = createReducer(
@@ -29,25 +30,40 @@ export const logsReducer = createReducer(
     ...state,
     mapObjects
   })),
+  on(mapViewerActions.selectObject, (state, { index }) => ({
+    ...state,
+    selectedObjects: [...state.selectedObjects, index]
+  })),
+  on(mapViewerActions.unselectObject, (state, { index }) => {
+    const selectedObjects = [...state.selectedObjects].filter(
+      (objectIndex) => objectIndex !== index
+    );
+
+    return { ...state, selectedObjects };
+  }),
   on(mapViewerActions.changeSelectedObject, (state, { index }) => ({
     ...state,
-    selectedObject: index
+    selectedObjects: [index]
   })),
   on(mapViewerActions.selectNextObject, (state) => ({
     ...state,
-    selectedObject: state.selectedObject + 1
+    selectedObjects: [state.selectedObjects[0] + 1]
   })),
   on(mapViewerActions.selectPreviousObject, (state) => ({
     ...state,
-    selectedObject: state.selectedObject - 1
+    selectedObjects: [state.selectedObjects[0] - 1]
   })),
-  on(mapViewerActions.removeSelectedObject, (state) => {
-    const mapObjects = [...state.mapObjects];
+  on(mapViewerActions.removeSelectedObjects, (state) => {
+    const mapObjects = [...state.mapObjects]
+      .map((object, index) => (state.selectedObjects.includes(index) ? undefined : object))
+      .filter((object) => object);
 
-    mapObjects.splice(state.selectedObject, 1);
-
-    return { ...state, mapObjects, selectedObject: undefined };
+    return { ...state, mapObjects, selectedObjects: [] };
   }),
+  on(mapViewerActions.selectMultiple, (state, { indexes }) => ({
+    ...state,
+    selectedObjects: indexes
+  })),
   on(mapViewerActions.clearObjectsList, (state) => ({
     ...state,
     mapObjects: [],

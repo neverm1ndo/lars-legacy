@@ -7,10 +7,19 @@ import {
   ViewChild
 } from '@angular/core';
 import { faBoxes, faCube } from '@fortawesome/free-solid-svg-icons';
-import { MapViewerFacade } from '../domain/application/mapviewer.facade';
-import { Subscription, distinctUntilChanged, filter, fromEvent, map, withLatestFrom } from 'rxjs';
+import {
+  Subscription,
+  distinctUntilChanged,
+  filter,
+  fromEvent,
+  map,
+  take,
+  withLatestFrom
+} from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { isNil } from 'lodash';
+import { isNil, range } from 'lodash';
+
+import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 import { MapObject } from '../domain/entities';
 
 @Component({
@@ -30,6 +39,7 @@ export class MapViewerInspectorComponent implements OnInit, AfterViewInit, OnDes
   objects$ = this.mapViewerFacade.getCurrentMapObjects();
 
   selectedObjectIndex$ = this.mapViewerFacade.getSelectedObjectIndex();
+  selectedObjectIndexes$ = this.mapViewerFacade.getSelectedObjectIndexes();
 
   private keyboardNavigationSubsription = new Subscription();
   private changesSubsription = new Subscription();
@@ -40,8 +50,37 @@ export class MapViewerInspectorComponent implements OnInit, AfterViewInit, OnDes
     return name !== 'material' && name !== 'text';
   }
 
-  selectObject(index: number) {
-    this.mapViewerFacade.setSelectedObjectIndex(index);
+  selectObject<T extends MouseEvent>(event: T, index: number) {
+    event.preventDefault();
+
+    this.selectedObjectIndexes$.pipe(take(1)).subscribe((selected: number[]) => {
+      if (!event.ctrlKey && !event.shiftKey) {
+        return void this.mapViewerFacade.changeSelectedObjectIndex(index);
+      }
+
+      if (event.ctrlKey) {
+        if (selected.includes(index)) {
+          return void this.mapViewerFacade.unselectObject(index);
+        }
+
+        return void this.mapViewerFacade.setObjectSelected(index);
+      }
+
+      if (event.shiftKey) {
+        const lastSelectedIndex =
+          selected.length === 1 ? selected[selected.length - 1] : selected[0];
+        const indexesRange =
+          lastSelectedIndex < index
+            ? range(lastSelectedIndex, index + 1)
+            : range(index, lastSelectedIndex + 1);
+
+        this.mapViewerFacade.selectMultiple(indexesRange);
+      }
+    });
+  }
+
+  selectMultiple(indexes: number[]) {
+    this.mapViewerFacade.selectMultiple(indexes);
   }
 
   private initKeyboardNavigation() {

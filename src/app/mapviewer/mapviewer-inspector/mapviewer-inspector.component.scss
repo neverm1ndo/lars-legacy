@@ -65,6 +65,7 @@
       height: 22px;
       border-bottom: 1px solid $topper;
       cursor: pointer;
+      user-select: none;
       
       .name {
         text-transform: uppercase;
