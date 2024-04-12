@@ -79,12 +79,6 @@ export class MapViewerFacade {
     this.getCurrentFilePathName()
       .pipe(take(1))
       .subscribe(({ path, name }) => {
-        // TODO: Вынести в сервис
-        // window.open(
-        //   `/home/configs/doc?frame=1&path=${path}&name=${name}`,
-        //   'monitor',
-        //   'minWidth=950'
-        // );
         this.windows.open('monitor', `/home/configs/doc?frame=1&path=${path}&name=${name}`);
       });
   }

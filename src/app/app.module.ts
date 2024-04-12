@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 
-
 import { WebSocketService, socketConfig } from './ws/web-socket.service';
 
 // NG Translate
@@ -28,6 +27,7 @@ import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
 import { DOCUMENT } from '@angular/common';
 import { selectQueryParam } from './state';
 import { map } from 'rxjs';
+import { WindowsService } from './shared/windows';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -73,9 +73,12 @@ export const IS_FRAME_WINDOW = new InjectionToken<boolean>('Is frame window');
     // }),
     SocketIoModule.forRoot(socketConfig),
     // RouterModule,
-    StoreModule.forRoot({
-      router: routerReducer
-    }, {}),
+    StoreModule.forRoot(
+      {
+        router: routerReducer
+      },
+      {}
+    ),
     // StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: AppConfig.production }),
     TranslateModule.forRoot({
       loader: {
@@ -89,6 +92,7 @@ export const IS_FRAME_WINDOW = new InjectionToken<boolean>('Is frame window');
   ],
   providers: [
     WebSocketService,
+    WindowsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JWTInterceptor,

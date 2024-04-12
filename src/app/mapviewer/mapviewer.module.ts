@@ -14,7 +14,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MapViewerBarComponent } from './map-viewer-bar/map-viewer-bar.component';
 import { DocumentTipsComponent } from '@lars/shared/components/document-tips/document-tips.component';
-import { WindowsService } from '@lars/shared/windows';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { WindowsService } from '@lars/shared/windows';
     AngularSplitModule,
     ScrollingModule,
     DocumentTipsComponent
-  ],
-  providers: [WindowsService]
+  ]
 })
 export class MapViewerModule {}
