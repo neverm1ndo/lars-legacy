@@ -6,10 +6,14 @@ import { Observable, map, take } from 'rxjs';
 import { ITreeNode } from '@lars/interfaces';
 import { selectQueryParams } from '@lars/state';
 import { isUndefined } from 'lodash';
+import { WindowsService } from '@lars/shared/windows';
 
 @Injectable()
 export class MapViewerFacade {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly windows: WindowsService
+  ) {}
 
   getFileTree(): Observable<ITreeNode | null> {
     return this.store.select(mapViewerSelectors.selectFileTree);
@@ -76,11 +80,12 @@ export class MapViewerFacade {
       .pipe(take(1))
       .subscribe(({ path, name }) => {
         // TODO: Вынести в сервис
-        window.open(
-          `/home/configs/doc?frame=1&path=${path}&name=${name}`,
-          'monitor',
-          'minWidth=950'
-        );
+        // window.open(
+        //   `/home/configs/doc?frame=1&path=${path}&name=${name}`,
+        //   'monitor',
+        //   'minWidth=950'
+        // );
+        this.windows.open('monitor', `/home/configs/doc?frame=1&path=${path}&name=${name}`);
       });
   }
 
