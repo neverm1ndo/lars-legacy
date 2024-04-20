@@ -18,11 +18,10 @@ import {
   fromEvent,
   withLatestFrom,
   tap,
-  merge,
-  map
+  map,
+  combineLatest
 } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
-import { isUndefined } from 'lodash';
 
 const USE_CONTEXT = '2d';
 const FPS_LIMIT = 60;
@@ -57,7 +56,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
   loading$ = new BehaviorSubject<boolean>(true);
 
   private mode = new BehaviorSubject<ViewerColntrolMode>(ViewerColntrolMode.NONE);
-  private controlsSubscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
 
   private resources: Record<string, CanvasImageSource> = {};
 
@@ -158,14 +157,18 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
         }
 
         drawVisiblePoints(this.mapObjects);
-        drawFps();
+        // drawFps();
 
-        drawDebugCursor();
+        // drawDebugCursor();
       };
 
-      const drawObjectPoint = ([x, y]: number[], { x: viewportX, y: viewportY }: Viewport) => {
+      const drawObjectPoint = (
+        [x, y]: number[],
+        { x: viewportX, y: viewportY }: Viewport,
+        selected?: boolean
+      ) => {
         const path = new Path2D();
-        context.fillStyle = Colors.OBJECT_POINT;
+        context.fillStyle = selected ? Colors.SELECTED_OBJECT_POINT : Colors.OBJECT_POINT;
 
         path.arc(
           x * this.zoom + viewportX + this.mapSize / 2,
@@ -180,8 +183,8 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
       };
 
       const drawVisiblePoints = (objects: MapObject[]) => {
-        for (const { posX, posY } of objects) {
-          drawObjectPoint([posX, posY], this.viewport);
+        for (const { posX, posY, selected } of objects) {
+          drawObjectPoint([posX, posY], this.viewport, selected);
         }
       };
 
@@ -279,7 +282,7 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
   }
 
   private initControls(): void {
-    this.controlsSubscriptions.push(
+    this.subscriptions.push(
       fromEvent(window, 'keydown')
         .pipe(
           filter((event: KeyboardEvent) => event.key === 'Delete'),
@@ -383,30 +386,49 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
     this.canvasElement.style.cursor = CURSOR[this.mode.getValue()];
   }
 
+  private subscribeToMapObjects() {
+    const mapObjectsSubscription = combineLatest([
+      this.mapViewerFacade.getCurrentMapObjects().pipe(
+        filter((objects) => Boolean(objects.length)),
+        tap((objects) => {
+          const { posX: x = 0, posY: y = 0 } = objects.find(({ posX, posY }) => posX && posY);
+
+          this.setViewportTo(x, y);
+        })
+      ),
+      this.mapViewerFacade.getSelectedObjectIndexes()
+    ])
+      .pipe(
+        map(([objects, selected]) => {
+          const mapObjects = [...objects];
+
+          for (const index of selected) {
+            const object = { ...mapObjects[index] };
+
+            object.selected = true;
+
+            mapObjects[index] = object;
+          }
+
+          return [mapObjects, selected];
+        })
+      )
+      .subscribe(([objects]: [MapObject[], number[]]) => {
+        this.mapObjects = objects;
+      });
+
+    this.subscriptions.push(mapObjectsSubscription);
+  }
+
   ngOnInit(): void {
     this.resizeObserver.observe(this.host.nativeElement);
     this.loadResources();
 
-    this.controlsSubscriptions.push(
-      merge(
-        this.mapViewerFacade.getCurrentMapObjects().pipe(
-          filter((objects) => Boolean(objects.length)),
-          tap((objects) => {
-            this.mapObjects = objects;
-          }),
-          map((objects) => objects.findIndex(({ posX, posY }) => posX && posY))
-        ),
-        this.mapViewerFacade.getSelectedObjectIndex().pipe(filter((index) => !isUndefined(index)))
-      ).subscribe((index) => {
-        const { posX = 0, posY = 0 } = this.mapObjects[index];
-
-        this.setViewportTo(posX, posY);
-      })
-    );
+    this.subscribeToMapObjects();
   }
 
   ngOnDestroy(): void {
-    this.controlsSubscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.mapViewerFacade.clearObjects();
   }
 }

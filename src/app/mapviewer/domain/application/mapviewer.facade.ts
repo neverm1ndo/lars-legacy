@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable, map, take } from 'rxjs';
 import { ITreeNode } from '@lars/interfaces';
 import { selectQueryParams } from '@lars/state';
-import { isUndefined } from 'lodash';
+import { isUndefined } from 'lodash-es';
 import { WindowsService } from '@lars/shared/windows';
 
 @Injectable()

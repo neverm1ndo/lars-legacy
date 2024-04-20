@@ -17,7 +17,7 @@ import {
   withLatestFrom
 } from 'rxjs';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { isNil, range } from 'lodash';
+import { isNil, range } from 'lodash-es';
 
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
 import { MapObject } from '../domain/entities';

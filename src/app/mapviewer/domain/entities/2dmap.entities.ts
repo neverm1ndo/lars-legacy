@@ -24,6 +24,7 @@ export interface MapObject {
   color?: number;
   txd?: string;
   texture?: string;
+  selected?: boolean;
 }
 
 export type Position2 = {
@@ -57,4 +58,5 @@ export type NumericMapObjectAttributeName = keyof Omit<
   | 'texture'
   | 'collisions'
   | 'doublesided'
+  | 'selected'
 >;

@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } fro
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/user.service';
 import { Workgroup } from '@lars/enums/workgroup.enum';
-import { intersection } from 'lodash';
+import { intersection } from 'lodash-es';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { Mapper, Backuper, Dev } = Workgroup;

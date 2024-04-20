@@ -9,7 +9,7 @@ import { AppConfig } from '../../environments/environment';
 import { UserService } from '../user/user.service';
 import { handleError } from '../utils';
 import { LogLine } from '../interfaces';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { HistoryListEnum } from '../enums';
 import { HistoryStorage } from '../interfaces';
 import { BanRule } from '../interfaces/bans.interfaces';
