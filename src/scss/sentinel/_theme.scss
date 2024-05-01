@@ -15,6 +15,7 @@ body > .dropdown {
     @import './badges';
     @import 'constants';
     @import '../animations';
+    @import './map';
     ::-webkit-scrollbar {
       background: $scrollbar;
       width: 12px;

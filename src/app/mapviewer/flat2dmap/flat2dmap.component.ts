@@ -22,6 +22,8 @@ import {
   combineLatest
 } from 'rxjs';
 import { MapViewerFacade } from '../domain/application/mapviewer.facade';
+import { SVGRenderer } from '../svg-map-renderer';
+import { SVGRendererViewportControls } from '../svg-map-renderer/lib/controls';
 
 const USE_CONTEXT = '2d';
 const FPS_LIMIT = 60;
@@ -46,6 +48,7 @@ const CURSOR = {
 })
 export class Flat2dmapComponent implements OnInit, OnDestroy {
   @ViewChild('map', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('map2', { static: true }) map2: ElementRef<HTMLCanvasElement>;
 
   private resizeObserver: ResizeObserver = new ResizeObserver((_entries: ResizeObserverEntry[]) => {
     this.fitCanvas();
@@ -57,6 +60,8 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
 
   private mode = new BehaviorSubject<ViewerColntrolMode>(ViewerColntrolMode.NONE);
   private subscriptions: Subscription[] = [];
+  private renderer: SVGRenderer;
+  private controls: SVGRendererViewportControls;
 
   private resources: Record<string, CanvasImageSource> = {};
 
@@ -421,14 +426,22 @@ export class Flat2dmapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.resizeObserver.observe(this.host.nativeElement);
-    this.loadResources();
-
-    this.subscribeToMapObjects();
+    // this.resizeObserver.observe(this.host.nativeElement);
+    // this.loadResources();
+    this.zone.runOutsideAngular(() => {
+      this.renderer = new SVGRenderer(this.map2);
+      // this.subscribeToMapObjects();
+      this.renderer.init({ resources: [{ name: 'map', src: MAP_IMAGE_URL }] }).then(() => {
+        this.controls = new SVGRendererViewportControls(this.renderer);
+        this.controls.initControls();
+      });
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.mapViewerFacade.clearObjects();
+
+    this.controls.dismiss();
   }
 }

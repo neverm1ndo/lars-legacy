@@ -1,0 +1,11 @@
+.lars_map {
+    * {
+        transition: scale 0.2s ease;
+    }
+
+    image {
+        transform-origin: center;
+        // position: relative;
+        // translate: -3000px -3000px;
+    }
+}
