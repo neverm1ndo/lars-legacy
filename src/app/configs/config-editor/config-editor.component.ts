@@ -1,8 +1,8 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, Inject } from '@angular/core';
 import { ApiService } from '@lars/api/api.service';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { switchMap, take, filter, tap, takeLast } from 'rxjs/operators';
+import { switchMap, take, filter, tap, takeWhile } from 'rxjs/operators';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { ToastService } from '@lars/toast.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { ConfigsService } from '@lars/configs/configs.service';
 import { IOutputAreaSizes } from 'angular-split';
 import { HistoryListEnum } from '@lars/enums';
 import { TranslateService } from '@ngx-translate/core';
+import { IS_FRAME_WINDOW } from '@lars/app.module';
 
 @Component({
   selector: 'app-config-editor',
@@ -41,6 +42,8 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     window: faWindowRestore,
   };
 
+  isFrameWindow$: Observable<boolean>;
+
   constructor(
     private _api: ApiService,
     private _router: Router,
@@ -49,11 +52,20 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
     private _electron: ElectronService,
     private _ngZone: NgZone,
     private _configs: ConfigsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(IS_FRAME_WINDOW) isFrameWindow: Observable<boolean>
   ) {
-    this.directories$ = this._configs.reloader$.pipe(
-      switchMap(() => this._api.getConfigsDir())
+    this.isFrameWindow$ = isFrameWindow;
+    
+    this.directories$ = this.isFrameWindow$.pipe(
+      takeWhile((val) => !val),
+      switchMap(
+        () => this._configs.reloader$.pipe(
+          switchMap(() => this._api.getConfigsDir())
+        )
+      )
     );
+    
     this.translateService.use('ru');
   }
 
@@ -259,14 +271,19 @@ export class ConfigEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.paneStates = this._setPanesState();
-    this._route.queryParams.pipe(
-                              take(1),
-                              filter(params => params.path)
-                            )
-                            .subscribe({
-                              next: ({ path, name }: Params) => this.toConfig({ path, name }),
-                            });
-    
+    this.isFrameWindow$.pipe(
+      takeWhile((val) => !val),
+      switchMap(
+        () => this._route.queryParams.pipe(
+          take(1),
+          filter(params => params.path)
+          )
+        )
+      )
+      .subscribe({
+        next: ({ path, name }: Params) => this.toConfig({ path, name }),
+      });
+
     this._electron.ipcRenderer.on('download-progress', (_event: any, progress: {total: number, loaded: number}) => {
       this._ngZone.run(() => {
         this._configs.dprogress$.next(Math.round(100 * progress.loaded / progress.total));

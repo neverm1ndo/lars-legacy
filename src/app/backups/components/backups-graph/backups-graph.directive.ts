@@ -1,7 +1,7 @@
 import { Directive, ElementRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { BackupsService } from '../../domain/inftastructure/backups.service';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash-es';
 
 type DrawableBackbone = {
   filename: string;

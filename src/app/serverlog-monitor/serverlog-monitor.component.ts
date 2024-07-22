@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { WebSocketService } from '@lars/ws/web-socket.service';
-import { isUndefined } from 'lodash';
+import { isUndefined } from 'lodash-es';
 
 @Component({
   selector: 'app-serverlog-monitor',

@@ -133,13 +133,15 @@ ngb-datepicker {
     }
   }
 }
-.as-split-gutter {
-  background-color: $topper!important;
-  transition: .1s ease;
-  &:hover {
-    background-color: $primary!important;
-  }
-  &-icon {
-    background-image: none!important;
+as-split {
+  .as-split-gutter {
+    background-color: $topper!important;
+    transition: .1s ease;
+    &:hover {
+      background-color: $primary!important;
+    }
+    &-icon {
+      background-image: none!important;
+    }
   }
 }

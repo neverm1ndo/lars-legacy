@@ -1,0 +1,16 @@
+<div class="bar d-flex flex-row">
+    <fa-icon class="text-muted me-2" [icon]="fa.faMap"></fa-icon>
+    <div ngbDropdown placement="top-left" autoClose="outside" class="d-inline-block">
+        <button type="button" class="btn btn-dark" id="dropdownFile" ngbDropdownToggle>
+            Файл
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownFile">
+            <button (click)="saveLocally()" ngbDropdownItem>Cохранить локально как...</button>
+            <button (click)="saveInCloud()" ngbDropdownItem>Cохранить в облаке</button>
+            <button (click)="deleteFile()" ngbDropdownItem>Удалить</button>
+            <div class="dropdown-divider"></div>
+            <button (click)="openInTextEditor()" ngbDropdownItem>Открыть XML</button>
+            <button disabled ngbDropdownItem>Открыть в 3D</button>
+        </div>
+    </div>
+</div>

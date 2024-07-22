@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
 import { ElectronService } from '../core/services';
 import { UserService } from '../user/user.service';
 import {
@@ -8,10 +8,9 @@ import {
   faGamepad
 } from '@fortawesome/free-solid-svg-icons';
 import { WebSocketService } from '../ws/web-socket.service';
-import { Subject, Subscription, map, tap } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { extrudeToRight } from '../app.animations';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { IS_FRAME_WINDOW } from '@lars/app.module';
 
 interface LarsWindow {
   close: () => void;
@@ -37,10 +36,6 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  href$: Subject<null | string> = new Subject();
-
-  isFrameWindow$ = this.route.queryParams.pipe(map(({ frame }) => Boolean(frame)));
-
   public larsWindow: LarsWindow = {
     close: () => {
       if (window.name === 'monitor') {
@@ -60,13 +55,15 @@ export class TopbarComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    @Inject(IS_FRAME_WINDOW) private isFrameWindow: boolean,
     private electron: ElectronService,
     private userService: UserService,
-    private ws: WebSocketService,
-    private location: Location,
-    private router: Router,
-    private route: ActivatedRoute
+    private ws: WebSocketService
   ) {}
+
+  get isFrame() {
+    return this.isFrameWindow;
+  }
 
   get isLoggedIn() {
     return this.userService.loggedInUser$;
@@ -93,17 +90,12 @@ export class TopbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(window);
     this.subscriptions.add(
       this.ws.getUpdateMessage().subscribe(() => {
         console.log('New update is ready!');
         this.$update.next(true);
       })
     );
-    this.location.onUrlChange((a) => {
-      console.log(a);
-      this.href$.next(a);
-    });
   }
 
   ngOnDestroy(): void {

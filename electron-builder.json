@@ -13,24 +13,13 @@
   "files": [
     "**/*",
     "!**/*.ts",
-    "!*.code-workspace",
-    "!LICENSE.md",
+    "!*.map",
     "!package.json",
     "!package-lock.json",
-    "!src/",
-    "!e2e/",
-    "!hooks/",
-    "!angular.json",
-    "!_config.yml",
-    "!karma.conf.js",
-    "!tsconfig.json",
-    "!tslint.json",
-    "!*.map",
-    "!dist/lars/browser/assets/sa_map/*",
-    "!coverage",
-    "!deployer",
-    "!.vscode",
-    "!.angular"
+    {
+      "from": "../dist",
+      "filter": ["**/*"]
+    }
   ],
   "nsis": {
     "installerIcon": "dist/lars/browser/assets/icons/favicon.ico",

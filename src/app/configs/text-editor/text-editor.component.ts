@@ -10,7 +10,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 import { faSave, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 

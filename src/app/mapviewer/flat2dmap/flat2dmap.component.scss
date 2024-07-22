@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  position: relative;
+  flex: 1 1 auto;
+  height: calc(100% - 30px);
+  width: 100%;
+  background: #6f8aa8;
+  // background: #000000;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 80;
+  pointer-events: none;
+  inset: 0;
+}
+
+.loader {
+  position: absolute;
+  z-index: 100;
+  background: black;
+  
+  lty-icon {
+    width: 20px;
+  }
+}
+
+svg image {
+  transform-origin: center;
+}
+
+.map {
+  background-color: red;
+}

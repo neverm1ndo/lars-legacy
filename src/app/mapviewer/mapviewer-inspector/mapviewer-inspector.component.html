@@ -1,0 +1,64 @@
+<div class="d-flex flex-column inspector h-100">
+    <div class="d-flex map-inspector-top justify-content-between align-items-center">
+        <div class="d-flex flex-row align-items-center">
+            <div class="d-flex text no-select">
+                <fa-icon class="mr-2" [icon]="fa.faBoxes"></fa-icon>
+                Инспектор объектов
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid g-0 h-100">
+      <ng-container *ngIf="objects$ | async as objects">
+            <cdk-virtual-scroll-viewport #viewport class="viewport" itemSize="22">
+                <div
+                    *cdkVirtualFor="let object of objects; let index = index"
+                    (click)="selectObject($event, index)"
+                    [class.active]="(selectedObjectIndexes$ | async).includes(index)"
+                    class="d-flex flex-row tab">      
+                    <div class="col-1">
+                        <span>{{ index }}</span></div>
+                    <div class="column col-2">
+                        <span 
+                            [ngClass]="object.name"
+                            class="name">
+                            {{ object.name }}
+                        </span>
+                    </div>
+                    <div class="text-ellipsis column col-3">
+                        <span>
+                            {{ object.id }}
+                        </span>
+                    </div>
+                    <div class="text-ellipsis column col-1">
+                        <span>
+                            {{ object.model }}
+                        </span>
+                    </div>
+                    <div *ngIf="object.name !== 'material'" class="text-ellipsis column col-3">
+                        <span>
+                            <kbd class="me-1" *ngIf="object.posX || object.posX === 0">X: {{ object.posX }}</kbd>
+                            <kbd class="me-1" *ngIf="object.posY || object.posY === 0">Y: {{ object.posY }}</kbd>
+                            <kbd class="me-1" *ngIf="object.posZ || object.posZ === 0">Z: {{ object.posZ }}</kbd>
+                        </span>
+                    </div>
+                    <div *ngIf="object.name === 'material'" class="column col-3 d-flex align-items-center">
+                        <img class="me-2" *ngIf="object.txd" src="https://textures.xyin.ws/textures/texvol2/{{object.txd}}/{{object.texture}}.png" [alt]="object.texture">
+                        <span>
+                            {{ object.texture }}
+                        </span>
+                    </div>
+                    <div class="text-ellipsis column col-1">
+                        <span>
+                            {{ object.dimension }}
+                        </span>
+                    </div>
+                    <div class="text-ellipsis column col-1">
+                        <span>
+                            {{ object.interior }}
+                        </span>
+                    </div>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </ng-container>
+    </div>
+  </div>

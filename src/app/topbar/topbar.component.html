@@ -5,47 +5,52 @@
         <small class="native-dragzone no-select label">LARS</small>
       </div>
     </div>
-    <ng-container *ngLet="isFrameWindow$ | async as isFrame">
-      <div *ngIf="!isFrame" class="d-flex flex-row">
-        <ng-container *ngIf="isLoggedIn | async as user">
-          <div [@extrudeRight] *ngIf="$update | async" placement="bottom" ngbTooltip="Обновление готово" class="d-flex align-self-end bg-success top-btn h-100" role="remote-group">
-              <button
+    <div *ngIf="!isFrame" class="d-flex flex-row">
+      <ng-container *ngIf="isLoggedIn | async as user">
+        <div [@extrudeRight]
+          *ngIf="$update | async"
+          placement="bottom"
+          ngbTooltip="Обновление готово"
+          class="d-flex align-self-end bg-success top-btn h-100"
+          role="remote-group">
+            <button
               (click)="reload()"
               type="button"
               class="btn btn-topnative pl-2 pr-2 top-btn update text-light"
               name="profile-button">
-                <span><fa-icon [icon]="fa.update"></fa-icon></span>
-              </button>
-          </div>
-          <div *ngIf="user.main_group === 10" class="d-flex btn-group" role="remote-group">
-            <dev-server-controls></dev-server-controls>
-          </div>
-          <div class="d-flex align-self-end btn-group h-100" role="remote-group">
-            <div ngbDropdown autoClose="outside" class="btn-native-profile">
-              <button
-              ngbDropdownToggle
-              type="button"
-              class="btn-profile pl-2 pr-2 top-btn"
-              name="profile-button">
-                <img [src]="user.avatar"/><span>{{ user.username }}</span>
-                <lty-icon name="lty-chevron"></lty-icon>
-              </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownTopper">
-                <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem (click)="logout()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
-              </div>
+              <span>
+                <fa-icon [icon]="fa.update"></fa-icon>
+              </span>
+            </button>
+        </div>
+        <div *ngIf="user.main_group === 10" class="d-flex btn-group" role="remote-group">
+          <dev-server-controls></dev-server-controls>
+        </div>
+        <div class="d-flex align-self-end btn-group h-100" role="remote-group">
+          <div ngbDropdown autoClose="outside" class="btn-native-profile">
+            <button
+            ngbDropdownToggle
+            type="button"
+            class="btn-profile pl-2 pr-2 top-btn"
+            name="profile-button">
+              <img [src]="user.avatar"/><span>{{ user.username }}</span>
+              <lty-icon name="lty-chevron"></lty-icon>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownTopper">
+              <button (click)="openForum()" ngbDropdownItem><fa-icon [icon]="fa.comm"></fa-icon> <span>Форум</span></button>
+              <div class="dropdown-divider"></div>
+              <button ngbDropdownItem (click)="logout()"><fa-icon [icon]="fa.signout"></fa-icon> <span>Выход</span></button>
             </div>
           </div>
-        </ng-container>
-      </div>
-      <div class="d-flex flex-row">
-        <button *ngIf="!isFrame" type="button" (click)="larsWindow.min()" class="btn native-min">
-          <lty-icon name="lty-minimize"></lty-icon>
-        </button>
-        <button type="button" (click)="larsWindow.close()" class="btn native-close">
-          <lty-icon name="lty-close"></lty-icon>
-        </button>
-      </div>
-    </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="d-flex flex-row">
+      <button *ngIf="!isFrame" type="button" (click)="larsWindow.min()" class="btn native-min">
+        <lty-icon name="lty-minimize"></lty-icon>
+      </button>
+      <button type="button" (click)="larsWindow.close()" class="btn native-close">
+        <lty-icon name="lty-close"></lty-icon>
+      </button>
+    </div>
   </div>

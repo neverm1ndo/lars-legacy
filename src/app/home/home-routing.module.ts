@@ -30,7 +30,7 @@ const routes: Routes = [
       },
       {
         path: 'maps',
-        loadChildren: () => import('@lars/maps/maps.module').then((m) => m.MapsModule),
+        loadChildren: () => import('@lars/mapviewer/mapviewer.module').then((m) => m.MapViewerModule),
         canActivate: [MapperGuard]
       },
       {

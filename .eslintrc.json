@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["app/**/*", "dist/**/*", "release/**/*"],
+  "ignorePatterns": ["app/**/*", "dist/**/*", "release/**/*", "lib/**/*", "main.ts"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -22,6 +22,7 @@
       "rules": {
         "prefer-arrow/prefer-arrow-functions": 0,
         "@angular-eslint/directive-selector": 0,
+        "@typescript-eslint/naming-convention": 0,
         "@typescript-eslint/member-ordering": "off",
         "@angular-eslint/component-selector": [
           "error",
@@ -31,18 +32,6 @@
           }
         ]
       }
-    },
-    // {
-    //   "files": ["*.html"],
-    //   "excludedFiles": ["*inline-template-*.component.html"],
-    //   "extends": ["plugin:@angular-eslint/template/recommended"],
-    //   "rules": {
-    //     "prettier/prettier": ["error", { "parser": "angular" }]
-    //   }
-    // },
-    {
-      "files": ["*.ts"],
-      "extends": ["plugin:@ngrx/recommended"]
     }
   ]
 }

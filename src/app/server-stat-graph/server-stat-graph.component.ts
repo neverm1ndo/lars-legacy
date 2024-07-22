@@ -11,8 +11,7 @@ import {
 import { ElectronService } from '@lars/core/services';
 import { faUsers, faServer, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { AppConfig } from '@lars/../environments/environment';
-import { ServerGameMode } from '@samp';
+import { ServerGameMode } from '@samp/samp';
 import {
   Observable,
   interval,

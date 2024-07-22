@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { intersection } from 'lodash';
+import { intersection } from 'lodash-es';
 
 import { UserService } from '@lars/user/user.service';
 import { Workgroup } from '@lars/enums/workgroup.enum';

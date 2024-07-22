@@ -1,0 +1,155 @@
+@import 'colors';
+:host {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+  $tab-gutter: 10px;
+  
+  .map-inspector-top {
+    $tab-head-height: 32px;
+    
+    height: $tab-head-height;
+    width: 100%;
+    background-color: $topper;
+    padding: 0 $tab-gutter calc($tab-gutter/2) $tab-gutter;
+    
+    .text {
+      font-size: 13px;
+      line-height: $tab-head-height;
+      
+      fa-icon {
+        margin-right: $tab-gutter;
+      }
+    }
+    
+  }
+  .inspector {
+    position: relative;
+    z-index: inherit;
+
+    &-hide {
+      $size: 24px;
+      width: $size;
+      height: $size;
+      padding: 0px;
+
+      svg {
+        width: 16px;
+        position: relative;
+        top: -2px
+      }
+    }
+
+    &_object-texture {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .viewport {
+    height: 100%;
+    width: 100%;
+    background-color: $filetree;
+
+    .column {
+      &:not(:last-of-type) {
+        border-right: 1px solid $topper;
+      }
+    }
+    
+    .tab {
+      &.active {
+        background-color: $scrollbar-thumb;
+      }
+      font-size: 10px;
+      height: 22px;
+      border-bottom: 1px solid $topper;
+      cursor: pointer;
+      user-select: none;
+      
+      .name {
+        text-transform: uppercase;
+        font-size: 10px;
+        background: #efefef;
+        color: #121212;
+        font-weight: 700;
+        line-height: 12px;
+        box-sizing: border-box;
+        padding: 1px 5px 1px 5px;
+      }
+
+      div {
+        display: flex;
+        padding: 0 0.2rem;
+      }
+
+      span {
+        align-self: center;
+      }
+      
+      img {
+        width: 18px;
+        height: 18px;
+        transition: .2s ease-in-out;
+        &:hover {
+          z-index: 10;
+          border: 1px solid $text;
+          transform: scale(3) translateX(-8px);
+        }
+      }
+      
+      .model-id {
+        margin-left: 5px;
+      }
+
+      $objects: 
+        vehicle #2791dc,
+        pickup #f3b94f,
+        remove #ce3d4a,
+        spawnpoint #6d55cc,
+        removeworldobject #505050,
+        material #3a84a0,
+        text #3e0f0f;
+
+    @each $name, $color in $objects {
+        .#{$name} {
+            background: $color;
+        }
+    }
+      
+    .id {
+        opacity: 0.8;
+        font-weight: bold;
+    }
+    
+    .d-inline {
+        overflow: hidden;
+        max-width: 80px;
+        word-wrap: break-word;
+      }
+    }
+  }
+}
+
+.text-ellipsis {
+    word-wrap: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kbd-button {
+  opacity: 0.6;
+  transition: .1s linear;
+  font-size: 10px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.remotes {
+  gap: 8px;
+}

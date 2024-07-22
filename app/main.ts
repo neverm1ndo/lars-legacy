@@ -2,10 +2,7 @@ import {
   app,
   BrowserWindow,
   dialog,
-  ipcMain,
-  Tray,
   protocol,
-  clipboard,
   session,
   MessageBoxOptions
 } from 'electron';
@@ -13,27 +10,11 @@ import { autoUpdater, UpdateDownloadedEvent } from 'electron-updater';
 import * as winStateKeeper from 'electron-window-state';
 import * as path from 'path';
 import * as url from 'url';
-import {
-  downloadFile,
-  createTray,
-  showNotification,
-  serve,
-  loadFromAsar,
-  pingHost,
-  loadFromFileSystem
-} from './utils.main';
+import { serve } from './utils';
 
-import Samp, { ServerGameMode, defaultServerInfo } from './samp';
-import { Subscription } from 'rxjs';
-import { PingConfig, PingResponse } from 'ping';
-
-/**
- * Init samp to get server stats later
- *
- * @type {Samp}
- */
-const samp: Samp = new Samp(20000);
-const $serverInfo: Subscription = new Subscription();
+import { tray } from './tray';
+import { serverInfo } from './samp/lars.samp';
+import { IpcHandler } from './ipc/lars.ipc';
 
 /**
  * Init main window
@@ -54,13 +35,6 @@ app.setAppUserModelId('ru.nmnd.lars');
  * @type {BrowserWindow}
  */
 export let splash: BrowserWindow = null;
-
-/**
- * Init system tray
- *
- * @type {Tray}
- */
-let tray: Tray;
 /**
  * Creates splash window
  */
@@ -70,7 +44,7 @@ function splashWindow() {
     height: 300,
     backgroundColor: '#3A3F52',
     resizable: false,
-    icon: path.join(__dirname, 'src/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, '../src/assets/icons/favicon.ico'),
     frame: false,
     show: false,
     webPreferences: {
@@ -82,7 +56,7 @@ function splashWindow() {
   splash.setMenu(null);
   splash.loadURL(
     url.format({
-      pathname: path.join(__dirname, 'dist/splash.html'),
+      pathname: path.join(__dirname, '../dist/splash.html'),
       protocol: 'file:'
     })
   );
@@ -119,7 +93,7 @@ function createWindow(): BrowserWindow {
     title: 'LARS',
     show: false,
     frame: false,
-    icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+    icon: path.join(__dirname, '../dist/lars/browser/assets/icons/favicon.ico'),
     backgroundColor: '#3A3F52',
     webPreferences: {
       devTools: true,
@@ -157,7 +131,7 @@ function createWindow(): BrowserWindow {
   }
   protocol.registerFileProtocol('lars', (request, callback) => {
     const fsUrl: URL = new URL(request.url);
-    callback({ path: path.join(__dirname, 'dist', 'lars', 'browser', 'assets', fsUrl.pathname) });
+    callback({ path: path.join(__dirname, '../dist', 'lars', 'browser', 'assets', fsUrl.pathname) });
   });
   win.on('show', (_event: any) => {
     if (tray) {
@@ -170,7 +144,7 @@ function createWindow(): BrowserWindow {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
-    $serverInfo.unsubscribe();
+    serverInfo.unsubscribe();
     app.quit();
   });
 
@@ -178,7 +152,7 @@ function createWindow(): BrowserWindow {
     return {
       action: 'allow',
       url: details.url,
-      icon: path.join(__dirname, 'dist/lars/browser/assets/icons/favicon.ico'),
+      icon: path.join(__dirname, '../dist/lars/browser/assets/icons/favicon.ico'),
       overrideBrowserWindowOptions: {
         frame: false,
         fullscreenable: false,
@@ -195,81 +169,8 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
-/** IPC */
-ipcMain.on('download-file', (_event: Electron.IpcMainEvent, conf) => {
-  downloadFile(conf);
-});
-ipcMain.on('minimize-to-tray', (event: Electron.IpcMainEvent) => {
-  event.preventDefault();
-  win.hide();
-  tray = createTray();
-  $serverInfo.unsubscribe();
-});
-ipcMain.on('close', () => win.close());
-ipcMain.on('minimize', () => win.minimize());
-ipcMain.on('reload', () => win.reload());
-
-ipcMain.on('notification', (_event: Electron.IpcMainEvent, options) => {
-  showNotification(options);
-});
-
-ipcMain.handle(
-  'server-game-mode',
-  (_event: Electron.IpcMainInvokeEvent, ip: string, port: number): Promise<ServerGameMode> => {
-    if (!serve) {
-      return samp.getGameMode(ip, port);
-    }
-    return Promise.resolve(defaultServerInfo);
-  }
-);
-ipcMain.handle(
-  'message-box',
-  (
-    _event: Electron.IpcMainInvokeEvent,
-    opts: Electron.MessageBoxOptions
-  ): Promise<Electron.MessageBoxReturnValue> => dialog.showMessageBox(opts)
-);
-ipcMain.handle(
-  'save-dialog',
-  (
-    _event: Electron.IpcMainInvokeEvent,
-    opts: Electron.SaveDialogOptions
-  ): Promise<Electron.SaveDialogReturnValue> => dialog.showSaveDialog(opts)
-);
-ipcMain.handle(
-  'open-dialog',
-  (
-    _event: Electron.IpcMainInvokeEvent,
-    opts: Electron.OpenDialogOptions
-  ): Promise<Electron.OpenDialogReturnValue> => dialog.showOpenDialog(opts)
-);
-ipcMain.handle('clipboard', (_event: Electron.IpcMainInvokeEvent, str: string): void => {
-  clipboard.writeText(str);
-});
-ipcMain.handle('version', (_event: Electron.IpcMainInvokeEvent): string => app.getVersion());
-ipcMain.handle(
-  'asar-load',
-  (_event: Electron.IpcMainInvokeEvent, assetPath: string): Promise<Buffer> =>
-    loadFromAsar(assetPath)
-);
-
-ipcMain.handle(
-  'ping',
-  (
-    _event: Electron.IpcMainInvokeEvent,
-    host: string,
-    options: PingConfig
-  ): Promise<PingResponse | void> =>
-    pingHost(host, options)
-      .then((value) => value)
-      .catch(console.error)
-);
-
-ipcMain.handle(
-  'model',
-  (_event: Electron.IpcMainInvokeEvent, filePath: string): Promise<Buffer> =>
-    loadFromFileSystem(filePath)
-);
+/** IPC Handlers */
+new IpcHandler();
 
 /** AutoUpdater handlers */
 autoUpdater.on('update-available', () => {
@@ -334,15 +235,15 @@ try {
       /**
        * Load Anguar DevTools on serve
        */
-      if (serve) {
-        session.defaultSession
-          .loadExtension(
-            path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')
-          )
-          .then(({ id }: { id: string }) => {
-            console.log('[ADT] DevTools loaded', id);
-          });
-      }
+      // if (serve) {
+      //   session.defaultSession
+      //     .loadExtension(
+      //       path.join(__dirname, '/Extensions/ienfalfjdbdpebioblfackkekamfmbnh/1.0.4_0')
+      //     )
+      //     .then(({ id }: { id: string }) => {
+      //       console.log('[ADT] DevTools loaded', id);
+      //     });
+      // }
       createWindow();
     });
 

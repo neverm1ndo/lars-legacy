@@ -1,0 +1,38 @@
+@import 'colors';
+
+:host {
+    height: 100%;
+}
+
+.progress {
+    $size: 2px;
+
+    height: $size;
+    margin-bottom: -$size;
+    position: relative;
+    top: 0px;
+    border-radius: none;
+    background: none!important;
+    z-index: 1;
+    .progressbar {
+        background: $primary!important;
+    }
+}
+
+.filetree {
+    font-size: 13px;
+    background: $filetree;
+}
+
+as-split ::ng-deep {
+    .inspector-pane {
+        &.with-topbar {
+            .as-split-gutter {
+                background-color: $dropdown!important;
+                &:hover {
+                    background-color: $primary!important;
+                }
+            }
+        }
+    }
+}
