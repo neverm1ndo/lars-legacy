@@ -55,7 +55,7 @@
     "coverage-report": "ng test --no-watch --code-coverage"
   },
   "dependencies": {
-    "@angular/cdk": "14.2.6",
+    "@angular/cdk": "15.2.9",
     "@angular/common": "17.3.12",
     "@angular/compiler": "17.3.12",
     "@angular/core": "17.3.12",
