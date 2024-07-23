@@ -4,9 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ITreeNode } from '@lars/interfaces/app.interfaces';
 import { sep } from 'path';
 
-@Injectable({
-  providedIn: 'any'
-})
+@Injectable()
 export class LtyFileTreeService {
 
   private _currentOpened: NgbDropdown | null;
