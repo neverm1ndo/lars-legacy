@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/user.service';
 import { Workgroup } from '@lars/enums/workgroup.enum';
@@ -10,7 +10,7 @@ const { Dev } = Workgroup;
 @Injectable({
   providedIn: 'root'
 })
-export class DevGuard implements CanActivate {
+export class DevGuard  {
   constructor(private user: UserService) {}
   canActivate(
     _route: ActivatedRouteSnapshot,

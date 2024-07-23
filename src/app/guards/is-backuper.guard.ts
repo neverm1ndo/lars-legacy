@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { intersection } from 'lodash-es';
 
@@ -13,7 +13,7 @@ const ALLOWED_GROUPS = [Backuper, Dev];
 @Injectable({
   providedIn: 'root'
 })
-export class BackuperGuard implements CanActivate {
+export class BackuperGuard  {
   constructor(private user: UserService) {}
   canActivate(
     _route: ActivatedRouteSnapshot,

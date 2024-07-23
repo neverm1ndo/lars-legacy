@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserService } from '@lars/user/user.service';
 import { Workgroup } from '@lars/enums/workgroup.enum';
@@ -11,7 +11,7 @@ const ALLOWED_GROUPS = [Mapper, Backuper, Dev];
 @Injectable({
   providedIn: 'root'
 })
-export class MapperGuard implements CanActivate {
+export class MapperGuard  {
   constructor(private user: UserService) {}
   canActivate(
     _route: ActivatedRouteSnapshot,

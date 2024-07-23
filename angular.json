@@ -1,8 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics",
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -188,7 +190,8 @@
               ],
               "optimization": false,
               "sourceMap": true,
-              "extractLicenses": true
+              "extractLicenses": true,
+              "buildOptimizer": false
             },
             "web": {
               "outputHashing": "none",
@@ -200,7 +203,8 @@
               ],
               "optimization": false,
               "sourceMap": true,
-              "extractLicenses": true
+              "extractLicenses": true,
+              "buildOptimizer": false
             },
             "production": {
               "outputHashing": "media",
@@ -212,7 +216,8 @@
               ],
               "optimization": true,
               "sourceMap": false,
-              "extractLicenses": true
+              "extractLicenses": true,
+              "buildOptimizer": true
             }
           },
           "defaultConfiguration": "production"
@@ -256,7 +261,6 @@
       }
     }
   },
-  "defaultProject": "lars",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
