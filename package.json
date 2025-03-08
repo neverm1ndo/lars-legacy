@@ -82,7 +82,7 @@
     "@types/iconv-lite": "0.0.1",
     "@types/three": "0.148.0",
     "angular-split": "14.1.0",
-    "axios": "1.6.0",
+    "axios": "1.8.2",
     "bootstrap": "^5.2.0",
     "chart.js": "^3.6.0",
     "codemirror": "5.63.3",
